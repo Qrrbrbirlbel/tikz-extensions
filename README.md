@@ -1,2 +1,2 @@
-# tikz-qrr
+# TikZ-Extensions
  

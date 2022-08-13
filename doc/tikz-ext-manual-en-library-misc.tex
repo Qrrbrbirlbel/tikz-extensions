@@ -1,0 +1,170 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\begin{tikzlibrary}{misc}
+  This library adds miscelleaneos utilities to PGFmath, PGF or \tikzname.
+\end{tikzlibrary}
+
+\section{PGFmath}
+
+\begin{codeexample}[preamble=\usetikzlibrary{misc}]
+\begin{tikzpicture}[
+  declare function={smallR=1; bigR(\n)=smallR+.05*\n; segments=20;},
+  full arc=segments]% same as \degrees[segments] in PSTricks
+\foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1]
+  \filldraw[fill=gray!50] (\iN R:\endRadius)
+    arc [radius=\endRadius, start angle=+\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
+    arc [radius=smallR, end angle=\iN R, delta angle=-1R]        -- cycle;
+
+\node                                              {$\phi^2$};
+\node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
+\node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
+\end{tikzpicture}
+\begin{tikzpicture}[
+  declare function={smallR=1; bigR(\n)=smallR+.05*\n; segments=20;},
+  full arc=segments]
+\filldraw[fill=gray!50] (right:smallR)
+  \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1] {
+    -- (\iN R:\endRadius) arc[radius=\endRadius, start angle=\iN R, delta angle=1R]}
+    -- (right:smallR)     arc[radius=smallR, start angle=0, delta angle=-360];
+
+\node                                              {$\phi^2$};
+\node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
+\node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
+\end{tikzpicture}
+\end{codeexample}
+
+\subsection{Postfix operator}
+
+\subsection{Functions}
+
+\begin{math-function}{strrepeat("\mvar{Text}", \mvar{x})}
+\mathcommand
+  Returns a string with \mvar{Text} repeated \mvar{x} times.
+
+\begin{codeexample}[]
+\pgfmathparse{strrepeat("foo", 5)} \pgfmathresult
+\end{codeexample}
+\end{math-function}
+
+\begin{math-function}{isInString("\mvar{String}", "\mvar{Text}")}
+\mathcommand
+  Returns |1| (true) if \mvar{Text} contains \mvar{String},
+  otherwise |0| (false).
+
+\begin{codeexample}[]
+\pgfmathparse{isInString("foo", "bar")} \pgfmathresult
+\ and\ 
+\pgfmathparse{isInString("foo", "foobar")} \pgfmathresult
+\end{codeexample}
+\end{math-function}
+
+\begin{math-function}{strcat("\mvar{Text A}", "\mvar{Text B}", …)}
+\mathcommand
+  Returns the concatenation of all given parameters.
+
+\begin{codeexample}[]
+\pgfmathparse{strcat("blue!", int(7*3), "!green")} \pgfmathresult
+\end{codeexample}
+\end{math-function}
+
+
+\begin{math-function}{isEmpty("\mvar{Text}")}
+\mathcommand
+  Returns |1| (true) if \mvar{Text} is empty, otherwise |0| (false).
+
+\begin{codeexample}[]
+\pgfmathparse{isEmpty("foo")} \pgfmathresult\ and\ 
+\pgfmathparse{isEmpty("")}    \pgfmathresult\ and\ 
+\def\emptyText{}
+\pgfmathparse{isEmpty("\emptyText")} \pgfmathresult
+\end{codeexample}
+\end{math-function}
+
+\section{PGFkeys}
+\begin{key}{/utils/if=\marg{cond}\marg{true}\marg{false}}
+  This key checks the conditional \meta{cond} and applies the styles \meta{true}
+  if \meta{cond} is true, otherwise \meta{false}.
+  \meta{cond} can be anything that PGFmath understands.
+  
+  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  actually optional.
+\end{key}
+
+The following keys use \TeX' macros |\if|, |\ifx|, |\ifnum| and |\ifdim| for faster
+executions.
+
+\begin{key}{/utils/TeX/if=\marg{token A}\marg{token B}\marg{true}\marg{false}}
+  This key checks via |\if| if \meta{token A} matches \meta{token B}
+  and applies the styles \meta{true} if it does, otherwise \meta{false}.
+  
+  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  actually optional.
+\end{key}
+
+\begin{key}{/utils/TeX/ifx=\marg{token A}\marg{token B}\marg{true}\marg{false}}
+  As above.
+\end{key}
+
+\begin{key}{/utils/TeX/ifnum=\marg{num cond}\marg{true}\marg{false}}
+  This key checks |\ifnum|\meta{num cond}
+  and applies the styles \meta{true} if true, otherwise \meta{false}.
+  A delimiting |\relax| will be inserted after \meta{num cond}.
+  
+  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  actually optional.
+\end{key}
+
+\begin{key}{/utils/TeX/ifdim=\marg{dim cond}\marg{true}\marg{false}}
+  As above.
+\end{key}
+
+\begin{key}{/utils/TeX/ifempty=\marg{Text}\marg{true}\marg{false}}
+  This checks whether \meta{Text} is empty and applies styles \meta{true} if true,
+  otherwise \meta{false}.
+\end{key}
+
+\begin{center}
+\begin{codeexample}[preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
+\tikzset{
+  mynode/.style={
+    circle, minimum size=10mm, draw, densely dashdotted, thick,
+    decide color/.expand once=#1},
+  decide color/.style 2 args={
+    /utils/TeX/if=c#1
+      {/utils/TeX/ifnum={#2<5}{bluelight}{bluedark}}
+      {/utils/TeX/ifnum={#2<8}{light}{dark}}},
+  light/.style={fill=gray!20},  bluelight/.style={fill=blue!10},
+  dark/.style ={fill=gray!60},  bluedark/.style ={fill=blue!30}}
+\tikz\graph[
+  spring electrical layout, horizontal=c2 to p13,
+  node distance=1.5cm, typeset=$n_{\tikzgraphnodetext}$,
+  nodes={mynode=\tikzgraphnodetext}] {
+  % outer ring
+  c2 -- {p1, p11, p6};
+    p1 -- {p8, c6, p11};
+      p8 -- {p3, p10, c6};
+       p3 -- {p13, p15, p10};
+         p13 -- {p15, c7};
+           c7  -- {c3, c4, p15};
+           c3  -- {p14, c4};
+           p14 -- {p7, c4};
+         p7 -- {p9, p2, c4};
+       p9 -- {c5, p12, p2};
+     c5 -- {c1, p4, p12};
+   c1 -- {p6, p4};
+  p6 -- {p11, p4};
+  % inner ring
+  p11 -- {c6, p12, p4};
+  p5 -- {c6 -- {p10, p12}, p10 -- p15, p15 -- c4, c4 -- p2, p2 -- p12, p12 -- p4};
+};
+\end{codeexample}
+\end{center}
+\endinput

@@ -1,0 +1,134 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\clearpage
+\section{Mirror, Mirror on the Wall}
+\label{library:mirror}
+
+\begin{tikzlibrary}{transformations.mirror}
+  This library adds more transformations to \tikzname.
+\end{tikzlibrary}
+
+As explained in section~\ref{pgflibrary:transformations}, they are two approaches to setting a mirror transformation.
+As with the commands in PGF, we'll be using lowercase |m| for the ``Spiegelungsmatrix'' and uppercase |M| for the built-in approach.
+
+\subsection{Using the ``Spiegelungsmatrix''}
+
+\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,transformations.mirror}]
+\begin{tikzpicture}[line join=round, thick, reg poly/.style={
+  shape=regular polygon, regular polygon sides={#1}}]
+\node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
+\foreach \i[evaluate={\col=(\i-1)/.04}] in {1,...,5}
+  \node [mirror=(a.corner \i)--(a.side \i), transform shape,
+         reg poly=5, minimum size=+2cm, draw=red!\col!blue] {};
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{key}{/tikz/xmirror=\meta{value or coordinate}}
+  Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
+
+\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
+\draw[xmirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\begin{key}{/tikz/ymirror=\meta{value or coordinate}}
+  Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
+\end{key}
+
+
+\begin{key}{/tikz/mirror x=\meta{coordinate}}
+  Similar to |/tikz/xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{tikzpicture}[x=.5cm, y=(45:1cm)]
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
+
+\draw[ xmirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
+\draw[mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\begin{key}{/tikz/mirror y=\meta{coordinate}}
+  Similar to |/tikz/ymirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\end{key}
+
+
+\begin{key}{/tikz/mirror=\meta{point A}|--|\meta{point B}}
+  Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
+  
+  When only \meta{point A} is given that line goes through \meta{point A} and the origin.
+\end{key}
+
+\subsection{Using built-in transformations}
+
+\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,transformations.mirror}]
+\begin{tikzpicture}[line join=round, thick, reg poly/.style={
+  shape=regular polygon, regular polygon sides={#1}}]
+\node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
+\foreach \i[evaluate={\col=(\i-1)/.04}] in {1,...,5}
+  \node [Mirror=(a.corner \i)--(a.side \i), transform shape,
+         reg poly=5, minimum size=+2cm, draw=red!\col!blue] {};
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{key}{/tikz/xMirror=\meta{value or coordinate}}
+  Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
+
+\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
+\draw[xMirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\begin{key}{/tikz/yMirror=\meta{value or coordinate}}
+  Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
+\end{key}
+
+
+\begin{key}{/tikz/Mirror x=\meta{coordinate}}
+  Similar to |/tikz/xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{tikzpicture}[x=.5cm, y=(45:1cm)]
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
+
+\draw[ xMirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
+\draw[Mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\begin{key}{/tikz/Mirror y=\meta{coordinate}}
+  Similar to |/tikz/yMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\end{key}
+
+
+\begin{key}{/tikz/Mirror=\meta{point A}|--|\meta{point B}}
+  Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
+  
+  When only \meta{point A} is given that line goes through \meta{point A} and the origin.
+\end{key}
+
+\endinput

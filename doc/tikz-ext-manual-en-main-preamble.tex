@@ -1,0 +1,95 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\usepackage[version=latest]{pgf}
+
+\usepackage{xkeyval,calc,listings,tikz,fp}
+
+\usepackage{imakeidx}
+\makeindex
+\usepackage{hyperref}
+\hypersetup{%
+    colorlinks=false, % use true to enable colors below:
+    linkcolor=blue,%red,
+    filecolor=blue,%magenta,
+    urlcolor=blue,%cyan,
+    citecolor=blue,
+    pdfborder=0 0 0,
+}
+
+\usepackage[a4paper,left=2.25cm,right=2.25cm,top=2.5cm,bottom=2.5cm,nohead,columnsep=1cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xxcolor}
+\usepackage{pifont}
+
+\usepackage[T1]{fontenc}
+% Promote `Missing character` reports to full errors
+% require texlive 2021 or above
+\tracinglostchars=3
+
+\input{pgfmanual-en-macros}
+
+\usepackage{unicode-math}
+\setmathfont[Scale=MatchUppercase]{libertinusmath-regular.otf}
+\usepackage[ttscale=.85]{libertine}
+
+\makeatletter
+\renewcommand*\l@section[2]{%
+  \ifnum \c@tocdepth >\z@
+    \addpenalty\@secpenalty
+    \addvspace{1.0em \@plus\p@}%
+    \setlength\@tempdima{2.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \endgroup
+  \fi}
+\renewcommand*\l@subsection{\@dottedtocline{2}{2.5em}{3.3em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{5.8em}{4.2em}}
+\def\@pnumwidth{2.2em}
+\makeatother
+
+% Global styles:
+\tikzset{
+  every plot/.style={prefix=plots/pgf-},
+  shape example/.style={
+    color=black!30,
+    draw,
+    fill=yellow!30,
+    line width=.5cm,
+    inner xsep=2.5cm,
+    inner ysep=0.5cm}
+}
+
+% Detect changed labels
+% by David Carlisle https://tex.stackexchange.com/a/169245
+\makeatletter
+\def\@testdef#1#2#3{%
+  \def\reserved@a{#3}%
+  \expandafter\ifx\csname #1@#2\endcsname\reserved@a\else
+    \typeout{^^JLabel `#2' changed:^^J\meaning\reserved@a^^J\expandafter\meaning\csname #1@#2\endcsname^^J}%
+    \@tempswatrue
+  \fi}
+\makeatother
+
+\usetikzlibrary{
+  misc,
+  paths.timer,
+  transformations.mirror,
+  shapes.geometric
+}
+
+%% needs Lua!
+\usetikzlibrary{graphs,graphdrawing}
+\usegdlibrary{force}

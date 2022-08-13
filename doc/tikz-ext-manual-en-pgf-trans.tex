@@ -1,0 +1,157 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Transformations: Mirroring}
+\label{pgflibrary:transformations}
+
+\begin{pgflibrary}{transformations.mirror}
+  This library adds mirror transformations to PGF.
+\end{pgflibrary}
+
+Two approaches to mirror transformation exist:
+\begin{enumerate}
+\item Using the ``Spiegelmatrix``(see section~\ref{pgflibrary:transformations:spiegelungsmatrix}).
+
+  This depends on |\pgfpointnormalised| which involves the sine and the cosine functions of PGFmath.
+
+\item Using built-in transformations (see section~\ref{pgflibrary:transformations:builtin}).
+
+  This depends on |\pgfmathanglebetween| which involves the arctangent (|atan2|) function of PGFmath.
+\end{enumerate}
+
+Which one is better? I don't know.
+Choose one you're comfortable with.
+
+\subsection{Using the ``Spiegelungmatrix''}
+\label{pgflibrary:transformations:spiegelungsmatrix}
+
+The following commands use the ``Spiegelungsmatrix'' that sets the transformation matrix following
+\begin{equation*}
+  A = \frac{1}{\Vert\vec l\Vert^2} \begin{bmatrix}
+  l_x^2-l_y^2 & 2l_xl_y \\
+  2l_xl_y & l_y^2-l_x^2\\
+  \end{bmatrix}.
+\end{equation*}
+
+
+\begin{command}{\pgftransformxmirror\marg{value}}
+  Sets up a transformation that mirrors along a vertical line that goes through point $(\text{\meta{value}}, 0)$.
+
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) -- (1.5, 1.25);
+\pgftransformxmirror{1.5}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+\begin{command}{\pgftransformymirror\marg{value}}
+  Sets up a transformation that mirrors along a horizontal line that goes through point $(0, \text{\meta{value})}$.
+\end{command}
+
+\begin{command}{\pgftransformmirror\marg{point A}\marg{point B}}
+  Sets up a transformation that mirrors along the line that goes through \meta{point A} and \meta{point B}.
+ 
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-.25, -2.25) grid (2.5, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (0, -1) -- (2, 0);
+\pgftransformmirror{\pgfpointxy{0}{-1}}{\pgfpointxy{2}{0}}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+\begin{command}{\pgfqtransformmirror\marg{point A}}
+  Sets up a transformation that mirrors along the line that goes through the origin and \meta{point A}.
+
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-.25, -.25) grid (2.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (0, 0) -- (2, 1);
+\pgfqtransformmirror{\pgfpointxy{2}{1}}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+
+\subsection{Using built-in transformations}
+\label{pgflibrary:transformations:builtin}
+
+The following commands use a combination of shifting, rotating, $-1$ scaling, rotating back and shifting back to reach the mirror transformation.
+
+The commands are named the same as above, only the |m| in |mirror| is capitalized.
+
+
+\begin{command}{\pgftransformxMirror\marg{value}}
+  Sets up a transformation that mirrors along a vertical line that goes through point $(\text{\meta{value}}, 0)$.
+
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (1.5, -.25) -- (1.5, 1.25);
+\pgftransformxMirror{1.5}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+\begin{command}{\pgftransformyMirror\marg{value}}
+  Sets up a transformation that mirrors along a horizontal line that goes through point $(0, \text{\meta{value})}$.
+\end{command}
+
+\begin{command}{\pgftransformMirror\marg{point A}\marg{point B}}
+  Sets up a transformation that mirrors along the line that goes through \meta{point A} and \meta{point B}.
+ 
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-.25, -2.25) grid (2.5, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (0, -1) -- (2, 0);
+\pgftransformMirror{\pgfpointxy{0}{-1}}{\pgfpointxy{2}{0}}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+\begin{command}{\pgfqtransformMirror\marg{point A}}
+  Sets up a transformation that mirrors along the line that goes through the origin and \meta{point A}.
+
+\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{tikzpicture}
+\draw[help lines] (-.25, -.25) grid (2.25, 1.25);
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+
+\draw[dashed] (0, 0) -- (2, 1);
+\pgfqtransformMirror{\pgfpointxy{2}{1}}
+
+\draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{command}
+
+\endinput
