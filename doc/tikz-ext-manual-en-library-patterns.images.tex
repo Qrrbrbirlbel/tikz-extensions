@@ -1,0 +1,50 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\clearpage
+\section{Using Images as a Pattern}
+\label{library:patterns.images}
+
+\begin{tikzlibrary}{patterns.images}
+  This library allows to use an image to be used as a repeating pattern for a path.
+\end{tikzlibrary}
+
+With this library arbitrary images (or indeed PDF documents) can be used as
+a repeating pattern for the background of a path.
+
+This is a two-step process:
+\begin{enumerate}
+\item Declaring an image as an ``image-pattern''.
+\item Using the ``image-pattern''.
+\end{enumerate}
+
+\begin{command}{\pgfsetupimageaspattern\oarg{options}\marg{name}\marg{image}}
+\end{command}
+
+\begin{key}{/tikz/image as pattern=\meta{options} (default |\{\}|)}
+
+\begin{codeexample}[preamble=\usetikzlibrary{patterns.images}]
+\pgfsetupimageaspattern[width=.5cm]{grid}{example-image-1x1}
+\tikz \node[star, minimum size=3cm, draw,
+  image as pattern={name=grid,options={left, bottom, y=-.5cm, rotate=45}}] {};
+\end{codeexample}
+\end{key}
+
+\begin{key}{/tikz/image as pattern/name=\meta{name}}
+Specifies the name of the ``image-pattern'' to be used.
+\end{key}
+
+\begin{stylekey}{/tikz/image as pattern/option}
+Options that's be used by the internal |\pgftext|,
+only keys from |/pgf/text| should be used.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/image as pattern/options=\meta{style}}
+Appends style |/tikz/image as pattern/option|.
+\end{stylekey}

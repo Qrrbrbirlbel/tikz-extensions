@@ -45,7 +45,7 @@
 Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
 to use an arbitrary number of segments of a circle to be used instead of an angle.
 
-\begin{key}{/tikz/full arc=\marg{num} (default |{}|)}
+\begin{key}{/tikz/full arc=\meta{num} (default |{}|)}
   The number \meta{num} of segments will be set up.
   Using |full arc| with an empty value disables the segmentation and |1R| equals $1^\circ$.
   
@@ -139,7 +139,7 @@ them in |"|.
 
 \subsection{Conditionals}
 
-\begin{key}{/utils/if=\marg{cond}\marg{true}\marg{false}}
+\begin{key}{/utils/if=\meta{cond}\meta{true}\opt{\meta{false}}}
   This key checks the conditional \meta{cond} and applies the styles \meta{true}
   if \meta{cond} is true, otherwise \meta{false}.
   \meta{cond} can be anything that PGFmath understands.
@@ -151,7 +151,7 @@ them in |"|.
 The following keys use \TeX' macros |\if|, |\ifx|, |\ifnum| and |\ifdim| for faster
 executions.
 
-\begin{key}{/utils/TeX/if=\marg{token A}\marg{token B}\marg{true}\marg{false}}
+\begin{key}{/utils/TeX/if=\meta{token A}\meta{token B}\meta{true}\opt{\meta{false}}}
   This key checks via |\if| if \meta{token A} matches \meta{token B}
   and applies the styles \meta{true} if it does, otherwise \meta{false}.
   
@@ -159,11 +159,11 @@ executions.
   actually optional.
 \end{key}
 
-\begin{key}{/utils/TeX/ifx=\marg{token A}\marg{token B}\marg{true}\marg{false}}
+\begin{key}{/utils/TeX/ifx=\meta{token A}\meta{token B}\meta{true}\opt{\meta{false}}}
   As above.
 \end{key}
 
-\begin{key}{/utils/TeX/ifnum=\marg{num cond}\marg{true}\marg{false}}
+\begin{key}{/utils/TeX/ifnum=\meta{num cond}\meta{true}\\opt{\meta{false}}}
   This key checks |\ifnum|\meta{num cond}
   and applies the styles \meta{true} if true, otherwise \meta{false}.
   A delimiting |\relax| will be inserted after \meta{num cond}.
@@ -172,11 +172,11 @@ executions.
   actually optional.
 \end{key}
 
-\begin{key}{/utils/TeX/ifdim=\marg{dim cond}\marg{true}\marg{false}}
+\begin{key}{/utils/TeX/ifdim=\meta{dim cond}\meta{true}\opt{\meta{false}}}
   As above.
 \end{key}
 
-\begin{key}{/utils/TeX/ifempty=\marg{Text}\marg{true}\marg{false}}
+\begin{key}{/utils/TeX/ifempty=\meta{Text}\meta{true}\opt{\meta{false}}}
   This checks whether \meta{Text} is empty and applies styles \meta{true} if true,
   otherwise \meta{false}.
 \end{key}
@@ -206,7 +206,7 @@ not all of them are.
 \end{codeexample}
 \end{handler}
 
-\begin{handler}{{.List}|=|\meta{\meta{e1}, \meta{e2}, ..., \meta{en}}}
+\begin{handler}{{.List}|=|\meta{\meta{e1}, \meta{e2}, \dots, \meta{en}}}
   This handler evaluates the given list with |\foreach| and concatenates the element and
   the result is then given to the used key.
 \begin{codeexample}[width=6cm,preamble=\usetikzlibrary{fit,misc}]
@@ -261,12 +261,12 @@ not all of them are.
 Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
 |\foreach \var[use int=start to end step delta]|.
 
-\begin{key}{/pgf/foreach/use int=\meta{start}| to |\meta{end}| step |\meta{delta}}
+\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
 The values \meta{start}, \meta{end} and \meta{delta} are evaluates by PGFmath at initialization.
 The part |step |\meta{delta} is optional (\meta{delta} = 1).
 \end{key}
 
-\begin{key}{/pgf/foreach/use float=\meta{start}| to |\meta{end}| step |\meta{delta}}
+\begin{key}{/pgf/foreach/use float=\meta{start}| o|\meta{end}opt{|step|\meta{delta}}}
 Same as above, however the results are not truncated.
 \end{key}
 
