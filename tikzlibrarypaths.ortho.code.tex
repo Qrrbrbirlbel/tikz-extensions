@@ -1,3 +1,11 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
 %% For the operators r-lr, r-rl, r-ud and r-du we need to check after TikZ found r
 \let\tikz@orig@rect\tikz@rect
 \def\tikz@rect{\pgfutil@ifnextchar e\tikz@orig@rect\qrr@tikz@r}
@@ -33,7 +41,7 @@
 \def\qrr@tikz@ud@lineto ud{\pgfutil@ifnextchar[{\qrr@tikz@collect@hvvh@options\qrr@tikz@ud@lineto@next}{\qrr@tikz@collect@hvvh@options\qrr@tikz@ud@lineto@next[]}}
 
 %% TikZ interjects are done, the rest is independent:
-\input tikzlibraryqrr.paths.ortho.tex
+\input tikzlibrarypaths.ortho.tex
 
 %% a few nice to haves, use with to or edge operator
 \let\tikz@origtotarget\pgfutil@empty

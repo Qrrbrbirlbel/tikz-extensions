@@ -1,0 +1,44 @@
+% !TeX root = tikz-ext-manual.tex
+% !TeX spellcheck = en_US
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Extending the Path Timers}
+\label{library:paths.ortho}
+
+\begin{tikzlibrary}{paths.ortho}
+  This library adds new path specifications \verb!|-|!, \verb!-|-! as well as
+  |r-ud|, |r-du|, |r-lr| and |r-rl|.
+\end{tikzlibrary}
+
+\subsection{Zig-Zag}
+Similar to the path operations \verb!|-! and \verb!-|! this library adds
+the path operations \verb!|-|! and \verb!-|-!.
+{\catcode`\|=12
+\begin{pathoperation}[noindex]{|-|}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+    \index{---1@\protect\texttt{\protect\pgfmanualbar-\protect\pgfmanualbar} path operation}%
+    \index{Path operations!---1@\protect\texttt{\protect\pgfmanualbar-\protect\pgfmanualbar}}%
+    \pgfmanualpdflabel[\catcode`\|=12 ]{|-|}{}%
+    This operation means ``first vertical, then horizontal and then vertical again''.
+\end{pathoperation}
+\begin{pathoperation}[noindex]{-|-}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+    \index{--1@\protect\texttt{-\protect\pgfmanualbar-} path operation}%
+    \index{Path operations!--1@\protect\texttt{-\protect\pgfmanualbar-}}%
+    \pgfmanualpdflabel[\catcode`\|=12 ]{-|-}{}%
+    This operation means ``first horizontal, then vertical and then horizontal again''.
+\end{pathoperation}
+}
+\subsection{Zig-Zig}
+\begin{pathoperation}{r-ud}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+\end{pathoperation}
+\begin{pathoperation}{r-du}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+\end{pathoperation}
+\begin{pathoperation}{r-lr}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+\end{pathoperation}
+\begin{pathoperation}{r-rl}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+\end{pathoperation}
