@@ -41,25 +41,30 @@
 %% In addition to use int, there's also use float.
 \newif\ifqrr@pgf@foreach@no@list
 \pgfqkeys{/pgf/foreach}{
-  @use/.code args={#1to#2}{%
-    \qrr@pgf@foreach@no@listtrue
-    \qrr@pgf@foreach@no@list@use\foreachStart{#1}%
-    \pgfutil@in@{step}{#2}
-    \ifpgfutil@in@
-      \qrr@pgf@foreach@no@list@parse@step#2\pgffor@stop
-    \else
-      \qrr@pgf@foreach@no@list@parse@step#2step1\pgffor@stop
-    \fi
-    \edef\qrr@pgf@foreach@no@list@list{\foreachStart,\foreachSecond,...,\foreachEnd}},
   use int/.code={%
-    \let\qrr@pgf@foreach@no@list@use\pgfmathtruncatemacro
-    \pgfkeysalso{/pgf/foreach/@use={#1}}},
+    \qrr@pgf@foreach@no@list@parse@to\pgfmathtruncatemacro#1\pgffor@stop
+  },
   use float/.code={%
-    \let\qrr@pgf@foreach@no@list@use\pgfmathsetmacro
-    \pgfkeysalso{/pgf/foreach/@use={#1}}}}
-\def\qrr@pgf@foreach@no@list@parse@step#1step#2\pgffor@stop{%
-  \qrr@pgf@foreach@no@list@use\foreachEnd{#1}%
-  \qrr@pgf@foreach@no@list@use\foreachSecond{\foreachStart+#2}}
+    \qrr@pgf@foreach@no@list@parse@to\pgfmathsetmacro#1\pgffor@stop
+  }
+}
+
+\def\qrr@pgf@foreach@no@list@parse@to#1#2to#3\pgffor@stop{%
+  \qrr@pgf@foreach@no@listtrue
+  #1\foreachStart{#2}%
+  \pgfutil@in@{step}{#3}
+  \ifpgfutil@in@
+    \qrr@pgf@foreach@no@list@parse@step{#1}#3\pgffor@stop
+  \else
+    \qrr@pgf@foreach@no@list@parse@step{#1}#3step1\pgffor@stop
+  \fi
+  \edef\qrr@pgf@foreach@no@list@list{\foreachStart,\foreachSecond,...,\foreachEnd}%
+  \texttt{\meaning\qrr@pgf@foreach@no@list@list}%
+}
+\def\qrr@pgf@foreach@no@list@parse@step#1#2step#3\pgffor@stop{%
+  #1\foreachEnd{#2}%
+  #1\foreachSecond{\foreachStart+#3}%
+}
 \def\pgffor@vars{% manually extended, better etoolbox
   \pgfutil@ifnextchar i{\pgffor@@vars@end}{%
     \pgfutil@ifnextchar[{\pgffor@@vars@opt}{%]
