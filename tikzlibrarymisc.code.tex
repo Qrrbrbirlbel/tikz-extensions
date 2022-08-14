@@ -117,8 +117,8 @@
 }{}
 
 % http://tex.stackexchange.com/questions/244569/bounding-lines-around-tax-nodes/244619#244619
-\pgfmathdeclarefunction{atanXY}{2}{\pgfmathatantwo@{#2}{#1}}
-\pgfmathdeclarefunction{atanYX}{2}{\pgfmathatantwo@{#1}{#2}}
+%\pgfmathdeclarefunction{atanXY}{2}{\pgfmathatantwo@{#2}{#1}}
+%\pgfmathdeclarefunction{atanYX}{2}{\pgfmathatantwo@{#1}{#2}}
 
 %% http://tex.stackexchange.com/a/132939/16595
 \tikzset{
@@ -141,38 +141,26 @@
   tos to/.style={/tikz/@tos to/.list={#1}}}
 
 
-%\pgfmathdeclarefunction{pgfveclen}{2}{%
-%  \begingroup
-%    \pgfpointdiff{#1}{#2}%
-%    \edef\pgfmath@temp{{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}}%
-%    \expandafter\pgfmathveclen@\pgfmath@temp
-%    \pgfmath@smuggleone\pgfmathresult
-%  \endgroup}
-\pgfmathdeclarefunction{pgfVeclen}{2}{% only coordinates/nodes
+\pgfmathdeclarefunction{distancebetween}{2}{% only coordinates/nodes
   \begingroup
     \pgfpointdiff{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}%
     \edef\pgfmath@temp{{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}}%
     \expandafter\pgfmathveclen@\pgfmath@temp
     \pgfmath@smuggleone\pgfmathresult
   \endgroup}
-\pgfmathdeclarefunction{tikzveclen}{2}{% for coordinates
+\pgfmathdeclarefunction{qdistancebetween}{1}{% only coordinates/nodes
   \begingroup
-    \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(#1)}
-                 {\tikz@scan@one@point\pgfutil@firstofone(#2)}%
+    \pgfpointdiff{\pgfpointorigin}{\pgfpointanchor{#1}{center}}%
     \edef\pgfmath@temp{{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}}%
     \expandafter\pgfmathveclen@\pgfmath@temp
     \pgfmath@smuggleone\pgfmathresult
   \endgroup}
-\pgfmathdeclarefunction{tikzVeclen}{2}{\pgfmathpgfVeclen@{#1}{#2}}
 
-\pgfmathdeclarefunction{pgfAtan}{1}{%
+\pgfmathdeclarefunction{qanglebetween}{1}{%
   \pgfmathanglebetweenpoints{\pgfpointorigin}{\pgfpointanchor{#1}{center}}}
-\pgfmathdeclarefunction{tikzAtan}{1}{\pgfmathpgfAtan@{#1}}
 
-\pgfmathdeclarefunction{pgfAngleBetween}{2}{%
+\pgfmathdeclarefunction{anglebetween}{2}{%
   \pgfmathanglebetweenpoints{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}}
-\pgfmathdeclarefunction{tikzAngleBetween}{2}{%
-  \pgfmathpgfAngleBetween@{#1}{#2}}
 
 \pgfmathdeclarefunction{isEmpty}{1}{%
   \begingroup
@@ -231,3 +219,22 @@
   \fi
   {\pgfkeysalso{#2}}%
   {\pgfkeysalso{#1}}}
+
+\pgfset{
+  declare constant/.code={%
+    \let\pgfmathdeclareconstant@@@\pgfutil@empty
+    \pgfkeysvalueof{/pgf/declare function/execute at begin function}%
+    \pgfmathdeclareconstant@#1@=@;\pgf@stop
+    \pgfkeysvalueof{/pgf/declare function/execute at end function}%
+    \pgfmathdeclareconstant@@@
+  }}
+\def\pgfmathdeclareconstant@{%
+  \pgfutil@ifnextchar x\pgfmathdeclareconstant@@\pgfmathdeclareconstant@@
+}
+\def\pgfmathdeclareconstant@@#1=#2;#3\pgf@stop{%
+  \edef\pgfmath@local@temp{#1}%
+  \pgfutil@ifx\pgfmath@local@temp\pgfmath@local@at{}{%
+    \pgfutil@g@addto@macro\pgfmathdeclareconstant@@@{\pgfmathdeclarepseudoconstant{#1}{\def\pgfmathresult{#2}}}%
+    \pgfmathdeclareconstant@#3\pgf@stop
+  }%
+}

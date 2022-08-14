@@ -14,26 +14,25 @@
 
 \section{PGFmath}
 
-\begin{codeexample}[preamble=\usetikzlibrary{misc}]
+\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{misc}]
 \begin{tikzpicture}[
-  declare function={smallR=1; bigR(\n)=smallR+.05*\n; segments=20;},
-  full arc=segments]% same as \degrees[segments] in PSTricks
+  declare function={bigR(\n)=smallR+.05*\n;},
+  declare constant={smallR=1; segments=20;},
+  full arc=segments]
 \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1]
   \filldraw[fill=gray!50] (\iN R:\endRadius)
-    arc [radius=\endRadius, start angle=+\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
-    arc [radius=smallR, end angle=\iN R, delta angle=-1R]        -- cycle;
+    arc [radius=\endRadius, start angle=\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
+    arc [radius=smallR,       end angle=\iN R, delta angle=-1R] -- cycle;
 
 \node                                              {$\phi^2$};
 \node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
 \node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
-\end{tikzpicture}
-\begin{tikzpicture}[
-  declare function={smallR=1; bigR(\n)=smallR+.05*\n; segments=20;},
-  full arc=segments]
+
+\tikzset{yshift=-5cm, declare constant={segments=25;}, full arc=segments}
 \filldraw[fill=gray!50] (right:smallR)
   \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1] {
     -- (\iN R:\endRadius) arc[radius=\endRadius, start angle=\iN R, delta angle=1R]}
-    -- (right:smallR)     arc[radius=smallR, start angle=0, delta angle=-360];
+    -- (right:smallR)     arc[radius=smallR,     start angle=0,     delta angle=-360];
 
 \node                                              {$\phi^2$};
 \node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
@@ -41,7 +40,22 @@
 \end{tikzpicture}
 \end{codeexample}
 
-\subsection{Postfix operator}
+\subsection{Postfix operator \texttt{R}}
+
+Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
+to use an arbitrary number of segments of a circle to be used instead of an angle.
+
+\begin{key}{/tikz/full arc=\marg{num} (default |{}|)}
+  The number \meta{num} of segments will be set up.
+  Using |full arc| with an empty value disables the segmentation and |1R| equals $1^\circ$.
+  
+  The given value \meta{num} is evaluated when the key is used and doesn't change when
+  \meta{num} contains variables that change.
+\end{key}
+The |R| operator can then be used.
+\begin{math-operator}{R}{postfix}{full arc}
+  Multiplies \mvar{x} with $\frac{360}{\meta{num}}$.
+\end{math-operator}
 
 \subsection{Functions}
 
@@ -88,7 +102,43 @@
 \end{codeexample}
 \end{math-function}
 
+
+\subsection{Functions: using coordinates}
+The following functions can only be used with PGF and/or \tikzname.
+Since the arguments are usually plain text (and not numbers) one has to wrap
+them in |"|.
+\begin{math-function}{anglebetween("\mvar{p1}", "\mvar{p2}")}\mathcommand
+  Return the angle between the centers of the nodes \mvar{p1} and \mvar{p2}.
+\end{math-function}
+\begin{math-function}{qanglebetween("\mvar{p}")}\mathcommand
+  Return the angle between the origin and the center of the node \mvar{p}.
+\end{math-function}
+\begin{math-function}{distancebetween("\mvar{p1}", "\mvar{p2}")}\mathcommand
+  Return the distance (in pt) between the centers of the nodes \mvar{p1} and \mvar{p2}.
+\end{math-function}
+\begin{math-function}{qdistancebetween("\mvar{p}")}\mathcommand
+  Return the distance (in pt) between the origin and the center of the node \mvar{p}.
+\end{math-function}
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{calc,misc,through}]
+\begin{tikzpicture}
+\path (0,0) coordinate (A) + (0:4) coordinate (B) +(75:4) coordinate (C);
+\draw (A) -- (B) -- (C) -- cycle;
+\foreach \cnt in {1,...,4}{
+  \pgfmathsetmacro\triA{distancebetween("B","C")}
+  \pgfmathsetmacro\triB{distancebetween("C","A")}
+  \pgfmathsetmacro\triC{distancebetween("A","B")}
+  \path (barycentric cs:A=\triA,B=\triB,C=\triC) coordinate (M)
+       node [draw, circle through=($(A)!(M)!(C)$)] (M) {};
+  \draw ($(C)-(A)$) coordinate (vecB)
+      (M.75-90) coordinate (@)
+      (intersection of @--[shift=(vecB)]@ and B--C) coordinate (C) -- 
+      (intersection of @--[shift=(vecB)]@ and B--A) coordinate (A);}
+\end{tikzpicture}
+\end{codeexample}
 \section{PGFkeys}
+
+\subsection{Conditionals}
+
 \begin{key}{/utils/if=\marg{cond}\marg{true}\marg{false}}
   This key checks the conditional \meta{cond} and applies the styles \meta{true}
   if \meta{cond} is true, otherwise \meta{false}.
@@ -131,8 +181,46 @@ executions.
   otherwise \meta{false}.
 \end{key}
 
+
+\subsection{Handlers}
+
+While already a lot of values given to keys are evaluated by PGFmath at some point,
+not all of them are.
+
+\begin{handler}{{.pgfmath}|=|\meta{eval}}
+  This handler evaluates \meta{eval} before it is handed to the key.
+\end{handler}
+
+\begin{handler}{{.pgfmath int}|=|\meta{eval}}
+  As above but truncates the result.
+\end{handler}
+
+\begin{handler}{{.pgfmath strcat}|=|\meta{eval}}
+  As above but uses the |strcat| function.
+  
+  In the example below, one could have used the |/pgf/foreach/evaluate| key from |\foreach|.
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{misc}]
+\tikz\foreach \i in {0,10,...,100}
+  \draw[line width=+.2cm, color/.pgfmath strcat={"red!",sqrt(\i)*10,"!blue"}]
+    (0,\i/50) -- +(right:3);
+\end{codeexample}
+\end{handler}
+
+\begin{handler}{{.List}|=|\meta{\meta{e1}, \meta{e2}, ..., \meta{en}}}
+  This handler evaluates the given list with |\foreach| and concatenates the element and
+  the result is then given to the used key.
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{fit,misc}]
+\begin{tikzpicture}[nodes={draw, dashed, inner sep=+10pt}]
+  \foreach \point [count=\cnt] in {(0,0), (0,2), (2,0), (2,2), (3,3), (-1,-1)}
+    \fill \point circle[radius=.1] coordinate (point-\cnt);
+  \node[gray, fit/.List={(point-1),(point-...),(point-4)}] {}; 
+  \node[red,  fit/.List={(point-1),(point-...),(point-5)}] {}; 
+  \node[blue, fit/.List={(point-1),(point-...),(point-6)}] {};
+\end{tikzpicture}
+\end{codeexample}
+\end{handler}
 \begin{center}
-\begin{codeexample}[preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
+\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
 \tikzset{
   mynode/.style={
     circle, minimum size=10mm, draw, densely dashdotted, thick,
@@ -144,7 +232,7 @@ executions.
   light/.style={fill=gray!20},  bluelight/.style={fill=blue!10},
   dark/.style ={fill=gray!60},  bluedark/.style ={fill=blue!30}}
 \tikz\graph[
-  spring electrical layout, horizontal=c2 to p13,
+  spring electrical layout, vertical=c2 to p13,
   node distance=1.5cm, typeset=$n_{\tikzgraphnodetext}$,
   nodes={mynode=\tikzgraphnodetext}] {
   % outer ring
@@ -167,4 +255,20 @@ executions.
 };
 \end{codeexample}
 \end{center}
+
+\section{PGFfor}
+
+Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
+|\foreach \var[use int=start to end step delta]|.
+
+\begin{key}{/pgf/foreach/use int=\meta{start}| to |\meta{end}| step |\meta{delta}}
+The values \meta{start}, \meta{end} and \meta{delta} are evaluates by PGFmath at initialization.
+The part |step |\meta{delta} is optional (\meta{delta} = 1).
+\end{key}
+
+\begin{key}{/pgf/foreach/use float=\meta{start}| to |\meta{end}| step |\meta{delta}}
+Same as above, however the results are not truncated.
+\end{key}
+
+%TODO: edges to and edges through
 \endinput
