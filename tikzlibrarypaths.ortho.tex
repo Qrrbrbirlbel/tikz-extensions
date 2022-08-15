@@ -159,7 +159,7 @@
   \ifx\pgf@temp\pgfutil@empty
     \let\tikz@moveto@waiting\relax
   \else
-    \edef\tikz@moveto@waiting{#5}%
+    \let\tikz@moveto@waiting\pgf@temp
   \fi
   \tikz@scan@next@command}%
 
@@ -178,7 +178,7 @@
       \ifqrr@tikz@hvvh@fromcenter
         \pgf@xc\pgf@xb
       \fi
-      \ifx\qrr@tikz@hvvh@ratio\pgfutil@empty
+      \pgfutil@ifxempty\qrr@tikz@hvvh@ratio{%
         \ifdim\qrr@tikz@hvvh@distance<0pt\relax
           \ifqrr@tikz@hvvh@fromcenter
             \pgf@xc\tikz@lastx
@@ -186,10 +186,10 @@
             \pgf@xc\pgf@x
           \fi
         \fi
-        \ifdim\pgf@x>\tikz@lastx
+        \ifdim\pgf@xb>\tikz@lastx
           \qrr@tikz@hvvh@distance-\qrr@tikz@hvvh@distance
         \fi
-      \else
+      }{%
         \ifqrr@tikz@hvvh@fromcenter
           \qrr@tikz@hvvh@distance\tikz@lastx
         \else
@@ -197,7 +197,7 @@
         \fi
         \advance\qrr@tikz@hvvh@distance-\pgf@xc
         \qrr@tikz@hvvh@distance\qrr@tikz@hvvh@ratio\qrr@tikz@hvvh@distance
-      \fi
+      }%
       \advance\pgf@xc\qrr@tikz@hvvh@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
@@ -207,18 +207,18 @@
       \ifqrr@tikz@hvvh@fromcenter
         \pgf@xc\pgf@xb
       \fi
-      \ifx\qrr@tikz@hvvh@ratio\pgfutil@empty
+      \pgfutil@ifxempty\qrr@tikz@hvvh@ratio{%
         \ifdim\qrr@tikz@hvvh@distance<0pt\relax
           \pgf@xc\tikz@lastx
         \fi
-        \ifdim\pgf@x>\tikz@lastx
+        \ifdim\pgf@xb>\tikz@lastx
           \qrr@tikz@hvvh@distance-\qrr@tikz@hvvh@distance
         \fi
-      \else
+      }{%
         \qrr@tikz@hvvh@distance\tikz@lastx
         \advance\qrr@tikz@hvvh@distance-\pgf@xc
         \qrr@tikz@hvvh@distance\qrr@tikz@hvvh@ratio\qrr@tikz@hvvh@distance
-      \fi
+      }%
       \advance\pgf@xc\qrr@tikz@hvvh@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
@@ -256,7 +256,7 @@
             \pgf@yc\pgf@y
           \fi
         \fi
-        \ifdim\pgf@y>\tikz@lasty
+        \ifdim\pgf@yb>\tikz@lasty
           \qrr@tikz@hvvh@distance-\qrr@tikz@hvvh@distance
         \fi
       \else
@@ -281,7 +281,7 @@
         \ifdim\qrr@tikz@hvvh@distance<0pt\relax
           \pgf@yc\tikz@lasty
         \fi
-        \ifdim\pgf@y>\tikz@lasty
+        \ifdim\pgf@yb>\tikz@lasty
           \qrr@tikz@hvvh@distance-\qrr@tikz@hvvh@distance
         \fi
       \else

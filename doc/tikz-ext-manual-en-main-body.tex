@@ -7,7 +7,7 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\newcommand*\tikzextname{Ti\emph{k}Z-Extensions}
+\newcommand*\tikzextname{Ti\textit kZ-Extensions}
 \newcommand*\tikzextversion{0.1}
 \begin{document}
 
@@ -21,44 +21,11 @@
 
 \tableofcontents
 
-\clearpage
-\part{Introduction}
-\begin{multicols}{2}
-\section{Usage}
-This package is called |tikz-ext|, however, one can't load it via |\usepackage|.
-Instead, this package consists of multiple PGF and \tikzname\space libraries
-which are loaded by either |\usepgflibrary| or |\usetikzlibrary|.
 
-\section{Why do we need it?}
-Since I have been answering questions on \hyperlink{https://tex.stackexchange.com}{TeX.sx}
-I've noticed that some questions come up again and again,
-every time with a slightly different approach on how to solve them.
-
-I don't like reinventing the wheel which is why I've gathered the code of my answers in this package.
-
-And, yes, I am using them myself, too.
-
-\section{Should these libraries be part of \tikzname?}
-I guess.
-\end{multicols}
-
-\clearpage
-\part{\tikzname\space Libraries}
-
-\input{tikz-ext-manual-en-library-paths.ortho}
-\input{tikz-ext-manual-en-library-paths.timer}
-\input{tikz-ext-manual-en-library-trans}
-\input{tikz-ext-manual-en-library-patterns.images}
-
-\clearpage
-\part{PGF Libraries}
-
-\input{tikz-ext-manual-en-pgf-trans}
-
-\clearpage
-\part{Miscellaneous}
-
-\input{tikz-ext-manual-en-library-misc}
+\include{tikz-ext-manual-en-intro}
+\include{tikz-ext-manual-en-library}
+\include{tikz-ext-manual-en-pgf}
+\include{tikz-ext-manual-en-library-misc}
 
 %%% END
 \printindex

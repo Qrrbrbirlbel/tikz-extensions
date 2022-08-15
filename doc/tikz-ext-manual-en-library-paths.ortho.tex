@@ -8,7 +8,7 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\section{Extending the Path Timers}
+\section{More Horizontal and Vertical Lines}
 \label{library:paths.ortho}
 
 \begin{tikzlibrary}{paths.ortho}
@@ -33,12 +33,106 @@ the path operations \verb!|-|! and \verb!-|-!.
     This operation means ``first horizontal, then vertical and then horizontal again''.
 \end{pathoperation}
 }
+\begin{key}{/tikz/hvvh/ratio=\meta{ratio} (initially 0.5)}
+  This sets the ratio for the middle part of the Zig-Zag connection.
+  
+  For values $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
+  look more like Zig-Zig lines.
+  \begin{codeexample}[preamble=\usetikzlibrary{paths.ortho}]
+\begin{tikzpicture}[very thick]
+\draw[help lines] (-.25, -1.25) grid (2.25, 1.25);
+\draw (0, 0) -|-            (2, 1) --
+      (2, 0) -|-[ratio=.25] (0,-1) -- cycle;
+\end{tikzpicture}
+  \end{codeexample}
+\end{key}
+%TODO: hvvh/distance needs fixing.
+\begin{key}{/tikz/hvvh/distance=\meta{distance}}
+  This sets the distance between the start point
+  and the middle part of the Zig-Zag connection.
+  
+  For values $\meta{distance} < 0$ the distance will be used for the target coordinate.
+\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{paths.ortho}]
+\begin{tikzpicture}[very thick,-latex]
+\draw[help lines,-] (-.25, -.25) grid (5.25, 3.25);
+\draw (0, 0)   -|-[distance= .5cm] ++(2, 1);
+\draw (0, 1.5) -|-[distance=-.5cm] ++(2, 1);
+
+\tikzset{xshift=3cm}
+\draw (2, 1)   -|-[distance= .5cm] ++(-2, -1);
+\draw (2, 2.5) -|-[distance=-.5cm] ++(-2, -1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+\begin{key}{/tikz/hvvh/from center=\opt{\meta{true or false}} (initially false, default true)}
+  When nodes get connected the placement of the middle part of the Zig-Zag
+  and the Zig-Zig (see below) connections will be calculated from the border
+  of these nodes.
+  The middle part of the connections can be calculated from the nodes' center
+  if this key is set to |true|.
+\end{key}
+
+New timers are setup for both the Zig-Zag and the Zig-Zig connections,
+these can be configured through the following keys.
+\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{paths.ortho}]
+\tikz \draw (0,0) -|- (2,3) 
+  foreach \p in {0.0, 0.25, 0.5, 0.75, 1.0}{
+    node [pos=\p] {\p}};
+\end{codeexample}
+\begin{key}{/tikz/hvvh/spacing=\meta{number} (initially 4)}
+  Unless $\meta{number} = 0$ is set
+  \begin{itemize}
+  \item |pos = 0| will be at the start,
+  \item |pos = 1| will be at the end,
+  \item |pos = |$\frac{1}{\meta{number}}$ will be at the first kink,
+  \item |pos = |$\frac{\meta{number}-1}{\meta{number}}$ will be at the second kink and
+  \item |pos = .5| will be in the middle of the middle part of the connection.
+  \end{itemize}
+  
+  If $\meta{number} = 0$ then
+  \begin{itemize}
+  \item |pos = -1| will be at the start,
+  \item |pos = 2| will be at the end,
+  \item |pos = 0| will be at the first kink,
+  \item |pos = 1| will be at the second kink and
+  \item |pos = .5| will still be in the middle of the middle part of the connection.
+  \end{itemize}
+\end{key}
+\begin{key}{/tikz/hvvh/middle 0 to 1}
+  This is an alias for |spacing = 0|.
+\end{key}
+
 \subsection{Zig-Zig}
 \begin{pathoperation}{r-ud}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+  This operation means ``first up, then horizontal and then down''.
+  \begin{key}{/tikz/udlr/ud distance=\meta{length} (initially .5cm)}
+    This sets the distance between the start and the horizontal line to \meta{length}.
+  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-du}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+  This operation means ``first down, then horizontal and then up''.
+  \begin{key}{/tikz/udlr/du distance=\meta{length} (initially .5cm)}
+    This sets the distance between the start and the horizontal line to \meta{length}.
+  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-lr}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+  This operation means ``left down, then vertical and then right''.
+  \begin{key}{/tikz/udlr/lr distance=\meta{length} (initially .5cm)}
+    This sets the distance between the start and the vertical line to \meta{length}.
+  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-rl}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+  This operation means ``first right, then vertical and then down''.
+  \begin{key}{/tikz/udlr/rl distance=\meta{length} (initially .5cm)}
+    This sets the distance between the start and the vertical line to \meta{length}.
+  \end{key}
 \end{pathoperation}
+
+All distances can be set with on key.
+\begin{key}{/tikz/udlr/distance=\meta{length}}
+  Sets all distances in the |/tikz/udlr| namespace.
+\end{key}
+
+\begin{key}{/tikz/udlr/from center=\opt{\meta{true or false}} (initially false, default true)}
+  This is an alias for |/tikz/hvvh/from center|.
+\end{key}

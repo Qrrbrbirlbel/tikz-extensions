@@ -59,7 +59,6 @@
     \qrr@pgf@foreach@no@list@parse@step{#1}#3step1\pgffor@stop
   \fi
   \edef\qrr@pgf@foreach@no@list@list{\foreachStart,\foreachSecond,...,\foreachEnd}%
-  \texttt{\meaning\qrr@pgf@foreach@no@list@list}%
 }
 \def\qrr@pgf@foreach@no@list@parse@step#1#2step#3\pgffor@stop{%
   #1\foreachEnd{#2}%
