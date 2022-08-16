@@ -9,11 +9,21 @@
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
 \newcommand*\tikzextversion{0.1}
+
+%\includeonly{
+%   tikz-ext-manual-en-library-paths.ortho,
+%   tikz-ext-manual-en-library-paths.timer,
+%   tikz-ext-manual-en-library-patterns.images,
+%   tikz-ext-manual-en-library-topaths.arcthrough,
+%   tikz-ext-manual-en-library-trans,
+%   tikz-ext-manual-en-pgf-trans,
+%   tikz-ext-manual-en-library-misc,
+%}
 \begin{document}
 
 \title{\bfseries The \tikzextname\space Package\\
   \large Manual for version \tikzextversion\\[1mm]
-%\large\href{https://github.com/pgf-tikz/pgf}{\texttt{https://github.com/pgf-tikz/pgf}}}
+\large\href{https://github.com/Qrrbrbirlbel/tikz-extensions}{\texttt{https://github.com/Qrrbrbirlbel/tikz-extensions}}
 \author{Qrrbrbirlbel}}
 
 \maketitle
@@ -23,8 +33,88 @@
 
 
 \include{tikz-ext-manual-en-intro}
-\include{tikz-ext-manual-en-library}
-\include{tikz-ext-manual-en-pgf}
+
+\part{\tikzname\space Libraries}
+\label{part:tikz}
+
+These libraries only work with \tikzname.
+\vspace{1em}
+\begin{center}
+\begin{tikzpicture}[
+  scale=2.7,
+  grow cyclic,
+  level distance=1cm,
+  level/.style={
+    level distance/.expanded=\ifnum#1>1 \tikzleveldistance/1.5\else\tikzleveldistance\fi,
+    nodes/.expanded={\ifodd#1 fill\else fill=none\fi}
+  },
+  level 1/.style={sibling angle=120},
+  level 2/.style={sibling angle=90},
+  level 3/.style={sibling angle=90},
+  level 4/.style={sibling angle=45},
+  nodes={circle,draw,inner sep=+0pt, minimum size=2pt},
+  ]
+\path[rotate=30]
+  node {}
+  child foreach \cntI in {1,...,3} {
+    node {}
+    child foreach \cntII in {1,...,2} { 
+      node {}
+      child foreach \cntIII in {1,...,2} {
+        node {}
+        child foreach \cntIV in {1,...,2} {
+          node {}
+          child foreach \cntV in {1,...,2} {}
+        }
+      }
+    }
+  };
+\end{tikzpicture}
+\end{center}
+
+\include{tikz-ext-manual-en-library-paths.ortho}
+\include{tikz-ext-manual-en-library-paths.timer}
+\include{tikz-ext-manual-en-library-patterns.images}
+\include{tikz-ext-manual-en-library-topaths.arcthrough}
+\include{tikz-ext-manual-en-library-trans}
+
+\part{PGF Libraries}
+\label{part:pgf}
+These libraries (should) work with both PGF and \tikzname.
+
+\include{tikz-ext-manual-en-pgf-trans}
+
+\part{Miscellaneous}
+
+\label{part:misc}
+\vfill
+\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{misc}]
+\begin{tikzpicture}[
+  declare function={bigR(\n)=smallR+.05*\n;},
+  declare constant={smallR=1; segments=20;},
+  full arc=segments]
+\foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1]
+  \filldraw[fill=gray!50] (\iN R:\endRadius)
+    arc [radius=\endRadius, start angle=\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
+    arc [radius=smallR,       end angle=\iN R, delta angle=-1R] -- cycle;
+
+\node                                              {$\phi^2$};
+\node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
+\node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
+
+\tikzset{yshift=-5cm, declare constant={segments=25;}, full arc=segments}
+\filldraw[fill=gray!50] (right:smallR)
+  \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1] {
+    -- (\iN R:\endRadius) arc[radius=\endRadius, start angle=\iN R, delta angle=1R]}
+    -- (right:smallR)     arc[radius=smallR,     start angle=0,     delta angle=-360];
+
+\node                                              {$\phi^2$};
+\node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
+\node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
+\end{tikzpicture}
+\end{codeexample}
+\vfill
+
 \include{tikz-ext-manual-en-library-misc}
 
 %%% END
