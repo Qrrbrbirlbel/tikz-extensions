@@ -1,0 +1,96 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\tikzset{
+  arc to/.code=\pgfqkeys{/tikz/arc to}{#1},
+  arc to={
+    counter clockwise/.code=\pgfkeyssetvalue{/tikz/arc to/ccw flag}{1},
+    clockwise/.code=\pgfkeyssetvalue{/tikz/arc to/ccw flag}{0},
+    x radius/.code=\pgfkeyssetvalue{/tikz/x radius}{#1},
+    y radius/.code=\pgfkeyssetvalue{/tikz/y radius}{#1},
+    radius/.code=\pgfkeyssetvalue{/tikz/x radius}{#1}\pgfkeyssetvalue{/tikz/y radius}{#1},
+    large/.code=\pgfkeyssetvalue{/tikz/arc to/large flag}{1},
+    small/.code=\pgfkeyssetvalue{/tikz/arc to/large flag}{0},
+    % defaults
+    rotate/.initial=0, counter clockwise, small,
+    counter clockwise/.value forbidden,
+    clockwise/.value forbidden,
+    large/.value forbidden,
+    small/.value forbidden}}
+\def\tikz@arcA rc{\pgfutil@ifnextchar t%
+  {\tikz@flush@moveto\expandafter\expandafter\expandafter\tikz@arcB@cont\expandafter\pgfutil@gobble\pgfutil@gobble}
+  {\tikz@flush@moveto\tikz@arc@cont}}
+\def\tikz@arcB@cont{%
+  \pgfutil@ifnextchar[\tikz@@do@arcB{
+    \advance\tikz@expandcount by -10\relax% go down quickly
+    \ifnum\tikz@expandcount<0\relax%
+      \def\@next{\tikz@@do@arcB[]}%
+    \else%
+      \def\@next{\expandafter\tikz@arcB@cont}%
+    \fi%
+    \@next}}%
+\def\tikz@@do@arcB[#1]{%
+  \def\tikz@arcB@options{#1}%
+  \tikz@do@@arcB}
+\def\tikz@do@@arcB{%
+  \pgfutil@ifnextchar n{\tikz@collect@label@onpath\tikz@do@@arcB}
+    {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikz@do@@arcB}
+      {\pgfutil@ifnextchar p{\tikz@collect@pic@onpath\tikz@do@@arcB}
+        {\tikz@scan@one@point\tikz@do@arcB}}}}
+
+\def\tikz@do@arcB#1{%
+  \edef\tikz@timer@start{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}
+  \tikz@make@last@position{#1}%
+  \edef\tikz@timer@end{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
+  \iftikz@shapeborder
+    \edef\tikz@moveto@waiting{\tikz@shapeborder@name}%
+  \fi
+  \begingroup
+    \tikzset{every arc/.try,every arc to/.try,arc to/.expand once=\tikz@arcB@options}%
+    \pgfmathsetmacro\tikz@arc@x{\pgfkeysvalueof{/tikz/x radius}}%
+    \ifpgfmathunitsdeclared
+      \pgfmathsetmacro\tikz@arc@y{\pgfkeysvalueof{/tikz/y radius}}%
+      \ifpgfmathunitsdeclared
+        \pgfpatharcto{\tikz@arc@x pt}{\tikz@arc@y pt}
+                     {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
+                     {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
+      \else
+        \tikzerror{You cannot mix dimensions and dimension values in an arc}%
+      \fi
+    \else
+      \pgfmathsetmacro\tikz@arc@y{\pgfkeysvalueof{/tikz/y radius}}%
+      \ifpgfmathunitsdeclared
+        \tikzerror{You cannot mix dimensions and dimension values in an arc}%
+      \else
+        \pgf@process{\pgfpointxy{\tikz@arc@x}{0}}%
+        \pgfmathveclen@{\pgf@x}{\pgf@y}%
+        \edef\tikz@arc@x{\pgfmathresult pt}%
+        \pgf@process{\pgfpointxy{0}{\tikz@arc@y}}%
+        \pgfmathveclen@{\pgf@x}{\pgf@y}%
+        \edef\tikz@arc@y{\pgfmathresult pt}%
+        \pgfpatharcto{\tikz@arc@x}{\tikz@arc@y}
+                     {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
+                     {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
+      \fi
+    \fi
+  \endgroup
+  % getting rid of \pgfpatharcaxes inside \pgf@marshal
+  \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter\pgf@marshal
+  \expandafter\expandafter\expandafter{\expandafter\pgfutil@gobble\pgf@marshal}%
+  % extracting the other four values needed for the timer
+  \edef\tikz@timer@start@angle{\expandafter\pgfutil@firstoffour\pgf@marshal}%
+  \edef\tikz@timer@end@angle{\expandafter\pgfutil@secondoffour\pgf@marshal}%
+  \pgfextract@process\tikz@timer@zero@axis{\expandafter\pgfutil@thirdoffour\pgf@marshal}%
+  \pgfextract@process\tikz@timer@ninety@axis{\expandafter\pgfutil@fourthoffour\pgf@marshal}%
+  %
+  \let\tikz@timer=\tikz@timer@arc
+  \tikz@scan@next@command
+}
+\def\pgfutil@firstoffour#1#2#3#4{#1}
+\def\pgfutil@secondoffour#1#2#3#4{#2}
+\def\pgfutil@thirdoffour#1#2#3#4{#3}
+\def\pgfutil@fourthoffour#1#2#3#4{#4}

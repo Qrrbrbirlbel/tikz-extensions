@@ -7,7 +7,27 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-
+\makeatletter
+\newenvironment{pathoperation'}[3][]{
+  \begin{pgfmanualentry}
+    \def\pgfmanualtest{#1}%
+    \pgfmanualentryheadline{%
+      \ifx\pgfmanualtest\@empty%
+        \pgfmanualpdflabel{#2}{}%
+      \fi%
+      %\textcolor{gray}{{\ttfamily\char`\\path}\ \ \dots}
+      %\declare{\texttt{\noligs{#2}}}#3\ \textcolor{gray}{\dots\texttt{;}}
+    }%
+    \ifx\pgfmanualtest\@empty%
+      \index{#2@\protect\texttt{#2} path operation}%
+      \index{Path operations!#2@\protect\texttt{#2}}%
+    \fi%
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
+\makeatother
 \section{Extending the Path Timers}
 \label{library:timer}
 
@@ -23,8 +43,9 @@ the other paths, nodes, coordinates, pics, etc. are placed on the last coordinat
 This library allows this.
 
 \subsection{Rectangle}
-\index{Path operations!\protect\texttt{rectangle}}%
-\index{\texttt{rectangle} path operation}%
+%\index{Path operations!\protect\texttt{rectangle}}%
+%\index{\texttt{rectangle} path operation}%
+\begin{pathoperation'}{rectangle}{}\end{pathoperation'}
 
 For the |rectangle| path operator, the timer starts with |pos = 0| (= |at start|) from
 the starting coordinate in a counter-clockwise direction along the rectangle.

@@ -67,7 +67,7 @@ The |R| operator can then be used.
 \begin{math-function}{isEmpty("\mvar{Text}")}
 \mathcommand
   Returns |1| (true) if \mvar{Text} is empty, otherwise |0| (false).
-
+  %
 \begin{codeexample}[]
 \pgfmathparse{isEmpty("foo")} \pgfmathresult\ and\ 
 \pgfmathparse{isEmpty("")}    \pgfmathresult\ and\ 
@@ -76,6 +76,23 @@ The |R| operator can then be used.
 \end{codeexample}
 \end{math-function}
 
+\begin{math-function}{atanXY(\mvar{x},\mvar{y})}
+\mathcommand
+  Arctangent of $\mvar y\div \mvar x$ in degrees. This also takes into account the quadrant.
+  This is just a argument-swapped version of |atan2| which makes it easier to use
+  the |\p| commands of the |calc| library.
+  %
+\begin{codeexample}[]
+\pgfmathparse{atanXY(3,4)} \pgfmathresult
+\end{codeexample}
+\end{math-function}
+\begin{math-function}{atanYX(\mvar{y},\mvar{x})}
+\mathcommand
+   Arctangent of $y\div x$ in degrees. This also takes into account the quadrant.
+\begin{codeexample}[]
+\pgfmathparse{atanYX(4,3)} \pgfmathresult
+\end{codeexample}
+\end{math-function}
 
 \subsection{Functions: using coordinates}
 The following functions can only be used with PGF and/or \tikzname.

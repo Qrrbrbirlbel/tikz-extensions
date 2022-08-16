@@ -1,0 +1,103 @@
+% !TeX root = tikz-ext-manual.tex
+% !TeX spellcheck = en_US
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Arc \emph{to} a point}
+\label{library:paths.arcto}
+
+\begin{tikzlibrary}{paths.arcto}
+  This library adds new path specifications |arcto| that specifies an arc \emph{to} a point~--
+  without the user having to specify any angles.
+\end{tikzlibrary}
+
+\begin{codeexample}[width=.5\linewidth,preamble=\usetikzlibrary{paths.arcto}]
+\begin{tikzpicture}[ultra thick,dot/.style={label={#1}}]
+\coordinate[dot=below left:$a$] (a) at (0,0);
+\coordinate[dot=above right:$b$] (b) at (2,3);
+\begin{scope}[
+  radius=3,
+  nodes={
+    shape=circle,
+    fill=white,
+    fill opacity=.9,
+    text opacity=1,
+    inner sep=+0pt,
+    sloped,
+    allow upside down
+  }]
+\draw[blue]    (a) arc to[] 
+  node[near start] {.25} node {.5} node[near end] {.75} (b);
+\draw[red]     (a) arc to[clockwise]
+  node[near start] {.25} node {.5} node[near end] {.75} (b);
+\draw[blue!50] (a) arc to[large]
+  node[near start] {.25} node {.5} node[near end] {.75} (b);
+\draw[red!50]  (a) arc to[large, clockwise]
+  node[near start] {.25} node {.5} node[near end] {.75} (b);
+\end{scope}
+
+\fill[radius=2pt] (a) circle[] (b) circle[];
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{pathoperation}{arc to}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+When this operation is used, the path gets extended by an arc that goes through
+the current point and \meta{coordinate}.
+
+For two points there exist two circles or four arcs that go through or connect
+these two points. Which one of these is constructed is determined by the following
+options that can be used inside of \meta{options}.
+
+\begin{stylekey}{/tikz/arc to/clockwise}
+  This constructs an arc that goes clockwise.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/arc to/counter clockwise}
+  This constructs an arc that goes counter clockwise.
+  
+  This is the default.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/arc to/large}
+  This constructs an arc whose angle is larger than $180^\circ$.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/arc to/small}
+  This constructs an arc whose angle is smaller than $180^\circ$.
+\end{stylekey}
+
+\begin{key}{/tikz/arc to/rotate=\meta{degree}}
+  Rotates the arc by \meta{degree}.
+  This only takes effect when |x radius| and |y radius| is different.
+\end{key}
+
+\begin{key}{/tikz/arc to/x radius=\meta{value}}
+  This forwards the \meta{value} to |/tikz/x radius|.
+\end{key}
+
+\begin{key}{/tikz/arc to/y radius=\meta{value}}
+  This forwards the \meta{value} to |/tikz/y radius|.
+\end{key}
+
+\begin{key}{/tikz/arc to/radius=\meta{value}}
+  This forwards the \meta{value} to both |/tikz/x radius| and |/tikz/y radius|.
+\end{key}
+
+\begin{stylekey}{/tikz/every arc to}
+  After |/tikz/every arc| this will also be applied before any \meta{options} are set.
+\end{stylekey}
+
+It should be noted that this uses |\pgfpatharcto| where the \tikzname\space manual warns of:
+\begin{quote}\itshape
+    The internal computations necessary for this command are numerically very unstable.
+    In particular, the arc will not always really end at the \meta{target coordinate},
+    but may be off by up to several points.
+    A more precise positioning is currently infeasible due to \TeX's numerical weaknesses.
+    The only case it works quite nicely is when the resulting angle is a multiple of $90^\circ$. 
+\end{quote}
+\end{pathoperation}

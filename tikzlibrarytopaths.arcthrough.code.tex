@@ -18,6 +18,7 @@
   clockwise/.value forbidden, counter clockwise/.value forbidden, counter clockwise}
 \tikzset{
   arc through/.code={%
+    \tikzset{every arc through/.try}%
     \pgfqkeys{/tikz/arc through}{#1}%
     \pgfkeysgetvalue{/tikz/arc through/through}\tikz@temp
     \pgfextract@process\pgf@tostart{\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax}%

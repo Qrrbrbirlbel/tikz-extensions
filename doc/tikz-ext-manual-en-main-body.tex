@@ -41,6 +41,7 @@ These libraries only work with \tikzname.
 \vspace{1em}
 \begin{center}
 \begin{tikzpicture}[
+  very thick,
   scale=2.7,
   grow cyclic,
   level distance=1cm,
@@ -52,7 +53,7 @@ These libraries only work with \tikzname.
   level 2/.style={sibling angle=90},
   level 3/.style={sibling angle=90},
   level 4/.style={sibling angle=45},
-  nodes={circle,draw,inner sep=+0pt, minimum size=2pt},
+  nodes={circle,draw,inner sep=+0pt, minimum size=+5pt},
   ]
 \path[rotate=30]
   node {}
@@ -72,6 +73,7 @@ These libraries only work with \tikzname.
 \end{tikzpicture}
 \end{center}
 
+\include{tikz-ext-manual-en-library-paths.arcto}
 \include{tikz-ext-manual-en-library-paths.ortho}
 \include{tikz-ext-manual-en-library-paths.timer}
 \include{tikz-ext-manual-en-library-patterns.images}
