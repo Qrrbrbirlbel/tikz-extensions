@@ -8,13 +8,14 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\section{And a little bit more}
 \begin{tikzlibrary}{misc}
   This library adds miscelleaneos utilities to PGFmath, PGF or \tikzname.
 \end{tikzlibrary}
 
-\section{PGFmath}
+\subsection{PGFmath}
 
-\subsection{Postfix operator \texttt{R}}
+\subsubsection{Postfix operator \texttt{R}}
 
 Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
 to use an arbitrary number of segments of a circle to be used instead of an angle.
@@ -31,7 +32,7 @@ The |R| operator can then be used.
   Multiplies \mvar{x} with $\frac{360}{\meta{num}}$.
 \end{math-operator}
 
-\subsection{Functions}
+\subsubsection{Functions}
 
 \begin{math-function}{strrepeat("\mvar{Text}", \mvar{x})}
 \mathcommand
@@ -96,7 +97,7 @@ The |R| operator can then be used.
 \end{codeexample}
 \end{math-function}
 
-\subsection{Functions: using coordinates}
+\subsubsection{Functions: using coordinates}
 The following functions can only be used with PGF and/or \tikzname.
 Since the arguments are usually plain text (and not numbers) one has to wrap
 them in |"|.
@@ -128,9 +129,9 @@ them in |"|.
       (intersection of @--[shift=(vecB)]@ and B--A) coordinate (A);}
 \end{tikzpicture}
 \end{codeexample}
-\section{PGFkeys}
+\subsection{PGFkeys}
 
-\subsection{Conditionals}
+\subsubsection{Conditionals}
 
 \begin{key}{/utils/if=\meta{cond}\meta{true}\opt{\meta{false}}}
   This key checks the conditional \meta{cond} and applies the styles \meta{true}
@@ -175,7 +176,7 @@ executions.
 \end{key}
 
 
-\subsection{Handlers}
+\subsubsection{Handlers}
 
 While already a lot of values given to keys are evaluated by PGFmath at some point,
 not all of them are.
@@ -249,7 +250,7 @@ not all of them are.
 \end{codeexample}
 \end{center}
 
-\section{PGFfor}
+\subsection{PGFfor}
 
 Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
 |\foreach \var[use int=start to end step delta]|.
@@ -259,7 +260,7 @@ The values \meta{start}, \meta{end} and \meta{delta} are evaluates by PGFmath at
 The part |step |\meta{delta} is optional (\meta{delta} = 1).
 \end{key}
 
-\begin{key}{/pgf/foreach/use float=\meta{start}| o|\meta{end}opt{|step|\meta{delta}}}
+\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
 Same as above, however the results are not truncated.
 \end{key}
 

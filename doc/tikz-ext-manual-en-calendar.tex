@@ -1,0 +1,72 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Calendar: Weeknumbers and more conditionals}
+\begin{package}{calendar-ext}
+  This package adds week numbers and more conditionals to the PGF package |pgfcalendar|.
+\end{package}
+
+This package extends the |pgfcalendar| package.
+
+\subsection{Extensions}
+
+The following tests are added.
+\begin{itemize}
+\itemcalendaroption{Jan} This test is passed by all dates that are in the month of January.
+\itemcalendaroption{Feb} as above.
+\itemcalendaroption{Mar} as above.
+\itemcalendaroption{Apr} as above.
+\itemcalendaroption{May} as above.
+\itemcalendaroption{Jun} as above.
+\itemcalendaroption{Jul} as above.
+\itemcalendaroption{Aug} as above.
+\itemcalendaroption{Sep} as above.
+\itemcalendaroption{Oct} as above.
+\itemcalendaroption{Nov} as above.
+\itemcalendaroption{Dec} as above.
+\itemcalendaroption{leap year}\opt{|=|\meta{year}}
+    This test checks whether the given year is a leap year. If
+    \meta{year} is omitted, it checks the year of the current \meta{date}.
+\itemcalendaroption{and}|=|\marg{tests}
+    This test passes when all \meta{tests} pass.
+\itemcalendaroption{not}|=|\marg{tests}
+    This test passes when \meta{tests} do not pass.
+\itemcalendaroption{yesterday}|=|\marg{tests}
+    This test passes when the previous day passes \marg{tests}.
+\itemcalendaroption{week}|=|\marg{num}
+    This test passes when the current week of the year equals \marg{num}.
+\end{itemize}
+
+The shorthands for |d-| and |m-| are slightly changed so that they are
+expandable. This makes it possible to use these shorthands inside of PGFmath.
+The shorthands for the week (see section~\ref{calendar:weeknumbering})
+are added. These are |n-| (shortest numerical representation), |n=|
+(shortest but added horizontal space) and |n0| (leading zero when below 10).
+
+\subsection{Week numbering (ISO~8601)}
+\label{calendar:weeknumbering}
+\begin{command}{\pgfcalendarjulianyeartoweek\marg{Julian day}\marg{year}\marg{week counter}}
+  This command calculates the week for the Julian date of \mark{year}.
+  The \marg{week counter} must be a \TeX\ counter.
+
+  The calculation follows the rule of ISO~8601 where the first week has that
+  year's first Thursday in it.
+\end{command}
+
+Inside of |\pgfcalendar| the command |\pgfcalendarcurrentweek| will be available.
+\begin{command}{\pgfcalendarcurrentweek}
+  This command stores the current week number (always two digits -- use shorthand |n.|
+  to strip the leading zero).
+\end{command}
+
+Inside of |\ifdate| the command |\pgfcalendarifdateweek| will be available.
+\begin{command}{\pgfcalendarifdateweek}
+  This command stores the week number (always two digits).
+\end{command}

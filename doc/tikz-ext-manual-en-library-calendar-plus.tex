@@ -1,0 +1,63 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Calendar}
+\begin{tikzlibrary}{calendar-plus}
+  This library extends the \tikzname\space library |calendar|.
+\end{tikzlibrary}
+
+\subsection{Extensions}
+
+The values of following keys were stored in some macros that are not
+accessible by the user. These are now simple value-keys.
+The |@|-protected macros are still available, of course.
+
+\begin{key}{/tikz/day xshift (initially 3ex)}
+\end{key}
+\begin{key}{/tikz/day yshift (initially 3.5ex)}
+\end{key}
+\begin{key}{/tikz/month xshift (initially 9ex)}
+\end{key}
+\begin{key}{/tikz/month yshift (initially 9ex)}
+\end{key}
+
+It is now also possible to nest |/tikz/if| occurrences.
+\begin{key}{/tikz/if=|(|\meta{conditions}|)|\meta{code or options}\opt{|else|\meta{else code or options}}}
+\end{key}
+
+\subsection{Week numbering (ISO~8601)}
+
+\begin{key}{/tikz/week code=\meta{code}}
+  Works like |/tikz/day code| or |/tikz/month code|, only for weeks.
+\end{key}
+
+\begin{key}{/tikz/week text=\meta{text}}
+  Works like |/tikz/day text| or |/tikz/month text|, only for weeks.
+\end{key}
+
+\begin{stylekey}{/tikz/every week}
+  Works like |/tikz/every day| or |/tikz/every month|, only for weeks.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/week label left}
+    Places the week label to the left of the first day of the month. (For
+    |week list| and |month list| where a week does not start on a Monday, the
+    position is chosen ``as if'' the week had started on a Monday --  which is
+    usually exactly what you want.)
+    %
+\begin{codeexample}[preamble={\usetikzlibrary{calendar-plus}}]
+\tikz
+  \calendar [week list, month label above centered,
+             dates=2022-07-01 to 2022-07-31,
+             week label left,
+             every week/.append style={gray!50!black,font=\sffamily}];
+\end{codeexample}
+    %
+\end{stylekey}
