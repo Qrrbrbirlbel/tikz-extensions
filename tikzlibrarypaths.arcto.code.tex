@@ -67,30 +67,38 @@
         \tikzerror{You cannot mix dimensions and dimension values in an arc}%
       \else
         \pgf@process{\pgfpointxy{\tikz@arc@x}{0}}%
-        \pgfmathveclen@{\pgf@x}{\pgf@y}%
-        \edef\tikz@arc@x{\pgfmathresult pt}%
+        \pgfmathveclen@{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}%
+        \let\tikz@arc@x\pgfmathresult
         \pgf@process{\pgfpointxy{0}{\tikz@arc@y}}%
-        \pgfmathveclen@{\pgf@x}{\pgf@y}%
-        \edef\tikz@arc@y{\pgfmathresult pt}%
-        \pgfpatharcto{\tikz@arc@x}{\tikz@arc@y}
+        \pgfmathveclen@{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}%
+        \let\tikz@arc@y\pgfmathresult
+        \pgfpatharcto{+\tikz@arc@x pt}{+\tikz@arc@y pt}
                      {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
                      {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
       \fi
     \fi
   \endgroup
-  % getting rid of \pgfpatharcaxes inside \pgf@marshal
-  \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter\pgf@marshal
-  \expandafter\expandafter\expandafter{\expandafter\pgfutil@gobble\pgf@marshal}%
-  % extracting the other four values needed for the timer
-  \edef\tikz@timer@start@angle{\expandafter\pgfutil@firstoffour\pgf@marshal}%
-  \edef\tikz@timer@end@angle{\expandafter\pgfutil@secondoffour\pgf@marshal}%
-  \pgfextract@process\tikz@timer@zero@axis{\expandafter\pgfutil@thirdoffour\pgf@marshal}%
-  \pgfextract@process\tikz@timer@ninety@axis{\expandafter\pgfutil@fourthoffour\pgf@marshal}%
-  %
-  \let\tikz@timer=\tikz@timer@arc
+  % check whether \pgf@marshall starts with \pgfpathlineto
+  \pgfutil@ifxempty\pgf@marshal{}{%
+    \edef\tikz@temp{\expandafter\expandafter\expandafter\noexpand\expandafter\pgfutil@firstgobblerest\pgf@marshal\relax}%
+    \expandafter\let\expandafter\tikz@temp\tikz@temp
+    \pgfutil@ifx\tikz@temp\pgfpathlineto{}{%
+      % getting rid of \pgfpatharcaxes inside \pgf@marshal
+      \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter\pgf@marshal
+      \expandafter\expandafter\expandafter{\expandafter\pgfutil@gobble\pgf@marshal}%
+      % extracting the other four values needed for the timer
+      \edef\tikz@timer@start@angle{\expandafter\pgfutil@firstoffour\pgf@marshal}%
+      \edef\tikz@timer@end@angle{\expandafter\pgfutil@secondoffour\pgf@marshal}%
+      \pgfextract@process\tikz@timer@zero@axis{\expandafter\pgfutil@thirdoffour\pgf@marshal}%
+      \pgfextract@process\tikz@timer@ninety@axis{\expandafter\pgfutil@fourthoffour\pgf@marshal}%
+      %
+      \let\tikz@timer=\tikz@timer@arc
+    }%
+  }%
   \tikz@scan@next@command
 }
 \def\pgfutil@firstoffour#1#2#3#4{#1}
 \def\pgfutil@secondoffour#1#2#3#4{#2}
 \def\pgfutil@thirdoffour#1#2#3#4{#3}
 \def\pgfutil@fourthoffour#1#2#3#4{#4}
+\def\pgfutil@firstgobblerest#1#2\relax{#1}

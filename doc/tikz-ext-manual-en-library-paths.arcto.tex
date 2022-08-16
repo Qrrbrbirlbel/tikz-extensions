@@ -12,7 +12,7 @@
 \label{library:paths.arcto}
 
 \begin{tikzlibrary}{paths.arcto}
-  This library adds new path specifications |arcto| that specifies an arc \emph{to} a point~--
+  This library adds new path specifications |arc to| that specifies an arc \emph{to} a point~--
   without the user having to specify any angles.
 \end{tikzlibrary}
 
@@ -100,4 +100,8 @@ It should be noted that this uses |\pgfpatharcto| where the \tikzname\space manu
     A more precise positioning is currently infeasible due to \TeX's numerical weaknesses.
     The only case it works quite nicely is when the resulting angle is a multiple of $90^\circ$. 
 \end{quote}
+
+The |arc to| path operation will also work only in the |canvas| coordinate system.
+The lengths of the vectors $(1, 0)$ and $(0, 1)$ will be used for the calculation of the radii
+but no further consideration is done.
 \end{pathoperation}
