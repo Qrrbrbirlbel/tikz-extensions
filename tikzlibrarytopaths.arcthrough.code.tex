@@ -36,7 +36,7 @@
     \pgfkeyssetevalue{/tikz/x radius}{+\pgfmathresult pt}%
     \pgfkeyssetevalue{/tikz/y radius}{+\pgfmathresult pt}%
     \pgfmathanglebetweenpoints{\pgf@tocenter}{\pgf@totarget}%
-    \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}
+    \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}%
     \pgfmathanglebetweenpoints{\pgf@tocenter}{\pgf@tostart}%
     \ifdim\pgfmathresult pt>\pgfkeysvalueof{/tikz/end angle}pt\relax
       \pgfmathsubtract@{\pgfmathresult}{360}%
@@ -45,4 +45,5 @@
     \tikz@arcthrough@clockwise
     \pgfkeyslet{/tikz/delta angle}\pgfutil@empty
     \def\tikz@to@path{arc[]\tikztonodes}%
-    }}
+  }%
+}
