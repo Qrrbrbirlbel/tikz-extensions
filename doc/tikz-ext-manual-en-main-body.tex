@@ -86,6 +86,43 @@ These libraries only work with \tikzname.
 \label{part:pgf}
 These libraries (should) work with both PGF and \tikzname.
 
+\begin{center}
+\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
+\tikzset{
+  mynode/.style={
+    circle, minimum size=10mm, draw, densely dashdotted, thick,
+    decide color/.expand once=#1},
+  decide color/.style 2 args={
+    /utils/TeX/if=c#1
+      {/utils/TeX/ifnum={#2<5}{bluelight}{bluedark}}
+      {/utils/TeX/ifnum={#2<8}{light}{dark}}},
+  light/.style={fill=gray!20},  bluelight/.style={fill=blue!10},
+  dark/.style ={fill=gray!60},  bluedark/.style ={fill=blue!30}}
+\tikz\graph[
+  spring electrical layout, vertical=c2 to p13,
+  node distance=1.5cm, typeset=$n_{\tikzgraphnodetext}$,
+  nodes={mynode=\tikzgraphnodetext}] {
+  % outer ring
+  c2 -- {p1, p11, p6};
+    p1 -- {p8, c6, p11};
+      p8 -- {p3, p10, c6};
+       p3 -- {p13, p15, p10};
+         p13 -- {p15, c7};
+           c7  -- {c3, c4, p15};
+           c3  -- {p14, c4};
+           p14 -- {p7, c4};
+         p7 -- {p9, p2, c4};
+       p9 -- {c5, p12, p2};
+     c5 -- {c1, p4, p12};
+   c1 -- {p6, p4};
+  p6 -- {p11, p4};
+  % inner ring
+  p11 -- {c6, p12, p4};
+  p5 -- {c6 -- {p10, p12}, p10 -- p15, p15 -- c4, c4 -- p2, p2 -- p12, p12 -- p4};
+};
+\end{codeexample}
+\end{center}
+
 \include{tikz-ext-manual-en-pgf-trans}
 
 \part{Miscellaneous}
@@ -123,6 +160,8 @@ These libraries (should) work with both PGF and \tikzname.
 \include{tikz-ext-manual-en-library-misc}
 
 %%% END
+
+\part{Index}
 \printindex
 
 %\typeout{Examples: \the\codeexamplecount}%

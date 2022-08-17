@@ -104,3 +104,120 @@
 %% needs Lua!
 \usetikzlibrary{graphs,graphdrawing}
 \usegdlibrary{force}
+
+\makeatletter
+\def\endofcodeexample#1{% original from tex/latex/pgf/doc/pgfmanual-en-macros.tex by Till Tantau et al
+  \endgroup%
+  \ifpgfmanual@setup@code%
+    \gdef\pgfmanual@do@this{%
+      {%
+        \returntospace%
+        \commenthandler%
+        \xdef\code@temp{#1}% removes returns and comments
+      }%
+      \edef\pgfmanualmcatcode{\the\catcode`\^^M}%
+      \catcode`\^^M=9\relax%
+      \expandafter\scantokens\expandafter{\code@temp}%
+      \catcode`\^^M=\pgfmanualmcatcode%
+    }%
+  \fi%
+  \ifcode@hidden\else
+    \ifcode@execute%
+      \setbox\codeexamplebox=\hbox{%
+        \ifx\code@render\pgfutil@empty%
+        {%
+          {%
+            \returntospace%
+            \commenthandler%
+            \xdef\code@temp{#1}% removes returns and comments
+          }%
+          \catcode`\^^M=9%
+          \colorbox{graphicbackground}{\color{black}\ignorespaces%
+            \code@pre\expandafter\scantokens\expandafter{\code@temp\ignorespaces}\code@post\ignorespaces}%
+        }%
+        \else%
+          \global\let\code@temp\code@render%
+          \colorbox{graphicbackground}{\color{black}\ignorespaces%
+            \code@render}%
+        \fi%
+      }%
+      \ifx\code@animation@list\pgfutil@empty%
+      \else%
+      \setbox\codeexampleboxanim=\vbox{%
+        \rightskip0pt\leftskip0pt plus1filll%
+        \ifdim\wd\codeexamplebox>\codeexamplewidth%
+        \else%
+          \hsize\codeexamplewidth%
+          \advance\hsize by2cm%
+        \fi%
+        \leavevmode\catcode`\^^M=9%
+        \foreach \pgfmanualtime/\pgfmanualtimehow in\code@animation@list{%
+          \setbox\codeexampleboxanim=\hbox{\colorbox{animationgraphicbackground}{%
+              \tikzset{make snapshot of=\pgfmanualtime}%
+              \scalebox{\pgfmanualanimscale}{\color{black}\ignorespaces%
+                \code@animation@pre\expandafter\scantokens\expandafter{\code@temp\ignorespaces}\code@animation@post\ignorespaces}%
+            }}%
+          \space\raise4pt\hbox to0pt{\vrule width0pt height1em\hbox
+            to\wd\codeexampleboxanim{\hfil\scriptsize$t{=}\pgfmanualtimehow \mathrm s$\hfil}\hss}%
+          \lower\ht\codeexampleboxanim\box\codeexampleboxanim\hfil\penalty0\hskip0ptplus-1fil%
+        }%
+      }%
+      \setbox\codeexampleboxanim=\hbox{\hbox{}\hskip-2cm\box\codeexampleboxanim}%
+      \fi%
+      \ifdim\wd\codeexamplebox>\codeexamplewidth%
+        \def\code@start{\par}%
+        \def\code@flushstart{}\def\code@flushend{}%
+        \def\code@mid{\parskip2pt\par\noindent}%
+        \def\code@width{\linewidth-6pt}%
+        \def\code@end{}%
+      \else%
+        \def\code@start{%
+%          \linewidth=\textwidth% removed this line
+          \parshape \@ne 0pt \linewidth
+          \leavevmode%
+          \hbox\bgroup}%
+        \def\code@flushstart{\hfill}%
+        \def\code@flushend{\hbox{}}%
+        \def\code@mid{\hskip6pt}%
+        \def\code@width{\linewidth-12pt-\codeexamplewidth}%
+        \def\code@end{\egroup}%
+      \fi%
+      \code@start%
+      \noindent%
+      \begin{minipage}[t]{\codeexamplewidth}\raggedright
+        \hrule width0pt%
+        \footnotesize\vskip-1em%
+        \code@flushstart\box\codeexamplebox\code@flushend%
+        \vskip0pt%
+        \leavevmode%
+        \box\codeexampleboxanim%
+        \vskip-1ex
+        \leavevmode%
+      \end{minipage}%
+    \else%
+      \def\code@mid{\par}
+      \def\code@width{\linewidth-6pt}
+      \def\code@end{}
+    \fi%
+    \code@mid%
+      \ifpgfmanual@multipage@code%
+        {%
+          \pgfkeysvalueof{/codeexample/prettyprint/base color}%
+          \pgfmanualdolisting{#1}%
+        }%
+      \else%
+        \colorbox{codebackground}{%
+          \pgfkeysvalueof{/codeexample/prettyprint/base color}%
+          \begin{minipage}[t]{\code@width}%
+            \pgfmanualdolisting{#1}%
+          \end{minipage}}%
+      \fi%
+    \code@end%
+    \par%
+    \medskip
+  \fi
+  \endcodeexample\endgroup%
+}
+\makeatother
+
+\usepackage{paracol}

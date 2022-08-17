@@ -15,6 +15,8 @@
 
 This package extends the |pgfcalendar| package.
 
+\begin{multicols}{2}
+
 \subsection{Extensions}
 
 The following tests are added.
@@ -33,28 +35,32 @@ The following tests are added.
 \itemcalendaroption{Dec} as above.
 \itemcalendaroption{leap year}\opt{|=|\meta{year}}
     This test checks whether the given year is a leap year. If
-    \meta{year} is omitted, it checks the year of the current \meta{date}.
+    \meta{year} is omitted, it checks the year of the current date.
 \itemcalendaroption{and}|=|\marg{tests}
     This test passes when all \meta{tests} pass.
 \itemcalendaroption{not}|=|\marg{tests}
     This test passes when \meta{tests} do not pass.
 \itemcalendaroption{yesterday}|=|\marg{tests}
-    This test passes when the previous day passes \marg{tests}.
-\itemcalendaroption{week}|=|\marg{num}
+    This test passes when the previous day passes \meta{tests}.
+\itemcalendaroption{week}|=|\meta{num}
     This test passes when the current week of the year equals \marg{num}.
 \end{itemize}
 
 The shorthands for |d-| and |m-| are slightly changed so that they are
 expandable. This makes it possible to use these shorthands inside of PGFmath.
 The shorthands for the week (see section~\ref{calendar:weeknumbering})
-are added. These are |n-| (shortest numerical representation), |n=|
-(shortest but added horizontal space) and |n0| (leading zero when below 10).
+are added. These are
+\begin{itemize}
+\item |n-| (shortest numerical representation),
+\item |n=| (shortest but added horizontal space) and
+\item |n0| (leading zero when below 10).
+\end{itemize}
 
 \subsection{Week numbering (ISO~8601)}
 \label{calendar:weeknumbering}
 \begin{command}{\pgfcalendarjulianyeartoweek\marg{Julian day}\marg{year}\marg{week counter}}
-  This command calculates the week for the Julian date of \mark{year}.
-  The \marg{week counter} must be a \TeX\ counter.
+  This command calculates the week for the \meta{Julian day} of \meta{year}.
+  The \meta{week counter} must be a \TeX\space counter.
 
   The calculation follows the rule of ISO~8601 where the first week has that
   year's first Thursday in it.
@@ -62,11 +68,12 @@ are added. These are |n-| (shortest numerical representation), |n=|
 
 Inside of |\pgfcalendar| the command |\pgfcalendarcurrentweek| will be available.
 \begin{command}{\pgfcalendarcurrentweek}
-  This command stores the current week number (always two digits -- use shorthand |n.|
+  This command returns the current week number (always two digits -- use shorthand |n.|
   to strip the leading zero).
 \end{command}
 
 Inside of |\ifdate| the command |\pgfcalendarifdateweek| will be available.
 \begin{command}{\pgfcalendarifdateweek}
-  This command stores the week number (always two digits).
+  This command returns the week number (always two digits).
 \end{command}
+\end{multicols}
