@@ -39,7 +39,7 @@ the path operations \verb!|-|! and \verb!-|-!.
   For values $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
   look more like Zig-Zig lines.
   \begin{codeexample}[preamble=\usetikzlibrary{paths.ortho}]
-\begin{tikzpicture}[very thick]
+\begin{tikzpicture}[very thick, rounded corners]
 \draw[help lines] (-.25, -1.25) grid (2.25, 1.25);
 \draw (0, 0) -|-            (2, 1) --
       (2, 0) -|-[ratio=.25] (0,-1) -- cycle;
@@ -55,12 +55,12 @@ the path operations \verb!|-|! and \verb!-|-!.
 \begin{codeexample}[width=8cm,preamble=\usetikzlibrary{paths.ortho}]
 \begin{tikzpicture}[very thick,-latex]
 \draw[help lines,-] (-.25, -.25) grid (5.25, 3.25);
-\draw (0, 0)   -|-[distance= .5cm] ++(2, 1);
-\draw (0, 1.5) -|-[distance=-.5cm] ++(2, 1);
+\draw (0, 0) -|-[distance= .5cm] ++(2, 1);
+\draw (0, 2) -|-[distance=-.5cm] ++(2, 1);
 
 \tikzset{xshift=3cm}
-\draw (2, 1)   -|-[distance= .5cm] ++(-2, -1);
-\draw (2, 2.5) -|-[distance=-.5cm] ++(-2, -1);
+\draw (2, 1) -|-[distance= .5cm] ++(-2, -1);
+\draw (2, 3) -|-[distance=-.5cm] ++(-2, -1);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
@@ -136,3 +136,50 @@ All distances can be set with on key.
 \begin{key}{/tikz/udlr/from center=\opt{\meta{true or false}} (initially false, default true)}
   This is an alias for |/tikz/hvvh/from center|.
 \end{key}
+
+\subsection{Even more Horizontal and Vertical Lines}
+
+The following keys can be used to access vertical and horizontal line path operations.
+\begin{stylekey}{/tikz/horizontal vertical}
+  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes! that can be used with
+  the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/vertical horizontal}
+  This installs \verb!to path = |- (\tikztotarget) \tikztonodes! that can be used with
+  the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/horizontal vertical horizontal}
+  This installs  \verb!to path = -|- (\tikztotarget) \tikztonodes! that can be used with
+  the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/vertical horizontal vertical}
+  This installs  \verb!to path = |-| (\tikztotarget) \tikztonodes! that can be used with
+  the path operations |to| or |edge|.
+\end{stylekey}
+
+When connecting rectangular nodes, these keys could be useful as well.
+They all need to be given to a |to| or |edge| path operation.
+\begin{stylekey}{/tikz/only vertical second=\opt{\meta{length}} (default 0pt)}
+This draws a vertical line from the start point to the target point so that
+it connects to the target point in the center (or at its border in case it is a node).
+
+The optional \meta{length} can be used to shift the line orthogonally to its direction.
+\end{stylekey}
+\begin{stylekey}{/tikz/only horizontal second=\opt{\meta{length}} (default 0pt)}
+This draws a horizontal line from the start point to the target point so that
+it connects to the target point in the center (or at its border in case it is a node).
+
+The optional \meta{length} can be used to shift the line orthogonally to its direction.
+\end{stylekey}
+\begin{stylekey}{/tikz/only vertical first=\opt{\meta{length}} (default 0pt)}
+This draws a vertical line from the start point to the target point so that
+it connects to the start point in the center (or at its border in case it is a node).
+
+The optional \meta{length} can be used to shift the line orthogonally to its direction.
+\end{stylekey}
+\begin{stylekey}{/tikz/only horizontal first=\opt{\meta{length}} (default 0pt)}
+This draws a horizontal line from the start point to the target point so that
+it connects to the start point in the center (or at its border in case it is a node).
+
+The optional \meta{length} can be used to shift the line orthogonally to its direction.
+\end{stylekey}
