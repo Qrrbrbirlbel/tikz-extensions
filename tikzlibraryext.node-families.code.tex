@@ -1,0 +1,271 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\tikzset{
+  family width/.initial=,
+  family height/.initial=,
+  family text depth/.initial=,
+  family text height/.initial=,
+  family text width/.default=,
+  family text width align/.is choice,
+  family text width align/left/.code=\let\tikz@nf@align@action\tikz@nf@align@left,
+  family text width align/center/.code=\let\tikz@nf@align@action\tikz@nf@align@center,
+  family text width algin/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
+  family text width align=left,
+  family text width/.code={%
+    \pgfkeyssetevalue{/tikz/family text@value}{#1}%
+  }%
+}
+\def\tikz@nf@align@left#1{\usebox#1\hfil}
+\def\tikz@nf@align@center#1{\hfil\usebox#1\hfil}
+\def\tikz@nf@align@right#1{\usebox#1\hfil}
+
+% #1 = family type + name
+\def\tikz@family@save#1{%
+  \immediate\write\pgfutil@auxout{%
+    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikz@family@#1@previous\endcsname{\csname tikz@family@#1@next\endcsname}%
+  }%
+  \expandafter\global\expandafter\let\csname tikz@family@#1@next\endcsname\relax
+}
+
+% #1 = value to set
+% #2 = family type
+% #3 = return dimen
+\def\tikz@nf@getandset#1#2#3{%
+    % what's our family's name?
+    #3=0pt\relax
+    \pgfkeysgetvalue{/tikz/family #2}\tikz@nf@familyname
+    \pgfutil@ifxempty\tikz@nf@familyname{% no family to deal with
+    }{%
+        % we need to save the value for the next run
+        \pgfutil@IfUndefined{tikz@family@#2@\tikz@nf@familyname @next}{%
+            % first time: define first value and install hook at end of picture
+            \expandafter\xdef\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname{#1}%
+            \edef\tikz@temp{\noexpand\tikz@family@save{#2@\tikz@nf@familyname}}%
+            \expandafter\pgfutil@g@addto@macro\expandafter\tikz@atend@picture\expandafter{\tikz@temp}%
+        }{%
+            \ifdim\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname<#1\relax
+                \expandafter\xdef\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname{#1}%
+            \fi
+        }%
+        \pgfutil@IfUndefined{tikz@family@#2@\tikz@nf@familyname @previous}{% first run, ignore
+        }{% set previous value
+              #3=\csname tikz@family@#2@\tikz@nf@familyname @previous\endcsname\relax
+        }%
+    }%
+}
+
+\pgfdeclareshape{Rectangle}{%
+  \savedanchor\northeast{%
+    % Calculate x
+    %
+    % First, is width < minimum width?
+    \pgf@x=\the\wd\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@x by 2\pgf@xc%
+    % Qrr: family width
+    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempa}%
+    \ifdim\pgf@x<\pgfutil@tempa
+      \pgf@x=\pgfutil@tempa
+    \fi
+    %
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
+    \ifdim\pgf@x<\pgf@xb%
+      % yes, too small. Enlarge...
+      \pgf@x=\pgf@xb%
+    \fi%
+    % Now, calculate right border: .5\wd\pgfnodeparttextbox + .5 \pgf@x + outer sep
+    \pgf@x=.5\pgf@x%
+    \advance\pgf@x by.5\wd\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    % Calculate y
+    %
+    % First, is height+depth < minimum height?
+    \pgf@y=\ht\pgfnodeparttextbox%
+    \advance\pgf@y by\dp\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@y by 2\pgf@yc%
+    % Qrr: family height
+    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempa}%
+    \ifdim\pgf@y<\pgfutil@tempa
+      \pgf@y=\pgfutil@tempa
+    \fi
+    %
+    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@y<\pgf@yb%
+      % yes, too small. Enlarge...
+      \pgf@y=\pgf@yb%
+    \fi%
+    % Now, calculate upper border: .5\ht-.5\dp + .5 \pgf@y + outer sep
+    \pgf@y=.5\pgf@y%
+    \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
+    \advance\pgf@y by.5\ht\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
+  }%
+
+\savedanchor\southwest{%
+    % Calculate x
+    %
+    % First, is width < minimum width?
+    \pgf@x=\wd\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@x by 2\pgf@xc%
+    % Qrr: family width
+    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempa}%
+    \ifdim\pgf@x<\ppgfutil@tempa
+      \pgf@x=\pgfutil@tempa
+    \fi
+    %
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
+    \ifdim\pgf@x<\pgf@xb%
+    % yes, too small. Enlarge...
+    \pgf@x=\pgf@xb%
+    \fi%
+    % Now, calculate left border: .5\wd\pgfnodeparttextbox - .5 \pgf@x - outer sep
+    \pgf@x=-.5\pgf@x%
+    \advance\pgf@x by.5\wd\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by-\pgf@xa%
+    % Calculate y
+    %
+    % First, is height+depth < minimum height?
+    \pgf@y=\ht\pgfnodeparttextbox%
+    \advance\pgf@y by\dp\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@y by 2\pgf@yc%
+    % Qrr: family height
+    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempa}%
+    \ifdim\pgf@y<\pgfutil@tempa
+      \pgf@y=\pgfutil@tempa
+    \fi
+    %
+    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@y<\pgf@yb%
+    % yes, too small. Enlarge...
+    \pgf@y=\pgf@yb%
+    \fi%
+    % Now, calculate upper border: .5\ht-.5\dp - .5 \pgf@y - outer sep
+    \pgf@y=-.5\pgf@y%
+    \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
+    \advance\pgf@y by.5\ht\pgfnodeparttextbox%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by-\pgf@ya%
+  }%
+  \inheritbackgroundpath[from=rectangle]
+  \inheritbeforebackgroundpath[from=rectangle]
+  \inheritbehindforegroundpath[from=rectangle]
+  \inheritforegroundpath[from=rectangle]
+  \inheritbeforeforegroundpath[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{mid}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{mid west}
+  \inheritanchor[from=rectangle]{base west}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{mid east}
+  \inheritanchor[from=rectangle]{base east}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchorborder[from=rectangle]
+}
+
+\pgfdeclareshape{Circle}{%
+  \savedanchor\centerpoint{% tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+    \pgf@x=.5\wd\pgfnodeparttextbox
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \advance\pgf@y by-.5\dp\pgfnodeparttextbox
+  }%
+  \saveddimen\radius{% tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+    % Calculate ``height radius''
+    \pgf@ya=.5\ht\pgfnodeparttextbox
+    \advance\pgf@ya by.5\dp\pgfnodeparttextbox
+    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@ya by\pgf@yb
+    % Calculate ``width radius''
+    \pgf@xa=.5\wd\pgfnodeparttextbox
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@xa by\pgf@xb
+    % Calculate length of radius vector:
+    \pgf@process{\pgfpointnormalised{\pgfqpoint{\pgf@xa}{\pgf@ya}}}%
+    \ifdim\pgf@x>\pgf@y
+        \c@pgf@counta=\pgf@x
+        \ifnum\c@pgf@counta=0\relax
+        \else
+          \divide\c@pgf@counta by 255\relax
+          \pgf@xa=16\pgf@xa\relax
+          \divide\pgf@xa by\c@pgf@counta
+          \pgf@xa=16\pgf@xa\relax
+        \fi
+      \else
+        \c@pgf@counta=\pgf@y
+        \ifnum\c@pgf@counta=0\relax
+        \else
+          \divide\c@pgf@counta by 255\relax
+          \pgf@ya=16\pgf@ya\relax
+          \divide\pgf@ya by\c@pgf@counta
+          \pgf@xa=16\pgf@ya\relax
+        \fi
+    \fi
+    \pgf@x=\pgf@xa%
+    % Qrr: check for families
+    \tikz@nf@getandset{\the\dimexpr2\pgf@x\relax}{width}{\pgfutil@tempdima}%
+    \tikz@nf@getandset{\the\dimexpr2\pgf@x\relax}{height}{\pgfutil@tempdimb}%
+    % Qrr: and adjust like minimum width and minimum height
+    \ifdim\pgf@x<.5\pgfutil@tempdima
+      \pgf@x=.5\pgfutil@tempdima
+    \fi
+    \ifdim\pgf@x<.5\pgfutil@tempdimb
+      \pgf@x=.5\pgfutil@tempdimb
+    \fi
+    % If necessary, adjust radius so that the size requirements are met:
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/minimum width}}%
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@x<.5\pgf@xb
+        \pgf@x=.5\pgf@xb
+    \fi
+    \ifdim\pgf@x<.5\pgf@yb
+        \pgf@x=.5\pgf@yb
+    \fi
+    % Now, add larger of outer separations.
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \ifdim\pgf@xb<\pgf@yb
+      \advance\pgf@x by\pgf@yb
+    \else
+      \advance\pgf@x by\pgf@xb
+    \fi
+  }%
+  \inheritbackgroundpath[from=circle]
+  \inheritbeforebackgroundpath[from=circle]
+  \inheritbehindforegroundpath[from=circle]
+  \inheritforegroundpath[from=circle]
+  \inheritbeforeforegroundpath[from=circle]
+  \inheritanchor[from=circle]{center}
+  \inheritanchor[from=circle]{mid}
+  \inheritanchor[from=circle]{base}
+  \inheritanchor[from=circle]{north}
+  \inheritanchor[from=circle]{south}
+  \inheritanchor[from=circle]{west}
+  \inheritanchor[from=circle]{mid west}
+  \inheritanchor[from=circle]{base west}
+  \inheritanchor[from=circle]{north west}
+  \inheritanchor[from=circle]{south west}
+  \inheritanchor[from=circle]{east}
+  \inheritanchor[from=circle]{mid east}
+  \inheritanchor[from=circle]{base east}
+  \inheritanchor[from=circle]{north east}
+  \inheritanchor[from=circle]{south east}
+  \inheritanchorborder[from=circle]
+}

@@ -14,18 +14,19 @@
 
 \input{tikz-ext-manual-en-main-preamble.tex}
 \usetikzlibrary{external}
-\newif\iftikzextmanualexternalize
-\tikzextmanualexternalizetrue
-\iftikzextmanualexternalize
+%\newif\iftikzextmanualexternalize
+%\tikzextmanualexternalizetrue
+%\iftikzextmanualexternalize
   \tikzexternalize[
-    prefix=doc/tikz/,
-    mode=graphics if exists,
+    prefix=tikz/,
+%    mode=convert with system call,
     %mode=list and make,
     %mode=list only,export=true,% simply skips EVERY picture -> good for debugging the text.
   ]
+  \tikzexternalenable
   \tikzifexternalizing{%
     \pgfkeys{/pdflinks/codeexample links=false}%
   }{}%
-\fi
+%\fi
 
 \input{tikz-ext-manual-en-main-body.tex}
