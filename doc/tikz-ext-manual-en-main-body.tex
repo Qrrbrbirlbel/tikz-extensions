@@ -88,7 +88,7 @@ These libraries only work with \tikzname.
 These libraries (should) work with both PGF and \tikzname.
 
 \begin{center}
-\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
+\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
 \tikzset{
   mynode/.style={
     circle, minimum size=10mm, draw, densely dashdotted, thick,
@@ -130,7 +130,7 @@ These libraries (should) work with both PGF and \tikzname.
 
 \label{part:misc}
 \vfill
-\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{misc}]
+\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{ext.misc}]
 \begin{tikzpicture}[
   declare function={bigR(\n)=smallR+.05*\n;},
   declare constant={smallR=1; segments=20;},

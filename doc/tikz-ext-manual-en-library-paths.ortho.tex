@@ -11,7 +11,7 @@
 \section{More Horizontal and Vertical Lines}
 \label{library:paths.ortho}
 
-\begin{tikzlibrary}{paths.ortho}
+\begin{tikzlibrary}{ext.paths.ortho}
   This library adds new path specifications \verb!|-|!, \verb!-|-! as well as
   |r-ud|, |r-du|, |r-lr| and |r-rl|.
 \end{tikzlibrary}
@@ -52,7 +52,7 @@ the path operations \verb!|-|! and \verb!-|-!.
   and the middle part of the Zig-Zag connection.
   
   For values $\meta{distance} < 0$ the distance will be used for the target coordinate.
-\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{paths.ortho}]
+\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{ext.paths.ortho}]
 \begin{tikzpicture}[very thick,-latex]
 \draw[help lines,-] (-.25, -.25) grid (5.25, 3.25);
 \draw (0, 0) -|-[distance= .5cm] ++(2, 1);

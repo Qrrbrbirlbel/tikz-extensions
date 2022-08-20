@@ -11,7 +11,7 @@
 \section{Using Images as a Pattern}
 \label{library:patterns.images}
 
-\begin{tikzlibrary}{patterns.images}
+\begin{tikzlibrary}{ext.patterns.images}
   This library allows to use an image to be used as a repeating pattern for a path.
 \end{tikzlibrary}
 
@@ -29,7 +29,7 @@ This is a two-step process:
 
 \begin{key}{/tikz/image as pattern=\meta{options} (default |\{\}|)}
 
-\begin{codeexample}[preamble=\usetikzlibrary{patterns.images}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.patterns.images}]
 \pgfsetupimageaspattern[width=.5cm]{grid}{example-image-1x1}
 \tikz \node[star, minimum size=3cm, draw,
   image as pattern={name=grid,options={left, bottom, y=-.5cm, rotate=45}}] {};
