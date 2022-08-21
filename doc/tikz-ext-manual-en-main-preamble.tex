@@ -85,14 +85,15 @@
 \makeatother
 
 \usetikzlibrary{
-  calendar-plus,
-  misc,
-  paths.arcto,
-  paths.ortho,
-  paths.timer,
-  patterns.images,
-  topaths.arcthrough,
-  transformations.mirror,
+  ext.calendar-plus,
+  ext.misc,
+  ext.paths.arcto,
+  ext.paths.ortho,
+  ext.paths.timer,
+  ext.patterns.images,
+  ext.positioning-plus,
+  ext.topaths.arcthrough,
+  ext.transformations.mirror,
   %
   calc,
   fit,
@@ -218,6 +219,31 @@
   \fi
   \endcodeexample\endgroup%
 }
+
+\newenvironment{pathoperation'}[3][]{
+  \begin{pgfmanualentry}
+    \def\pgfmanualtest{#1}%
+    \pgfmanualentryheadline{%
+      \ifx\pgfmanualtest\@empty%
+        \pgfmanualpdflabel{#2}{}%
+      \fi%
+      %\textcolor{gray}{{\ttfamily\char`\\path}\ \ \dots}
+      %\declare{\texttt{\noligs{#2}}}#3\ \textcolor{gray}{\dots\texttt{;}}
+    }%
+    \ifx\pgfmanualtest\@empty%
+      \index{#2@\protect\texttt{#2} path operation}%
+      \index{Path operations!#2@\protect\texttt{#2}}%
+    \fi%
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
 \makeatother
 
 \usepackage{paracol}
+
+\newcommand*{\indexLibrary}[1]{%
+  \index{#1@\protect\texttt{#1} library}%
+  \index{Libraries!#1@\protect\texttt{#1}}%
+}

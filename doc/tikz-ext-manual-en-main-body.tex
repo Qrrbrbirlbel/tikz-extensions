@@ -40,7 +40,7 @@
 
 These libraries only work with \tikzname.
 \vspace{1em}
-\begin{center}
+\begin{center}\tikzsetnextfilename{main-cover}
 \begin{tikzpicture}[
   very thick,
   scale=2.7,
@@ -74,21 +74,21 @@ These libraries only work with \tikzname.
 \end{tikzpicture}
 \end{center}
 
-\include{tikz-ext-manual-en-library-calendar-plus}
-\include{tikz-ext-manual-en-library-paths.arcto}
-\include{tikz-ext-manual-en-library-paths.ortho}
-\include{tikz-ext-manual-en-library-paths.timer}
-\include{tikz-ext-manual-en-library-patterns.images}
-\include{tikz-ext-manual-en-library-positioning-plus}
-\include{tikz-ext-manual-en-library-topaths.arcthrough}
-\include{tikz-ext-manual-en-library-trans}
+\tikzsetfigurename{calendar-plus}   \include{tikz-ext-manual-en-library-calendar-plus}
+\tikzsetfigurename{paths.arcto}     \include{tikz-ext-manual-en-library-paths.arcto}
+\tikzsetfigurename{paths.ortho}     \include{tikz-ext-manual-en-library-paths.ortho}
+\tikzsetfigurename{paths.timer}     \include{tikz-ext-manual-en-library-paths.timer}
+\tikzsetfigurename{patterns.images} \include{tikz-ext-manual-en-library-patterns.images}
+\tikzsetfigurename{positioning-plus}\include{tikz-ext-manual-en-library-positioning-plus}
+\tikzsetfigurename{topaths.arcthrough}\include{tikz-ext-manual-en-library-topaths.arcthrough}
+\tikzsetfigurename{trans}             \include{tikz-ext-manual-en-library-trans}
 
 \part{PGF Libraries}
 \label{part:pgf}
 These libraries (should) work with both PGF and \tikzname.
 
-\begin{center}
-\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing} \usegdlibrary{force}]
+\begin{center}\tikzsetnextfilename{main-graph}
+\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
 \tikzset{
   mynode/.style={
     circle, minimum size=10mm, draw, densely dashdotted, thick,
@@ -124,13 +124,13 @@ These libraries (should) work with both PGF and \tikzname.
 \end{codeexample}
 \end{center}
 
-\include{tikz-ext-manual-en-pgf-trans}
+\tikzsetfigurename{PGF.trans}\include{tikz-ext-manual-en-pgf-trans}
 
 \part{Miscellaneous}
 
 \label{part:misc}
-\vfill
-\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{misc}]
+\vfill\tikzsetnextfilename{main-misc}
+\begin{codeexample}[width=6cm, preamble=\usetikzlibrary{ext.misc}]
 \begin{tikzpicture}[
   declare function={bigR(\n)=smallR+.05*\n;},
   declare constant={smallR=1; segments=20;},
@@ -157,12 +157,34 @@ These libraries (should) work with both PGF and \tikzname.
 \end{codeexample}
 \vfill
 
-\include{tikz-ext-manual-en-calendar}
-\include{tikz-ext-manual-en-library-misc}
+\tikzsetfigurename{misc.calendar}\include{tikz-ext-manual-en-calendar}
+\tikzsetfigurename{misc.misc}\include{tikz-ext-manual-en-library-misc}
 
 %%% END
+\newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
+\newcommand*{\addPGF}[1]{Added PGF library \texttt{ext.#1}.}
+\part{Changelog \& Index}
+\section*{Changelog}
+\begin{multicols}{2}
+Version 0.2
+\begin{itemize}
+\item \addTikz{positioning-plus}
+\item \addTikz{node-families}
+\end{itemize}
 
-\part{Index}
+Version 0.1
+\begin{itemize}
+\item \addTikz{calendar-plus}
+\item \addTikz{misc}
+\item \addTikz{paths.arcto}
+\item \addTikz{paths.ortho}
+\item \addTikz{paths.timer}
+\item \addTikz{patterns.images}
+\item \addTikz{topaths.arcthrough}
+\item \addTikz{transformations.mirror}
+\item \addPGF{transformations.mirror}
+\end{itemize}
+\end{multicols}
 \printindex
 
 %\typeout{Examples: \the\codeexamplecount}%

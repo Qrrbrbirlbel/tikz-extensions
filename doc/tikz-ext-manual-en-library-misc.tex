@@ -9,7 +9,7 @@
 %
 
 \section{And a little bit more}
-\begin{tikzlibrary}{misc}
+\begin{tikzlibrary}{ext.misc}
   This library adds miscelleaneos utilities to PGFmath, PGF or \tikzname.
 \end{tikzlibrary}
 
@@ -121,7 +121,7 @@ them in |"|.
 
 \end{multicols}
 
-\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{calc,misc,through}]
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{calc,ext.misc,through}]
 \begin{tikzpicture}
 \path (0,0) coordinate (A) + (0:4) coordinate (B) +(75:4) coordinate (C);
 \draw (A) -- (B) -- (C) -- cycle;
@@ -218,7 +218,7 @@ not all of them are.
   the result is then given to the used key.
 \end{handler}
 \end{multicols}
-\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{fit,misc}]
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{fit,ext.misc}]
 \begin{tikzpicture}[nodes={draw, dashed, inner sep=+10pt}]
   \foreach \point [count=\cnt] in {(0,0), (0,2), (2,0), (2,2), (3,3), (-1,-1)}
     \fill \point circle[radius=.1] coordinate (point-\cnt);

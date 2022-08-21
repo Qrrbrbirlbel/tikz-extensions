@@ -1,3 +1,5 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
 % Copyright 2022 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
@@ -10,16 +12,16 @@
 \section{Mirror, Mirror on the Wall}
 \label{library:mirror}
 
-\begin{tikzlibrary}{transformations.mirror}
+\begin{tikzlibrary}{ext.transformations.mirror}
   This library adds more transformations to \tikzname.
 \end{tikzlibrary}
 
 As explained in section~\ref{pgflibrary:transformations}, there are two approaches to setting a mirror transformation.
-As with the commands in PGF, we'll be using lowercase |m| for the reflection matrix and uppercase |M| for the built-in approach.
+As with the commands in PGF, we'll be using a lowercase |m| for the reflection matrix and an uppercase |M| for the built-in approach.
 
 \subsection{Using the reflection matrix}
 
-\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,transformations.mirror}]
+\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,ext.transformations.mirror}]
 \begin{tikzpicture}[line join=round, thick, reg poly/.style={
   shape=regular polygon, regular polygon sides={#1}}]
 \node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
@@ -32,7 +34,7 @@ As with the commands in PGF, we'll be using lowercase |m| for the reflection mat
 \begin{key}{/tikz/xmirror=\meta{value or coordinate}}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
-\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
@@ -50,7 +52,7 @@ As with the commands in PGF, we'll be using lowercase |m| for the reflection mat
 
 \begin{key}{/tikz/mirror x=\meta{coordinate}}
   Similar to |/tikz/xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
-\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
@@ -76,7 +78,7 @@ As with the commands in PGF, we'll be using lowercase |m| for the reflection mat
 
 \subsection{Using built-in transformations}
 
-\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,transformations.mirror}]
+\begin{codeexample}[width=.4\linewidth,preamble=\usetikzlibrary{shapes.geometric,ext.transformations.mirror}]
 \begin{tikzpicture}[line join=round, thick, reg poly/.style={
   shape=regular polygon, regular polygon sides={#1}}]
 \node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
@@ -89,7 +91,7 @@ As with the commands in PGF, we'll be using lowercase |m| for the reflection mat
 \begin{key}{/tikz/xMirror=\meta{value or coordinate}}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
-\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-0.25, -.25) grid (3.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
@@ -107,7 +109,7 @@ As with the commands in PGF, we'll be using lowercase |m| for the reflection mat
 
 \begin{key}{/tikz/Mirror x=\meta{coordinate}}
   Similar to |/tikz/xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
-\begin{codeexample}[preamble=\usetikzlibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);

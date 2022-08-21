@@ -11,12 +11,12 @@
 \section{Arc \emph{to} a point}
 \label{library:paths.arcto}
 
-\begin{tikzlibrary}{paths.arcto}
+\begin{tikzlibrary}{ext.paths.arcto}
   This library adds new path specifications |arc to| that specifies an arc \emph{to} a point~--
   without the user having to specify any angles.
 \end{tikzlibrary}
 
-\begin{codeexample}[width=.5\linewidth,preamble=\usetikzlibrary{paths.arcto}]
+\begin{codeexample}[width=.5\linewidth,preamble=\usetikzlibrary{ext.paths.arcto}]
 \begin{tikzpicture}[ultra thick,dot/.style={label={#1}}]
 \coordinate[dot=below left:$a$] (a) at (0,0);
 \coordinate[dot=above right:$b$] (b) at (2,3);
@@ -73,19 +73,22 @@ options that can be used inside of \meta{options}.
 
 \begin{key}{/tikz/arc to/rotate=\meta{degree}}
   Rotates the arc by \meta{degree}.
-  This only takes effect when |x radius| and |y radius| is different.
+  This is only noticeable when |x radius| and |y radius| are different.
 \end{key}
 
 \begin{key}{/tikz/arc to/x radius=\meta{value}}
   This forwards the \meta{value} to |/tikz/x radius|.
+  Its \meta{value} is used for radius of the arc.
 \end{key}
 
 \begin{key}{/tikz/arc to/y radius=\meta{value}}
   This forwards the \meta{value} to |/tikz/y radius|.
+  Its \meta{value} is used for radius of the arc.
 \end{key}
 
 \begin{key}{/tikz/arc to/radius=\meta{value}}
   This forwards the \meta{value} to both |/tikz/x radius| and |/tikz/y radius|.
+  Its \meta{value} is used for radius of the arc.
 \end{key}
 
 \begin{stylekey}{/tikz/every arc to}

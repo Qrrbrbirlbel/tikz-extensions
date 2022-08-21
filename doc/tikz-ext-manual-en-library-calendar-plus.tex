@@ -9,9 +9,11 @@
 %
 
 \section{Calendar}
-\begin{tikzlibrary}{calendar-plus}
-  This library extends the \tikzname\space library |calendar|.
+\begin{tikzlibrary}{ext.calendar-plus}
+  This library extends the \tikzname\space library |calendar|\indexLibrary{calendar}.
 \end{tikzlibrary}
+
+\begin{multicols}{2}
 
 \subsection{Extensions}
 
@@ -52,7 +54,7 @@ It is now also possible to nest |/tikz/if| occurrences.
     position is chosen ``as if'' the week had started on a Monday --  which is
     usually exactly what you want.)
     %
-\begin{codeexample}[preamble={\usetikzlibrary{calendar-plus}}]
+\begin{codeexample}[preamble={\usetikzlibrary{ext.calendar-plus}}]
 \tikz
   \calendar [week list, month label above centered,
              dates=2022-07-01 to 2022-07-31,
@@ -61,3 +63,6 @@ It is now also possible to nest |/tikz/if| occurrences.
 \end{codeexample}
     %
 \end{stylekey}
+
+\end{multicols}
+\endinput

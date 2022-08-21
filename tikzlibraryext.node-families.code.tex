@@ -6,24 +6,21 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\def\tikz@nf@align@left#1{}
+\def\tikz@nf@align@center#1{\kern.5#1}
+\def\tikz@nf@align@right#1{\kern#1}
 \tikzset{
   family width/.initial=,
   family height/.initial=,
   family text depth/.initial=,
   family text height/.initial=,
-  family text width/.default=,
   family text width align/.is choice,
   family text width align/left/.code=\let\tikz@nf@align@action\tikz@nf@align@left,
   family text width align/center/.code=\let\tikz@nf@align@action\tikz@nf@align@center,
-  family text width algin/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
+  family text width align/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
   family text width align=left,
-  family text width/.code={%
-    \pgfkeyssetevalue{/tikz/family text@value}{#1}%
-  }%
+  family text width/.initial=,
 }
-\def\tikz@nf@align@left#1{\usebox#1\hfil}
-\def\tikz@nf@align@center#1{\hfil\usebox#1\hfil}
-\def\tikz@nf@align@right#1{\usebox#1\hfil}
 
 % #1 = family type + name
 \def\tikz@family@save#1{%
@@ -69,9 +66,9 @@
     \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
     \advance\pgf@x by 2\pgf@xc%
     % Qrr: family width
-    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempa}%
-    \ifdim\pgf@x<\pgfutil@tempa
-      \pgf@x=\pgfutil@tempa
+    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
+    \ifdim\pgf@x<\pgfutil@tempdima
+      \pgf@x=\pgfutil@tempdima
     \fi
     %
     \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
@@ -92,8 +89,8 @@
     \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
     \advance\pgf@y by 2\pgf@yc%
     % Qrr: family height
-    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempa}%
-    \ifdim\pgf@y<\pgfutil@tempa
+    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
+    \ifdim\pgf@y<\pgfutil@tempdima
       \pgf@y=\pgfutil@tempa
     \fi
     %
@@ -118,9 +115,9 @@
     \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
     \advance\pgf@x by 2\pgf@xc%
     % Qrr: family width
-    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempa}%
-    \ifdim\pgf@x<\ppgfutil@tempa
-      \pgf@x=\pgfutil@tempa
+    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
+    \ifdim\pgf@x<\pgfutil@tempdima
+      \pgf@x=\pgfutil@tempdima
     \fi
     %
     \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
@@ -141,9 +138,9 @@
     \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
     \advance\pgf@y by 2\pgf@yc%
     % Qrr: family height
-    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempa}%
-    \ifdim\pgf@y<\pgfutil@tempa
-      \pgf@y=\pgfutil@tempa
+    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
+    \ifdim\pgf@y<\pgfutil@tempdima
+      \pgf@y=\pgfutil@tempdima
     \fi
     %
     \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
@@ -268,4 +265,32 @@
   \inheritanchor[from=circle]{north east}
   \inheritanchor[from=circle]{south east}
   \inheritanchorborder[from=circle]
+}
+
+\def\pgfutil@prefixto@macro#1#2{%
+  \def\pgf@temp{#2}%
+  \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter#1%
+  \expandafter\expandafter\expandafter{\expandafter\pgf@temp#1}%
+}
+
+\tikzset{
+  node families/set text family/.code={%
+    \expandafter\pgfutil@prefixto@macro\csname pgf@sh@s@#1\endcsname{%
+      \tikz@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
+      \ifdim\wd\pgfnodeparttextbox<\pgfutil@tempdima
+        \pgfutil@tempdimb=\pgfutil@tempdima
+        \advance\pgfutil@tempdimb-\wd\pgfnodeparttextbox
+        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikz@nf@align@action\pgfutil@tempdimb\box\pgfnodeparttextbox}%
+      \fi
+      \tikz@nf@getandset{\the\dp\pgfnodeparttextbox}{text depth}{\pgfutil@tempdima}%
+      \ifdim\dp\pgfnodeparttextbox<\pgfutil@tempdima
+          \dp\pgfnodeparttextbox=\pgfutil@tempdima
+      \fi
+      \tikz@nf@getandset{\the\ht\pgfnodeparttextbox}{text height}{\pgfutil@tempdima}%
+      \ifdim\ht\pgfnodeparttextbox<\pgfutil@tempdima
+          \ht\pgfnodeparttextbox=\pgfutil@tempdima
+      \fi
+    }%
+  },
+  node families/set text family/.list={rectangle,circle,Rectangle,Circle}
 }

@@ -10,3 +10,174 @@
 \clearpage
 \section{Positioning Plus}
 \label{library:positioning-plus}
+\tikzsetnextfilename{posplus}
+\begin{tikzlibrary}{ext.positioning-plus}
+  With the help of the |positioning|\indexLibrary{positioning} and the |fit|\indexLibrary{fit} library this extends the placement of nodes.
+\end{tikzlibrary}
+
+\subsection{Useful corner anchors}
+The anchors |corner north east|, |corner north west|, |corner south west| and |corner south east|
+are defined as ``generic anchors'', i.\,e. they are defined for all shapes.
+This is mostly useful for the placement of circular shapes.
+\begin{stylekey}{/tikz/corner above left=\opt{\meta{specification}} (default 0pt)}
+  Similar as |/tikz/above left| of the \tikzname\space library |positioning|
+  but uses the |corner north west| anchor.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner below left=\opt{\meta{specification}} (default 0pt)}
+  Similar as |/tikz/below left| of the \tikzname\space library |positioning|
+  but uses the |corner south west| anchor.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner above right=\opt{\meta{specification}} (default 0pt)}
+  Similar as |/tikz/above right| of the \tikzname\space library |positioning|
+  but uses the |corner north east| anchor.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner below right=\opt{\meta{specification}} (default 0pt)}
+  Similar as |/tikz/below right| of the \tikzname\space library |positioning|
+  but uses the |corner south east| anchor.
+\end{stylekey}
+
+\begin{codeexample}[width=.6\linewidth,preamble=\usetikzlibrary{ext.positioning-plus}]
+\Huge
+\begin{tikzpicture}
+\node[name=s,shape=circle,shape example]
+  {Circle\vrule width 1pt height 2cm};
+\foreach \anchor/\placement in {
+  north west/above left, north/above, north east/above right,
+  west/left, center/above, east/right,
+  mid west/right, mid/above, mid east/left,
+  base west/left, base/below, base east/right,
+  south west/below left, south/below, south east/below right,
+  text/left, 10/right, 130/above}
+  \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+    node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\draw (s.corner north west) rectangle (s.corner south east);
+\foreach \anchor/\placement in {
+  corner north west/above left, corner north east/above right,
+  corner south west/below left, corner south east/below right}
+  \draw[red,shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+    node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}
+
+\subsection{Useful placement keys for vertical and horizontal alignment}
+\begin{stylekey}{/tikz/north left=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/left| but aligns the nodes at their |north| border.
+  
+  This is basically the same as |left=of reference.north west, anchor=north east|.
+  %
+\begin{codeexample}[preamble=\usetikzlibrary{ext.positioning-plus}]
+\begin{tikzpicture}[nodes=draw]
+\node[minimum height=2cm] (a) {};
+\node[minimum height=3cm, north right=of a] {};
+\end{tikzpicture}
+\end{codeexample}
+\end{stylekey}
+\begin{stylekey}{/tikz/north right=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/right| but aligns the nodes at their |north| border.
+  
+  This is basically the same as |left=of reference.north east, anchor=north west|.
+\end{stylekey}
+\begin{stylekey}{/tikz/south left=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/left| but aligns the nodes at their |south| border.
+  
+  This is basically the same as |left=of reference.south west, anchor=south east|.
+\end{stylekey}
+\begin{stylekey}{/tikz/south right=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/right| but aligns the nodes at their |south| border.
+  
+  This is basically the same as |left=of reference.south east, anchor=south west|.
+\end{stylekey}
+\begin{stylekey}{/tikz/west above=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/above| but aligns the nodes at their |west| border.
+  
+  This is basically the same as |left=of reference.north west, anchor=south west|.
+\end{stylekey}
+\begin{stylekey}{/tikz/west below=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/below| but aligns the nodes at their |west| border.
+  
+  This is basically the same as |left=of reference.south west, anchor=north west|.
+\end{stylekey}
+\begin{stylekey}{/tikz/east above=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/above| but aligns the nodes at their |east| border.
+  
+  This is basically the same as |left=of reference.north east, anchor=south east|.
+\end{stylekey}
+\begin{stylekey}{/tikz/east below=\opt{\meta{specification}} (default 0pt)}
+  Like |/tikz/below| but aligns the nodes at their |east| border.
+  
+  This is basically the same as |left=of reference.south east, anchor=north east|.
+\end{stylekey}
+
+The same exist for the recently introduces corner anchors, too.
+\begin{stylekey}{/tikz/corner north left=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/north left| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner north right=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/north right| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner south left=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/south left| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner south right=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/south right| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner west above=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/west above| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner west below=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/west below| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner east above=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/east above| but uses the new corner anchors.
+\end{stylekey}
+\begin{stylekey}{/tikz/corner east below=\opt{\meta{specification}} (default 0pt)}
+  The same as |/tikz/east below| but uses the new corner anchors.
+\end{stylekey}
+
+While the \meta{specification} of all these keys still accept the same form as with \tikzname,
+the |ext.positioning-plus| library extends this even more.
+
+The specification after |of| can contain a list of coordinates
+(like the |fit| key of the |fit| library).
+This means that the new node will be placed in relation to a rectangular bounding box
+that fits around all this nodes in the list.
+
+If this list is prefixed with \verb!|!, |-| or |+|,
+the new node will also have the same height (\verb!|!),
+the same width (|-|) or both as this bounding box.
+
+\begin{codeexample}[preamble=\usetikzlibrary{ext.positioning-plus}]
+\begin{tikzpicture}[nodes=draw]
+\node                     (A) {A};
+\node[below=of A]         (BCD) {BCD};
+\node[right=of |(A)(BCD)] (c) {};
+\node[below=.5:of -(A)(BCD)] (d) {};
+\draw[help lines] (BCD.south west) -- (c.south east)
+                  (BCD.north east) -- (d.south east);
+\end{tikzpicture}
+\end{codeexample}
+
+This functionality is also available without the placement:
+\begin{stylekey}{/tikz/fit bounding box=\meta{list of coordinates}}
+  Creates a rectangular node with the name |fit bounding box| that encompasses
+  the \meta{list of coordinates}.
+\end{stylekey}
+\begin{stylekey}{/tikz/span vertical=\meta{list of coordinates}}
+  Creates a rectangular node with the name |fit bounding box| that encompasses
+  the \meta{list of coordinates} \emph{and} sets the |/pgf/minimum height| to
+  the height of this bounding box.
+\end{stylekey}
+\begin{stylekey}{/tikz/span horizontal=\meta{list of coordinates}}
+  Creates a rectangular node with the name |fit bounding box| that encompasses
+  the \meta{list of coordinates} \emph{and} sets the |/pgf/minimum width| to
+  the width of this bounding box.
+\end{stylekey}
+\begin{stylekey}{/tikz/span=\meta{list of coordinates}}
+  Is a combination of |span vertical| and |span horizontal|.
+\end{stylekey}
+
+As you maybe noticed in the example above, the \meta{specification} also allows a prefix
+delimited by |:| which the |node distance| will be multiplied to with for the placement.%
+\footnote{This is probably more useful when \texttt{/tikz/on grid} is used.}
+
+\endinput
