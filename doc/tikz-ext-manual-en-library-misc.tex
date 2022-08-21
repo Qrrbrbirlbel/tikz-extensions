@@ -10,7 +10,7 @@
 
 \section{And a little bit more}
 \begin{tikzlibrary}{ext.misc}
-  This library adds miscelleaneos utilities to PGFmath, PGF or \tikzname.
+  This library adds miscellaneous utilities to PGFmath, PGF or \tikzname.
 \end{tikzlibrary}
 
 \subsection{PGFmath}
@@ -85,10 +85,8 @@ The |R| operator can then be used.
 \begin{math-function}{atanXY(\mvar{x},\mvar{y})}
 \mathcommand
   Arctangent of $\mvar y\div \mvar x$ in degrees. This also takes into account the quadrant.
-  This is just a argument-swapped version of |atan2| which makes it easier to use
-  the |\p| commands of the |calc| library.
-  \index{atan2@\protect\texttt{atan2} math function}%
-  \index{Math functions!atan2@\protect\texttt{atan2}}%
+  This is just a argument-swapped version of |atan2|\indexMathFunctionO{atan2} which makes it easier to use
+  the |\p| commands of the |calc|\indexLibraryO{calc} library.
   %
 \begin{codeexample}[]
 \pgfmathparse{atanXY(3,4)} \pgfmathresult

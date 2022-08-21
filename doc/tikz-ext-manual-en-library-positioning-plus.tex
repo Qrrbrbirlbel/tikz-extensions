@@ -20,19 +20,19 @@ The anchors |corner north east|, |corner north west|, |corner south west| and |c
 are defined as ``generic anchors'', i.\,e. they are defined for all shapes.
 This is mostly useful for the placement of circular shapes.
 \begin{stylekey}{/tikz/corner above left=\opt{\meta{specification}} (default 0pt)}
-  Similar as |/tikz/above left| of the \tikzname\space library |positioning|
+  Similar as \referenceKeyandIndexO{above left} of the \tikzname\space library |positioning|
   but uses the |corner north west| anchor.
 \end{stylekey}
 \begin{stylekey}{/tikz/corner below left=\opt{\meta{specification}} (default 0pt)}
-  Similar as |/tikz/below left| of the \tikzname\space library |positioning|
+  Similar as \referenceKeyandIndexO{below left} of the \tikzname\space library |positioning|
   but uses the |corner south west| anchor.
 \end{stylekey}
 \begin{stylekey}{/tikz/corner above right=\opt{\meta{specification}} (default 0pt)}
-  Similar as |/tikz/above right| of the \tikzname\space library |positioning|
+  Similar as \referenceKeyandIndexO{above right} of the \tikzname\space library |positioning|
   but uses the |corner north east| anchor.
 \end{stylekey}
 \begin{stylekey}{/tikz/corner below right=\opt{\meta{specification}} (default 0pt)}
-  Similar as |/tikz/below right| of the \tikzname\space library |positioning|
+  Similar as \referenceKeyandIndexO{below right} of the \tikzname\space library |positioning|
   but uses the |corner south east| anchor.
 \end{stylekey}
 
@@ -61,7 +61,7 @@ This is mostly useful for the placement of circular shapes.
 
 \subsection{Useful placement keys for vertical and horizontal alignment}
 \begin{stylekey}{/tikz/north left=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/left| but aligns the nodes at their |north| border.
+  Like \referenceKeyandIndexO{left} but aligns the nodes at their |north| border.
   
   This is basically the same as |left=of reference.north west, anchor=north east|.
   %
@@ -73,37 +73,37 @@ This is mostly useful for the placement of circular shapes.
 \end{codeexample}
 \end{stylekey}
 \begin{stylekey}{/tikz/north right=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/right| but aligns the nodes at their |north| border.
+  Like \referenceKeyandIndexO{right} but aligns the nodes at their |north| border.
   
   This is basically the same as |left=of reference.north east, anchor=north west|.
 \end{stylekey}
 \begin{stylekey}{/tikz/south left=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/left| but aligns the nodes at their |south| border.
+  Like \referenceKeyandIndexO{left} but aligns the nodes at their |south| border.
   
   This is basically the same as |left=of reference.south west, anchor=south east|.
 \end{stylekey}
 \begin{stylekey}{/tikz/south right=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/right| but aligns the nodes at their |south| border.
+  Like \referenceKeyandIndexO{right} but aligns the nodes at their |south| border.
   
   This is basically the same as |left=of reference.south east, anchor=south west|.
 \end{stylekey}
 \begin{stylekey}{/tikz/west above=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/above| but aligns the nodes at their |west| border.
+  Like \referenceKeyandIndexO{above} but aligns the nodes at their |west| border.
   
   This is basically the same as |left=of reference.north west, anchor=south west|.
 \end{stylekey}
 \begin{stylekey}{/tikz/west below=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/below| but aligns the nodes at their |west| border.
+  Like \referenceKeyandIndexO{below} but aligns the nodes at their |west| border.
   
   This is basically the same as |left=of reference.south west, anchor=north west|.
 \end{stylekey}
 \begin{stylekey}{/tikz/east above=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/above| but aligns the nodes at their |east| border.
+  Like \referenceKeyandIndexO{above} but aligns the nodes at their |east| border.
   
   This is basically the same as |left=of reference.north east, anchor=south east|.
 \end{stylekey}
 \begin{stylekey}{/tikz/east below=\opt{\meta{specification}} (default 0pt)}
-  Like |/tikz/below| but aligns the nodes at their |east| border.
+  Like \referenceKeyandIndexO{below} but aligns the nodes at their |east| border.
   
   This is basically the same as |left=of reference.south east, anchor=north east|.
 \end{stylekey}
@@ -164,20 +164,20 @@ This functionality is also available without the placement:
 \end{stylekey}
 \begin{stylekey}{/tikz/span vertical=\meta{list of coordinates}}
   Creates a rectangular node with the name |fit bounding box| that encompasses
-  the \meta{list of coordinates} \emph{and} sets the |/pgf/minimum height| to
+  the \meta{list of coordinates} \emph{and} sets the \referenceKeyandIndexO[/pgf]{minimum height} to
   the height of this bounding box.
 \end{stylekey}
 \begin{stylekey}{/tikz/span horizontal=\meta{list of coordinates}}
   Creates a rectangular node with the name |fit bounding box| that encompasses
-  the \meta{list of coordinates} \emph{and} sets the |/pgf/minimum width| to
+  the \meta{list of coordinates} \emph{and} sets the \referenceKeyandIndexO[/pgf]{minimum width} to
   the width of this bounding box.
 \end{stylekey}
 \begin{stylekey}{/tikz/span=\meta{list of coordinates}}
-  Is a combination of |span vertical| and |span horizontal|.
+  Is a combination of |/tikz/span vertical| and |/tikz/span horizontal|.
 \end{stylekey}
 
 As you maybe noticed in the example above, the \meta{specification} also allows a prefix
 delimited by |:| which the |node distance| will be multiplied to with for the placement.%
-\footnote{This is probably more useful when \texttt{/tikz/on grid} is used.}
+\footnote{This is probably more useful when \referenceKeyandIndexO{on grid} is used.}
 
 \endinput

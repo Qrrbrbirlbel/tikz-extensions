@@ -10,14 +10,14 @@
 
 \section{Calendar}
 \begin{tikzlibrary}{ext.calendar-plus}
-  This library extends the \tikzname\space library |calendar|\indexLibrary{calendar}.
+  This library extends the \tikzname\space library |calendar|\indexLibraryO{calendar}.
 \end{tikzlibrary}
 
 \begin{multicols}{2}
 
-\subsection{Extensions}
+\subsection{Value-keys and nestable \texttt{if} key}
 
-The values of following keys were stored in some macros that are not
+The values of following keys are originally stored in some macros that are not
 accessible by the user. These are now simple value-keys.
 The |@|-protected macros are still available, of course.
 
@@ -36,16 +36,17 @@ It is now also possible to nest |/tikz/if| occurrences.
 
 \subsection{Week numbering (ISO~8601)}
 
+The actual week number algorithm is implemented by the |pgfcalendar-ext| package/module in section~\ref{calendar:weeknumbering}.
 \begin{key}{/tikz/week code=\meta{code}}
-  Works like |/tikz/day code| or |/tikz/month code|, only for weeks.
+  Works like |/tikz/day code| or |/tikz/month code|, only for weeks.\indexKeyO{day code}\indexKeyO{month code}
 \end{key}
 
 \begin{key}{/tikz/week text=\meta{text}}
-  Works like |/tikz/day text| or |/tikz/month text|, only for weeks.
+  Works like |/tikz/day text| or |/tikz/month text|, only for weeks.\indexKeyO{day text}\indexKeyO{month text}
 \end{key}
 
 \begin{stylekey}{/tikz/every week}
-  Works like |/tikz/every day| or |/tikz/every month|, only for weeks.
+  Works like |/tikz/every day| or |/tikz/every month|, only for weeks.\indexKeyO{every day}\indexKeyO{every month}
 \end{stylekey}
 
 \begin{stylekey}{/tikz/week label left}

@@ -12,7 +12,7 @@
 \label{library:paths.arcto}
 
 \begin{tikzlibrary}{ext.paths.arcto}
-  This library adds new path specifications |arc to| that specifies an arc \emph{to} a point~--
+  This library adds the new path operation |arc to| that specifies an arc \emph{to} a point~--
   without the user having to specify any angles.
 \end{tikzlibrary}
 
@@ -77,13 +77,13 @@ options that can be used inside of \meta{options}.
 \end{key}
 
 \begin{key}{/tikz/arc to/x radius=\meta{value}}
-  This forwards the \meta{value} to |/tikz/x radius|.
-  Its \meta{value} is used for radius of the arc.
+  This forwards the \meta{value} to \referenceKeyandIndexO{x radius}.
+  Its \meta{value} is used for the radius of the arc.
 \end{key}
 
 \begin{key}{/tikz/arc to/y radius=\meta{value}}
-  This forwards the \meta{value} to |/tikz/y radius|.
-  Its \meta{value} is used for radius of the arc.
+  This forwards the \meta{value} to \referenceKeyandIndexO{y radius}.
+  Its \meta{value} is used for the radius of the arc.
 \end{key}
 
 \begin{key}{/tikz/arc to/radius=\meta{value}}
@@ -95,7 +95,7 @@ options that can be used inside of \meta{options}.
   After |/tikz/every arc| this will also be applied before any \meta{options} are set.
 \end{stylekey}
 
-It should be noted that this uses |\pgfpatharcto| where the \tikzname\space manual warns of:
+It should be noted that this uses |\pgfpatharcto| for which the \tikzname\space manual warns:\indexCommandO\pgfpatharcto
 \begin{quote}\itshape
     The internal computations necessary for this command are numerically very unstable.
     In particular, the arc will not always really end at the \meta{target coordinate},

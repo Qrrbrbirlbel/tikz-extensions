@@ -17,7 +17,7 @@
 \end{tikzlibrary}
 
 \subsection{Zig-Zag}
-Similar to the path operations \verb!|-! and \verb!-|! this library adds
+Similar to the path operations \verb!|-! and \verb!-|! this library adds\indexPathOperationO{\protect\pgfmanualbar-}\indexPathOperationO{-\protect\pgfmanualbar}
 the path operations \verb!|-|! and \verb!-|-!.
 {\catcode`\|=12
 \begin{pathoperation}[noindex]{|-|}{\opt{\oarg{options}}\meta{coordinate or cycle}}
@@ -38,13 +38,13 @@ the path operations \verb!|-|! and \verb!-|-!.
   
   For values $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
   look more like Zig-Zig lines.
-  \begin{codeexample}[preamble=\usetikzlibrary{paths.ortho}]
+\begin{codeexample}[preamble=\usetikzlibrary{paths.ortho}]
 \begin{tikzpicture}[very thick, rounded corners]
 \draw[help lines] (-.25, -1.25) grid (2.25, 1.25);
 \draw (0, 0) -|-            (2, 1) --
       (2, 0) -|-[ratio=.25] (0,-1) -- cycle;
 \end{tikzpicture}
-  \end{codeexample}
+\end{codeexample}
 \end{key}
 %TODO: hvvh/distance needs fixing, maybe?
 \begin{key}{/tikz/hvvh/distance=\meta{distance}}
@@ -82,7 +82,7 @@ these can be configured through the following keys.
 \begin{key}{/tikz/hvvh/spacing=\meta{number} (initially 4)}
   Unless $\meta{number} = 0$ is set
   \begin{itemize}
-  \item |pos = 0| will be at the start,
+  \item |pos = 0| will be at the start,\indexKeyO{pos}
   \item |pos = 1| will be at the end,
   \item |pos = |$\frac{1}{\meta{number}}$ will be at the first kink,
   \item |pos = |$\frac{\meta{number}-1}{\meta{number}}$ will be at the second kink and
@@ -141,7 +141,7 @@ All distances can be set with on key.
 
 The following keys can be used to access vertical and horizontal line path operations.
 \begin{stylekey}{/tikz/horizontal vertical}
-  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes! that can be used with
+  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes! that can be used with\indexKeyO{to path}
   the path operations |to| or |edge|.
 \end{stylekey}
 \begin{stylekey}{/tikz/vertical horizontal}

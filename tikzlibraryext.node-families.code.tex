@@ -9,25 +9,32 @@
 \def\tikz@nf@align@left#1{}
 \def\tikz@nf@align@center#1{\kern.5#1}
 \def\tikz@nf@align@right#1{\kern#1}
-\tikzset{
-  family width/.initial=,
-  family height/.initial=,
-  family text depth/.initial=,
-  family text height/.initial=,
-  family text width align/.is choice,
-  family text width align/left/.code=\let\tikz@nf@align@action\tikz@nf@align@left,
-  family text width align/center/.code=\let\tikz@nf@align@action\tikz@nf@align@center,
-  family text width align/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
-  family text width align=left,
-  family text width/.initial=,
+
+\pgfqkeys{/tikz/node family}{
+  width/.initial=,
+  height/.initial=,
+  size/.style=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
+  text depth/.initial=,
+  text height/.initial=,
+  text width align/.is choice,
+  text width align/left/.code=\let\tikz@nf@align@action\tikz@nf@align@left,
+  text width align/center/.code=\let\tikz@nf@align@action\tikz@nf@align@center,
+  text width align/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
+  text width align=center,
+  text width/.initial=,
+  text/.code=\pgfqkeys{/tikz/node family}{text depth={#1},text height={#1},text width={#1}},
+  prefix/.initial=\pgfpictureid-,
 }
+\tikzset{node family/.code=\pgfqkeys{/tikz/node family}{#1}}
 
 % #1 = family type + name
-\def\tikz@family@save#1{%
+\def\tikz@nf@save#1{%
+  %\errmessage{#1}%
   \immediate\write\pgfutil@auxout{%
-    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikz@family@#1@previous\endcsname{\csname tikz@family@#1@next\endcsname}%
+    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikz@nf@#1@previous\endcsname
+      {\csname tikz@nf@#1@next\endcsname}%
   }%
-  \expandafter\global\expandafter\let\csname tikz@family@#1@next\endcsname\relax
+  %\expandafter\global\expandafter\let\csname tikz@nf@#1@next\endcsname\relax
 }
 
 % #1 = value to set
@@ -36,24 +43,26 @@
 \def\tikz@nf@getandset#1#2#3{%
     % what's our family's name?
     #3=0pt\relax
-    \pgfkeysgetvalue{/tikz/family #2}\tikz@nf@familyname
+    \pgfkeysgetvalue{/tikz/node family/#2}\tikz@nf@familyname
     \pgfutil@ifxempty\tikz@nf@familyname{% no family to deal with
     }{%
-        % we need to save the value for the next run
-        \pgfutil@IfUndefined{tikz@family@#2@\tikz@nf@familyname @next}{%
-            % first time: define first value and install hook at end of picture
-            \expandafter\xdef\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname{#1}%
-            \edef\tikz@temp{\noexpand\tikz@family@save{#2@\tikz@nf@familyname}}%
-            \expandafter\pgfutil@g@addto@macro\expandafter\tikz@atend@picture\expandafter{\tikz@temp}%
-        }{%
-            \ifdim\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname<#1\relax
-                \expandafter\xdef\csname tikz@family@#2@\tikz@nf@familyname @next\endcsname{#1}%
-            \fi
-        }%
-        \pgfutil@IfUndefined{tikz@family@#2@\tikz@nf@familyname @previous}{% first run, ignore
-        }{% set previous value
-              #3=\csname tikz@family@#2@\tikz@nf@familyname @previous\endcsname\relax
-        }%
+      \edef\tikz@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikz@nf@familyname}%
+      % we need to save the value for the next run
+      \pgfutil@IfUndefined{tikz@nf@#2@\tikz@nf@familyname @next}{%
+        % first time: define first value and install hook at end of picture
+        \expandafter\xdef\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname{#1}%
+        \edef\tikz@temp{\noexpand\tikz@nf@save{#2@\tikz@nf@familyname}}%
+        %\expandafter\AtVeryEndDocument\expandafter{\tikz@temp}%
+        \expandafter\pgfutil@g@addto@macro\expandafter\tikz@atend@picture\expandafter{\tikz@temp}%
+      }{%
+        \ifdim\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname<#1\relax
+          \expandafter\xdef\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname{#1}%
+        \fi
+      }%
+      \pgfutil@IfUndefined{tikz@nf@#2@\tikz@nf@familyname @previous}{% first run, ignore
+      }{% set previous value
+        #3=\csname tikz@nf@#2@\tikz@nf@familyname @previous\endcsname\relax
+      }%
     }%
 }
 
@@ -273,8 +282,8 @@
   \expandafter\expandafter\expandafter{\expandafter\pgf@temp#1}%
 }
 
-\tikzset{
-  node families/set text family/.code={%
+\pgfqkeys{/tikz/node family}{
+  setup shape/.code={%
     \expandafter\pgfutil@prefixto@macro\csname pgf@sh@s@#1\endcsname{%
       \tikz@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
       \ifdim\wd\pgfnodeparttextbox<\pgfutil@tempdima
@@ -292,5 +301,5 @@
       \fi
     }%
   },
-  node families/set text family/.list={rectangle,circle,Rectangle,Circle}
+  setup shape/.list={rectangle,circle,Rectangle,Circle}
 }

@@ -87,6 +87,7 @@
 \usetikzlibrary{
   ext.calendar-plus,
   ext.misc,
+  ext.node-families,
   ext.paths.arcto,
   ext.paths.ortho,
   ext.paths.timer,
@@ -243,7 +244,125 @@
 
 \usepackage{paracol}
 
+%% normal references
 \newcommand*{\indexLibrary}[1]{%
   \index{#1@\protect\texttt{#1} library}%
   \index{Libraries!#1@\protect\texttt{#1}}%
 }
+\newcommand*{\indexMathFunction}[1]{%
+  \index{#1@\protect\texttt{#1} math function}%
+  \index{Math functions!#1@\protect\texttt{#1}}%
+}
+\newcommand*{\indexShape}[1]{%
+  \index{#1@\protect\texttt{#1} shape}%
+  \index{Shapes!#1@\protect\texttt{#1}}%
+}
+\newcommand*{\indexHandler}[1]{%
+  \index{\gobble#1@\protect\texttt{#1} handler}%
+  \index{Key handlers!#1@\protect\texttt{#1}}
+}
+\newcommand*{\indexKey}[2][/tikz/]{%
+  \def\mykey{#1#2}%
+  \def\mypath{}%
+  \gdef\myname{}%
+  \decompose#1#2/\nil
+}
+\newcommand*{\indexPathOperation}[1]{%
+  \index{#1@\protect\texttt{#1} path operation}%
+  \index{Path operations!#1@\protect\texttt{#1}}%
+}
+
+%% references to original
+\newcommand*{\indexLibraryO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} library\originalsuffix}%
+  \index{Libraries!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\indexMathFunctionO}[1]{%
+  \index{#1@\protect\texttt{\original{#1}} math function\originalsuffix}%
+  \index{Math functions!#1@\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\indexShapeO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} shape\originalsuffix}%
+  \index{Shapes!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\indexHandlerO}[1]{%
+  \index{\gobble#1@\originalprefix\protect\texttt{\original{#1}} handler\originalsuffix}%
+  \index{Key handlers!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}
+}
+\newcommand*{\indexKeyO}[2][/tikz/]{%TODO
+  \begingroup\let\decomposetoodeep\decomposetoodeepO
+    \def\mykey{#1#2}%
+    \def\mypath{}%
+    \gdef\myname{}%
+    \firsttimetrue
+    \decomposeO#1#2/\nil
+  \endgroup
+}
+\def\decomposetoodeepO#1/#2/\nil{%
+  % avoid too-deep nesting in index
+  \index{#1/#2@\originalprefix\protect\texttt{\original{#1/#2}} key\originalsuffix}%
+  \index{\mypath#1/#2@\originalprefix\protect\texttt{\original{#1/#2}}\originalsuffix}%
+  \decomposefindlast/#1/#2/\nil%
+}
+\def\decomposeO/#1/#2\nil{%
+  \def\test{#2}%
+  \ifx\test\empty%
+    % aha.
+    \index{#1@\originalprefix\protect\texttt{\original{#1}} key\originalsuffix}%
+    \index{\mypath#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+    \gdef\myname{#1}%
+    \pgfmanualpdflabel{#1}{}
+  \else%
+    \advance\pgfmanualdecomposecount by1\relax%
+    \ifnum\pgfmanualdecomposecount>2\relax%
+      \decomposetoodeepO#1/#2\nil%
+    \else%
+      \iffirsttime%
+        \begingroup%  
+          % also make a pdf link anchor with full key path.
+          \def\hyperlabelwithoutslash##1/\nil{%
+            \pgfmanualpdflabel{##1}{}%
+          }%
+          \hyperlabelwithoutslash/#1/#2\nil%
+        \endgroup%
+        \def\mypath{#1@\protect\texttt{/#1/}!}%
+        \firsttimefalse%
+      \else%
+        \expandafter\def\expandafter\mypath\expandafter{\mypath#1@\protect\texttt{#1/}!}%
+      \fi%
+      \def\firsttime{}%
+      \decomposeO/#2\nil%
+    \fi%
+  \fi%
+}
+\newcommand*{\indexPathOperationO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} path operation\originalsuffix}%
+  \index{Path operations!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+
+\newcommand*{\indexCommandO}[1]{%
+  \removeats{#1}%
+  \index{\strippedat @\originalprefix\protect\texttt{\original{\protect\string\protect#1}}\originalsuffix}%
+}
+
+\newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}%
+
+\colorlet{originalindex}{gray}
+\newcommand*{\original}[1]{\textcolor{originalindex}{#1}}
+\newcommand*{\originalsuffix}{}%\textsuperscript{\textdagger}}%\normalsize
+\newcommand*{\originalprefix}{}%\footnotesize
+
+%\newcommand*{\original}[1]{\textcolor{originalindex}{#1}}
+%\newcommand*{\original}[1]{#1}%\textcolor{originalindex}{#1}}
+%\newcommand*{\originalsuffix}{}%\textsuperscript{\color{blue}\tikzname}}
+%\DeclareRobustCommand*{\originalprefix}{\smash{\footnotesize\llap{\textbullet\space}}}
+
+\newcommand*{\filetype}[1]{\textsc{#1}}
+
+\makeatletter
+\def\index@prologue{\section*{Index}\addcontentsline{toc}{section}{Index}
+  This index contains automatically generated entries as well as {\originalprefix\original{references}\originalsuffix} to
+  original functionalities of PGF/\tikzname.
+  \bigskip
+}
+\makeatother

@@ -11,6 +11,7 @@
 \section{Calendar: Weeknumbers and more conditionals}
 \begin{package}{calendar-ext}
   This package adds week numbers and more conditionals to the PGF package |pgfcalendar|.
+  (Despite the code example above, this package is not set up to work with Con\TeX t.)
 \end{package}
 
 %This package extends the |pgfcalendar| package.
@@ -66,13 +67,13 @@ are added. These are
   year's first Thursday in it.
 \end{command}
 
-Inside of |\pgfcalendar| the command |\pgfcalendarcurrentweek| will be available.
+Inside of |\pgfcalendar|\indexCommandO\pgfcalendar the command |\pgfcalendarcurrentweek| will be available.
 \begin{command}{\pgfcalendarcurrentweek}
   This command returns the current week number (always two digits -- use shorthand |n.|
   to strip the leading zero).
 \end{command}
 
-Inside of |\ifdate| the command |\pgfcalendarifdateweek| will be available.
+Inside of |\ifdate|\indexCommandO\ifdate the command |\pgfcalendarifdateweek| will be available.
 \begin{command}{\pgfcalendarifdateweek}
   This command returns the week number (always two digits).
 \end{command}
