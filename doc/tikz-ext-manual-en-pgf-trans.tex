@@ -17,7 +17,7 @@
 
 Two approaches to mirror transformation exist:
 \begin{enumerate}
-\item Using the mirroring matrix (see left column).
+\item Using the reflection matrix (see left column).
 
   This depends on |\pgfpointnormalised| which involves the sine and the cosine functions of PGFmath.
 
@@ -31,9 +31,9 @@ Choose one you're comfortable with.
 
 \begin{paracol}{2}
 
-\subsection{Using the mirroring matrix}
+\subsection{Using the reflection matrix}
 
-The following commands use the mirroring matrix that sets the transformation matrix following
+The following commands use the reflection matrix that sets the transformation matrix following
 \begin{equation*}
   A = \frac{1}{\Vert\vec l\Vert^2} \begin{bmatrix}
   l_x^2-l_y^2 & 2l_xl_y \\
