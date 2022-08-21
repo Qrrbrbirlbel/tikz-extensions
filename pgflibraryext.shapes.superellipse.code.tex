@@ -1,0 +1,111 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\usepgflibrary{shapes.geometric,intersections}
+\pgfset{
+  superellipse x exponent/.initial=2.5,
+  superellipse y exponent/.initial=2.5,
+  superellipse step/.initial=4,
+  superellipse exponent/.style={/pgf/superellipse x exponent={#1},/pgf/superellipse y exponent={#1}}}
+\pgfdeclareshape{superellipse}{%
+  \inheritsavedanchors[from=ellipse]
+  \inheritanchor[from=ellipse]{text}\inheritanchor[from=ellipse]{center}
+  \inheritanchor[from=ellipse]{mid}\inheritanchor[from=ellipse]{base}
+  \inheritanchor[from=ellipse]{north}\inheritanchor[from=ellipse]{south}
+  \inheritanchor[from=ellipse]{west}\inheritanchor[from=ellipse]{east}
+  \inheritanchor[from=ellipse]{mid west}\inheritanchor[from=ellipse]{base west}
+  \inheritanchor[from=ellipse]{mid east}\inheritanchor[from=ellipse]{base east}
+  \anchor{north east}{%
+    \pgf@process{\radius}%
+    \pgfmathpow@{.70710678118}{\xexponent}%
+    \pgf@x=\pgfmathresult\pgf@x
+    \pgfmathpow@{.70710678118}{\yexponent}%
+    \pgf@y=\pgfmathresult\pgf@y
+    \pgfpointadd{}{\centerpoint}%
+  }
+  \anchor{north west}{%
+    \pgf@process{\radius}%
+    \pgfmathpow@{.70710678118}{\xexponent}%
+    \pgf@x=-\pgfmathresult\pgf@x
+    \pgfmathpow@{.70710678118}{\yexponent}%
+    \pgf@y=\pgfmathresult\pgf@y
+    \pgfpointadd{}{\centerpoint}%
+  }
+  \anchor{south west}{%
+    \pgf@process{\radius}%
+    \pgfmathpow@{.70710678118}{\xexponent}%
+    \pgf@x=-\pgfmathresult\pgf@x
+    \pgfmathpow@{.70710678118}{\yexponent}%
+    \pgf@y=-\pgfmathresult\pgf@y
+    \pgfpointadd{}{\centerpoint}%
+  }
+  \anchor{south east}{%
+    \pgf@process{\radius}%
+    \pgfmathpow@{.70710678118}{\xexponent}%
+    \pgf@x=\pgfmathresult\pgf@x
+    \pgfmathpow@{.70710678118}{\yexponent}%
+    \pgf@y=-\pgfmathresult\pgf@y
+    \pgfpointadd{}{\centerpoint}%
+  }
+  \savedmacro\xexponent{%
+    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/superellipse x exponent}}%
+    \pgfmathmultiply@{\pgfmathresult}{2}%
+    \let\xexponent\pgfmathresult
+  }
+  \savedmacro\yexponent{%
+    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/superellipse y exponent}}%
+    \pgfmathmultiply@{\pgfmathresult}{2}%
+    \let\yexponent\pgfmathresult
+  }
+  \savedmacro\step{%
+    \pgfmathsetmacro\step{\pgfkeysvalueof{/pgf/superellipse step}}}
+  \savedmacro\plothandler{\pgfkeysgetvalue{/pgf/superellipse smooth}\plothandler}
+  \backgroundpath{%
+    \pgfplothandlerclosedcurve
+    \pgf@process{\radius}%
+    \pgfmathsetlengthmacro\xradius{\pgf@x-\pgfkeysvalueof{/pgf/outer xsep}}%
+    \pgfmathsetlengthmacro\yradius{\pgf@y-\pgfkeysvalueof{/pgf/outer ysep}}%
+    \pgftransformshift{\centerpoint}%
+    \pgfplotfunction{\x}{0,\step,...,359}{%
+      \pgfmathsin@{\x}\let\sineofx\pgfmathresult
+      \pgfmathcos@{\x}\let\cosineofx\pgfmathresult
+      \pgfpoint{\xradius*abs(\cosineofx)^\xexponent*sign(\cosineofx)}
+               {\yradius*abs(\sineofx)^\yexponent*sign(\sineofx)}}
+    \pgftransformshift{\centerpoint\pgf@x=-\pgf@x\pgf@y=-\pgf@y}}
+  \anchorborder{%
+    \pgfextract@process\externalpoint{}%
+    \ifdim\pgf@x=0pt % catch special case x = 0
+      \ifdim\pgf@y<0pt \pgf@anchor@superellipse@south\else\pgf@anchor@superellipse@north\fi
+    \else
+      \ifdim\pgf@y=0pt % catch special case y = 0
+        \ifdim\pgf@x<0pt \pgf@anchor@superellipse@west\else\pgf@anchor@superellipse@east\fi
+      \else % both are not zero
+        \pgftransformreset % weird
+        \pgfintersectionofpaths{%
+          % line from center to rectangle encompassing superellipse
+          % \externalpoint might be only 1pt from center
+          \pgfpathmoveto{\centerpoint}%
+          \pgfpathlineto{\pgfpointborderrectangle{\externalpoint}{\radius}}%
+        }{%
+          \pgfpathmoveto{\centerpoint}%
+          \pgf@process{\radius}\pgfgetlastxy\xradius\yradius
+          \pgfplothandlerclosedcurve
+          \pgfplotfunction{\x}{0,\step,...,359}{%
+            % TODO: look for direction and only do quarter path
+            \pgfmathsin@{\x}\let\sineofx\pgfmathresult
+            \pgfmathcos@{\x}\let\cosineofx\pgfmathresult
+            \pgfpoint{\xradius*abs(\cosineofx)^\xexponent*sign(\cosineofx)}
+                     {\yradius*abs(\sineofx)^\yexponent*sign(\sineofx)}}%
+        }%
+        \ifnum\pgfintersectionsolutions>0 % only if a solution was found
+          \pgfpointintersectionsolution{1}%
+          \pgfpointadd{}{\centerpoint}%
+        \else % other wise take the border on the rectangle (close enough?)
+          \pgfpointborderrectangle{\externalpoint}{\radius}%
+        \fi
+      \fi
+    \fi}}

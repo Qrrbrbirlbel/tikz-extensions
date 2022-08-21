@@ -1,0 +1,53 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\section{Shape: Superellipse}
+\begin{pgflibrary}{ext.shapes.superellipse}
+  Shape in the form of a ``superellipse''.
+\end{pgflibrary}
+
+This shape is defined by formula
+\begin{equation*}
+  \left|\frac x{r_x}\right|^m + \left|\frac y{r_y}\right|^n = 1
+\end{equation*}
+and will be plotted by
+\begin{align*}
+  x(t) &= |\cos t|^{\frac 2m} \cdot r_x \sgn(\cos t) \\
+  y(t) &= |\sin t|^{\frac 2n} \cdot r_y \sgn(\sin t) \\
+\end{align*}
+where $r_x$ is half the node's width and $r_y$ is half the node's height.
+
+\begin{key}{/pgf/superellipse x exponent=\meta{x exponent}(initially 2.5)}
+This sets $m$.
+\end{key}
+\begin{key}{/pgf/superellipse y exponent=\meta{y exponent}(initially 2.5)}
+This sets $n$.
+\end{key}
+\begin{key}{/pgf/superellipse step=\meta{step}(initially 5)}
+This specifies the step of the underlying plot handler. The smaller \meta{step} is, the slower compilation will be.
+\end{key}
+\begin{key}{/pgf/superellipse exponent=\meta{exponent}}
+  Sets both |superellipse x exponent| and |superellipse y exponent| to \meta{exponent}.
+\end{key}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.superellipse}]
+\begin{tikzpicture}[superellipse step=1]\Huge
+\node[name=s,shape=superellipse,shape example] {Superellipse\vrule width 1pt height 2cm};
+\foreach \anchor/\placement in
+  {north west/above left, north/above, north east/above right,
+   west/left, center/above, east/right,
+   mid west/right, mid/above, mid east/left,
+   base west/left, base/below, base east/right,
+   south west/below left, south/below, south east/below right,
+   text/left, 10/right, 130/above}
+   \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+     node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}
+
+\endinput

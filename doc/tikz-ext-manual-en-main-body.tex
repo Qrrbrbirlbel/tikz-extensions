@@ -20,6 +20,7 @@
 %   tikz-ext-manual-en-pgf-trans,
 %   tikz-ext-manual-en-library-misc,
 %}
+%\includeonly{tikz-ext-manual-en-pgf-shapes}
 \begin{document}
 
 \title{\bfseries The \tikzextname\space Package\\
@@ -126,7 +127,7 @@ These libraries (should) work with both PGF and \tikzname.
 \end{center}
 
 \tikzsetfigurename{PGF.trans}\include{tikz-ext-manual-en-pgf-trans}
-
+\tikzsetfigurename{PGF.shapes}\include{tikz-ext-manual-en-pgf-shapes}
 \part{Utilities}
 
 \label{part:misc}
@@ -164,15 +165,20 @@ These libraries (should) work with both PGF and \tikzname.
 %%% END
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added PGF library \texttt{ext.#1}.}
+\newcommand*{\addShape}[1]{Added shape \texttt{#1} (PGF library \texttt{ext.shapes.#1}).}
 \part{Changelog \& Index}
-\section*{Changelog}
+\section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}
+\noindent
+Version 0.3
+\begin{itemize}
+\item \addShape{superellipse}
+\end{itemize}
 Version 0.2
 \begin{itemize}
 \item \addTikz{positioning-plus}
 \item \addTikz{node-families}
 \end{itemize}
-
 Version 0.1
 \begin{itemize}
 \item \addTikz{calendar-plus}
