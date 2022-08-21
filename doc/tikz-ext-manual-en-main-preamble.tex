@@ -91,6 +91,7 @@
   ext.paths.ortho,
   ext.paths.timer,
   ext.patterns.images,
+  ext.positioning-plus,
   ext.topaths.arcthrough,
   ext.transformations.mirror,
   %
@@ -241,3 +242,8 @@
 \makeatother
 
 \usepackage{paracol}
+
+\newcommand*{\indexLibrary}[1]{%
+  \index{#1@\protect\texttt{#1} library}%
+  \index{Libraries!#1@\protect\texttt{#1}}%
+}

@@ -33,6 +33,7 @@
 
 This can only by used for circles in the |canvas| coordinate system.
 
+\begin{multicols}{2}
 \begin{key}{/tikz/arc through/through=\meta{coordinate} (initially {(0,0)})}
   The coordinate on the circle that defines~-- together with the
   starting and target point~-- a circle.
@@ -40,7 +41,7 @@ This can only by used for circles in the |canvas| coordinate system.
 
 \begin{key}{/tikz/arc through/center suffix=\meta{suffix} (initially {})}
   The |arc through| will define a coordinate named |arc through center|\meta{suffix}
-  so that it can referenced later.
+  so that it can be referenced later.
 \end{key}
 
 \begin{key}{/tikz/arc through/clockwise}
@@ -58,3 +59,5 @@ This can only by used for circles in the |canvas| coordinate system.
   A parameter other than |center suffix|, |clockwise| or |counter clockwise| will
   be assumed to be the |through| coordinate.
 \end{key}
+\end{multicols}
+\endinput
