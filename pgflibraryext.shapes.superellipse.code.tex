@@ -11,22 +11,41 @@
   superellipse y exponent/.initial=2.5,
   superellipse step/.initial=4,
   superellipse exponent/.style={/pgf/superellipse x exponent={#1},/pgf/superellipse y exponent={#1}}}
-\pgfmathdeclarefunction{superellipsex}{3}{% #1 = t (0≤t≤90), #2 = 2/m (x-exp), #3 = a (x-rad)
+
+% Evaluates the x-value of a superellipse around the center
+% #1 = t (0≤t≤90)
+% #2 = 2/m (x-exp)
+% #3 = a (x-rad)
+\pgfmathdeclarefunction{superellipsex}{3}{%
   \pgfmathcos@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
-\pgfmathdeclarefunction{superellipsey}{3}{% #1 = t (0≤t≤90), #2 = 2/n (y-exp), #3 = a (y-rad)
+
+% Evaluates the y-value of a superellipse around the center
+% #1 = t (0≤t≤90)
+% #2 = 2/n (y-exp)
+% #3 = a (y-rad)
+\pgfmathdeclarefunction{superellipsey}{3}{%
   \pgfmathsin@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
-\def\pgfmathsuperellipseXY#1#2#3#4#5{% #1 = t (0≤t≤90), #2 = 2/m (x-exp), #3 = 2/n (y-exp), #4 = a (x-rad), #5 = b (y-rad)
+
+% Evaluates the x- and y- value of superellipse around the center
+% #1 = t (0≤t≤90)
+% #2 = 2/m (x-exp)
+% #3 = 2/n (y-exp)
+% #4 = a (x-rad)
+% #5 = b (y-rad)
+\def\pgfmathsuperellipseXY#1#2#3#4#5{%
   \begingroup
-    \pgfmathsuperellipsex{#1}{#2}{#4}%
+    \pgfmathsuperellipsex@{#1}{#2}{#4}%
     \let\pgfmath@temp\pgfmathresult
-    \pgfmathsuperellipsey{#1}{#3}{#5}%
-    \edef\pgfmath@temp{\def\noexpand\pgfmathresultX{\pgfmath@temp}\def\noexpand\pgfmathresultY{\pgfmathresult}}%
+    \pgfmathsuperellipsey@{#1}{#3}{#5}%
+    \edef\pgfmath@temp{\def\noexpand\pgfmathresultX{\pgfmath@temp}%
+                       \def\noexpand\pgfmathresultY{\pgfmathresult}}%
     \expandafter
   \endgroup\pgfmath@temp}
+
 \pgfdeclareshape{superellipse}{%
   \inheritsavedanchors[from=ellipse]
   \inheritanchor[from=ellipse]{text}\inheritanchor[from=ellipse]{center}
@@ -78,41 +97,39 @@
     \let\yexponent\pgfmathresult
   }
   \savedmacro\step{%
-    \pgfmathsetmacro\step{\pgfkeysvalueof{/pgf/superellipse step}}}
-  \savedmacro\plothandler{\pgfkeysgetvalue{/pgf/superellipse smooth}\plothandler}
+    \pgfmathtruncatemacro\step{\pgfkeysvalueof{/pgf/superellipse step}}%
+  }
   \backgroundpath{%
     \pgf@process{\radius}%
-    \pgfmathsetlengthmacro\xradius{\pgf@x-\pgfkeysvalueof{/pgf/outer xsep}}%
-    \pgfmathsetlengthmacro\yradius{\pgf@y-\pgfkeysvalueof{/pgf/outer ysep}}%
-    \let\pgf@tempd\pgfutil@empty
-    \let\pgf@tempa\pgfutil@empty
-    \let\pgf@tempb\pgfutil@empty
-    \let\pgf@tempc\pgfutil@empty
+    \pgfmathsetlengthmacro\xradius{\pgf@x-(\pgfkeysvalueof{/pgf/outer xsep})}%
+    \pgfmathsetlengthmacro\yradius{\pgf@y-(\pgfkeysvalueof{/pgf/outer ysep})}%
+    \let\pgf@tempa\pgfutil@empty\let\pgf@tempb\pgfutil@empty
+    \let\pgf@tempc\pgfutil@empty\let\pgf@tempd\pgfutil@empty
     \c@pgf@counta=\step
     \pgfutil@loop
     \ifnum\c@pgf@counta<90
       \pgfmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{\pgfmathresultY pt}}}%
-      \pgfutil@append@macrotomacro\pgf@tempd\pgf@temp
+      \pgfutil@append@macrotomacro\pgf@tempa\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{\pgfmathresultY pt}}}%
-      \pgfutil@prefix@macrotomacro\pgf@tempa\pgf@temp
+      \pgfutil@prefix@macrotomacro\pgf@tempb\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
-      \pgfutil@append@macrotomacro\pgf@tempb\pgf@temp
+      \pgfutil@append@macrotomacro\pgf@tempc\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
-      \pgfutil@prefix@macrotomacro\pgf@tempc\pgf@temp
+      \pgfutil@prefix@macrotomacro\pgf@tempd\pgf@temp
       \advance\c@pgf@counta by\step
     \pgfutil@repeat
     \pgftransformshift{\centerpoint}%
     \pgfplothandlerclosedcurve
     \pgfplotstreamstart
-    \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}%
-    \pgf@tempd
-    \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}%
+    \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}% east
     \pgf@tempa
-    \pgfplotstreampoint{\pgfqpoint{-\xradius}{0pt}}%
+    \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}% north
     \pgf@tempb
-    \pgfplotstreampoint{\pgfqpoint{0pt}{-\yradius}}%
+    \pgfplotstreampoint{\pgfqpoint{-\xradius}{0pt}}% west
     \pgf@tempc
+    \pgfplotstreampoint{\pgfqpoint{0pt}{-\yradius}}% south
+    \pgf@tempd
     \pgfplotstreamend
     \pgftransformshift{\centerpoint\pgf@x=-\pgf@x\pgf@y=-\pgf@y}
   }
@@ -124,44 +141,41 @@
       \ifdim\pgf@y=0pt % catch special case y = 0
         \ifdim\pgf@x<0pt \pgf@anchor@superellipse@west\else\pgf@anchor@superellipse@east\fi
       \else % both are not zero
-        \pgftransformreset % weird
+        % save original direction
+        \pgf@xa=\pgf@x
+        \pgf@ya=\pgf@y
+        % make both positive, we're not looking at one quadrant
+        \ifdim\pgf@xa<0pt \pgf@x=-\pgf@x\fi
+        \ifdim\pgf@ya<0pt \pgf@y=-\pgf@y\fi
+        % save that point again
+        \pgfextract@process\externalpoint{}%
+        % we need to do the calculations without any transformations
+        % since we're using plots and \pgfpointborderrectangle
+        \pgftransformreset
         \pgfintersectionofpaths{%
-          \pgf@relevantforpicturesizefalse % even weirder
-          \pgftransformshift{\centerpoint}%
+          % from center to point on rectangle that encompasses superellipse
+          \pgf@relevantforpicturesizefalse
           \pgfpathmoveto{\pgfpointorigin}%
           \pgfpathlineto{\pgfpointborderrectangle{\externalpoint}{\radius}}%
         }{% TODO: construct only quarter of path
-          \pgf@relevantforpicturesizefalse % even weirder
+          \pgf@relevantforpicturesizefalse
           \pgf@process{\radius}\pgfgetlastxy\xradius\yradius
-          \let\pgf@tempd\pgfutil@empty
           \let\pgf@tempa\pgfutil@empty
-          \let\pgf@tempb\pgfutil@empty
-          \let\pgf@tempc\pgfutil@empty
           \c@pgf@counta=\step
           \pgfutil@loop
           \ifnum\c@pgf@counta<90
             \pgfmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
             \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{\pgfmathresultY pt}}}%
-            \pgfutil@append@macrotomacro\pgf@tempd\pgf@temp
-            \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{\pgfmathresultY pt}}}%
-            \pgfutil@prefix@macrotomacro\pgf@tempa\pgf@temp
-            \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
-            \pgfutil@append@macrotomacro\pgf@tempb\pgf@temp
-            \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
-            \pgfutil@prefix@macrotomacro\pgf@tempc\pgf@temp
+            \pgfutil@append@macrotomacro\pgf@tempa\pgf@temp
             \advance\c@pgf@counta by\step
           \pgfutil@repeat
-          \pgftransformshift{\centerpoint}%
-          \pgfplothandlerclosedcurve
+          % we're only using curveto since closedcurve
+          % messes with our other path
+          \pgfplothandlercurveto
           \pgfplotstreamstart
-          \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}%
-          \pgf@tempd
-          \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}%
+          \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}% east
           \pgf@tempa
-          \pgfplotstreampoint{\pgfqpoint{-\xradius}{0pt}}%
-          \pgf@tempb
-          \pgfplotstreampoint{\pgfqpoint{0pt}{-\yradius}}%
-          \pgf@tempc
+          \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}% north
           \pgfplotstreamend
         }%
         \ifnum\pgfintersectionsolutions>0 % only if a solution was found
@@ -169,8 +183,13 @@
         \else % otherwise take the border on the rectangle (close enough?)
           \pgf@process{\pgfpointborderrectangle{\externalpoint}{\radius}}%
         \fi
+        \ifdim\pgf@xa<0pt \pgf@x=-\pgf@x\fi
+        \ifdim\pgf@ya<0pt \pgf@y=-\pgf@y\fi
+        \pgf@process{\pgfpointadd{}{\centerpoint}}%
       \fi
-    \fi}}
+    \fi
+  }
+}
 \def\pgfutil@prefix@macrotomacro#1#2{%
     \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter%
         #1\expandafter\expandafter\expandafter{\expandafter#2#1}}

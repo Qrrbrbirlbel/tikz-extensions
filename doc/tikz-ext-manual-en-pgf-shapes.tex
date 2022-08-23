@@ -30,11 +30,53 @@ This sets $m$.
 This sets $n$.
 \end{key}
 \begin{key}{/pgf/superellipse step=\meta{step}(initially 5)}
-This specifies the step of the underlying plot handler. The smaller \meta{step} is, the slower compilation will be.
+This specifies the step of the underlying plot handler.
+The smaller \meta{step} is, the slower computation will be.
+
+Sensible values for \meta{step} are integer dividers of 90, i.\,e.
+2, 3, 5, 6, 9, 10, 15, 18, 30 and 45.
 \end{key}
 \begin{key}{/pgf/superellipse exponent=\meta{exponent}}
   Sets both |superellipse x exponent| and |superellipse y exponent| to \meta{exponent}.
 \end{key}
+
+\paragraph{Notes on Implementation}
+For implementing this shape, additional mathematical functions were declared.
+\begin{math-function}{superellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})}
+\mathcommand
+Returns the $x$ value on a point of the superellipse with its center on the origin following
+\begin{equation*}
+   x = r_x\cos^{2/m} t
+\end{equation*}
+for values of $0 \leq t \leq 90$.
+\end{math-function}
+\begin{math-function}{superellipsey(\mvar{t}, \mvar{2/n}, \mvar{$r_y$})}
+\mathcommand
+Returns the $y$ value on a point of the superellipse with its center on the origin following
+\begin{equation*}
+   y = r_y\cos^{2/n} t
+\end{equation*}
+for values of $0 \leq t \leq 90$.
+\end{math-function}
+
+Both PGFmath functions can be used at once with the following macro.
+\begin{command}{\pgfmathsuperellipseXY\marg{t}\marg{2/m}\marg{2/n}\marg{a}\marg{b}}
+Returns the $x$ value (in |\pgfmathresultX|) and the $y$ value (in |\pgfmathresultY|) of the superellipse with its center on the origin following
+\begin{align*}
+   x & = a\cos^{2/m} t \\
+   y & = b\cos^{2/n} t
+\end{align*}
+for values of $0 \leq t \leq 90$.
+
+Note: all arguments must be a valid number since they will not be parsed by PGFmath.
+\end{command}
+
+And additional internal macro was defined following the original naming scheme.
+\def\temp{\begin{command}}%
+\expandafter\temp\expandafter{\csname pgfutil@prefix@macrotomacro\endcsname\marg{macro 1}\marg{macro 2}}
+Adds the once-expansion of \meta{macro 2} in front of \meta{macro 1}.
+\end{command}
+
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.superellipse}]
 \begin{tikzpicture}[superellipse step=1]\Huge
 \node[name=s,shape=superellipse,shape example] {Superellipse\vrule width 1pt height 2cm};
@@ -49,5 +91,4 @@ This specifies the step of the underlying plot handler. The smaller \meta{step} 
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
-
 \endinput
