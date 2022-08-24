@@ -1,0 +1,52 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Shape: Rectangle with Rounded Corners}
+\begin{pgflibrary}{ext.shapes.rectangleroundedcorners}
+  A rectangle with rounded corners.
+\end{pgflibrary}
+
+\begin{key}{/pgf/rectangle with rounded corners north west radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+  Sets the north west radius to \meta{dimen}.
+\end{key}
+\begin{key}{/pgf/rectangle with rounded corners north east radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+  Sets the north east radius to \meta{dimen}.
+\end{key}
+\begin{key}{/pgf/rectangle with rounded corners south west radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+  Sets the south west radius to \meta{dimen}.
+\end{key}
+\begin{key}{/pgf/rectangle with rounded corners south east radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+  Sets the south east radius to \meta{dimen}.
+\end{key}
+\begin{key}{/pgf/rectangle with rounded corners radius=\meta{dimen}}
+  Sets all radii to \meta{dimen}.
+\end{key}
+
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.rectangleroundedcorners}]
+\tikzexternaldisable
+\begin{tikzpicture}\Huge
+\node[name=s, shape=rectangle with rounded corners, shape example,
+  rectangle with rounded corners north west radius=10pt,
+  rectangle with rounded corners north east radius=20pt,
+  rectangle with rounded corners south west radius=30pt,
+  rectangle with rounded corners south east radius=40pt] {Rectangle with rounded corners\vrule width 1pt height 2cm};
+\foreach \anchor/\placement in
+  {north west/above left, north/above, north east/above right,
+         west/left,      center/above,       east/right,
+     mid west/right,        mid/above,   mid east/left,
+    base west/left,        base/below,  base east/right,
+   south west/below left, south/below, south east/below right,
+   text/left,% 10/right, 130/above,
+   north west center/below right,      north east center/below left,
+   south west center/above right,      south east center/above left}
+   \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+     node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}

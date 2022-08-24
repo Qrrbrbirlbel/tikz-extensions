@@ -1,13 +1,13 @@
 \pgfqkeys{/pgf}{
-    heat arc width/.initial=+4pt,
-    heat arc sep/.initial=+1pt,
-    heat arc rings/.initial=3,
-    heat arcs/.initial=3,
-    heat arc sep angle/.initial=20,
-    heat opacity high/.initial=.8,
-    heat opacity low/.initial=.2,
-    heat rotate/.initial=90,
-    heat/.code=\pgfqkeys{/pgf/heat}{#1}%
+    heatmark arc width/.initial=+4pt,
+    heatmark arc sep/.initial=+1pt,
+    heatmark arc rings/.initial=3,
+    heatmark arcs/.initial=3,
+    heatmark arc sep angle/.initial=20,
+    heatmark opacity high/.initial=.8,
+    heatmark opacity low/.initial=.2,
+    heatmark rotate/.initial=90,
+    heatmark/.code=\pgfqkeys{/pgf/heatmark}{#1}%
 }
 \pgfdeclareshape{heat}
 %
@@ -80,8 +80,8 @@
     \else%
       \advance\pgf@x by\pgf@xb%
     \fi%
-    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heat arc rings}}%
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heat arc width}+\pgfkeysvalueof{/pgf/heat arc sep}}%
+    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heatmark arc rings}}%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heatmark arc width}+\pgfkeysvalueof{/pgf/heatmark arc sep}}%
     \multiply\pgf@xa\c@pgf@counta
     \advance\pgf@x\pgf@xa
   }%
@@ -115,20 +115,20 @@
   %
   %
   \behindbackgroundpath{%
-    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heat arc rings}}%     heat arc rings
-    \pgfmathsetcount\c@pgf@countb{\pgfkeysvalueof{/pgf/heat arcs}}%          heat arcs
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heat arc width}}%          heat arc width
-    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/heat arc sep}}%            heat arc sep
+    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heatmark arc rings}}%     heat arc rings
+    \pgfmathsetcount\c@pgf@countb{\pgfkeysvalueof{/pgf/heatmark arcs}}%          heat arcs
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heatmark arc width}}%          heat arc width
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/heatmark arc sep}}%            heat arc sep
     %\pgfmathsetmacro\pgf@tempa{\pgfkeysvalueof{/pgf/heat arc sep angle}}%    heat arc sep angle
-    \pgfmathsetmacro\pgf@tempb{360/\c@pgf@countb-(\pgfkeysvalueof{/pgf/heat arc sep angle})}% heat arc
-    \pgfmathsetmacro\pgf@tempc{\pgfkeysvalueof{/pgf/heat rotate}}%           heat rotate
+    \pgfmathsetmacro\pgf@tempb{360/\c@pgf@countb-(\pgfkeysvalueof{/pgf/heatmark arc sep angle})}% heat arc
+    \pgfmathsetmacro\pgf@tempc{\pgfkeysvalueof{/pgf/heatmark rotate}}%           heat rotate
     %
-    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heat opacity high}}%     heat opacity high
+    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heatmark opacity high}}%     heat opacity high
     \ifnum\c@pgf@counta=1
-      \def\qrr@heat@opacity@seps{0}%
+      \def\qrr@heatmark@opacity@seps{0}%
     \else
-      \pgfmathsetmacro\qrr@heat@opacity@seps
-      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heat opacity low}))%
+      \pgfmathsetmacro\qrr@heatmark@opacity@seps
+      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heatmark opacity low}))%
          /(\c@pgf@counta-1)}%
     \fi
     \pgfutil@tempcnta=0
@@ -141,22 +141,22 @@
       \advance\pgf@yb\pgf@xa % current radius + heat arc sep + heat arc width
       \pgfsetfillopacity{\pgf@tempd}%
       \begingroup
-        \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heat}{heat ring \number\numexpr\pgfutil@tempcnta+1\relax/.try}}%
+        \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heatmark}{ring \number\numexpr\pgfutil@tempcnta+1\relax/.try}}%
         \pgf@marshal
         \tikz@options
         {%
         \pgfutil@loop
-          \pgfmathsetmacro\qrr@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
+          \pgfmathsetmacro\qrr@heatmark@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
           % path
           \begingroup
-            \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heat}{heat arc \number\numexpr\pgfutil@tempcntb+1\relax/.try}%
-                              \noexpand\pgfqkeys{/pgf/heat}{heat arc \number\numexpr\pgfutil@tempcnta+1\relax-\number\numexpr\pgfutil@tempcntb+1\relax/.try}}%
+            \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heatmark}{arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
+                              \noexpand\pgfqkeys{/pgf/heatmark}{arc \the\numexpr\pgfutil@tempcnta+1\relax-\the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
             \pgf@marshal
-            \tikz@options
-            \pgfpathmoveto{\pgfpointpolar{\qrr@start@angle}{\pgf@ya}}%
-            \pgfpatharc{\qrr@start@angle}{\qrr@start@angle+\pgf@tempb}{\pgf@ya}%
-            \pgfpathlineto{\pgfpointpolar{\qrr@start@angle+\pgf@tempb}{\pgf@yb}}%
-            \pgfpatharc{\qrr@start@angle+\pgf@tempb}{\qrr@start@angle}{\pgf@yb}%
+            \csname tikz@options\endcsname
+            \pgfpathmoveto{\pgfpointpolar{\qrr@heatmark@start@angle}{\pgf@ya}}%
+            \pgfpatharc{\qrr@heatmark@start@angle}{\qrr@heatmark@start@angle+\pgf@tempb}{\pgf@ya}%
+            \pgfpathlineto{\pgfpointpolar{\qrr@heatmark@start@angle+\pgf@tempb}{\pgf@yb}}%
+            \pgfpatharc{\qrr@heatmark@start@angle+\pgf@tempb}{\qrr@heatmark@start@angle}{\pgf@yb}%
             \pgfpathclose
             \pgfusepathqfill
           \endgroup
@@ -168,7 +168,7 @@
       \advance\pgfutil@tempcnta\@ne
       \ifnum\pgfutil@tempcnta<\c@pgf@counta
         \pgf@ya\pgf@yb
-        \pgfmathsetmacro\pgf@tempd{\pgf@tempd-\qrr@heat@opacity@seps}%
+        \pgfmathsetmacro\pgf@tempd{\pgf@tempd-\qrr@heatmark@opacity@seps}%
     \pgfutil@repeat
     \pgftransformshift{\pgfqpointscale{-1}{\centerpoint}}%
   }
