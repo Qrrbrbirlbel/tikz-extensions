@@ -101,8 +101,8 @@
   }
   \backgroundpath{%
     \pgf@process{\radius}%
-    \pgfmathsetlengthmacro\xradius{\pgf@x-(\pgfkeysvalueof{/pgf/outer xsep})}%
-    \pgfmathsetlengthmacro\yradius{\pgf@y-(\pgfkeysvalueof{/pgf/outer ysep})}%
+    \pgfmathsetmacro\xradius{\pgf@x-(\pgfkeysvalueof{/pgf/outer xsep})}%
+    \pgfmathsetmacro\yradius{\pgf@y-(\pgfkeysvalueof{/pgf/outer ysep})}%
     \let\pgf@tempa\pgfutil@empty\let\pgf@tempb\pgfutil@empty
     \let\pgf@tempc\pgfutil@empty\let\pgf@tempd\pgfutil@empty
     \c@pgf@counta=\step
@@ -122,13 +122,13 @@
     \pgftransformshift{\centerpoint}%
     \pgfplothandlerclosedcurve
     \pgfplotstreamstart
-    \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}% east
+    \pgfplotstreampoint{\pgfqpoint{\xradius pt}{0pt}}% east
     \pgf@tempa
-    \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}% north
+    \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius pt}}% north
     \pgf@tempb
-    \pgfplotstreampoint{\pgfqpoint{-\xradius}{0pt}}% west
+    \pgfplotstreampoint{\pgfqpoint{-\xradius pt}{0pt}}% west
     \pgf@tempc
-    \pgfplotstreampoint{\pgfqpoint{0pt}{-\yradius}}% south
+    \pgfplotstreampoint{\pgfqpoint{0pt}{-\yradius pt}}% south
     \pgf@tempd
     \pgfplotstreamend
     \pgftransformshift{\centerpoint\pgf@x=-\pgf@x\pgf@y=-\pgf@y}
@@ -157,9 +157,11 @@
           \pgf@relevantforpicturesizefalse
           \pgfpathmoveto{\pgfpointorigin}%
           \pgfpathlineto{\pgfpointborderrectangle{\externalpoint}{\radius}}%
-        }{% TODO: construct only quarter of path
+        }{%
           \pgf@relevantforpicturesizefalse
-          \pgf@process{\radius}\pgfgetlastxy\xradius\yradius
+          \pgf@process{\radius}
+          \edef\xradius{\pgf@sys@tonumber\pgf@x}%
+          \edef\yradius{\pgf@sys@tonumber\pgf@y}%
           \let\pgf@tempa\pgfutil@empty
           \c@pgf@counta=\step
           \pgfutil@loop
@@ -173,9 +175,9 @@
           % messes with our other path
           \pgfplothandlercurveto
           \pgfplotstreamstart
-          \pgfplotstreampoint{\pgfqpoint{\xradius}{0pt}}% east
+          \pgfplotstreampoint{\pgfqpoint{\xradius pt}{0pt}}% east
           \pgf@tempa
-          \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius}}% north
+          \pgfplotstreampoint{\pgfqpoint{0pt}{\yradius pt}}% north
           \pgfplotstreamend
         }%
         \ifnum\pgfintersectionsolutions>0 % only if a solution was found

@@ -29,8 +29,7 @@
   Sets all radii to \meta{dimen}.
 \end{key}
 
-\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.rectangleroundedcorners}]
-\tikzexternaldisable
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.rectangleroundedcorners}]\tikzexternaldisable
 \begin{tikzpicture}\Huge
 \node[name=s, shape=rectangle with rounded corners, shape example,
   rectangle with rounded corners north west radius=10pt,
@@ -43,9 +42,11 @@
      mid west/right,        mid/above,   mid east/left,
     base west/left,        base/below,  base east/right,
    south west/below left, south/below, south east/below right,
-   text/left,% 10/right, 130/above,
-   north west center/below right,      north east center/below left,
-   south west center/above right,      south east center/above left}
+   text/below, 10/right, 130/above,
+   north west center/below right,      north east center/left,
+   south west center/above right,      south east center/left,
+   below north west/left,  above south west/left, above south east/right, below north east/right,
+   right north west/above, right south west/below, left south east/below,  left north east/above}
    \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}

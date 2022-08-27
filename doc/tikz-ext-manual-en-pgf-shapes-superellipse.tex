@@ -92,4 +92,11 @@ Adds the once-expansion of \meta{macro 2} in front of \meta{macro 1}.
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
+%
+\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{ext.shapes.superellipse}]
+\begin{tikzpicture}[minimum width=1cm, minimum height=3cm]
+\foreach \xe/\ye[count=\i] in {.5/.5, 1/1, 2/2, 3/3, .5/5}
+  \node[draw, superellipse, superellipse x exponent=\xe, superellipse y exponent=\ye] at (1.5*\i,0) {};
+\end{tikzpicture}
+\end{codeexample}
 \endinput

@@ -15,8 +15,8 @@
   measurements to the \filetype{aux} file.
   
   Unfortunately, this does not work with the |external| library.\indexLibraryO{external}%
-  \footnote{Not only would the \texttt{external} library not notice the change of the value between compilations runs,
-    it also changes the way \texttt{\textbackslash pgfutil@writeout} works which suddenly writes to the \textsc{log} file instead.}
+  \footnote{First of all, I can't figure out how to use the \textsc{aux} file during externalization since it gets written to the \textsc{log} instead.
+            And then there's the question about how \texttt{external} would notice the need to export the picture again until it's stable \dots}
 \end{tikzlibrary}
 
 This library introduces two new shapes called |Circle| and |Rectangle|
