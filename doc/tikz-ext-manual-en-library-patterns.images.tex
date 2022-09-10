@@ -29,7 +29,7 @@ This is a two-step process:
 
 \begin{key}{/tikz/image as pattern=\meta{options} (default |\{\}|)}
 
-\begin{codeexample}[preamble=\usetikzlibrary{ext.patterns.images}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.patterns.images,shapes.geometric}]
 \pgfsetupimageaspattern[width=.5cm]{grid}{example-image-1x1}
 \tikz \node[star, minimum size=3cm, draw,
   image as pattern={name=grid,options={left, bottom, y=-.5cm, rotate=45}}] {};
@@ -41,7 +41,7 @@ Specifies the name of the ``image-pattern'' to be used.
 \end{key}
 
 \begin{stylekey}{/tikz/image as pattern/option}
-Options that's be used by the internal |\pgftext|,\indexCommandO{\pgftext}
+Options that will be used by the internal |\pgftext|,\indexCommandO{\pgftext}
 only keys from |/pgf/text| should be used.\indexKeyO[/pgf/]{text}
 \end{stylekey}
 

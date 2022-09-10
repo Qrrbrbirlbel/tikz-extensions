@@ -24,17 +24,17 @@ This enables the use of a custom fill for each of the node parts
 (including the area covered by the |inner sep|).
 The background path for the shape should not be filled (e.\,g., in \tikzname,
 the |fill| option for the node must be implicitly or explicitly set to |none|).
-Internally, this key sets the TeX-if |\ifpgfcirclecrosssplitcustomfill| appropriately. 
+Internally, this key sets the \TeX-if |\ifpgfcirclecrosssplitcustomfill| appropriately. 
 \end{key}
 \begin{codeexample}[preamble=\usepgflibrary{ext.shapes.circlecrosssplit}]
 \begin{tikzpicture}\Huge
-\node[name=s, shape=circle cross split, shape example, inner xsep=1.5cm,
+\node[name=s, shape=circle cross split, shape example, inner xsep=1.5cm, fill=none,
   circle cross split part fill={green,blue,red,yellow!90!black}]
  {\nodepart{text}text\nodepart{two}two
          \nodepart{three}three\nodepart{four}four};
 \foreach \anchor/\placement in
     {north west/above left, north/above,      north east/above right,
-           west/left,      center/above,            east/right,
+           west/left,      center/left,             east/right,
        mid west/right,        mid/left,         mid east/left,
       base west/left,        base/left,        base east/right,
 lower base west/left,  lower base/below, lower base east/right,

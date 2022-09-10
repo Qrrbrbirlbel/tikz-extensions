@@ -1,0 +1,85 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\section{Shape: Circle Arrow}
+\begin{pgflibrary}{ext.shapes.circlearrow}
+  A circular shape that has an arc as its background path that can have an arrow tip.
+\end{pgflibrary}
+\begin{key}{/pgf/circle arrow start angle=\meta{start angle} (initially |\{\}|)}
+Sets the start angle.
+\end{key}
+\begin{key}{/pgf/circle arrow end angle=\meta{end angle} (initially |\{\}|)}
+Sets the end angle.
+\end{key}
+\begin{key}{/pgf/circle arrow delta angle=\meta{delta angle} (initially |\{\}|)}
+Sets the delta angle.
+\end{key}
+\begin{key}{/pgf/circle arrow arrows=%
+  \meta{start arrow tip specification}-\meta{end arrow tip specification} (initially |-|)}
+The specification will be forwarded to |\pgfsetarrows|\indexCommandO{\pgfsetarrows}.
+\end{key}
+
+\begin{key}{/pgf/circle arrow turn left north}
+Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
+and |circle arrow arrows = ->|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn left east}
+As above but |circle arrow start angle = 10|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn left west}
+As above but |circle arrow start angle = 280|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn left south}
+As above but |circle arrow start angle = 190|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn right north}
+Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
+and |circle arrow arrows = <-|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn right east}
+As above but |circle arrow start angle = 10|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn right west}
+As above but |circle arrow start angle = 280|.
+\end{key}
+\begin{key}{/pgf/circle arrow turn right south}
+As above but |circle arrow start angle = 190|.
+\end{key}
+
+{\catcode`\|=12
+\begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow,matrix}]
+\begin{tikzpicture}
+\matrix[matrix of nodes, draw=none, row sep=1em, column sep=1em,
+  every node/.style={draw=gray, shape=circle arrow, ultra thick, inner sep=1em}
+] (m) {
+  |[circle arrow turn left north]|  & |[circle arrow turn left east]|   \\
+  |[circle arrow turn left west]|   & |[circle arrow turn left south]|  \\
+  |[circle arrow turn right north]| & |[circle arrow turn right east]|  \\
+  |[circle arrow turn right west]|  & |[circle arrow turn right south]| \\
+};
+\end{tikzpicture}
+\end{codeexample}
+}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow},width=16cm]
+\begin{tikzpicture}\Huge
+\node[name=s, shape=circle arrow,
+  circle arrow turn left west, shape example]
+  {Circle Arrow\vrule width 1pt height 2cm};
+\foreach \anchor/\placement in
+  {north west/above left, north/above, north east/above right,
+   west/left, center/above, east/right,
+   mid west/right, mid/above, mid east/left,
+   base west/left, base/below, base east/right,
+   south west/below left, south/below, south east/below right,
+   text/left, 10/right, 130/above}
+   \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+     node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}
+\endinput

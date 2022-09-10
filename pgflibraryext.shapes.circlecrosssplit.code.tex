@@ -66,12 +66,6 @@
     \advance\pgf@y-\pgf@yc
     \advance\pgf@x-\wd\pgfnodepartthreebox
   }%
-  \savedanchor\fouranchor{%
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
-    \advance\pgf@x\wd\pgfnodepartthreebox
-    \advance\pgf@x2\pgf@xa
-    \advance\pgf@x\pgflinewidth
-  }%
   \saveddimen\radius{%
     % height (upper):
     \pgf@y=\ht\pgfnodeparttextbox
@@ -180,7 +174,12 @@
   \inheritanchor[from=circle]{south east}%
   \anchor{two}{\twoanchor}%
   \anchor{three}{\threeanchor}%
-  \anchor{four}{\fouranchor}%
+  \anchor{four}{
+    \threeanchor
+    \pgf@ya=\pgf@y
+    \twoanchor
+    \pgf@y=\pgf@ya
+  }%
   \anchor{lower base}{%
     \threeanchor
     \pgf@ya=\pgf@y

@@ -1,0 +1,66 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\pgfset{
+    circle arrow start angle/.initial=,
+    circle arrow end angle/.initial=,
+    circle arrow delta angle/.initial=,
+    circle arrow arrows/.initial=-,
+    circle arrow/@turn left/.style={/pgf/circle arrow arrows=->,/pgf/circle arrow delta angle=340},
+    circle arrow/@turn right/.style={/pgf/circle arrow arrows=<-,/pgf/circle arrow delta angle=340},
+    circle arrow turn left north/.style  = {/pgf/circle arrow/@turn left,  /pgf/circle arrow start angle=100},
+    circle arrow turn left east/.style   = {/pgf/circle arrow/@turn left,  /pgf/circle arrow start angle=10},
+    circle arrow turn left south/.style  = {/pgf/circle arrow/@turn left,  /pgf/circle arrow start angle=280},
+    circle arrow turn left west/.style   = {/pgf/circle arrow/@turn left,  /pgf/circle arrow start angle=190},
+    circle arrow turn right north/.style = {/pgf/circle arrow/@turn right, /pgf/circle arrow start angle=100},
+    circle arrow turn right east/.style  = {/pgf/circle arrow/@turn right, /pgf/circle arrow start angle=10},
+    circle arrow turn right south/.style = {/pgf/circle arrow/@turn right, /pgf/circle arrow start angle=280},
+    circle arrow turn right west/.style  = {/pgf/circle arrow/@turn right, /pgf/circle arrow start angle=190},
+}
+\pgfdeclareshape{circle arrow}{
+    \inheritsavedanchors[from=circle]
+    \inheritanchorborder[from=circle]
+    \inheritanchor[from=circle]{north}
+    \inheritanchor[from=circle]{north west}
+    \inheritanchor[from=circle]{north east}
+    \inheritanchor[from=circle]{center}
+    \inheritanchor[from=circle]{west}
+    \inheritanchor[from=circle]{east}
+    \inheritanchor[from=circle]{mid}
+    \inheritanchor[from=circle]{mid west}
+    \inheritanchor[from=circle]{mid east}
+    \inheritanchor[from=circle]{base}
+    \inheritanchor[from=circle]{base west}
+    \inheritanchor[from=circle]{base east}
+    \inheritanchor[from=circle]{south}
+    \inheritanchor[from=circle]{south west}
+    \inheritanchor[from=circle]{south east}
+    \backgroundpath{
+        \pgfkeysgetvalue{/pgf/circle arrow start angle}\pgf@sh@circlearrow@s
+        \pgfkeysgetvalue{/pgf/circle arrow end angle}\pgf@sh@circlearrow@e
+        \pgfkeysgetvalue{/pgf/circle arrow delta angle}\pgf@sh@circlearrow@d
+        \ifx\pgf@sh@circlearrow@s\pgfutil@empty%
+            \pgfmathsetmacro\pgf@sh@circlearrow@s{\pgf@sh@circlearrow@e-\pgf@sh@circlearrow@d}%
+        \else
+            \ifx\pgf@sh@circlearrow@e\pgfutil@empty%
+                \pgfmathsetmacro\pgf@sh@circlearrow@e{\pgf@sh@circlearrow@s+\pgf@sh@circlearrow@d}%
+            \fi%
+        \fi
+        \pgfutil@tempdima=\radius
+        \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%
+        \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%
+        \ifdim\pgf@xb<\pgf@yb
+          \advance\pgfutil@tempdima by-\pgf@yb
+        \else
+          \advance\pgfutil@tempdima by-\pgf@xb
+        \fi
+        \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfpointpolar{\pgf@sh@circlearrow@s}{\pgfutil@tempdima}}}%
+        \pgfpatharc{\pgf@sh@circlearrow@s}{\pgf@sh@circlearrow@e}{\pgfutil@tempdima}%
+        \pgfkeysgetvalue{/pgf/circle arrow arrows}\pgf@temp
+        \expandafter\pgfsetarrows\expandafter{\pgf@temp}%
+    }
+}
