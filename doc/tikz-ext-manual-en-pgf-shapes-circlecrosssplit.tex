@@ -1,0 +1,47 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\section{Shape: Circle Cross Split}
+\begin{pgflibrary}{ext.shapes.circlecrosssplit}
+  A circular shape with four parts that can be individually filled.
+\end{pgflibrary}
+\begin{key}{/pgf/circle cross split part fill=\marg{list} (initially |none|)}
+Sets the custom fill color for each node part shape.
+The items in \meta{list} should be separated by commas
+(so if there is more than one item in \meta{list}, it must be surrounded by braces).
+If \meta{list} has less entries than node parts,
+then the remaining node parts use the color from the last entry in the list.
+This key will automatically set |/pgf/circle cross split uses custom fill|.
+\end{key}
+\begin{key}{/pgf/circle cross split uses custom fill=\opt{\meta{boolean}} (default |true|)}
+This enables the use of a custom fill for each of the node parts
+(including the area covered by the |inner sep|).
+The background path for the shape should not be filled (e.\,g., in \tikzname,
+the |fill| option for the node must be implicitly or explicitly set to |none|).
+Internally, this key sets the TeX-if |\ifpgfcirclecrosssplitcustomfill| appropriately. 
+\end{key}
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.circlecrosssplit}]
+\begin{tikzpicture}\Huge
+\node[name=s, shape=circle cross split, shape example, inner xsep=1.5cm,
+  circle cross split part fill={green,blue,red,yellow!90!black}]
+ {\nodepart{text}text\nodepart{two}two
+         \nodepart{three}three\nodepart{four}four};
+\foreach \anchor/\placement in
+    {north west/above left, north/above,      north east/above right,
+           west/left,      center/above,            east/right,
+       mid west/right,        mid/left,         mid east/left,
+      base west/left,        base/left,        base east/right,
+lower base west/left,  lower base/below, lower base east/right,
+ lower mid west/left,  lower mid/above,   lower mid east/right,
+     south west/below left, south/below,      south east/below right,
+   text/below, 10/right, 130/above, two/left, three/left, four/left}
+   \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+     node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}
