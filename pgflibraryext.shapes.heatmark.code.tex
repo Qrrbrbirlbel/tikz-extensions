@@ -1,15 +1,20 @@
-\pgfqkeys{/pgf}{
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\pgfset{
     heatmark arc width/.initial=+4pt,
     heatmark arc sep/.initial=+1pt,
     heatmark arc rings/.initial=3,
     heatmark arcs/.initial=3,
     heatmark arc sep angle/.initial=20,
-    heatmark opacity high/.initial=.8,
-    heatmark opacity low/.initial=.2,
-    heatmark rotate/.initial=90,
-    heatmark/.code=\pgfqkeys{/pgf/heatmark}{#1}%
+    heatmark inner opacity/.initial=.8,
+    heatmark outer opacity/.initial=.2
 }
-\pgfdeclareshape{heat}
+\pgfdeclareshape{heatmark}
 %
 % Draws a circle around the text
 %
@@ -121,14 +126,14 @@
     \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/heatmark arc sep}}%            heat arc sep
     %\pgfmathsetmacro\pgf@tempa{\pgfkeysvalueof{/pgf/heat arc sep angle}}%    heat arc sep angle
     \pgfmathsetmacro\pgf@tempb{360/\c@pgf@countb-(\pgfkeysvalueof{/pgf/heatmark arc sep angle})}% heat arc
-    \pgfmathsetmacro\pgf@tempc{\pgfkeysvalueof{/pgf/heatmark rotate}}%           heat rotate
+    \pgfmathsetmacro\pgf@tempc{\pgfkeysvalueof{/pgf/shape border rotate}}%           heat rotate
     %
-    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heatmark opacity high}}%     heat opacity high
+    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heatmark inner opacity}}%     heat opacity high
     \ifnum\c@pgf@counta=1
       \def\qrr@heatmark@opacity@seps{0}%
     \else
       \pgfmathsetmacro\qrr@heatmark@opacity@seps
-      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heatmark opacity low}))%
+      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heatmark outer opacity}))%
          /(\c@pgf@counta-1)}%
     \fi
     \pgfutil@tempcnta=0
@@ -141,16 +146,16 @@
       \advance\pgf@yb\pgf@xa % current radius + heat arc sep + heat arc width
       \pgfsetfillopacity{\pgf@tempd}%
       \begingroup
-        \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heatmark}{ring \number\numexpr\pgfutil@tempcnta+1\relax/.try}}%
+        \edef\pgf@marshal{\noexpand\pgfset{heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax/.try}}%
         \pgf@marshal
-        \tikz@options
+        \csname tikz@options\endcsname
         {%
         \pgfutil@loop
           \pgfmathsetmacro\qrr@heatmark@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
           % path
           \begingroup
-            \edef\pgf@marshal{\noexpand\pgfqkeys{/pgf/heatmark}{arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
-                              \noexpand\pgfqkeys{/pgf/heatmark}{arc \the\numexpr\pgfutil@tempcnta+1\relax-\the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
+            \edef\pgf@marshal{\noexpand\pgfset{heatmark arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
+                              \noexpand\pgfset{heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax\space arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
             \pgf@marshal
             \csname tikz@options\endcsname
             \pgfpathmoveto{\pgfpointpolar{\qrr@heatmark@start@angle}{\pgf@ya}}%

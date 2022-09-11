@@ -9,48 +9,54 @@
 %
 \section{Shape: Circle Arrow}
 \begin{pgflibrary}{ext.shapes.circlearrow}
-  A circular shape that has an arc as its background path that can have an arrow tip.
+  A circular shape named that has an arc as its background path that can have an arrow tip.
 \end{pgflibrary}
-\begin{key}{/pgf/circle arrow start angle=\meta{start angle} (initially |\{\}|)}
-Sets the start angle.
-\end{key}
-\begin{key}{/pgf/circle arrow end angle=\meta{end angle} (initially |\{\}|)}
-Sets the end angle.
-\end{key}
-\begin{key}{/pgf/circle arrow delta angle=\meta{delta angle} (initially |\{\}|)}
-Sets the delta angle.
-\end{key}
-\begin{key}{/pgf/circle arrow arrows=%
-  \meta{start arrow tip specification}-\meta{end arrow tip specification} (initially |-|)}
-The specification will be forwarded to |\pgfsetarrows|\indexCommandO{\pgfsetarrows}.
-\end{key}
-
-\begin{key}{/pgf/circle arrow turn left north}
-Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
-and |circle arrow arrows = ->|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn left east}
-As above but |circle arrow start angle = 10|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn left west}
-As above but |circle arrow start angle = 280|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn left south}
-As above but |circle arrow start angle = 190|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn right north}
-Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
-and |circle arrow arrows = <-|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn right east}
-As above but |circle arrow start angle = 10|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn right west}
-As above but |circle arrow start angle = 280|.
-\end{key}
-\begin{key}{/pgf/circle arrow turn right south}
-As above but |circle arrow start angle = 190|.
-\end{key}
+\begin{shape}{circle arrow}
+  This shape is an arrow whose path is an arc -- defined very similar to the |arc|%
+  \indexPathOperationO{arc} path operation -- that can possibly be customized with
+  arrow tips.
+  
+  \begin{key}{/pgf/circle arrow start angle=\meta{start angle} (initially |\{\}|)}
+  Sets the start angle.
+  \end{key}
+  \begin{key}{/pgf/circle arrow end angle=\meta{end angle} (initially |\{\}|)}
+  Sets the end angle.
+  \end{key}
+  \begin{key}{/pgf/circle arrow delta angle=\meta{delta angle} (initially |\{\}|)}
+  Sets the delta angle.
+  \end{key}
+  \begin{key}{/pgf/circle arrow arrows=%
+    \meta{start arrow tip specification}-\meta{end arrow tip specification} (initially |-|)}
+  The specification will be forwarded to |\pgfsetarrows|\indexCommandO{\pgfsetarrows}.
+  \end{key}
+  
+  A few handful styles are pre-defined.
+  \begin{key}{/pgf/circle arrow turn left north}
+  Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
+  and |circle arrow arrows = ->|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn left east}
+  As above but |circle arrow start angle = 10|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn left west}
+  As above but |circle arrow start angle = 280|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn left south}
+  As above but |circle arrow start angle = 190|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn right north}
+  Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
+  and |circle arrow arrows = <-|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn right east}
+  As above but |circle arrow start angle = 10|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn right west}
+  As above but |circle arrow start angle = 280|.
+  \end{key}
+  \begin{key}{/pgf/circle arrow turn right south}
+  As above but |circle arrow start angle = 190|.
+  \end{key}
 
 {\catcode`\|=12
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow,matrix}]
@@ -82,4 +88,5 @@ As above but |circle arrow start angle = 190|.
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
+\end{shape}
 \endinput

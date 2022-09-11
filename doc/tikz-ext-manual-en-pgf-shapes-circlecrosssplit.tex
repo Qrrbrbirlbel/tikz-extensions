@@ -11,7 +11,10 @@
 \begin{pgflibrary}{ext.shapes.circlecrosssplit}
   A circular shape with four parts that can be individually filled.
 \end{pgflibrary}
-\begin{key}{/pgf/circle cross split part fill=\marg{list} (initially |none|)}
+\begin{shape}{circle cross split}
+This shape has four node parts that are placed near the center of a circle.
+
+\begin{key}{/pgf/circle cross split part fill=\marg{list} (initially none)}
 Sets the custom fill color for each node part shape.
 The items in \meta{list} should be separated by commas
 (so if there is more than one item in \meta{list}, it must be surrounded by braces).
@@ -19,7 +22,7 @@ If \meta{list} has less entries than node parts,
 then the remaining node parts use the color from the last entry in the list.
 This key will automatically set |/pgf/circle cross split uses custom fill|.
 \end{key}
-\begin{key}{/pgf/circle cross split uses custom fill=\opt{\meta{boolean}} (default |true|)}
+\begin{key}{/pgf/circle cross split uses custom fill=\opt{\meta{boolean}} (default true)}
 This enables the use of a custom fill for each of the node parts
 (including the area covered by the |inner sep|).
 The background path for the shape should not be filled (e.\,g., in \tikzname,
@@ -45,3 +48,5 @@ lower base west/left,  lower base/below, lower base east/right,
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
+\end{shape}
+\endinput

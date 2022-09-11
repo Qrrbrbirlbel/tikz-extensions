@@ -73,9 +73,9 @@ These libraries only work with \tikzname.
 \tikzsetfigurename{topaths.arcthrough}\include{tikz-ext-manual-en-library-topaths.arcthrough}
 \tikzsetfigurename{trans}             \include{tikz-ext-manual-en-library-trans}
 
-\part{PGF Libraries}
+\part{\pgfname\space Libraries}
 \label{part:pgf}
-These libraries (should) work with both PGF and \tikzname.
+These libraries (should) work with both \pgfname\space and \tikzname.
 
 \begin{center}\tikzsetnextfilename{main-graph}
 \begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
@@ -118,6 +118,7 @@ These libraries (should) work with both PGF and \tikzname.
 \tikzsetfigurename{PGF.shapes}%
 \include{tikz-ext-manual-en-pgf-shapes-circlearrow}
 \include{tikz-ext-manual-en-pgf-shapes-circlecrosssplit}
+\include{tikz-ext-manual-en-pgf-shapes-heatmark}
 \include{tikz-ext-manual-en-pgf-shapes-rectround}
 \include{tikz-ext-manual-en-pgf-shapes-superellipse}
 \part{Utilities}
@@ -166,6 +167,7 @@ Version 0.3
 \begin{itemize}
 \item \addShape[circle arrow]{circlearrow}
 \item \addShape[circle cross split]{circlecrosssplit}
+\item \addShape{heatmark}
 \item \addShape[rectangle with rounded corners]{rectangleroundedcorners}
 \item \addShape{superellipse}
 \end{itemize}
