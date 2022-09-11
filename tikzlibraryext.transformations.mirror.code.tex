@@ -12,30 +12,60 @@
     \ifpgfutil@in@
       \tikz@trans@mirror#1\@nil
     \else
-      \tikz@scan@one@point\pgfqtransformmirror#1\relax
+      \tikz@addtransform{\tikz@scan@one@point\pgfqtransformmirror#1\relax}%
     \fi},
   ymirror/.code={\pgfutil@ifnextchar(\tikz@trans@ymirror@coordinate\tikz@trans@ymirror@simple#1\@nil},
   xmirror/.code={\pgfutil@ifnextchar(\tikz@trans@xmirror@coordinate\tikz@trans@xmirror@simple#1\@nil},
   mirror x/.code={%
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
-    \pgftransformmirror{\tikz@temp}{\pgfpointadd{\tikz@temp}{\pgfqpointxy{0}{1}}}},
+    \edef\tikz@marshal{%
+      \noexpand\tikz@addtransform{%
+        \noexpand\pgftransformmirror
+          {\expandafter\noexpand\tikz@temp}
+          {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
+                                {\noexpand\pgfqpointxy{0}{1}}}}}%
+    \tikz@marshal
+  },
   mirror y/.code={%
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
-    \pgftransformmirror{\tikz@temp}{\pgfpointadd{\tikz@temp}{\pgfqpointxy{1}{0}}}},
+    \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformmirror
+        {\expandafter\noexpand\tikz@temp}
+        {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
+                              {\noexpand\pgfqpointxy{1}{0}}}}}%
+    \tikz@marshal
+  },
   mirror/.value required,
-  ymirror/.value required,
-  xmirror/.value required,
-  mirror x/.value required,
-  mirror y/.value required}
+  ymirror/.default=+0pt,
+  xmirror/.default=+0pt,
+  mirror x/.default={(0,0)},
+  mirror y/.default={(0,0)}%
+}
 \def\tikz@trans@mirror#1--#2\@nil{%
-  \pgftransformmirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
-                     {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}
-\def\tikz@trans@xmirror@simple#1\@nil{\pgftransformxmirror{#1}}
-\def\tikz@trans@ymirror@simple#1\@nil{\pgftransformymirror{#1}}
-\def\tikz@trans@xmirror@coordinate#1\@nil{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\pgftransformxmirror{+\the\pgf@x}}
-\def\tikz@trans@ymirror@coordinate#1\@nil{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\pgftransformymirror{+\the\pgf@y}}
+  \tikz@addtransform{%
+    \pgftransformmirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
+                       {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
+\def\tikz@trans@xmirror@simple#1\@nil{\tikz@addtransform{\pgftransformxmirror{#1}}}
+\def\tikz@trans@ymirror@simple#1\@nil{\tikz@addtransform{\pgftransformymirror{#1}}}
+\def\tikz@trans@xmirror@coordinate#1\@nil#2{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformxmirror{+\the\pgf@x}%
+    }%
+  }%
+  \tikz@marshal
+}
+\def\tikz@trans@ymirror@coordinate#1\@nil#2{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformymirror{+\the\pgf@y}%
+    }%
+  }%
+  \tikz@marshal
+}
 
 \tikzset{
   Mirror/.code={%
@@ -43,28 +73,58 @@
     \ifpgfutil@in@
       \tikz@trans@Mirror#1\@nil
     \else
-      \tikz@scan@one@point\pgfqtransformMirror#1\relax
+      \tikz@addtransform{\tikz@scan@one@point\pgfqtransformMirror#1\relax}%
     \fi},
   yMirror/.code={\pgfutil@ifnextchar(\tikz@trans@yMirror@coordinate\tikz@trans@yMirror@simple#1\@nil},
   xMirror/.code={\pgfutil@ifnextchar(\tikz@trans@xMirror@coordinate\tikz@trans@xMirror@simple#1\@nil},
   Mirror x/.code={%
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
-    \pgftransformMirror{\tikz@temp}{\pgfpointadd{\tikz@temp}{\pgfqpointxy{0}{1}}}},
+    \edef\tikz@marshal{%
+      \noexpand\tikz@addtransform{%
+        \noexpand\pgftransformMirror
+          {\expandafter\noexpand\tikz@temp}
+          {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
+                                {\noexpand\pgfqpointxy{0}{1}}}}}%
+    \tikz@marshal
+  },
   Mirror y/.code={%
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
-    \pgftransformMirror{\tikz@temp}{\pgfpointadd{\tikz@temp}{\pgfqpointxy{1}{0}}}},
+    \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformMirror
+        {\expandafter\noexpand\tikz@temp}
+        {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
+                              {\noexpand\pgfqpointxy{1}{0}}}}}%
+    \tikz@marshal
+  },
   Mirror/.value required,
-  yMirror/.value required,
-  xMirror/.value required,
-  Mirror x/.value required,
-  Mirror y/.value required}
+  yMirror/.default=+0pt,
+  xMirror/.default=+0pt,
+  Mirror x/.default={(0,0)},
+  Mirror y/.default={(0,0)}%
+}
 \def\tikz@trans@Mirror#1--#2\@nil{%
-  \pgftransformMirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
-                     {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}
-\def\tikz@trans@xMirror@simple#1\@nil{\pgftransformxMirror{#1}}
-\def\tikz@trans@yMirror@simple#1\@nil{\pgftransformyMirror{#1}}
-\def\tikz@trans@xMirror@coordinate#1\@nil{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\pgftransformxMirror{+\the\pgf@x}}
-\def\tikz@trans@yMirror@coordinate#1\@nil{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\pgftransformyMirror{+\the\pgf@y}}
+  \tikz@addtransform{%
+    \pgftransformMirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
+                       {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
+\def\tikz@trans@xMirror@simple#1\@nil{\tikz@addtransform{\pgftransformxMirror{#1}}}
+\def\tikz@trans@yMirror@simple#1\@nil{\tikz@addtransform{\pgftransformyMirror{#1}}}
+\def\tikz@trans@xMirror@coordinate#1\@nil#2{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformxMirror{+\the\pgf@x}%
+    }%
+  }%
+  \tikz@marshal
+}
+\def\tikz@trans@yMirror@coordinate#1\@nil#2{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef\tikz@marshal{%
+    \noexpand\tikz@addtransform{%
+      \noexpand\pgftransformyMirror{+\the\pgf@y}%
+    }%
+  }%
+  \tikz@marshal
+}
 \endinput

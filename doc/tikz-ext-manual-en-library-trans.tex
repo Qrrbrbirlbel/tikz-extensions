@@ -17,7 +17,7 @@
 \end{tikzlibrary}
 
 As explained in section~\ref{pgflibrary:transformations}, there are two approaches to setting a mirror transformation.
-As with the commands in PGF, we'll be using a lowercase |m| for the reflection matrix and an uppercase |M| for the built-in approach.
+As with the commands in \pgfname, we'll be using a lowercase |m| for the reflection matrix and an uppercase |M| for the built-in approach.
 
 \subsection{Using the reflection matrix}
 
@@ -31,7 +31,7 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/xmirror=\meta{value or coordinate}}
+\begin{key}{/tikz/xmirror=\meta{value or coordinate} (default |0pt|)}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -45,12 +45,12 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ymirror=\meta{value or coordinate}}
+\begin{key}{/tikz/ymirror=\meta{value or coordinate} (default |0pt|)}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/mirror x=\meta{coordinate}}
+\begin{key}{/tikz/mirror x=\meta{coordinate} (default |{(0,0)}|)}
   Similar to |/tikz/xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
@@ -65,7 +65,7 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/mirror y=\meta{coordinate}}
+\begin{key}{/tikz/mirror y=\meta{coordinate} (default |{(0,0)}|)}
   Similar to |/tikz/ymirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 
@@ -88,7 +88,7 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/xMirror=\meta{value or coordinate}}
+\begin{key}{/tikz/xMirror=\meta{value or coordinate} (default |0pt|)}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -102,12 +102,12 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/yMirror=\meta{value or coordinate}}
+\begin{key}{/tikz/yMirror=\meta{value or coordinate} (default |0pt|)}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/Mirror x=\meta{coordinate}}
+\begin{key}{/tikz/Mirror x=\meta{coordinate} (default |{(0,0)}|)}
   Similar to |/tikz/xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
@@ -122,7 +122,7 @@ As with the commands in PGF, we'll be using a lowercase |m| for the reflection m
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/Mirror y=\meta{coordinate}}
+\begin{key}{/tikz/Mirror y=\meta{coordinate} (default |{(0,0)}|)}
   Similar to |/tikz/yMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 

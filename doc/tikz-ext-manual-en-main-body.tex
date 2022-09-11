@@ -156,14 +156,17 @@ These libraries (should) work with both PGF and \tikzname.
 
 %%% END
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
-\newcommand*{\addPGF}[1]{Added PGF library \texttt{ext.#1}.}
-\newcommand*{\addShape}[1]{Added shape \texttt{#1} (PGF library \texttt{ext.shapes.#1}).}
+\newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}
+\newcommand*{\addShape}[2][]{Added shape \texttt{\ifx\\#1\\#2\else#1\fi}\\(\pgfname\space library \texttt{ext.shapes.#2}).}
 \part{Changelog \& Index}
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}
 \noindent
 Version 0.3
 \begin{itemize}
+\item \addShape[circle arrow]{circlearrow}
+\item \addShape[circle cross split]{circlecrosssplit}
+\item \addShape[rectangle with rounded corners]{rectangleroundedcorners}
 \item \addShape{superellipse}
 \end{itemize}
 Version 0.2

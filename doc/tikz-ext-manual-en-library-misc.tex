@@ -10,10 +10,10 @@
 
 \section{And a little bit more}
 \begin{tikzlibrary}{ext.misc}
-  This library adds miscellaneous utilities to PGFmath, PGF or \tikzname.
+  This library adds miscellaneous utilities to \pgfname math, \pgfname\space or \tikzname.
 \end{tikzlibrary}
 
-\subsection{PGFmath}
+\subsection{\pgfname math}
 
 \begin{multicols}{2}
 \pgfkeys{/codeexample/every codeexample/.append style={width=3cm}}
@@ -101,7 +101,7 @@ The |R| operator can then be used.
 \end{math-function}
 
 \subsubsection{Functions: using coordinates}
-The following functions can only be used with PGF and/or \tikzname.
+The following functions can only be used with \pgfname\space and/or \tikzname.
 Since the arguments are usually plain text (and not numbers) one has to wrap
 them in |"|.
 \begin{math-function}{anglebetween("\mvar{p1}", "\mvar{p2}")}\mathcommand
@@ -135,7 +135,7 @@ them in |"|.
       (intersection of @--[shift=(vecB)]@ and B--A) coordinate (A);}
 \end{tikzpicture}
 \end{codeexample}
-\subsection{PGFkeys}
+\subsection{\pgfname keys}
 
 \begin{multicols}{2}
 
@@ -144,9 +144,9 @@ them in |"|.
 \begin{key}{/utils/if=\meta{cond}\meta{true}\opt{\meta{false}}}
   This key checks the conditional \meta{cond} and applies the styles \meta{true}
   if \meta{cond} is true, otherwise \meta{false}.
-  \meta{cond} can be anything that PGFmath understands.
+  \meta{cond} can be anything that \pgfname math understands.
   
-  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  As a side effect on how \pgfname keys parses argument, the \meta{false} argument is
   actually optional.
 \end{key}
 
@@ -157,7 +157,7 @@ executions.
   This key checks via |\if| if \meta{token A} matches \meta{token B}
   and applies the styles \meta{true} if it does, otherwise \meta{false}.
   
-  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  As a side effect on how \pgfname keys parses argument, the \meta{false} argument is
   actually optional.
 \end{key}
 
@@ -170,7 +170,7 @@ executions.
   and applies the styles \meta{true} if true, otherwise \meta{false}.
   A delimiting |\relax| will be inserted after \meta{num cond}.
   
-  As a side effect on how PGFkeys parses argument, the \meta{false} argument is
+  As a side effect on how \pgfname keys parses argument, the \meta{false} argument is
   actually optional.
 \end{key}
 
@@ -186,7 +186,7 @@ executions.
 
 \subsubsection{Handlers}
 
-While already a lot of values given to keys are evaluated by PGFmath at some point,
+While already a lot of values given to keys are evaluated by \pgfname math at some point,
 not all of them are.
 
 \begin{handler}{{.pgfmath}|=|\meta{eval}}
@@ -226,13 +226,13 @@ not all of them are.
 \end{tikzpicture}
 \end{codeexample}
 
-\subsection{PGFfor}
+\subsection{\pgfname for}
 
 Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
 |\foreach \var[use int=start to end step delta]|.
 
 \begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
-The values \meta{start}, \meta{end} and \meta{delta} are evaluates by PGFmath at initialization.
+The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
 The part |step |\meta{delta} is optional (\meta{delta} = 1).
 \end{key}
 

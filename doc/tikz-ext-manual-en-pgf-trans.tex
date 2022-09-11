@@ -12,7 +12,7 @@
 \label{pgflibrary:transformations}
 
 \begin{purepgflibrary}{ext.transformations.mirror}
-  This library adds mirror transformations to PGF.
+  This library adds mirror transformations to \pgfname.
 \end{purepgflibrary}
 
 Two approaches to mirror transformation exist:
@@ -20,11 +20,12 @@ Two approaches to mirror transformation exist:
 \item Using the reflection matrix (see left column).
 
   This depends on |\pgfpointnormalised|\indexCommandO\pgfpointnormalised which involves
-  the sine\indexMathFunctionO{sin} and the cosine\indexMathFunctionO{cos} functions of PGFmath.
+  the sine\indexMathFunctionO{sin} and the cosine\indexMathFunctionO{cos} functions of \pgfname math.
 
 \item Using built-in transformations (see right column).
 
-  This depends on |\pgfmathanglebetween|\indexCommandO\pgfmathanglebetween which involves the arctangent (|atan2|\indexMathFunctionO{atan2}) function of PGFmath.
+  This depends on |\pgfmathanglebetween|\indexCommandO\pgfmathanglebetween which
+  involves the arctangent (|atan2|\indexMathFunctionO{atan2}) function of \pgfname math.
 \end{enumerate}
 
 Which one is better? I don't know.
