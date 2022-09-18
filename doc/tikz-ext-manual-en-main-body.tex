@@ -13,7 +13,8 @@
 
 \title{\bfseries The \tikzextname\space Package\\
   \large Manual for version \tikzextversion\\[1mm]
-\large\href{https://github.com/Qrrbrbirlbel/tikz-extensions}{\texttt{https://github.com/Qrrbrbirlbel/tikz-extensions}}
+\large\href{https://github.com/Qrrbrbirlbel/tikz-extensions}
+   {\texttt{https://github.com/Qrrbrbirlbel/tikz-extensions}}
 \author{Qrrbrbirlbel}}
 
 \maketitle
@@ -69,16 +70,20 @@ These libraries only work with \tikzname.
 \tikzsetfigurename{paths.ortho}     \include{tikz-ext-manual-en-library-paths.ortho}
 \tikzsetfigurename{paths.timer}     \include{tikz-ext-manual-en-library-paths.timer}
 \tikzsetfigurename{patterns.images} \include{tikz-ext-manual-en-library-patterns.images}
-\tikzsetfigurename{positioning-plus}\include{tikz-ext-manual-en-library-positioning-plus}
-\tikzsetfigurename{topaths.arcthrough}\include{tikz-ext-manual-en-library-topaths.arcthrough}
-\tikzsetfigurename{trans}             \include{tikz-ext-manual-en-library-trans}
+\tikzsetfigurename{positioning-plus}
+\include{tikz-ext-manual-en-library-positioning-plus}
+\tikzsetfigurename{topaths.arcthrough}
+\include{tikz-ext-manual-en-library-topaths.arcthrough}
+\tikzsetfigurename{trans}
+\include{tikz-ext-manual-en-library-trans}
 
 \part{\pgfname\space Libraries}
 \label{part:pgf}
 These libraries (should) work with both \pgfname\space and \tikzname.
 
 \begin{center}\tikzsetnextfilename{main-graph}
-\begin{codeexample}[width=10cm,preamble=\usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
+\begin{codeexample}[width=10cm,preamble=%
+  \usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
 \tikzset{
   mynode/.style={
     circle, minimum size=10mm, draw, densely dashdotted, thick,

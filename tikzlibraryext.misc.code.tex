@@ -39,28 +39,28 @@
 %% this allows to use \foreach[use int={start to end step delta}] without(!) a list in {}
 %% the values start, end and delta are evaluated by PGFmath at the start of the loop.
 %% In addition to use int, there's also use float.
-\newif\ifqrr@pgf@foreach@no@list
+\newif\iftikzext@pgf@foreach@no@list
 \pgfqkeys{/pgf/foreach}{
   use int/.code={%
-    \qrr@pgf@foreach@no@list@parse@to\pgfmathtruncatemacro#1\pgffor@stop
+    \tikzext@pgf@foreach@no@list@parse@to\pgfmathtruncatemacro#1\pgffor@stop
   },
   use float/.code={%
-    \qrr@pgf@foreach@no@list@parse@to\pgfmathsetmacro#1\pgffor@stop
+    \tikzext@pgf@foreach@no@list@parse@to\pgfmathsetmacro#1\pgffor@stop
   }
 }
 
-\def\qrr@pgf@foreach@no@list@parse@to#1#2to#3\pgffor@stop{%
-  \qrr@pgf@foreach@no@listtrue
+\def\tikzext@pgf@foreach@no@list@parse@to#1#2to#3\pgffor@stop{%
+  \tikzext@pgf@foreach@no@listtrue
   #1\foreachStart{#2}%
   \pgfutil@in@{step}{#3}
   \ifpgfutil@in@
-    \qrr@pgf@foreach@no@list@parse@step{#1}#3\pgffor@stop
+    \tikzext@pgf@foreach@no@list@parse@step{#1}#3\pgffor@stop
   \else
-    \qrr@pgf@foreach@no@list@parse@step{#1}#3step1\pgffor@stop
+    \tikzext@pgf@foreach@no@list@parse@step{#1}#3step1\pgffor@stop
   \fi
-  \edef\qrr@pgf@foreach@no@list@list{\foreachStart,\foreachSecond,...,\foreachEnd}%
+  \edef\tikzext@pgf@foreach@no@list@list{\foreachStart,\foreachSecond,...,\foreachEnd}%
 }
-\def\qrr@pgf@foreach@no@list@parse@step#1#2step#3\pgffor@stop{%
+\def\tikzext@pgf@foreach@no@list@parse@step#1#2step#3\pgffor@stop{%
   #1\foreachEnd{#2}%
   #1\foreachSecond{\foreachStart+#3}%
 }
@@ -68,9 +68,9 @@
   \pgfutil@ifnextchar i{\pgffor@@vars@end}{%
     \pgfutil@ifnextchar[{\pgffor@@vars@opt}{%]
       \pgfutil@ifnextchar/{\pgffor@@vars@slash@gobble}{%
-         \ifqrr@pgf@foreach@no@list\expandafter\pgfutil@firstoftwo\else
+         \iftikzext@pgf@foreach@no@list\expandafter\pgfutil@firstoftwo\else
            \expandafter\pgfutil@secondoftwo\fi
-         {\qrr@pgf@foreach@no@listfalse\pgffor@macro@list\qrr@pgf@foreach@no@list@list}
+         {\tikzext@pgf@foreach@no@listfalse\pgffor@macro@list\tikzext@pgf@foreach@no@list@list}
          {\pgffor@@vars}}}}}%
 
 %% Handlers
@@ -198,7 +198,7 @@
     \else
       \expandafter\pgfutil@secondoftwo
     \fi
-    {\qrr@misc@handle@else#2\pgf@stop}{\qrr@misc@handle@else#2else\pgf@stop}%
+    {\tikzext@misc@handle@else#2\pgf@stop}{\tikzext@misc@handle@else#2else\pgf@stop}%
   },
   TeX/if/.code n args={4}{%
     \if#1#2\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
@@ -222,7 +222,7 @@
   },
   tex/.search also=/utils/TeX,
 }
-\def\qrr@misc@handle@else#1else#2\pgf@stop{%
+\def\tikzext@misc@handle@else#1else#2\pgf@stop{%
   \ifdim\pgfmathresult pt=0pt
     \expandafter\pgfutil@firstoftwo
   \else

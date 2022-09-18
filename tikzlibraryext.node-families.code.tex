@@ -13,7 +13,7 @@
 \pgfqkeys{/tikz/node family}{
   width/.initial=,
   height/.initial=,
-  size/.style=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
+  size/.code=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
   text depth/.initial=,
   text height/.initial=,
   text width align/.is choice,

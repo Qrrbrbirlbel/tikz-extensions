@@ -130,9 +130,9 @@
     %
     \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heatmark inner opacity}}%     heat opacity high
     \ifnum\c@pgf@counta=1
-      \def\qrr@heatmark@opacity@seps{0}%
+      \def\tikzext@heatmark@opacity@seps{0}%
     \else
-      \pgfmathsetmacro\qrr@heatmark@opacity@seps
+      \pgfmathsetmacro\tikzext@heatmark@opacity@seps
       {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heatmark outer opacity}))%
          /(\c@pgf@counta-1)}%
     \fi
@@ -151,17 +151,17 @@
         \csname tikz@options\endcsname
         {%
         \pgfutil@loop
-          \pgfmathsetmacro\qrr@heatmark@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
+          \pgfmathsetmacro\tikzext@heatmark@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
           % path
           \begingroup
             \edef\pgf@marshal{\noexpand\pgfset{heatmark arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
                               \noexpand\pgfset{heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax\space arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
             \pgf@marshal
             \csname tikz@options\endcsname
-            \pgfpathmoveto{\pgfpointpolar{\qrr@heatmark@start@angle}{\pgf@ya}}%
-            \pgfpatharc{\qrr@heatmark@start@angle}{\qrr@heatmark@start@angle+\pgf@tempb}{\pgf@ya}%
-            \pgfpathlineto{\pgfpointpolar{\qrr@heatmark@start@angle+\pgf@tempb}{\pgf@yb}}%
-            \pgfpatharc{\qrr@heatmark@start@angle+\pgf@tempb}{\qrr@heatmark@start@angle}{\pgf@yb}%
+            \pgfpathmoveto{\pgfpointpolar{\tikzext@heatmark@start@angle}{\pgf@ya}}%
+            \pgfpatharc{\tikzext@heatmark@start@angle}{\tikzext@heatmark@start@angle+\pgf@tempb}{\pgf@ya}%
+            \pgfpathlineto{\pgfpointpolar{\tikzext@heatmark@start@angle+\pgf@tempb}{\pgf@yb}}%
+            \pgfpatharc{\tikzext@heatmark@start@angle+\pgf@tempb}{\tikzext@heatmark@start@angle}{\pgf@yb}%
             \pgfpathclose
             \pgfusepathqfill
           \endgroup
@@ -173,7 +173,7 @@
       \advance\pgfutil@tempcnta\@ne
       \ifnum\pgfutil@tempcnta<\c@pgf@counta
         \pgf@ya\pgf@yb
-        \pgfmathsetmacro\pgf@tempd{\pgf@tempd-\qrr@heatmark@opacity@seps}%
+        \pgfmathsetmacro\pgf@tempd{\pgf@tempd-\tikzext@heatmark@opacity@seps}%
     \pgfutil@repeat
     \pgftransformshift{\pgfqpointscale{-1}{\centerpoint}}%
   }

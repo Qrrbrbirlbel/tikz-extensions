@@ -66,7 +66,7 @@
 \tikzset{east above/.code =\tikz@lib@place@handle@{#1}{south east}{0}{1}{north east}{1}}
 \tikzset{east below/.code=\tikz@lib@place@handle@{#1}{north east}{0}{-1}{south east}{1}}
 
-\newif\ifqrr@tikz@lib@place@postransform
+\newif\iftikzext@tikz@lib@place@postransform
 \tikzset{node distance transformation/.is if=qrr@tikz@lib@place@postransform}
 \def\tikz@lib@place@handle@@#1#2#3#4{%
   \pgfutil@in@{of }{#1}%
@@ -81,7 +81,7 @@
     \expandafter\tikz@lib@place@parse@nums\expandafter{\tikz@lib@place@nums}%
     \pgf@x=#2\pgf@x
     \pgf@y=#3\pgf@y
-    \ifqrr@tikz@lib@place@postransform
+    \iftikzext@tikz@lib@place@postransform
       \pgf@pos@transform{\pgf@x}{\pgf@y}% change from original
     \fi
     \edef\tikz@lib@pos@call{\noexpand\pgftransformshift{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
@@ -91,7 +91,7 @@
 \def\tikz@lib@place@handle@#1#2#3#4#5#6{%
   \pgfutil@in@{:}{#1}%
   \ifpgfutil@in@
-    \tikz@lib@place@handle@qrr@#1\tikz@stop
+    \tikzext@lib@place@handle@#1\tikz@stop
     \ifx\pgf@temp\pgfutil@empty
       \let\pgf@temp\tikz@node@distance
     \fi
@@ -107,24 +107,24 @@
     \expandafter\tikz@lib@place@handle@@\expandafter{\tikz@temp}{#3}{#4}{#5}%
   \fi
 }
-\def\tikz@lib@place@handle@qrr@#1:#2\tikz@stop{%
+\def\tikzext@lib@place@handle@#1:#2\tikz@stop{%
   \pgfutil@in@{and}{#1}%
   \ifpgfutil@in@
-    \tikz@lib@place@handle@qrr@@#1\tikz@stop
+    \tikzext@lib@place@handle@@#1\tikz@stop
   \else
-    \tikz@lib@place@handle@qrr@@#1and#1\tikz@stop
+    \tikzext@lib@place@handle@@#1and#1\tikz@stop
   \fi
   \def\pgf@temp{#2}%
 }
-\def\tikz@lib@place@handle@qrr@@#1and#2\tikz@stop{%
+\def\tikzext@lib@place@handle@@#1and#2\tikz@stop{%
   \def\pgf@tempa{#1}%
   \def\pgf@tempb{#2}%
 }
-\def\qrr@xyshift@starred#1#2#3{%
+\def\tikzext@xyshift@starred#1#2#3{%
   \edef\tikz@marshal{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
   \tikz@marshal
   \ifpgfutil@in@
-    \expandafter\tikz@lib@place@handle@qrr@@\tikz@node@distance\tikz@stop
+    \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
   \else
     \let#3\tikz@node@distance
   \fi
@@ -144,8 +144,8 @@
     \pgftransformshift{\pgfqpoint{\pgf@x}{\pgf@y}}%
   \fi}
 \tikzset{
-  xshift*/.code=\qrr@xyshift@starred{#1}x\pgf@tempb,
-  yshift*/.code=\qrr@xyshift@starred{#1}y\pgf@tempa
+  xshift*/.code=\tikzext@xyshift@starred{#1}x\pgf@tempb,
+  yshift*/.code=\tikzext@xyshift@starred{#1}y\pgf@tempa
 }
 
 \def\pgfutil@firstofmany#1#2\pgf@stop{#1}
@@ -233,7 +233,7 @@
   \begingroup
     \edef\pgfmath@temp{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
     \pgfmath@temp\ifpgfutil@in@
-      \expandafter\tikz@lib@place@handle@qrr@@\tikz@node@distance\tikz@stop
+      \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
     \else
       \let\pgf@tempb\tikz@node@distance
     \fi
@@ -245,7 +245,7 @@
   \begingroup
     \edef\pgfmath@temp{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
     \pgfmath@temp\ifpgfutil@in@
-      \expandafter\tikz@lib@place@handle@qrr@@\tikz@node@distance\tikz@stop
+      \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
     \else
       \let\pgf@tempa\tikz@node@distance
     \fi
@@ -256,7 +256,7 @@
 %\tikzdeclarecoordinatesystem{node distance}{%
 %  \tikz@cs@nd#1\tikz@stop}
 %\def\tikz@cs@nd#1,#2\tikz@stop{%
-%  \def\qrr@xyshift@starred@action##1{\pgftransformshift{##1}}%
-%  \qrr@xyshift@starred{#1}x\pgf@tempb
-%  \qrr@xyshift@starred{#2}y\pgf@tempa}
+%  \def\tikzext@xyshift@starred@action##1{\pgftransformshift{##1}}%
+%  \tikzext@xyshift@starred{#1}x\pgf@tempb
+%  \tikzext@xyshift@starred{#2}y\pgf@tempa}
 \endinput

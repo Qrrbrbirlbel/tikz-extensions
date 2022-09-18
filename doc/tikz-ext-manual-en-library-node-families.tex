@@ -23,7 +23,7 @@ This library introduces two new shapes called |Circle| and |Rectangle|
 that are basically copies of the original shapes |circle|\indexShapeO{circle} and |rectangle|\indexShapeO{rectangle}.
 However, their dimension will be set to the same maximum |minimum width| and |minimum height|
 when one of the following \meta{name}s are declared.
-\begin{key}{/tikz/node family/width=\meta{name} (initially |\{\}|)}
+\begin{key}{/tikz/node family/width=\meta{name} (initially \{\})}
 Nodes with the same \meta{name} will have the same \referenceKeyandIndexO[/pgf/]{minimum width}.
 An empty \meta{name} disables the evaluation by the library.
 \begin{codeexample}[preamble=\usetikzlibrary{positioning,ext.node-families},/tikz/node distance=.5cm]
@@ -34,7 +34,7 @@ An empty \meta{name} disables the evaluation by the library.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/tikz/node family/height=\meta{name} (initially |\{\}|)}
+\begin{key}{/tikz/node family/height=\meta{name} (initially \{\})}
 Nodes with the same \meta{name} will have the same \referenceKeyandIndexO[/pgf/]{minimum height}.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
@@ -45,17 +45,17 @@ Sets both |height| and |width|.
 While |node family/width| and |node family/height| only work for the new shapes |Circle| and |Rectangle|,
 the following keys~-- when setup, see below~-- work with every shape with one single node part.
 Initially though, only |circle|, |rectangle|, |Circle| and |Rectangle| are set up that way.
-\begin{key}{/tikz/node family/text height=\meta{name} (initially |\{\}|)}
+\begin{key}{/tikz/node family/text height=\meta{name} (initially \{\})}
 Nodes with the same \meta{name} will have the same text height.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
 
-\begin{key}{/tikz/node family/text depth=\meta{name} (initially |\{\}|)}
+\begin{key}{/tikz/node family/text depth=\meta{name} (initially \{\})}
 Nodes with the same \meta{name}  will have the same text depth.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
 
-\begin{key}{/tikz/node family/text width=\meta{name} (initially |\{\}|)}
+\begin{key}{/tikz/node family/text width=\meta{name} (initially \{\})}
 Nodes with the same \meta{name} will have the same text width.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
@@ -68,7 +68,7 @@ Since the width of the node's content's box is setup much earlier,
 the previous key only extends the width of that box which would make the text
 seem as if it where aligned to the left.
 With |text width family align| this can changed.
-\begin{key}{/tikz/node family/text width align=\meta{alignment}(initially |center|)}
+\begin{key}{/tikz/node family/text width align=\meta{alignment}(initially center)}
 \meta{alignment} is one of |left|, |center| or |right|.
 
 \begin{codeexample}[preamble=\usetikzlibrary{positioning,ext.node-families},/tikz/node distance=.5cm]
@@ -80,7 +80,7 @@ With |text width family align| this can changed.
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/node family/prefix=\meta{prefix}(initially \expandafter|\string\pgfpictureid-|)}
+\begin{key}{/tikz/node family/prefix=\meta{prefix}(initially \string\pgfpictureid-)}
 The family names are prefixed with the value of |/tikz/node family/prefix|.
 \end{key}
 
