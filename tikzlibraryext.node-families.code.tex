@@ -6,9 +6,9 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikz@nf@align@left#1{}
-\def\tikz@nf@align@center#1{\kern.5#1}
-\def\tikz@nf@align@right#1{\kern#1}
+\def\tikzext@nf@align@left#1{}
+\def\tikzext@nf@align@center#1{\kern.5#1}
+\def\tikzext@nf@align@right#1{\kern#1}
 
 \pgfqkeys{/tikz/node family}{
   width/.initial=,
@@ -17,9 +17,9 @@
   text depth/.initial=,
   text height/.initial=,
   text width align/.is choice,
-  text width align/left/.code=\let\tikz@nf@align@action\tikz@nf@align@left,
-  text width align/center/.code=\let\tikz@nf@align@action\tikz@nf@align@center,
-  text width align/right/.code=\let\tikz@nf@align@action\tikz@nf@align@right,
+  text width align/left/.code=\let\tikzext@nf@align@action\tikzext@nf@align@left,
+  text width align/center/.code=\let\tikzext@nf@align@action\tikzext@nf@align@center,
+  text width align/right/.code=\let\tikzext@nf@align@action\tikzext@nf@align@right,
   text width align=center,
   text width/.initial=,
   text/.code=\pgfqkeys{/tikz/node family}{text depth={#1},text height={#1},text width={#1}},
@@ -28,40 +28,39 @@
 \tikzset{node family/.code=\pgfqkeys{/tikz/node family}{#1}}
 
 % #1 = family type + name
-\def\tikz@nf@save#1{%
+\def\tikzext@nf@save#1{%
   %\errmessage{#1}%
   \immediate\write\pgfutil@auxout{%
-    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikz@nf@#1@previous\endcsname
-      {\csname tikz@nf@#1@next\endcsname}%
+    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
+      {\csname tikzext@nf@#1@next\endcsname}%
   }%
-  %\expandafter\global\expandafter\let\csname tikz@nf@#1@next\endcsname\relax
 }
 
 % #1 = value to set
 % #2 = family type
 % #3 = return dimen
-\def\tikz@nf@getandset#1#2#3{%
+\def\tikzext@nf@getandset#1#2#3{%
     % what's our family's name?
     #3=0pt\relax
-    \pgfkeysgetvalue{/tikz/node family/#2}\tikz@nf@familyname
-    \pgfutil@ifxempty\tikz@nf@familyname{% no family to deal with
+    \pgfkeysgetvalue{/tikz/node family/#2}\tikzext@nf@familyname
+    \pgfutil@ifxempty\tikzext@nf@familyname{% no family to deal with
     }{%
-      \edef\tikz@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikz@nf@familyname}%
+      \edef\tikzext@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikzext@nf@familyname}%
       % we need to save the value for the next run
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikz@nf@familyname @next}{%
+      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @next}{%
         % first time: define first value and install hook at end of picture
-        \expandafter\xdef\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname{#1}%
-        \edef\tikz@temp{\noexpand\tikz@nf@save{#2@\tikz@nf@familyname}}%
+        \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
+        \edef\tikz@temp{\noexpand\tikzext@nf@save{#2@\tikzext@nf@familyname}}%
         %\expandafter\AtVeryEndDocument\expandafter{\tikz@temp}%
         \expandafter\pgfutil@g@addto@macro\expandafter\tikz@atend@picture\expandafter{\tikz@temp}%
       }{%
-        \ifdim\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname<#1\relax
-          \expandafter\xdef\csname tikz@nf@#2@\tikz@nf@familyname @next\endcsname{#1}%
+        \ifdim\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname<#1\relax
+          \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
         \fi
       }%
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikz@nf@familyname @previous}{% first run, ignore
+      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @previous}{% first run, ignore
       }{% set previous value
-        #3=\csname tikz@nf@#2@\tikz@nf@familyname @previous\endcsname\relax
+        #3=\csname tikzext@nf@#2@\tikzext@nf@familyname @previous\endcsname\relax
       }%
     }%
 }
@@ -75,7 +74,7 @@
     \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
     \advance\pgf@x by 2\pgf@xc%
     % Qrr: family width
-    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
+    \tikzext@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
     \ifdim\pgf@x<\pgfutil@tempdima
       \pgf@x=\pgfutil@tempdima
     \fi
@@ -98,7 +97,7 @@
     \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
     \advance\pgf@y by 2\pgf@yc%
     % Qrr: family height
-    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
+    \tikzext@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
     \ifdim\pgf@y<\pgfutil@tempdima
       \pgf@y=\pgfutil@tempa
     \fi
@@ -116,7 +115,7 @@
     \advance\pgf@y by\pgf@ya%
   }%
 
-\savedanchor\southwest{%
+  \savedanchor\southwest{%
     % Calculate x
     %
     % First, is width < minimum width?
@@ -124,7 +123,7 @@
     \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
     \advance\pgf@x by 2\pgf@xc%
     % Qrr: family width
-    \tikz@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
+    \tikzext@nf@getandset{\the\pgf@x}{width}{\pgfutil@tempdima}%
     \ifdim\pgf@x<\pgfutil@tempdima
       \pgf@x=\pgfutil@tempdima
     \fi
@@ -147,7 +146,7 @@
     \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
     \advance\pgf@y by 2\pgf@yc%
     % Qrr: family height
-    \tikz@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
+    \tikzext@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
     \ifdim\pgf@y<\pgfutil@tempdima
       \pgf@y=\pgfutil@tempdima
     \fi
@@ -226,8 +225,8 @@
     \fi
     \pgf@x=\pgf@xa%
     % Qrr: check for families
-    \tikz@nf@getandset{\the\dimexpr2\pgf@x\relax}{width}{\pgfutil@tempdima}%
-    \tikz@nf@getandset{\the\dimexpr2\pgf@x\relax}{height}{\pgfutil@tempdimb}%
+    \tikzext@nf@getandset{\the\dimexpr2\pgf@x\relax}{width}{\pgfutil@tempdima}%
+    \tikzext@nf@getandset{\the\dimexpr2\pgf@x\relax}{height}{\pgfutil@tempdimb}%
     % Qrr: and adjust like minimum width and minimum height
     \ifdim\pgf@x<.5\pgfutil@tempdima
       \pgf@x=.5\pgfutil@tempdima
@@ -285,17 +284,17 @@
 \pgfqkeys{/tikz/node family}{
   setup shape/.code={%
     \expandafter\pgfutil@prefixto@macro\csname pgf@sh@s@#1\endcsname{%
-      \tikz@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
+      \tikzext@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
       \ifdim\wd\pgfnodeparttextbox<\pgfutil@tempdima
         \pgfutil@tempdimb=\pgfutil@tempdima
         \advance\pgfutil@tempdimb-\wd\pgfnodeparttextbox
-        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikz@nf@align@action\pgfutil@tempdimb\box\pgfnodeparttextbox}%
+        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikzext@nf@align@action\pgfutil@tempdimb\box\pgfnodeparttextbox}%
       \fi
-      \tikz@nf@getandset{\the\dp\pgfnodeparttextbox}{text depth}{\pgfutil@tempdima}%
+      \tikzext@nf@getandset{\the\dp\pgfnodeparttextbox}{text depth}{\pgfutil@tempdima}%
       \ifdim\dp\pgfnodeparttextbox<\pgfutil@tempdima
           \dp\pgfnodeparttextbox=\pgfutil@tempdima
       \fi
-      \tikz@nf@getandset{\the\ht\pgfnodeparttextbox}{text height}{\pgfutil@tempdima}%
+      \tikzext@nf@getandset{\the\ht\pgfnodeparttextbox}{text height}{\pgfutil@tempdima}%
       \ifdim\ht\pgfnodeparttextbox<\pgfutil@tempdima
           \ht\pgfnodeparttextbox=\pgfutil@tempdima
       \fi
