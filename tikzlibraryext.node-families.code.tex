@@ -5,7 +5,50 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+\usepgfmodule{parser}
 
+\pgfparserdef{tikzext-nodefamilies}{initial}l{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+    \pgfqkeys{/tikz/node family}{
+      text width align=left,
+      text width=@tikzext@matrix@}}%
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}r{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+    \pgfqkeys{/tikz/node family}{
+      text width align=right,
+      text width=@tikzext@matrix@}}%
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}c{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+    \pgfqkeys{/tikz/node family}{
+      text width align=center,
+      text width=@tikzext@matrix@}}%
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}c{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+    \pgfqkeys{/tikz/node family}{
+      text width align=center,
+      text width=@tikzext@matrix@}}%
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}*[mm]{%
+  \begingroup
+    \pgfmathsetcount\c@pgf@countb{#1}%
+    \let\tikz@temp\pgfutil@empty
+    \pgfutil@loop
+      \ifnum0<\c@pgf@countb
+      \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#2}%
+      \advance\c@pgf@countb by -1
+    \pgfutil@repeat
+    \edef\tikz@temp{\endgroup\def\noexpand\pgfparserletter{\tikz@temp}}%
+    \tikz@temp
+  \pgfparserreinsert
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}\tikzext@stop{\pgfparserswitch{final}}
 \def\tikzext@nf@align@left#1{}
 \def\tikzext@nf@align@center#1{\kern.5#1}
 \def\tikzext@nf@align@right#1{\kern#1}
@@ -13,6 +56,19 @@
 \pgfqkeys{/tikz/node family}{
   width/.initial=,
   height/.initial=,
+  matrix columns/.code={%
+    \c@pgf@counta=0
+    \pgfparserparse{tikzext-nodefamilies}#1\tikzext@stop
+    \pgfqkeys{/tikz/node family}{
+      prefix/.append=\tikzmatrixname-\the\pgfmatrixcurrentcolumn,
+    }%
+  },
+  matrix like tabular/.style={
+    /pgf/inner xsep=+0pt,
+    /pgf/inner ysep=+0.85ex,
+    /tikz/column sep=+\tabcolsep,
+    /tikz/row sep=+0pt,
+  },
   size/.code=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
   text depth/.initial=,
   text height/.initial=,
@@ -29,7 +85,6 @@
 
 % #1 = family type + name
 \def\tikzext@nf@save#1{%
-  %\errmessage{#1}%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
       {\csname tikzext@nf@#1@next\endcsname}%
@@ -47,7 +102,7 @@
     }{%
       \edef\tikzext@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikzext@nf@familyname}%
       % we need to save the value for the next run
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @next}{%
+      \pgfutil@IfUndefined{tikzext@nf@#2@\tikzext@nf@familyname @next}{%
         % first time: define first value and install hook at end of picture
         \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
         \edef\tikz@temp{\noexpand\tikzext@nf@save{#2@\tikzext@nf@familyname}}%
@@ -58,7 +113,7 @@
           \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
         \fi
       }%
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @previous}{% first run, ignore
+      \pgfutil@IfUndefined{tikzext@nf@#2@\tikzext@nf@familyname @previous}{% first run, ignore
       }{% set previous value
         #3=\csname tikzext@nf@#2@\tikzext@nf@familyname @previous\endcsname\relax
       }%
@@ -302,3 +357,4 @@
   },
   setup shape/.list={rectangle,circle,Rectangle,Circle}
 }
+\endinput
