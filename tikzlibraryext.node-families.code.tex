@@ -47,7 +47,7 @@
     }{%
       \edef\tikzext@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikzext@nf@familyname}%
       % we need to save the value for the next run
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @next}{%
+      \pgfutil@IfUndefined{tikzext@nf@#2@\tikzext@nf@familyname @next}{%
         % first time: define first value and install hook at end of picture
         \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
         \edef\tikz@temp{\noexpand\tikzext@nf@save{#2@\tikzext@nf@familyname}}%
@@ -58,7 +58,7 @@
           \expandafter\xdef\csname tikzext@nf@#2@\tikzext@nf@familyname @next\endcsname{#1}%
         \fi
       }%
-      \pgfutil@IfUndefined{tikz@nf@#2@\tikzext@nf@familyname @previous}{% first run, ignore
+      \pgfutil@IfUndefined{tikzext@nf@#2@\tikzext@nf@familyname @previous}{% first run, ignore
       }{% set previous value
         #3=\csname tikzext@nf@#2@\tikzext@nf@familyname @previous\endcsname\relax
       }%
