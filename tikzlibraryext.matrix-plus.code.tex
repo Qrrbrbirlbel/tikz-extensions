@@ -1,0 +1,173 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\usetikzlibrary{ext.node-families,ext.misc}
+\usepgfmodule{parser}
+\pgfqkeys{/tikz/node family}{
+    @matrix/.style={
+        text height=@tikzext@matrix@row\the\pgfmatrixcurrentrow,
+        text depth=@tikzext@matrix@row\the\pgfmatrixcurrentrow,
+        text width=@tikzext@matrix@col\the\pgfmatrixcurrentcolumn
+    }
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}L[O{}]{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+        \pgfqkeys{/tikz/node family}{@matrix,text width align=left}%
+        \tikzset{nodes={#1}}%
+    }%
+}
+\pgfparserdef{tikzext-nodefamilies-col}{initial}R[O{}]{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+        \pgfqkeys{/tikz/node family}{@matrix,text width align=right}%
+        \tikzset{nodes={#1}}%
+    }%
+}
+\pgfparserdef{tikzext-nodefamilies-col}{initial}C[O{}]{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
+        \pgfqkeys{/tikz/node family}{@matrix,text width align=center}%
+        \tikzset{nodes={#1}}%
+    }%
+}
+\pgfparserdef{tikzext-nodefamilies-col}{initial}|[O{}D()-]{%
+    \ifnum\c@pgf@counta=0
+        \edef\tikz@temp{,matrix-plus/@vertical line=%
+            {{matrix-plus/vertical line first/.try,
+              matrix-plus/vertical line before 1/.try,#1}{1}{.north west}{.south west}#2}}%
+    \else
+        \edef\tikz@temp{,matrix-plus/@vertical line=%
+            {{matrix-plus/vertical line after \the\c@pgf@counta/.try,
+              matrix-plus/vertical line before \the\numexpr\c@pgf@counta+1\relax/.try,#1}{\the\c@pgf@counta}{.north east}{.south east}#2}}%
+    \fi
+    \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@matrixplus@aftermatrix\expandafter{\tikz@temp}%
+}
+\pgfparserdef{tikzext-nodefamilies}{initial}l{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base}}
+}%
+
+\pgfparserdef{tikzext-nodefamilies-col}{initial}r{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base east}}
+}%
+
+\pgfparserdef{tikzext-nodefamilies-col}{initial}c{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
+}%
+
+\pgfparserdef{tikzext-nodefamilies-col}{initial}*[mm]{%
+  \begingroup
+    \pgfmathsetcount\c@pgf@countb{#1}%
+    \let\tikz@temp\pgfutil@empty
+    \pgfutil@loop
+      \ifnum0<\c@pgf@countb
+      \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#2}%
+      \advance\c@pgf@countb by -1
+    \pgfutil@repeat
+    \edef\tikz@temp{\endgroup\def\noexpand\pgfparserletter{\tikz@temp}}%
+    \tikz@temp
+  \pgfparserreinsert
+}
+\pgfparserdef{tikzext-nodefamilies-col}{initial}\tikzext@stop{\pgfparserswitch{final}}
+
+\pgfqkeys{/tikz/matrix-plus}{
+    .code=\pgfqkeys{/tikz/matrix-plus}{#1},
+    columns/.code={%
+        \tikzset{
+            node family/prefix/.append=\tikzmatrixname-,
+            /utils/exec=\gdef\tikzext@matrixplus@aftermatrix{%
+                /utils/exec=%
+                \edef\tikzext@matrixplus@lastrow{\the\pgfmatrixcurrentrow}%
+                \edef\tikzext@matrixplus@lastcol{\the\pgfmatrixcurrentcolumn}%
+                \let\tikzext@matrixplus@name\tikzlastnode
+            },
+            append after command={[style/.expand once=\tikzext@matrixplus@aftermatrix]},
+        }%
+        \c@pgf@counta=0
+        \pgfparserparse{tikzext-nodefamilies-col}#1\tikzext@stop
+    },
+    style/.is choice,
+    style/tabular/.style={
+        /pgf/inner xsep=+0pt,
+        /pgf/inner ysep=+0.85ex,
+        /tikz/column sep=+\tabcolsep,
+        /tikz/row sep=+-.5\pgflinewidth,
+    },
+    style/better tabular/.style={
+        /pgf/inner xsep=+.5\tabcolsep,
+        /pgf/inner ysep=+0.85ex,
+        /tikz/column sep=+0pt,
+        /tikz/row sep=+0pt,
+        /pgf/outer xsep=+0pt,
+        /pgf/outer ysep=+0pt,
+    },
+    @vertical line/.style args={#1#2#3#4#5-#6}{
+        /utils/exec=%
+            \def\tikz@temp{#5}%
+            \pgfutil@ifxempty\tikz@temp
+                {\def\tikzext@matrixplus@start{1}}
+                {\pgfmathtruncatemacro\tikzext@matrixplus@start{\tikz@temp}}%
+            \def\tikz@temp{#6}%
+            \pgfutil@ifxempty\tikz@temp{%
+                \let\tikzext@matrixplus@end\tikzext@matrixplus@lastrow
+            }{%
+                \pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}%
+            },
+        insert path={
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2#3)
+            edge[matrix-plus/vertical line,#1]
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2#4)}
+    },
+    vertical line/.style=line to,
+    horizontal line/.style=line to,
+    bottomrule line/.style=thick,
+    toprule line/.style=thick,
+    rule line/.style=thin,
+    bottomrule/.default=,
+    bottomrule/.code={%
+        \tikzext@matrixplus@parse@rule{matrix-plus/bottomrule line}{\noexpand\tikzext@matrixplus@lastrow}{.south west}{.south east}{yshift=+-.5\pgflinewidth}#1\tikz@stop
+    },
+    toprule/.default=,
+    toprule/.code={%
+        \tikzext@matrixplus@parse@rule{matrix-plus/toprule line}{1}{.north west}{.north east}{yshift=+.5\pgflinewidth}#1\tikz@stop
+    },
+    rule/.value required,
+    rule/.code 2 args={%
+        \tikzext@matrixplus@parse@rule{matrix-plus/rule line}{#1}{.south west}{.south east}{}#2\tikz@stop
+    },
+    @horizontal line/.style args={#1#2#3#4#5#6-#7}{
+        /utils/exec=%
+            \def\tikz@temp{#6}%
+            \pgfutil@ifxempty\tikz@temp
+                {\def\tikzext@matrixplus@start{1}}
+                {\pgfmathtruncatemacro\tikzext@matrixplus@start{\tikz@temp}}%
+            \def\tikz@temp{#7}%
+            \pgfutil@ifxempty\tikz@temp
+                {\let\tikzext@matrixplus@end\tikzext@matrixplus@lastcol}
+                {\pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}},
+        insert path={
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@start#3)
+            edge[matrix-plus/horizontal line,#1]
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@end#4)}
+    }
+}
+\def\tikzext@matrixplus@parse@rule#1#2#3#4#5{%
+    \def\tikz@temp##1{{#1,##1}{#2}{#3}{#4}{#5}}%
+    \pgfutil@ifnextchar[\tikzext@matrixplus@parse@rule@options{\tikzext@matrixplus@parse@rule@options[]}%
+}
+\def\tikzext@matrixplus@parse@rule@options[#1]{%
+    \pgfutil@ifnextchar({\tikzext@matrixplus@parse@rule@final{#1}}{\tikzext@matrixplus@parse@rule@final{#1}(-)}%
+}
+\def\tikzext@matrixplus@parse@rule@final#1(#2)#3\tikz@stop{%
+    \edef\tikz@temp{,matrix-plus/@horizontal line={\tikz@temp{#1}#2}}
+    \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@matrixplus@aftermatrix\expandafter{\tikz@temp}%
+}
+\endinput
