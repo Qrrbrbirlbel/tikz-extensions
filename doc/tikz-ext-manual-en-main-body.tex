@@ -174,7 +174,7 @@ Version 0.3
 \item \addShape{heatmark}
 \item \addShape[rectangle with rounded corners]{rectangleroundedcorners}
 \item \addShape{superellipse}
-\item Added shape \texttt{Ellipse} to \tikzname\space library \texttt{ext.node-families.shapes.geometric} which now works with |width| and |height|.
+\item \addTikz{node-families.shapes.geometric}
 \item Fixed |ext.node-families|' key |size|.
 \item Renamed internal macros to use custom namespace starting with |\tikzext@|.
 \item Added some references.
@@ -199,7 +199,6 @@ Version 0.1
 \end{multicols}
 \printindex
 
-\addcontentsline{toc}{section}{References}
-\printbibliography
+\printbibliography[heading=bibintoc]
 %\typeout{Examples: \the\codeexamplecount}%
 \end{document}

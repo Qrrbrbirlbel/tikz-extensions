@@ -6,94 +6,33 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\usetikzlibrary{ext.node-families}
+\usetikzlibrary{ext.node-families,shapes.geometric}
 
-\pgfdeclareshape{Ellipse}
-%
-% Draws a circle around the text
-%
-{%
-  \savedanchor\centerpoint{%
-    \pgf@x=.5\wd\pgfnodeparttextbox%
-    \pgf@y=.5\ht\pgfnodeparttextbox%
-    \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
-  }%
-  \savedanchor\radius{%
-    %
-    % Calculate ``height radius''
-    %
-    \pgf@y=.5\ht\pgfnodeparttextbox%
-    \advance\pgf@y by.5\dp\pgfnodeparttextbox%
-    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/inner ysep}}%
-    \advance\pgf@y by\pgf@yb%
-    %
-    % Calculate ``width radius''
-    %
-    \pgf@x=.5\wd\pgfnodeparttextbox%
-    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/inner xsep}}%
-    \advance\pgf@x by\pgf@xb%
-    %
-    % Adjust
-    %
-    \pgf@x=1.4142136\pgf@x%
-    \pgf@y=1.4142136\pgf@y%
-    % Qrr: check for families
-    \tikzext@nf@getandset{\the\dimexpr2\pgf@x\relax}{width}{\pgfutil@tempdima}%
-    \tikzext@nf@getandset{\the\dimexpr2\pgf@y\relax}{height}{\pgfutil@tempdimb}%
-    % Qrr: and adjust like minimum width and minimum height
-    \ifdim\pgf@x<.5\pgfutil@tempdima
-      \pgf@x=.5\pgfutil@tempdima
-    \fi
-    \ifdim\pgf@y<.5\pgfutil@tempdimb
-      \pgf@y=.5\pgfutil@tempdimb
-    \fi
-    %
-    % Adjust height, if necessary
-    %
-    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/minimum height}}%
-    \ifdim\pgf@y<.5\pgf@yc%
-      \pgf@y=.5\pgf@yc%
-    \fi%
-    %
-    % Adjust width, if necessary
-    %
-    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/minimum width}}%
-    \ifdim\pgf@x<.5\pgf@xc%
-      \pgf@x=.5\pgf@xc%
-    \fi%
-    %
-    % Add outer sep
-    %
-    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%
-    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%
-    \advance\pgf@x by\pgf@xb%
-    \advance\pgf@y by\pgf@yb%
-  }%
+\let\tikzext@nf@function@ellipse    \tikzext@nf@function@default@double
+\let\tikzext@nf@function@star       \tikzext@nf@function@circle
+\let\tikzext@nf@function@diamond    \tikzext@nf@function@default@double
+\let\tikzext@nf@function@star       \tikzext@nf@function@circle@double
+\expandafter\let\csname tikzext@nf@function@regular polygon\endcsname
+                                    \tikzext@nf@function@circle@double
+\let\tikzext@nf@function@trapezium\tikzext@nf@function@default@double
+\def\tikzext@nf@function@semicircle {{\the\dimexpr2\pgf@x\relax}{\the\pgf@x}}
+\expandafter\def\csname tikzext@nf@function@isosceles triangle\endcsname
+                                    {{\the\dimexpr2\pgf@ya\relax}{\the\pgf@xa}}
+\def\tikzext@nf@function@kite       {{\the\dimexpr2\pgf@xa\relax}{\the\dimexpr\pgf@ya+\pgf@yb\relax}}
+\def\tikzext@nf@function@dart       {{\the\dimexpr2\pgf@ya\relax}{\the\pgf@xb}}
+\expandafter\def\csname tikzext@nf@function@circular sector\endcsname{{\the\pgf@xc}{\the\pgf@xa}}
+\def\tikzext@nf@function@cylinder{{\the\dimexpr2\pgfutil@tempdimb\relax}{\the\pgf@x}}
 
-  %
-  % Anchors
-  %
-  \inheritanchor[from=ellipse]{center}
-  \inheritanchor[from=ellipse]{mid}
-  \inheritanchor[from=ellipse]{base}
-  \inheritanchor[from=ellipse]{north}
-  \inheritanchor[from=ellipse]{south}
-  \inheritanchor[from=ellipse]{west}
-  \inheritanchor[from=ellipse]{mid west}
-  \inheritanchor[from=ellipse]{base west}
-  \inheritanchor[from=ellipse]{north west}
-  \inheritanchor[from=ellipse]{south west}
-  \inheritanchor[from=ellipse]{east}
-  \inheritanchor[from=ellipse]{mid east}
-  \inheritanchor[from=ellipse]{base east}
-  \inheritanchor[from=ellipse]{north east}
-  \inheritanchor[from=ellipse]{south east}
-  \inheritanchorborder[from=ellipse]
-  \inheritbackgroundpath[from=ellipse]
-}%
-
-\pgfqkeys{/tikz/node family}{
-    setup shape=Ellipse,
-    setup shape=ellipse
-}
-\endinput
+\tikzset{node family/setup shape/.list={
+    ellipse,
+    star,
+    diamond,
+    regular polygon,
+    trapezium,
+    semicircle,
+    isosceles triangle,
+    kite,
+    dart,
+    circular sector,
+    cylinder
+}}
