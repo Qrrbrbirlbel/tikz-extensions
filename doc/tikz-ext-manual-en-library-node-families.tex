@@ -17,10 +17,13 @@
   Unfortunately, this does not work with the |external| library.\indexLibraryO{external}%
   \footnote{First of all, I can't figure out how to use the \textsc{aux} file during externalization since it gets written to the \textsc{log} instead.
             And then there's the question about how \texttt{external} would notice the need to export the picture again until it's stable \dots}
+
+  \inspiration{NodeFam-Q}{NodeFam-A}
+
 \end{tikzlibrary}
 
-This library introduces two new shapes called |Circle| and |Rectangle|
-that are basically copies of the original shapes |circle|\indexShapeO{circle} and |rectangle|\indexShapeO{rectangle}.
+This library introduces two new shapes called \referenceShapeandIndex{Circle} and \referenceShapeandIndex{Rectangle}
+that are basically copies of the original shapes \referenceShapeandIndexO{circle} and \referenceShapeandIndexO{rectangle}.
 However, their dimension will be set to the same maximum |minimum width| and |minimum height|
 when one of the following \meta{name}s are declared.
 \begin{key}{/tikz/node family/width=\meta{name} (initially \{\})}
@@ -99,4 +102,18 @@ This should be only used once per shape.
 \draw[help lines] (a.south) -- (h.south) (a.north) -- (h.north) (a.base-|a.west) -- (h.base-|h.east);
 \end{tikzpicture}
 \end{codeexample}
+
+\subsection{More shapes that support the keys \texttt{width} and \texttt{height}}
+\begin{tikzlibrary}{ext.node-families.shapes.geometric}
+  This library adds support for the keys \referenceKeyandIndex[/tikz/node family]{width} and
+  \referenceKeyandIndex[/tikz/node family]{height} for the shapes of
+  the \pgfname\space library \referenceLibraryandIndexO{shapes.geometric}.
+
+  \inspirationQ{NodeFam-Ellipse}
+\end{tikzlibrary}
+At this points, only the shape \referenceShapeandIndex{Ellipse} is setup.
+The |Ellipse| shape also supports the keys
+\referenceKeyandIndex[/tikz/node family]{text height},
+\referenceKeyandIndex[/tikz/node family]{text depth} and
+\referenceKeyandIndex[/tikz/node family]{text width}.
 \endinput

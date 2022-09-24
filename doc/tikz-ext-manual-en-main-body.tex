@@ -8,9 +8,9 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\newcommand*\tikzextversion{0.2}
+\newcommand*\tikzextversion{0.3}
 \begin{document}
-
+{\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
   \large Manual for version \tikzextversion\\[1mm]
 \large\href{https://github.com/Qrrbrbirlbel/tikz-extensions}
@@ -21,8 +21,7 @@
 \label{table-of-contents}
 
 \tableofcontents
-
-
+}
 \include{tikz-ext-manual-en-intro}
 
 \part{\tikzname\space Libraries}
@@ -164,9 +163,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}
 \newcommand*{\addShape}[2][]{Added shape \texttt{\ifx\\#1\\#2\else#1\fi}\\(\pgfname\space library \texttt{ext.shapes.#2}).}
-\part{Changelog \& Index}
+\part{Changelog, Index \& References}
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
-\begin{multicols}{2}
+\begin{multicols}{2}\raggedright
 \noindent
 Version 0.3
 \begin{itemize}
@@ -175,6 +174,10 @@ Version 0.3
 \item \addShape{heatmark}
 \item \addShape[rectangle with rounded corners]{rectangleroundedcorners}
 \item \addShape{superellipse}
+\item Added shape \texttt{Ellipse} to \tikzname\space library \texttt{ext.node-families.shapes.geometric} which now works with |width| and |height|.
+\item Fixed |ext.node-families|' key |size|.
+\item Renamed internal macros to use custom namespace starting with |\tikzext@|.
+\item Added some references.
 \end{itemize}
 Version 0.2
 \begin{itemize}
@@ -196,5 +199,7 @@ Version 0.1
 \end{multicols}
 \printindex
 
+\addcontentsline{toc}{section}{References}
+\printbibliography
 %\typeout{Examples: \the\codeexamplecount}%
 \end{document}

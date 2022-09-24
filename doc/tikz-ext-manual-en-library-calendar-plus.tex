@@ -11,6 +11,7 @@
 \section{Calendar}
 \begin{tikzlibrary}{ext.calendar-plus}
   This library extends the \tikzname\space library |calendar|\indexLibraryO{calendar}.
+  \inspiration{WeekNum-Q,CalCond-Q,CalMath-Q}{WeekNum-A,CalCond-A,CalMath-A}
 \end{tikzlibrary}
 
 \begin{multicols}{2}
@@ -33,6 +34,17 @@ The |@|-protected macros are still available, of course.
 It is now also possible to nest |/tikz/if| occurrences.
 \begin{key}{/tikz/if=|(|\meta{conditions}|)|\meta{code or options}\opt{|else|\meta{else code or options}}}
 \end{key}
+
+\subsection{\pgfname math functions}
+\begin{math-function}{weeksinmonthofyear(\mvar{first weekday}, \mvar{month}, \mvar{year})}
+\mathcommand
+  Returns the number of (partial) weeks in the month \mvar{month} of year \mvar{year}
+  when this month begins on a \mvar{first weekday}.
+\end{math-function}
+\begin{math-function}{lastdayinmonthofyear(\mvar{month}, \mvar{year})}
+\mathcommand
+  Returns the last day (28, 29, 30 or 31) of month \mvar{month} of year \mvar{year}.
+\end{math-function}
 
 \subsection{Week numbering (ISO~8601)}
 

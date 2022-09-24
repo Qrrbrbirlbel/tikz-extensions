@@ -14,9 +14,15 @@
 
 \usepackage{imakeidx}
 \makeindex
+
+%%% Bibliography
+\usepackage{csquotes}
+\usepackage[backend=biber,style=numeric,backref]{biblatex}
+\addbibresource{tikz-ext-manual.bib}
+
 \usepackage{hyperref}
 \hypersetup{%
-    colorlinks=false, % use true to enable colors below:
+    colorlinks=true, % use true to enable colors below:
     linkcolor=blue,%red,
     filecolor=blue,%magenta,
     urlcolor=blue,%cyan,
@@ -268,10 +274,13 @@
   \index{Key handlers!#1@\protect\texttt{#1}}
 }
 \newcommand*{\indexKey}[2][/tikz/]{%
+\begingroup
   \def\mykey{#1#2}%
   \def\mypath{}%
   \gdef\myname{}%
+  \firsttimetrue
   \decompose#1#2/\nil
+\endgroup
 }
 \newcommand*{\indexPathOperation}[1]{%
   \index{#1@\protect\texttt{#1} path operation}%
@@ -351,7 +360,11 @@
   \index{\strippedat @\originalprefix\protect\texttt{\original{\protect\string\protect#1}}\originalsuffix}%
 }
 
-\newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}%
+\newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}
+\newcommand*{\referenceKeyandIndex}[2][/tikz/]{\texttt{#1#2}\indexKey[#1]{#2}}
+\newcommand*{\referenceShapeandIndex}[1]{\texttt{#1}\indexShape{#1}}
+\newcommand*{\referenceShapeandIndexO}[1]{\texttt{#1}\indexShapeO{#1}}
+\newcommand*{\referenceLibraryandIndexO}[1]{\texttt{#1}\indexLibraryO{#1}}
 
 \colorlet{originalindex}{gray}
 \newcommand*{\original}[1]{\textcolor{originalindex}{#1}}
@@ -381,3 +394,8 @@
   \small
   \begin{quotation}%
 }{\end{quotation}}
+
+\newcommand*{\inspiration}[2]{%
+  \par\textbf{Q\,\&\,A:} \cite{#1} \& \cite{#2}\par
+}
+\newcommand*\inspirationQ[1]{\par\textbf{Q:} \cite{#1}}

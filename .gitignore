@@ -305,3 +305,4 @@ doc/tikz/*
 # testing
 pgfmanual-test.*
 ./pgfmanual-test/*
+*.tmp
