@@ -8,7 +8,7 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\newcommand*\tikzextversion{0.3}
+\newcommand*\tikzextversion{0.?}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
@@ -167,6 +167,12 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
+Version 0.* % TODO
+\begin{itemize}
+\item Fixed |ext.paths.ortho| keys |only vertical first| and |only horizontal first|.
+\item Moved all (except the |to path|s) to namespace |/tikz/ortho|.
+     |/tikz/hvvh| and |/tikz/udlr| are considered deprecated.
+\end{itemize}
 Version 0.3
 \begin{itemize}
 \item \addShape[circle arrow]{circlearrow}
@@ -199,6 +205,17 @@ Version 0.1
 \end{multicols}
 \printindex
 
+\makeatletter
+\def\url#1{%
+  \in@{/16595}{#1}%
+  \ifin@
+    \hyper@linkurl{\expandafter\Hurl\expandafter{\strip@url#1\relax}}{#1}%
+  \else
+    \hyper@linkurl{\Hurl{#1}}{#1}%
+  \fi
+}
+\def\strip@url#1/16595\relax{#1}
+\makeatother
 \printbibliography[heading=bibintoc]
 %\typeout{Examples: \the\codeexamplecount}%
 \end{document}

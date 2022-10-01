@@ -51,14 +51,13 @@
 
 %%% HVVH/UDLR
 \tikzset{%
-  hvvh/.code={\pgfqkeys{/tikz/hvvh}{#1}},%
-  udlr/.code={\pgfqkeys{/tikz/udlr}{#1}},%
-  hvvh/.search also=/tikz,%
-  udlr/.search also=/tikz,%
-  hvvh/middle 0 to 1/.style={hvvh/spacing=0},%
-  hvvh/from center/.is if=tikzext@tikz@hvvh@fromcenter,%
-  udlr/from center/.style={/tikz/hvvh/from center={#1}},
-  hvvh/spacing/.code=% spacing = 0 means that the middle part are the pos-itions 0 to 1,
+  ortho/.code=\pgfqkeys{/tikz/ortho}{#1},
+  hvvh/.code=\pgfqkeys{/tikz/ortho}{#1},%
+  udlr/.code=\pgfqkeys{/tikz/ortho}{#1},%
+  ortho/.search also=/tikz,
+  ortho/middle 0 to 1/.style={/tikz/ortho/spacing=0},%
+  ortho/from center/.is if=tikzext@tikz@hvvh@fromcenter,%
+  ortho/spacing/.code=% spacing = 0 means that the middle part are the pos-itions 0 to 1,
   %                                           the first part is -1 to 0, the last part is to 2
     \pgfmathint{#1}\let\tikzext@tikz@hvvh@timing@parts\pgfmathresult% in case they are calculations to be done
     \ifcase\tikzext@tikz@hvvh@timing@parts\relax
@@ -76,20 +75,20 @@
       \let\tikzext@tikz@hvvh@timing@subtr\pgfmathresult
       \pgfmathsetmacro\tikzext@tikz@hvvh@timing@factor{1+2*\pgfmathresult}%
     \fi,%
-  hvvh/ratio/.code=\pgfmathsetmacro\tikzext@tikz@hvvh@ratio{#1},%
+  ortho/ratio/.code=\pgfmathsetmacro\tikzext@tikz@hvvh@ratio{#1},%
   % TODO: not possible to do distance in TikZ coordinate system
-  hvvh/distance/.code=\pgfmathsetlength\tikzext@tikz@hvvh@distance{#1}\let\tikzext@tikz@hvvh@ratio\pgfutil@empty,%
-  udlr/distance/.style={%
-    /tikz/udlr/ud distance={#1},%
-    /tikz/udlr/du distance={#1},%
-    /tikz/udlr/lr distance={#1},%
-    /tikz/udlr/rl distance={#1}},%
-  udlr/ud distance/.initial=+.5cm,%
-  udlr/du distance/.initial=+.5cm,%
-  udlr/lr distance/.initial=+.5cm,%
-  udlr/rl distance/.initial=+.5cm,%
-  hvvh/ratio=.5,% default value
-  hvvh/spacing=4,% default value
+  ortho/distance/.code=\pgfmathsetlength\tikzext@tikz@hvvh@distance{#1}\let\tikzext@tikz@hvvh@ratio\pgfutil@empty,%
+  ortho/udlr distance/.style={%
+    /tikz/ortho/ud distance={#1},%
+    /tikz/ortho/du distance={#1},%
+    /tikz/ortho/lr distance={#1},%
+    /tikz/ortho/rl distance={#1}},%
+  ortho/ud distance/.initial=+.5cm,%
+  ortho/du distance/.initial=+.5cm,%
+  ortho/lr distance/.initial=+.5cm,%
+  ortho/rl distance/.initial=+.5cm,%
+  ortho/ratio=.5,% default value
+  ortho/spacing=4,% default value
 }%
 
 %BEGIN_FOLD Timer
@@ -207,7 +206,7 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\pgf@yc}}\pgf@xc\pgf@yc
   \begingroup
-    \pgfqkeys{/tikz/hvvh}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@xb}{\tikz@lasty}}}%
       \iftikzext@tikz@hvvh@fromcenter
@@ -277,7 +276,7 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\pgf@xc}{\tikz@lasty}}\pgf@xc\pgf@yc
   \begingroup
-    \pgfqkeys{/tikz/hvvh}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\tikz@lastx}{\pgf@yb}}}%
       \iftikzext@tikz@hvvh@fromcenter
@@ -348,8 +347,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/udlr}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/udlr/ud distance}}%
+    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/ud distance}}%
     \iftikz@shapeborder
       \advance\pgf@y1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -399,8 +398,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/udlr}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/udlr/du distance}}%
+    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/du distance}}%
     \iftikz@shapeborder
       \advance\pgf@y-1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -450,8 +449,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/udlr}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/udlr/lr distance}}%
+    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/lr distance}}%
     \iftikz@shapeborder
       \advance\pgf@x-1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -501,8 +500,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/udlr}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/udlr/rl distance}}%
+    \pgfqkeys{/tikz/udlr}{/tikz/ortho/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/rl distance}}%
     \iftikz@shapeborder%
       \advance\pgf@x1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -546,6 +545,16 @@
 \tikzset{
   node as new start/.is if=tikzext@ortho@preflush,
   node as new start,
+  ortho/install shortcuts/.style={
+    *|/.style={only vertical second={#1}},   *|/.default=,
+    |*/.style={only vertical first={#1}},    |*/.default=,
+    *-/.style={only horizontal second={#1}}, *-/.default=,
+    -*/.style={only horizontal first={#1}},  -*/.default=,
+    |-/.style={to path={|-(\tikztotarget)\tikztonodes}},
+    -|/.style={to path={-|(\tikztotarget)\tikztonodes}},
+    -|-/.style=/tikz/horizontal vertical horizontal,
+    |-|/.style=/tikz/vertical horizontal vertical,
+  },
   horizontal vertical/.style={to path={-| (\tikztotarget) \tikztonodes}},
   vertical horizontal/.style={to path={|- (\tikztotarget) \tikztonodes}},
   horizontal vertical horizontal/.style={to path={-|- (\tikztotarget) \tikztonodes}},
@@ -611,10 +620,11 @@
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
       \tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)\relax
+      \pgf@ya=\pgf@y
       \iftikz@shapeborder
         \let\tikzext@origtotarget\tikztotarget
         \tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax
-        \ifdim\pgf@y>\tikz@lasty\relax
+        \ifdim\pgf@ya>\tikz@lasty\relax
           \edef\tikztotarget{\tikztotarget.south}%
           \iftikz@shapeborder\def\tikzext@ortho@anchor{.north}\fi
         \else
@@ -640,10 +650,11 @@
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
       \tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)\relax
+      \pgf@xa=\pgf@x
       \iftikz@shapeborder
         \let\tikzext@origtotarget\tikztotarget
         \tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax
-        \ifdim\pgf@x>\tikz@lastx\relax
+        \ifdim\pgf@xa>\tikz@lastx\relax
           \edef\tikztotarget{\tikztotarget.west}%
           \iftikz@shapeborder\def\tikzext@ortho@anchor{.east}\fi
         \else
