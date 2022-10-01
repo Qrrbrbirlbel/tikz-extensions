@@ -6,7 +6,24 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\usetikzlibrary{ext.node-families,ext.misc}
+\usetikzlibrary{ext.node-families,ext.misc,matrix}
+\pgfkeys{
+    /prefix functions/tikz/execute at begin cell/.code=%
+        \def\pgfkeys@temp{#1}%
+        \expandafter\expandafter\expandafter\def
+        \expandafter\expandafter\expandafter\tikz@atbegin@cell
+        \expandafter\expandafter\expandafter{\expandafter\pgfkeys@temp\tikz@atbegin@cell},%
+    /prefix functions/tikz/execute at end cell/.code=%
+        \def\pgfkeys@temp{#1}%
+        \expandafter\expandafter\expandafter\def
+        \expandafter\expandafter\expandafter\tikz@atend@cell
+        \expandafter\expandafter\expandafter{\expandafter\pgfkeys@temp\tikz@atend@cell},%
+    /handlers/.Prefix/.code={%
+        \edef\pgfkeys@temp##1{\noexpand\pgfkeysalso{/prefix functions\pgfkeyscurrentpath={##1}}}%
+        \pgfkeys@temp{#1}%
+    }
+}
+
 \usepgfmodule{parser}
 \pgfqkeys{/tikz/node family}{
     @matrix/.style={
@@ -50,7 +67,7 @@
 }
 \pgfparserdef{tikzext-nodefamilies}{initial}l{%
     \advance\c@pgf@counta by 1
-    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base}}
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
 }%
 
 \pgfparserdef{tikzext-nodefamilies-col}{initial}r{%
@@ -60,7 +77,7 @@
 
 \pgfparserdef{tikzext-nodefamilies-col}{initial}c{%
   \advance\c@pgf@counta by 1
-  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base}}
 }%
 
 \pgfparserdef{tikzext-nodefamilies-col}{initial}*[mm]{%
@@ -80,6 +97,14 @@
 
 \pgfqkeys{/tikz/matrix-plus}{
     .code=\pgfqkeys{/tikz/matrix-plus}{#1},
+    bounding boxes/.style={
+        /tikz/execute at begin cell/.Prefix=%
+            \pgf@matrix@nodecallback
+                {\tikz@pp@name{\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}%
+            \tikzset{
+              local bounding box/.expanded=
+                \tikz@pp@name
+                  {\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}},
     columns/.code={%
         \tikzset{
             node family/prefix/.append=\tikzmatrixname-,
