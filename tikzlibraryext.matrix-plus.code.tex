@@ -18,6 +18,11 @@
         \expandafter\expandafter\expandafter\def
         \expandafter\expandafter\expandafter\tikz@atend@cell
         \expandafter\expandafter\expandafter{\expandafter\pgfkeys@temp\tikz@atend@cell},%
+    /prefix functions/tikz/execute at empty cell/.code=%
+        \def\pgfkeys@temp{#1}%
+        \expandafter\expandafter\expandafter\def
+        \expandafter\expandafter\expandafter\tikz@at@emptycell
+        \expandafter\expandafter\expandafter{\expandafter\pgfkeys@temp\tikz@at@emptycell},%
     /handlers/.Prefix/.code={%
         \edef\pgfkeys@temp##1{\noexpand\pgfkeysalso{/prefix functions\pgfkeyscurrentpath={##1}}}%
         \pgfkeys@temp{#1}%
@@ -98,13 +103,18 @@
 \pgfqkeys{/tikz/matrix-plus}{
     .code=\pgfqkeys{/tikz/matrix-plus}{#1},
     bounding boxes/.style={
+        /tikz/execute at empty cell/.Prefix=%
+            \pgf@matrix@nodecallback
+                {\tikz@pp@name{\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}%
+            \pgfcoordinate
+              {\tikz@pp@name{\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}
+              {\pgfpointorigin},
         /tikz/execute at begin cell/.Prefix=%
             \pgf@matrix@nodecallback
                 {\tikz@pp@name{\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}%
             \tikzset{
-              local bounding box/.expanded=
-                \tikz@pp@name
-                  {\tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}}},
+                local bounding box/.expanded=
+                    \tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}},
     columns/.code={%
         \tikzset{
             node family/prefix/.append=\tikzmatrixname-,
@@ -134,6 +144,8 @@
         /pgf/outer xsep=+0pt,
         /pgf/outer ysep=+0pt,
     },
+    @find heighest column in row/.code={%
+    },
     @vertical line/.style args={#1#2#3#4#5-#6}{
         /utils/exec=%
             \def\tikz@temp{#5}%
@@ -145,11 +157,17 @@
                 \let\tikzext@matrixplus@end\tikzext@matrixplus@lastrow
             }{%
                 \pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}%
-            },
+            }
+            % \pgf@ya=-16000pt
+            % \pgf@yb=16000pt
+            % \pgf@xa=-16000pt
+            % \pgf@xb=16000pt
+            ,
+        % @find heighest column in row=\tikzext@matricplus@start
         insert path={
-            (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2#3)
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2-bounding box#3)
             edge[matrix-plus/vertical line,#1]
-            (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2#4)}
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2-bounding box#4)}
     },
     vertical line/.style=line to,
     horizontal line/.style=line to,
@@ -179,9 +197,9 @@
                 {\let\tikzext@matrixplus@end\tikzext@matrixplus@lastcol}
                 {\pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}},
         insert path={
-            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@start#3)
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@start-bounding box#3)
             edge[matrix-plus/horizontal line,#1]
-            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@end#4)}
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@end-bounding box#4)}
     }
 }
 \def\tikzext@matrixplus@parse@rule#1#2#3#4#5{%
