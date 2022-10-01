@@ -11,6 +11,7 @@
 \section{And a little bit more}
 \begin{tikzlibrary}{ext.misc}
   This library adds miscellaneous utilities to \pgfname math, \pgfname\space or \tikzname.
+  \inspiration{FullArc-Q,ForeachUse-Q}{FullArc-A,ForeachUse-A}
 \end{tikzlibrary}
 
 \subsection{\pgfname math}
@@ -135,10 +136,11 @@ them in |"|.
       (intersection of @--[shift=(vecB)]@ and B--A) coordinate (A);}
 \end{tikzpicture}
 \end{codeexample}
+\pagebreak
 \subsection{\pgfname keys}
-
+%
 \begin{multicols}{2}
-
+%
 \subsubsection{Conditionals}
 
 \begin{key}{/utils/if=\meta{cond}\meta{true}\opt{\meta{false}}}

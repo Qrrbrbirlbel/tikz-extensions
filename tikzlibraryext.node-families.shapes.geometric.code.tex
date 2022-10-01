@@ -1,0 +1,38 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\usetikzlibrary{ext.node-families,shapes.geometric}
+
+\let\tikzext@nf@function@ellipse    \tikzext@nf@function@default@double
+\let\tikzext@nf@function@star       \tikzext@nf@function@circle
+\let\tikzext@nf@function@diamond    \tikzext@nf@function@default@double
+\let\tikzext@nf@function@star       \tikzext@nf@function@circle@double
+\expandafter\let\csname tikzext@nf@function@regular polygon\endcsname
+                                    \tikzext@nf@function@circle@double
+\let\tikzext@nf@function@trapezium\tikzext@nf@function@default@double
+\def\tikzext@nf@function@semicircle {{\the\dimexpr2\pgf@x\relax}{\the\pgf@x}}
+\expandafter\def\csname tikzext@nf@function@isosceles triangle\endcsname
+                                    {{\the\dimexpr2\pgf@ya\relax}{\the\pgf@xa}}
+\def\tikzext@nf@function@kite       {{\the\dimexpr2\pgf@xa\relax}{\the\dimexpr\pgf@ya+\pgf@yb\relax}}
+\def\tikzext@nf@function@dart       {{\the\dimexpr2\pgf@ya\relax}{\the\pgf@xb}}
+\expandafter\def\csname tikzext@nf@function@circular sector\endcsname{{\the\pgf@xc}{\the\pgf@xa}}
+\def\tikzext@nf@function@cylinder{{\the\dimexpr2\pgfutil@tempdimb\relax}{\the\pgf@x}}
+
+\tikzset{node family/setup shape/.list={
+    ellipse,
+    star,
+    diamond,
+    regular polygon,
+    trapezium,
+    semicircle,
+    isosceles triangle,
+    kite,
+    dart,
+    circular sector,
+    cylinder
+}}

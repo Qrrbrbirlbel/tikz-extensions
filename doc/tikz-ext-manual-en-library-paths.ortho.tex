@@ -33,7 +33,7 @@ the path operations \verb!|-|! and \verb!-|-!.
     This operation means ``first horizontal, then vertical and then horizontal again''.
 \end{pathoperation}
 }
-\begin{key}{/tikz/hvvh/ratio=\meta{ratio} (initially 0.5)}
+\begin{key}{/tikz/ortho/ratio=\meta{ratio} (initially 0.5)}
   This sets the ratio for the middle part of the Zig-Zag connection.
   
   For values $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
@@ -47,7 +47,7 @@ the path operations \verb!|-|! and \verb!-|-!.
 \end{codeexample}
 \end{key}
 %TODO: hvvh/distance needs fixing, maybe?
-\begin{key}{/tikz/hvvh/distance=\meta{distance}}
+\begin{key}{/tikz/ortho/distance=\meta{distance}}
   This sets the distance between the start point
   and the middle part of the Zig-Zag connection.
   
@@ -64,7 +64,7 @@ the path operations \verb!|-|! and \verb!-|-!.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/tikz/hvvh/from center=\opt{\meta{true or false}} (default true)}
+\begin{key}{/tikz/ortho/from center=\opt{\meta{true or false}} (default true)}
   When nodes get connected the placement of the middle part of the Zig-Zag
   and the Zig-Zig (see below) connections will be calculated from the border
   of these nodes.
@@ -79,7 +79,7 @@ these can be configured through the following keys.
   foreach \p in {0.0, 0.25, 0.5, 0.75, 1.0}{
     node [pos=\p] {\p}};
 \end{codeexample}
-\begin{key}{/tikz/hvvh/spacing=\meta{number} (initially 4)}
+\begin{key}{/tikz/ortho/spacing=\meta{number} (initially 4)}
   Unless $\meta{number} = 0$ is set
   \begin{itemize}
   \item |pos = 0| will be at the start,\indexKeyO{pos}
@@ -98,63 +98,59 @@ these can be configured through the following keys.
   \item |pos = .5| will still be in the middle of the middle part of the connection.
   \end{itemize}
 \end{key}
-\begin{key}{/tikz/hvvh/middle 0 to 1}
+\begin{key}{/tikz/ortho/middle 0 to 1}
   This is an alias for |spacing = 0|.
 \end{key}
 
 \subsection{Zig-Zig}
 \begin{pathoperation}{r-ud}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first up, then horizontal and then down''.
-  \begin{key}{/tikz/udlr/ud distance=\meta{length} (initially .5cm)}
+  \begin{key}{/tikz/ortho/ud distance=\meta{length} (initially .5cm)}
     This sets the distance between the start and the horizontal line to \meta{length}.
   \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-du}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first down, then horizontal and then up''.
-  \begin{key}{/tikz/udlr/du distance=\meta{length} (initially .5cm)}
+  \begin{key}{/tikz/ortho/du distance=\meta{length} (initially .5cm)}
     This sets the distance between the start and the horizontal line to \meta{length}.
   \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-lr}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``left down, then vertical and then right''.
-  \begin{key}{/tikz/udlr/lr distance=\meta{length} (initially .5cm)}
+  \begin{key}{/tikz/ortho/lr distance=\meta{length} (initially .5cm)}
     This sets the distance between the start and the vertical line to \meta{length}.
   \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-rl}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first right, then vertical and then down''.
-  \begin{key}{/tikz/udlr/rl distance=\meta{length} (initially .5cm)}
+  \begin{key}{/tikz/ortho/rl distance=\meta{length} (initially .5cm)}
     This sets the distance between the start and the vertical line to \meta{length}.
   \end{key}
 \end{pathoperation}
 
 All distances can be set with on key.
-\begin{key}{/tikz/udlr/distance=\meta{length}}
-  Sets all distances in the |/tikz/udlr| namespace.
-\end{key}
-
-\begin{key}{/tikz/udlr/from center=\opt{\meta{true or false}} (initially false, default true)}
-  This is an alias for |/tikz/hvvh/from center|.
+\begin{key}{/tikz/ortho/udlr distance=\meta{length}}
+  Sets all the previous distances to the same value \meta{length}.
 \end{key}
 
 \subsection{Even more Horizontal and Vertical Lines}
 
 The following keys can be used to access vertical and horizontal line path operations.
 \begin{stylekey}{/tikz/horizontal vertical}
-  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes! that can be used with\indexKeyO{to path}
-  the path operations |to| or |edge|.
+  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes!\indexKeyO{to path}
+  that can be used with the path operations |to| or |edge|.
 \end{stylekey}
 \begin{stylekey}{/tikz/vertical horizontal}
-  This installs \verb!to path = |- (\tikztotarget) \tikztonodes! that can be used with
-  the path operations |to| or |edge|.
+  This installs \verb!to path = |- (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
 \end{stylekey}
 \begin{stylekey}{/tikz/horizontal vertical horizontal}
-  This installs  \verb!to path = -|- (\tikztotarget) \tikztonodes! that can be used with
-  the path operations |to| or |edge|.
+  This installs  \verb!to path = -|- (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
 \end{stylekey}
 \begin{stylekey}{/tikz/vertical horizontal vertical}
-  This installs  \verb!to path = |-| (\tikztotarget) \tikztonodes! that can be used with
-  the path operations |to| or |edge|.
+  This installs  \verb!to path = |-| (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
 \end{stylekey}
 
 When connecting rectangular nodes, these keys could be useful as well.
@@ -182,4 +178,22 @@ This draws a horizontal line from the start point to the target point so that
 it connects to the start point in the center (or at its border in case it is a node).
 
 The optional \meta{length} can be used to shift the line orthogonally to its direction.
+\end{stylekey}
+
+\pagebreak
+Since all previous key are rather cumbersome, one can install shortcuts for these.
+\begin{stylekey}{/tikz/ortho/install shortcuts}
+Installs the following shortcuts:\\
+{\ttfamily
+\begin{tabular}{l@{\hspace{.5em}${}\to{}$\hspace{.5em}}l}
+  \pgfmanualbar-              & vertical horizontal            \\
+  -\pgfmanualbar              & horizontal vertical            \\
+  -\pgfmanualbar-             & horizontal vertical horizontal \\
+  \pgfmanualbar-\pgfmanualbar & vertical horizontal vertical   \\
+  \pgfmanualbar*              & only vertical first            \\
+  *\pgfmanualbar              & only vertical second           \\
+  \pgfmanualbar*              & only vertical first            \\
+  *\pgfmanualbar              & only vertical second
+\end{tabular}
+}
 \end{stylekey}

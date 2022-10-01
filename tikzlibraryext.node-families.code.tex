@@ -12,7 +12,9 @@
 
 \pgfqkeys{/tikz/node family}{
   width/.initial=,
+  width/.append style={/pgf/minimum width=nf_width},
   height/.initial=,
+  height/.append style={/pgf/minimum height=nf_height},
   size/.code=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
   text depth/.initial=,
   text height/.initial=,
@@ -98,7 +100,7 @@
     % Qrr: family height
     \tikzext@nf@getandset{\the\pgf@y}{height}{\pgfutil@tempdima}%
     \ifdim\pgf@y<\pgfutil@tempdima
-      \pgf@y=\pgfutil@tempa
+      \pgf@y=\pgfutil@tempdima
     \fi
     %
     \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
@@ -301,4 +303,38 @@
   },
   setup shape/.list={rectangle,circle,Rectangle,Circle}
 }
+
+%% nf functions
+\def\tikzext@nf@function@default{{\the\pgf@x}{\the\pgf@y}}
+\def\tikzext@nf@function@default@double{{\the\dimexpr2\pgf@x\relax}{\the\dimexpr2\pgf@y\relax}}
+\def\tikzext@nf@function@circle{{\the\pgf@x}{\the\pgf@x}}
+\def\tikzext@nf@function@circle@double{{\the\dimexpr2\pgf@x\relax}{\the\dimexpr2\pgf@x\relax}}
+
+\pgfmathdeclarefunction{nf_width}{0}{%
+  \begingroup
+    \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name}{%
+      \let\tikzext@nf@function\tikzext@nf@function@default
+    }{%
+      \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name @extra}{}{\csname tikzext@nf@function@\pgf@sm@shape@name @extra\endcsname}%
+      \expandafter\let\expandafter\tikzext@nf@function\csname tikzext@nf@function@\pgf@sm@shape@name\endcsname
+    }%
+    \tikzext@nf@getandset{\expandafter\pgfutil@firstoftwo\tikzext@nf@function}{width}{\pgfutil@tempdima}%
+    \edef\pgfmathresult{\pgf@sys@tonumber\pgfutil@tempdima}%
+    \pgfmath@smuggleone\pgfmathresult
+  \endgroup
+}
+\pgfmathdeclarefunction{nf_height}{0}{%
+  \begingroup
+    \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name}{%
+      \let\tikzext@nf@function\tikzext@nf@function@default
+    }{%
+      \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name @extra}{}{\csname tikzext@nf@function@\pgf@sm@shape@name @extra\endcsname}%
+      \expandafter\let\expandafter\tikzext@nf@function\csname tikzext@nf@function@\pgf@sm@shape@name\endcsname
+    }%
+    \tikzext@nf@getandset{\expandafter\pgfutil@secondoftwo\tikzext@nf@function}{height}{\pgfutil@tempdima}%
+    \edef\pgfmathresult{\pgf@sys@tonumber\pgfutil@tempdima}%
+    \pgfmath@smuggleone\pgfmathresult
+  \endgroup
+}
+
 \endinput

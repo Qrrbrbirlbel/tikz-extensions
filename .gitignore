@@ -302,6 +302,9 @@ TSWLatexianTemp*
 
 # tikzexternalize
 doc/tikz/*
+
 # testing
-pgfmanual-test.*
-./pgfmanual-test/*
+tikz-ext-test.*
+tikz-ext-test/*
+*.tmp
+tikz-ext-manual.tex

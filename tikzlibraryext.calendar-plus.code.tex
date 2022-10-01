@@ -48,7 +48,7 @@
 % Overwriting original \tikz@lib@cal@if@else@code
 %
 \def\tikz@lib@cal@if@else@code#1#2#3{%
-  \tikzcalendar@addto\tikz@lib@cal@ifs{\ifdate{#1}{#2}{#3}}%
+  \pgfutil@addto@macro\tikz@lib@cal@ifs{\ifdate{#1}{#2}{#3}}%
   \tikz@lib@cal@scanner%
 }
 
@@ -62,7 +62,7 @@
       \tikz@before@day%
       \scope%
         \tikz@atbegin@day%
-        \let\tikzcalendar@addto\pgfutil@secondoftwo
+        \let\pgfutil@addto@macro\pgfutil@secondoftwo
         \tikz@lib@cal@ifs%
         \tikzdaycode%
         \tikz@atend@day%
@@ -72,7 +72,7 @@
   \endgroup%
 }
 
-\def\tikzcalendar@addto#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
+\def\pgfutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
 
 \pgfmathdeclarefunction{weeksinmonthofyear}{3}{% #1 = first weekday, #2 = month, #3 = year
   \begingroup
