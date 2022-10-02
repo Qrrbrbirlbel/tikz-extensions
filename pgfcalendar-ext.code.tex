@@ -178,9 +178,8 @@
         \advance\pgfutil@tempcnta by 7\relax
       \fi
       % setup macro for year with {Julian number for day of first week}{weekday of -01-01}
-      \edef\pgf@cal@temp{\def\expandafter\noexpand\csname pgfcalendar@week@#1\endcsname
-        {{\the\pgfutil@tempcnta}{\the\pgfutil@tempcntb}}}%
-      \expandafter\endgroup\pgf@cal@temp
+      \expandafter\xdef\csname pgfcalendar@week@#1\endcsname{{\the\pgfutil@tempcnta}{\the\pgfutil@tempcntb}}%
+    \endgroup
   }{}%
 }
 
