@@ -211,7 +211,7 @@
       {% we need to check the week of the previous year
         #3=#2\relax
         \advance#3 by -1
-        \edef\pgf@cal@temp{\noexpand\pgfcalendarjulianyeartoweek@#1{\the#3}#3\noexpand\iffalse}%
+        \edef\pgf@cal@temp{\noexpand\pgfcalendarjulianyeartoweek@{#1}{\the#3}{#3}\noexpand\iffalse}%
         \pgf@cal@temp
       }{% yeah, it's weird
         \divide#3 by 7
