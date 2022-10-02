@@ -37,7 +37,7 @@
         text width=@tikzext@matrix@col\the\pgfmatrixcurrentcolumn
     }
 }
-\pgfparserdef{tikzext-nodefamilies}{initial}L[O{}]{%
+\pgfparserdef{tikzext-nodefamilies-col}{initial}L[O{}]{%
     \advance\c@pgf@counta by 1
     \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
         \pgfqkeys{/tikz/node family}{@matrix,text width align=left}%
@@ -70,7 +70,7 @@
     \fi
     \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@matrixplus@aftermatrix\expandafter{\tikz@temp}%
 }
-\pgfparserdef{tikzext-nodefamilies}{initial}l{%
+\pgfparserdef{tikzext-nodefamilies-col}{initial}l{%
     \advance\c@pgf@counta by 1
     \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
 }%
@@ -102,6 +102,8 @@
 
 \pgfqkeys{/tikz/matrix-plus}{
     .code=\pgfqkeys{/tikz/matrix-plus}{#1},
+    tight matrix/.style={/tikz/every outer matrix/.append style={/pgf/inner sep=+0pt}},
+    tabular matrix/.style={/tikz/every outer matrix/.append style={/pgf/inner ysep=+0pt,/pgf/inner xsep=\tabcolsep}},
     bounding boxes/.style={
         /tikz/execute at empty cell/.Prefix=%
             \pgf@matrix@nodecallback
@@ -131,10 +133,12 @@
     },
     style/.is choice,
     style/tabular/.style={
+        /tikz/matrix-plus/tabular matrix,
         /pgf/inner xsep=+0pt,
-        /pgf/inner ysep=+0.85ex,
-        /tikz/column sep=+\tabcolsep,
-        /tikz/row sep=+-.5\pgflinewidth,
+        /tikz/execute at begin node=\strut,
+        /pgf/inner ysep=+0pt,
+        /tikz/column sep=+2\tabcolsep,
+        /tikz/row sep=+0pt,
     },
     style/better tabular/.style={
         /pgf/inner xsep=+.5\tabcolsep,
@@ -158,21 +162,19 @@
             }{%
                 \pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}%
             }
-            % \pgf@ya=-16000pt
-            % \pgf@yb=16000pt
-            % \pgf@xa=-16000pt
-            % \pgf@xb=16000pt
             ,
-        % @find heighest column in row=\tikzext@matricplus@start
         insert path={
             (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2-bounding box#3)
             edge[matrix-plus/vertical line,#1]
             (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2-bounding box#4)}
     },
+    heavyrule/.style={/tikz/line width=+.08em},
+    lightrule/.style={/tikz/line width=+.05em},
+    cmidrule/.style={/tikz/line width=+.03em},
     vertical line/.style=line to,
-    horizontal line/.style=line to,
-    bottomrule line/.style=thick,
-    toprule line/.style=thick,
+    horizontal line/.style={matrix-plus/cmidrule,line to},
+    bottomrule line/.style=matrix-plus/heavyrule,
+    toprule line/.style=matrix-plus/heavyrule,
     rule line/.style=thin,
     bottomrule/.default=,
     bottomrule/.code={%
@@ -213,4 +215,17 @@
     \edef\tikz@temp{,matrix-plus/@horizontal line={\tikz@temp{#1}#2}}
     \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@matrixplus@aftermatrix\expandafter{\tikz@temp}%
 }
+
+\let\tikzext@matrixplus@addtextdepth\pgfutil@empty
+\let\tikzext@matrixplus@addtextheight\pgfutil@empty
+\pgfutil@prefixto@macro\pgf@sh@s@rectangle{%
+  \pgfutil@ifxempty\tikzext@matrixplus@addtextdepth{}{%
+    \pgfmathsetlength\pgfutil@tempdima{\tikzext@matrixplus@addtextdepth}%
+    \advance\dp\pgfnodeparttextbox by\pgfutil@tempdima
+  }%
+  \pgfutil@ifxempty\tikzext@matrixplus@addtextheight{}{%
+    \pgfmathsetlength\pgfutil@tempdima{\tikzext@matrixplus@addtextheight}%
+    \advance\ht\pgfnodeparttextbox by\pgfutil@tempdima
+  }%
+}%
 \endinput
