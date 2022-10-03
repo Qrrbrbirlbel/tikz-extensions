@@ -135,8 +135,31 @@
           \pgfcalendar@launch@ifdate{\pgfkeyscurrentname={#1}}%
           {\let\pgf@cal@temp\pgfutil@empty}{\def\pgf@cal@temp{\pgfcalendarmatchesfalse}}
         \expandafter\endgroup\pgf@cal@temp
-      }%
-}
+      },%
+    calendar week of month/.default=1,
+    calendar week of month'/.default=1,
+    calendar week of month/.code={%
+      \begingroup
+        \pgfutil@tempcnta=\pgfcalendarifdateday\relax
+        \advance\pgfutil@tempcnta by 5
+        \advance\pgfutil@tempcnta by -\pgfcalendarifdateweekday\relax
+        \divide\pgfutil@tempcnta by 7
+        \advance\pgfutil@tempcnta by -#1\relax
+        \expandafter\endgroup\expandafter
+      \ifnum\the\pgfutil@tempcnta=-1
+        \pgfcalendarmatchestrue
+      \fi},
+    calendar week of month'/.code={%
+      \begingroup
+        \pgfcalendar@getlastYMX\pgfcalendarifdateyear\pgfcalendarifdatemonth\pgfutil@tempcnta
+        \advance\pgfutil@tempcnta by -\pgfcalendarifdateday\relax
+        \edef\pgfcalendarifdateday{\the\pgfutil@tempcnta}%
+        \pgfutil@tempcnta=-\pgfcalendarifdateweekday\relax
+        \advance\pgfutil@tempcnta by 5
+        \edef\pgfcalendarifdateweekday{\the\pgfutil@tempcnta}%
+        \let\pgf@cal@temp\pgfutil@empty
+        \pgfcalendar@launch@ifdate{calendar week of month={#1}}{\def\pgf@cal@temp{\pgfcalendarmatchestrue}}{}%
+      \expandafter\endgroup\pgf@cal@temp}}
 
 \def\pgfcalendar@ifdate@first#1#2:#3\pgf@stop{%
     \pgfqkeys{/pgf/calendar}{and={#3, week of month#1={#2}}}}
