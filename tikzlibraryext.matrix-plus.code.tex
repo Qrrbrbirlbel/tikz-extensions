@@ -37,6 +37,34 @@
         text width=@tikzext@matrix@col\the\pgfmatrixcurrentcolumn
     }
 }
+
+%
+% Columns l, c and r
+%
+% only set anchor
+% can't be used with lines or fills
+%
+\pgfparserdef{tikzext-nodefamilies-col}{initial}l{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
+}%
+
+\pgfparserdef{tikzext-nodefamilies-col}{initial}r{%
+    \advance\c@pgf@counta by 1
+    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base east}}
+}%
+
+\pgfparserdef{tikzext-nodefamilies-col}{initial}c{%
+  \advance\c@pgf@counta by 1
+  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base}}
+}%
+
+%
+% Columns L, C and R
+%
+% * use node family and text widt align
+% * allow optional argument that's given to the nodes in that column
+%
 \pgfparserdef{tikzext-nodefamilies-col}{initial}L[O{}]{%
     \advance\c@pgf@counta by 1
     \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append code=%
@@ -58,6 +86,14 @@
         \tikzset{nodes={#1}}%
     }%
 }
+
+%
+% | adds vertical line
+%
+% allows an optiona argument that is given to the vertical line
+% and an optional argment delimited by () that
+% specifies which rows to cover
+%
 \pgfparserdef{tikzext-nodefamilies-col}{initial}|[O{}D()-]{%
     \ifnum\c@pgf@counta=0
         \edef\tikz@temp{,matrix-plus/@vertical line=%
@@ -70,21 +106,12 @@
     \fi
     \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@matrixplus@aftermatrix\expandafter{\tikz@temp}%
 }
-\pgfparserdef{tikzext-nodefamilies-col}{initial}l{%
-    \advance\c@pgf@counta by 1
-    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base west}}
-}%
 
-\pgfparserdef{tikzext-nodefamilies-col}{initial}r{%
-    \advance\c@pgf@counta by 1
-    \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base east}}
-}%
-
-\pgfparserdef{tikzext-nodefamilies-col}{initial}c{%
-  \advance\c@pgf@counta by 1
-  \pgfkeysalso{/tikz/column \the\c@pgf@counta/.append style={anchor=base}}
-}%
-
+%
+% * repeats given column specification
+%
+% Example: *5l → lllll
+%
 \pgfparserdef{tikzext-nodefamilies-col}{initial}*[mm]{%
   \begingroup
     \pgfmathsetcount\c@pgf@countb{#1}%
@@ -94,16 +121,46 @@
       \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#2}%
       \advance\c@pgf@countb by -1
     \pgfutil@repeat
-    \edef\tikz@temp{\endgroup\def\noexpand\pgfparserletter{\tikz@temp}}%
+    \expandafter\def\expandafter\tikz@temp\expandafter{%
+      \expandafter\endgroup\expandafter\def\expandafter\pgfparserletter\expandafter{\tikz@temp}}%
     \tikz@temp
   \pgfparserreinsert
 }
+%
+% \tikzext@stop
+%
+% stops the parsing
+%
 \pgfparserdef{tikzext-nodefamilies-col}{initial}\tikzext@stop{\pgfparserswitch{final}}
 
+\newif\iftikzext@matrixplus@hookinstalled
+\def\tikzext@matrixplus@checkforhook{%
+    \iftikzext@matrixplus@hookinstalled
+    \else
+        \tikzext@matrixplus@hookinstalledtrue
+        \tikzset{append after command={[style/.expand once=\tikzext@matrixplus@aftermatrix]}}%
+        \gdef\tikzext@matrixplus@aftermatrix{%
+            /utils/exec=%
+            \edef\tikzext@matrixplus@lastrow{\the\pgfmatrixcurrentrow}%
+            \edef\tikzext@matrixplus@lastcol{\the\pgfmatrixcurrentcolumn}%
+            \let\tikzext@matrixplus@name\tikzlastnode
+        }%
+    \fi
+}
 \pgfqkeys{/tikz/matrix-plus}{
     .code=\pgfqkeys{/tikz/matrix-plus}{#1},
     tight matrix/.style={/tikz/every outer matrix/.append style={/pgf/inner sep=+0pt}},
-    tabular matrix/.style={/tikz/every outer matrix/.append style={/pgf/inner ysep=+0pt,/pgf/inner xsep=\tabcolsep}},
+    tabular matrix/.style={
+        /tikz/every outer matrix/.append style={
+            /pgf/inner ysep=+0pt,
+            /pgf/inner xsep=+0pt,
+        },
+        /pgf/inner xsep=+\tabcolsep,
+        /pgf/inner ysep=+0pt,
+        /tikz/column sep=+0pt,
+        /tikz/row sep=+0pt,
+        /tikz/execute at begin node=\strut,
+    },
     bounding boxes/.style={
         /tikz/execute at empty cell/.Prefix=%
             \pgf@matrix@nodecallback
@@ -118,35 +175,12 @@
                 local bounding box/.expanded=
                     \tikzmatrixname-\the\pgfmatrixcurrentrow-\the\pgfmatrixcurrentcolumn-bounding box}},
     columns/.code={%
-        \tikzset{
-            node family/prefix/.append=\tikzmatrixname-,
-            /utils/exec=\gdef\tikzext@matrixplus@aftermatrix{%
-                /utils/exec=%
-                \edef\tikzext@matrixplus@lastrow{\the\pgfmatrixcurrentrow}%
-                \edef\tikzext@matrixplus@lastcol{\the\pgfmatrixcurrentcolumn}%
-                \let\tikzext@matrixplus@name\tikzlastnode
-            },
-            append after command={[style/.expand once=\tikzext@matrixplus@aftermatrix]},
-        }%
+        \iftikzext@matrixplus@hookinstalled
+            \pgfkeysaddvalue{/tikz/node family/prefix}{}{\tikzmatrixname-}%
+        \fi    
+        \tikzext@matrixplus@checkforhook
         \c@pgf@counta=0
         \pgfparserparse{tikzext-nodefamilies-col}#1\tikzext@stop
-    },
-    style/.is choice,
-    style/tabular/.style={
-        /tikz/matrix-plus/tabular matrix,
-        /pgf/inner xsep=+0pt,
-        /tikz/execute at begin node=\strut,
-        /pgf/inner ysep=+0pt,
-        /tikz/column sep=+2\tabcolsep,
-        /tikz/row sep=+0pt,
-    },
-    style/better tabular/.style={
-        /pgf/inner xsep=+.5\tabcolsep,
-        /pgf/inner ysep=+0.85ex,
-        /tikz/column sep=+0pt,
-        /tikz/row sep=+0pt,
-        /pgf/outer xsep=+0pt,
-        /pgf/outer ysep=+0pt,
     },
     @find heighest column in row/.code={%
     },
@@ -164,30 +198,74 @@
             }
             ,
         insert path={
-            (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2-bounding box#3)
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@start-#2#3)
             edge[matrix-plus/vertical line,#1]
-            (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2-bounding box#4)}
+            (\tikzext@matrixplus@name-\tikzext@matrixplus@end-#2#4)}
     },
-    heavyrule/.style={/tikz/line width=+.08em},
-    lightrule/.style={/tikz/line width=+.05em},
-    cmidrule/.style={/tikz/line width=+.03em},
-    vertical line/.style=line to,
-    horizontal line/.style={matrix-plus/cmidrule,line to},
-    bottomrule line/.style=matrix-plus/heavyrule,
-    toprule line/.style=matrix-plus/heavyrule,
-    rule line/.style=thin,
+    % bookstabs' line widths
+    heavyrule/.style = {/tikz/line width = +.08em},%\pgfkeysvalueof{/tikz/matrix-plus/heavyrulewidth}
+    lightrule/.style = {/tikz/line width = +.05em},
+    cmidrule/.style  = {/tikz/line width = +.03em},
+    %
+    aboverulesep/.initial    = +.4ex,
+    heavyrulewidth/.initial  = +.08em,
+    lightrulewidth/.initial  = +.05em,
+    cmidrulewidth/.initial   = +.03em,
+    belowrulesep/.initial    = +.65ex,
+    belowbottomsep/.initial  = +0pt,
+    aboverulesep/.initial    = +.4ex,
+    abovetopsep/.initial     = +0pt,
+    % cmidrulesep=\doublerulesep,
+    cmidrulekern/.initial    = +.5em,
+    defaultaddspace/.initial = +.5em,
+    % default styles
+    vertical line/.style   = {thin, line to},
+    horizontal line/.style = {matrix-plus/cmidrule, line to},
+    toprule line/.style    = matrix-plus/heavyrule,
+    bottomrule line/.style = matrix-plus/heavyrule,
+    midrule line/.style    = matrix-plus/lightrule,
+    rule line/.style       = {overlay, thin},
+    midrule/.code 2 args   = {%
+        \pgfmathsetcount\c@pgf@counta{#1}%
+        \ifnum\c@pgf@counta=0
+            \tikzext@matrixplus@parse@rule
+              {matrix-plus/midrule line}
+              {0}
+              {.north west}
+              {.north east}
+              {}#2\tikz@stop
+            \tikzset{row 1/.append code={\def\tikzext@matrixplus@addtextheight{+.4ex}}}
+        \else
+            \tikzext@matrixplus@parse@rule
+              {matrix-plus/midrule line}
+              {#1}
+              {.south west}
+              {.south east}
+              {}#2\tikz@stop
+        \fi
+    },
     bottomrule/.default=,
     bottomrule/.code={%
-        \tikzext@matrixplus@parse@rule{matrix-plus/bottomrule line}{\noexpand\tikzext@matrixplus@lastrow}{.south west}{.south east}{yshift=+-.5\pgflinewidth}#1\tikz@stop
+        \tikzext@matrixplus@parse@rule
+          {matrix-plus/bottomrule line}
+          {\noexpand\tikzext@matrixplus@lastrow}
+          {.south west}
+          {.south east}
+          {yshift=+-.5\pgflinewidth}#1\tikz@stop
     },
     toprule/.default=,
     toprule/.code={%
-        \tikzext@matrixplus@parse@rule{matrix-plus/toprule line}{1}{.north west}{.north east}{yshift=+.5\pgflinewidth}#1\tikz@stop
+        \tikzext@matrixplus@parse@rule
+          {matrix-plus/toprule line}
+          {1}
+          {.north west}
+          {.north east}
+          {yshift=+.5\pgflinewidth}#1\tikz@stop
     },
-    rule/.value required,
-    rule/.code 2 args={%
-        \tikzext@matrixplus@parse@rule{matrix-plus/rule line}{#1}{.south west}{.south east}{}#2\tikz@stop
-    },
+    % rule/.value required,
+    % rule/.code 2 args={%
+    %     \tikzext@matrixplus@parse@rule{matrix-plus/rule line}{#1}{.south west}{.south east}{}#2\tikz@stop
+    % },
     @horizontal line/.style args={#1#2#3#4#5#6-#7}{
         /utils/exec=%
             \def\tikz@temp{#6}%
@@ -199,9 +277,9 @@
                 {\let\tikzext@matrixplus@end\tikzext@matrixplus@lastcol}
                 {\pgfmathtruncatemacro\tikzext@matrixplus@end{\tikz@temp}},
         insert path={
-            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@start-bounding box#3)
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@start#3)
             edge[matrix-plus/horizontal line,#1]
-            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@end-bounding box#4)}
+            ([#5]\tikzext@matrixplus@name-#2-\tikzext@matrixplus@end#4)}
     }
 }
 \def\tikzext@matrixplus@parse@rule#1#2#3#4#5{%
