@@ -55,7 +55,7 @@
     \ifpgfmathunitsdeclared
       \pgfmathsetmacro\tikz@arc@y{\pgfkeysvalueof{/tikz/y radius}}%
       \ifpgfmathunitsdeclared
-        \pgfpatharcto{\tikz@arc@x pt}{\tikz@arc@y pt}
+        \tikzext@pgfpatharcto{\tikz@arc@x pt}{\tikz@arc@y pt}
                      {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
                      {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
       \else
@@ -72,7 +72,7 @@
         \pgf@process{\pgfpointxy{0}{\tikz@arc@y}}%
         \pgfmathveclen@{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}%
         \let\tikz@arc@y\pgfmathresult
-        \pgfpatharcto{+\tikz@arc@x pt}{+\tikz@arc@y pt}
+        \tikzext@pgfpatharcto{+\tikz@arc@x pt}{+\tikz@arc@y pt}
                      {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
                      {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
       \fi
@@ -102,3 +102,225 @@
 \def\pgfutil@thirdoffour#1#2#3#4{#3}
 \def\pgfutil@fourthoffour#1#2#3#4{#4}
 \def\pgfutil@firstgobblerest#1#2\relax{#1}
+
+% original from pgfcorepathconstruct.code.tex
+\def\tikzext@pgfpatharcto#1#2#3#4#5#6{%
+  {%
+    % The following code is based on the transformation described in svg
+    % 1.1 specification Section F.6.5
+    %
+    % Step 1: store the simple parameters (xa=x1 since TeX does not
+    % allow numbers in names)
+    %
+    \pgfmathsetmacro\pgf@arcto@rx{abs(#1)}%
+    \pgfmathsetmacro\pgf@arcto@ry{abs(#2)}%
+    \ifdim\pgf@arcto@rx pt=0pt% special rule: zero radius=straight line
+      \gdef\pgf@marshal{\pgfpathlineto{#6}}%
+    \else
+    \ifdim\pgf@arcto@ry pt=0pt% special rule: zero radius=straight line
+      \gdef\pgf@marshal{\pgfpathlineto{#6}}%
+    \else
+    \pgfmathsetmacro\pgf@arcto@phi{#3}%
+    \pgfmathsetmacro\pgf@arcto@fA{#4}%
+    \ifdim\pgf@arcto@fA pt=0pt
+    \else
+      \pgfmathsetmacro\pgf@arcto@fA{1.0}%  Special rule: every non-zero value is 1.
+    \fi
+    \pgfmathsetmacro\pgf@arcto@fS{#5}%
+    \ifdim\pgf@arcto@fS pt=0pt
+    \else
+      \pgfmathsetmacro\pgf@arcto@fS{1.0}%  Special rule: every non-zero value is 1.
+    \fi
+    \pgf@process{#6}%
+    \edef\pgf@arcto@xb{\the\pgf@x}%
+    \edef\pgf@arcto@yb{\the\pgf@y}%
+    %
+    % Step 2: x1,y1 is more complicated to compute: It is given by lastx
+    % and lasty, but these are transformed coordinates, we need the
+    % untransformed ones. So, we inverse the transformation (arghh...)
+    %
+    \pgftransforminvert%
+    \pgf@process{\pgfpointtransformed{\pgfqpoint{\pgf@path@lastx}{\pgf@path@lasty}}}%
+    \edef\pgf@arcto@xa{\the\pgf@x}%
+    \edef\pgf@arcto@ya{\the\pgf@y}%
+    \edef\pgf@temp@a{\pgf@arcto@xa,\pgf@arcto@ya}%
+    \edef\pgf@temp@b{\pgf@arcto@xb,\pgf@arcto@yb}%
+    \ifx\pgf@temp@a\pgf@temp@b% special rule: skip!
+      \global\let\pgf@marshal\pgfutil@empty
+    \else
+    %
+    % Ok, now we got all the parameters setup. Now comes the
+    % computation...
+    %
+    %
+    % Step 3: Start with a new coordinate system and rotate everything
+    % by the negated phi.
+    %
+    \pgftransformreset
+    \pgftransformrotate{-\pgf@arcto@phi}%
+    % Ok, using \pgfpointtransformed we now get transformed points...
+    %
+    % Step 4: Compute x1' and y1' (xaprime and yaprime)
+    %
+    \pgf@process{%
+      \pgfpointtransformed{\pgfpointscale{.5}{\pgfpointdiff
+          {\pgfqpoint{\pgf@arcto@xb}{\pgf@arcto@yb}}
+          {\pgfqpoint{\pgf@arcto@xa}{\pgf@arcto@ya}}%
+        }%
+      }%
+    }%
+    \edef\pgf@arcto@xaprime{\pgf@sys@tonumber\pgf@x}%
+    \edef\pgf@arcto@yaprime{\pgf@sys@tonumber\pgf@y}%
+    %
+    % Compute Lambda
+    %
+    \pgfmathsetmacro\pgf@arcto@frac@x{\pgf@arcto@xaprime/\pgf@arcto@rx}%
+    \pgfmathsetmacro\pgf@arcto@frac@y{\pgf@arcto@yaprime/\pgf@arcto@ry}%
+    \pgfmathsetmacro\pgf@arcto@lambda{
+      \pgf@arcto@frac@x*\pgf@arcto@frac@x+\pgf@arcto@frac@y*\pgf@arcto@frac@y
+    }%
+    \ifdim\pgf@arcto@lambda pt>1pt
+      \pgfmathsetmacro\pgf@arcto@sqrt@lambda{sqrt(\pgf@arcto@lambda)}%
+      \pgfmathsetmacro\pgf@arcto@rx{\pgf@arcto@sqrt@lambda*\pgf@arcto@rx}%
+      \pgfmathsetmacro\pgf@arcto@ry{\pgf@arcto@sqrt@lambda*\pgf@arcto@ry}%
+    \fi
+    %
+    % Do some scaling
+    %
+    \pgfmathsetmacro\pgf@arcto@xaprime@abs{abs(\pgf@arcto@xaprime)}%
+    \pgfmathsetmacro\pgf@arcto@yaprime@abs{abs(\pgf@arcto@yaprime)}%
+    \pgfmathmax@{\pgf@arcto@rx,\pgf@arcto@ry,\pgf@arcto@xaprime@abs,\pgf@arcto@yaprime@abs}%
+    \pgfmathsetmacro\pgf@arcto@scaling{20/\pgfmathresult}%
+    \pgfmathsetmacro\pgf@arcto@rx@scaled{\pgf@arcto@scaling*\pgf@arcto@rx}%
+    \pgfmathsetmacro\pgf@arcto@ry@scaled{\pgf@arcto@scaling*\pgf@arcto@ry}%
+    \pgfmathsetmacro\pgf@arcto@xaprime@scaled{\pgf@arcto@scaling*\pgf@arcto@xaprime}%
+    \pgfmathsetmacro\pgf@arcto@yaprime@scaled{\pgf@arcto@scaling*\pgf@arcto@yaprime}%
+    %
+    % Step 5: Now comes the messy computation of c1' and c2'.
+    %
+    \ifdim\pgf@arcto@rx pt>\pgf@arcto@ry pt
+      \pgfmathsetmacro\pgf@arcto@rx@over@ry{\pgf@arcto@rx/\pgf@arcto@ry}%
+      \pgfmathsetmacro\pgf@arcto@ry@over@rx{\pgf@arcto@ry/\pgf@arcto@rx}%
+      \pgfmathsetmacro\pgf@arcto@temp{\pgf@arcto@ry@over@rx*\pgf@arcto@xaprime@scaled}%
+      \pgfmathsetmacro\pgf@arcto@numerator{
+        \pgf@arcto@ry@scaled*\pgf@arcto@ry@scaled-
+        \pgf@arcto@yaprime@scaled*\pgf@arcto@yaprime@scaled-
+        \pgf@arcto@temp*\pgf@arcto@temp
+      }%
+      \pgfmathsetmacro\pgf@arcto@denominator{
+        \pgf@arcto@yaprime@scaled*\pgf@arcto@yaprime@scaled+
+        \pgf@arcto@temp*\pgf@arcto@temp
+      }%
+    \else
+      \pgfmathsetmacro\pgf@arcto@rx@over@ry{\pgf@arcto@rx/\pgf@arcto@ry}%
+      \pgfmathsetmacro\pgf@arcto@ry@over@rx{\pgf@arcto@ry/\pgf@arcto@rx}%
+      \pgfmathsetmacro\pgf@arcto@temp{\pgf@arcto@rx@over@ry*\pgf@arcto@yaprime@scaled}%
+      \pgfmathsetmacro\pgf@arcto@numerator{
+        \pgf@arcto@rx@scaled*\pgf@arcto@rx@scaled-
+        \pgf@arcto@xaprime@scaled*\pgf@arcto@xaprime@scaled-
+        \pgf@arcto@temp*\pgf@arcto@temp
+      }%
+      \pgfmathsetmacro\pgf@arcto@denominator{
+        \pgf@arcto@xaprime@scaled*\pgf@arcto@xaprime@scaled+
+        \pgf@arcto@temp*\pgf@arcto@temp
+      }%
+    \fi
+    \pgfmathsetmacro\pgf@arcto@frac{
+      \pgf@arcto@numerator/\pgf@arcto@denominator
+    }%
+    \ifdim\pgf@arcto@frac pt<0pt
+      \pgfmathsetmacro\pgf@arcto@factor{0}%
+    \else
+      \pgfmathsetmacro\pgf@arcto@factor{sqrt(\pgf@arcto@frac)}%
+    \fi
+    \ifx\pgf@arcto@fA\pgf@arcto@fS
+      \pgfmathsetmacro\pgf@arcto@factor{-\pgf@arcto@factor}%
+    \fi
+    \pgfmathsetmacro\pgf@arcto@cxprime{
+      \pgf@arcto@factor*\pgf@arcto@rx@over@ry*\pgf@arcto@yaprime
+    }%
+    \pgfmathsetmacro\pgf@arcto@cyprime{
+      -\pgf@arcto@factor*\pgf@arcto@ry@over@rx*\pgf@arcto@xaprime
+    }%
+    %
+    % Step 6: Ok, now compute cx,cy
+    %
+    \pgftransformreset
+    \pgftransformrotate{\pgf@arcto@phi}%
+    \pgf@process{%
+      \pgfpointtransformed{\pgfqpoint{\pgf@arcto@cxprime pt}{\pgf@arcto@cyprime pt}}%
+    }%
+    \edef\pgf@arcto@temp{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+    \pgf@process{\pgfpointadd{\pgf@arcto@temp}{%
+        \pgfpointscale{.5}{%
+          \pgfpointadd
+          {\pgfqpoint{\pgf@arcto@xa}{\pgf@arcto@ya}}
+          {\pgfqpoint{\pgf@arcto@xb}{\pgf@arcto@yb}}}%
+      }%
+    }%
+    \edef\pgf@arcto@cx{\the\pgf@x}%
+    \edef\pgf@arcto@cy{\the\pgf@y}%
+    %
+    % Step 7: Compute start angle:
+    %
+    \pgfmathsetmacro\pgf@arcto@vec@x{(\pgf@arcto@xaprime-\pgf@arcto@cxprime)/\pgf@arcto@rx}%
+    \pgfmathsetmacro\pgf@arcto@vec@y{(\pgf@arcto@yaprime-\pgf@arcto@cyprime)/\pgf@arcto@ry}%
+    \pgfmathsetmacro\pgf@arcto@denominator{veclen(\pgf@arcto@vec@x,\pgf@arcto@vec@y)}%
+    \pgfmathsetmacro\pgf@arcto@frac{\pgf@arcto@vec@x/\pgf@arcto@denominator}%
+    \pgfmathsetmacro\pgf@arcto@theta@start{acos(\pgf@arcto@frac)}%
+    \ifdim\pgf@arcto@vec@y pt<0pt
+      \pgfmathsetmacro\pgf@arcto@theta@start{-\pgf@arcto@theta@start}%
+    \fi
+    %
+    % Step 8: Compute end angle:
+    %
+    \pgfmathsetmacro\pgf@arcto@vec@x{(-\pgf@arcto@xaprime-\pgf@arcto@cxprime)/\pgf@arcto@rx}%
+    \pgfmathsetmacro\pgf@arcto@vec@y{(-\pgf@arcto@yaprime-\pgf@arcto@cyprime)/\pgf@arcto@ry}%
+    \pgfmathsetmacro\pgf@arcto@denominator{veclen(\pgf@arcto@vec@x,\pgf@arcto@vec@y)}%
+    \pgfmathsetmacro\pgf@arcto@frac{\pgf@arcto@vec@x/\pgf@arcto@denominator}%
+    \pgfmathsetmacro\pgf@arcto@theta@end{acos(\pgf@arcto@frac)}%
+    \ifdim\pgf@arcto@vec@y pt<0pt
+      \pgfmathsetmacro\pgf@arcto@theta@end{-\pgf@arcto@theta@end}%
+    \fi
+    \pgfmathsetmacro\pgf@arcto@delta@theta{abs(\pgf@arcto@theta@start-\pgf@arcto@theta@end)}%
+    \ifdim\pgf@arcto@fA pt=0pt
+      \ifdim\pgf@arcto@delta@theta pt>180pt
+        % Ok, we need to adjust the angle!
+        \ifdim\pgf@arcto@theta@end pt>\pgf@arcto@theta@start pt
+          \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end-360}%
+        \else
+          \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end+360}%
+        \fi
+      \fi
+    \else
+      \ifdim\pgf@arcto@delta@theta pt<180pt
+        % Ok, we need to adjust the angle!
+        \ifdim\pgf@arcto@theta@end pt>\pgf@arcto@theta@start pt
+          \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end-360}%
+        \else
+          \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end+360}%
+        \fi
+      \fi
+    \fi
+    % Qrr:
+    % make sure direction is properly followed
+    \ifdim\pgf@arcto@fS pt=1pt
+      % counter clockwise
+      \ifdim\pgf@arcto@theta@end pt<\pgf@arcto@theta@start path
+        \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end+360}%
+      \fi
+    \else
+      % clockwise
+      \ifdim\pgf@arcto@theta@end pt>\pgf@arcto@theta@start path
+        \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end-360}%
+      \fi
+    \fi
+    \xdef\pgf@marshal{\noexpand
+      \pgfpatharcaxes{\pgf@arcto@theta@start}{\pgf@arcto@theta@end}
+      {\noexpand\pgfpointpolar{\pgf@arcto@phi}{\pgf@arcto@rx}}
+      {\noexpand\pgfpointpolar{\pgf@arcto@phi+90}{\pgf@arcto@ry}}%
+    }%
+    \fi\fi\fi
+  }%
+  \pgf@marshal
+}
