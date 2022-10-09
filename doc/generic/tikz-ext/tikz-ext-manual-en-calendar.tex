@@ -43,12 +43,30 @@ The following tests are added.
     This test passes when all \meta{tests} pass.
 \itemcalendaroption{not}|=|\marg{tests}
     This test passes when \meta{tests} do not pass.
+\itemcalendaroption{week of month}|=|\meta{num}
+    This test passes when the date is in \meta{num}th week of the month.
+    The first week of the month start at day~1 and ends with day~7.
+\itemcalendaroption{week of month'}|=|\meta{num}
+    As above but counts from the last day of the month.
+    For a month with 31~days, this means the ``1st'' week starts at day~25 and ends with day~31.
+\itemcalendaroption{calendar week of month}|=|\meta{num}
+    This test passes when the date is in \meta{num}th calendar week of the month.
+    The first week starts at the first day of the month and ends at the next Sunday.
+\itemcalendaroption{calendar week of month'}|=|\meta{num}
+    As above but counts from the last day of the month.
+\begin{codeexample}[width=5cm,preamble=\usetikzlibrary{ext.calendar-plus}]
+\tikz
+  \calendar[
+    dates=2022-10-01 to 2022-10-31,
+    week list]
+    if (week of month=2) [red]
+    if (calendar week of month'=2) [blue];
+\end{codeexample}
 \itemcalendaroption{yesterday}|=|\marg{tests}
     This test passes when the previous day passes \meta{tests}.
 \itemcalendaroption{week}|=|\meta{num}
     This test passes when the current week of the year equals \marg{num}.
 \end{itemize}
-
 The shorthands for |d-| and |m-| are slightly changed so that they are
 expandable. This makes it possible to use these shorthands inside of \pgfname math.
 The shorthands for the week (see section~\ref{calendar:weeknumbering})

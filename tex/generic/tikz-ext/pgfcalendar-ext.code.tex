@@ -26,6 +26,24 @@
         \expandafter
       \endgroup\pgf@cal@temp
     },
+    relative/.code 2 args={%
+      \begingroup
+        \pgfutil@tempcnta=\pgfcalendarifdatejulian\relax
+        \advance\pgfutil@tempcnta by #1\relax
+        \pgfcalendarjuliantodate{\pgfutil@tempcnta}{\pgfcalendarifdateyear}{\pgfcalendarifdatemonth}{\pgfcalendarifdateday}%
+        \edef\pgfcalendarifdatejulian{\the\pgfutil@tempcnta}%
+        \pgfcalendarjuliantoweekday\pgfutil@tempcnta\pgfutil@tempcntb
+        \edef\pgfcalendarifdateweekday{\the\pgfutil@tempcntb}%
+        \pgfcalendarjulianyeartoweek\pgfutil@tempcnta\pgfcalendarifdateyear\pgfutil@tempcntb
+        \edef\pgfcalendarifdateweek{\the\pgfutil@tempcntb}%
+        \pgfcalendar@launch@ifdate{#2}{%
+          \def\pgf@cal@temp{\pgfcalendarmatchestrue}%
+        }{%
+          \let\pgf@cal@temp\pgfutil@empty
+        }%
+      \expandafter
+    \endgroup\pgf@cal@temp
+    },
     Jan/.code={\ifnum\pgfcalendarifdatemonth=1 \expandafter\pgfcalendarmatchestrue\fi},Jan/.value forbidden,
     Feb/.code={\ifnum\pgfcalendarifdatemonth=2 \expandafter\pgfcalendarmatchestrue\fi},Feb/.value forbidden,
     Mar/.code={\ifnum\pgfcalendarifdatemonth=3 \expandafter\pgfcalendarmatchestrue\fi},Mar/.value forbidden,
@@ -39,20 +57,6 @@
     Nov/.code={\ifnum\pgfcalendarifdatemonth=11 \expandafter\pgfcalendarmatchestrue\fi},Nov/.value forbidden,
     Dec/.code={\ifnum\pgfcalendarifdatemonth=12 \expandafter\pgfcalendarmatchestrue\fi},Dec/.value forbidden,
     %
-    difference between/.code args={#1and#2 #3 #4}{%
-      \pgfcalendardatetojulian{#1}\pgfutil@tempcnta
-      \pgfcalendardatetojulian{#2}\pgfutil@tempcntb
-      \advance\pgfutil@tempcntb by -\pgfutil@tempcnta
-      \ifnum\pgfutil@tempcntb#3#4\relax
-        \pgfcalendarmatchestrue
-      \fi},
-    weekday before or same/.code args={#1and#2}{%
-      \pgfcalendarjuliantoweekday{#1}\pgfutil@tempcnta
-      \pgfcalendarjuliantoweekday{#2}\pgfutil@tempcntb
-      \ifnum\pgfutil@tempcntb<\pgfutil@tempcnta
-        \pgfcalendarmatchestrue
-      \fi
-    },
     leap year/.code={%
         \pgfutil@tempcnta=#1\relax
         \divide\pgfutil@tempcnta4
@@ -71,6 +75,7 @@
             \fi
         \fi},
     leap year/.default=\pgfcalendarifdateyear,
+    between days/.value required,
     between days/.code args={#1and#2}{%
         \pgfutil@tempcnta=#1\relax
         \ifnum\pgfcalendarifdateday<\pgfutil@tempcnta\else
@@ -336,6 +341,22 @@
   \let\pgfcalendarifdateweekday=\pgfcalendarcurrentweekday
   \let\pgfcalendarifdateweek=\pgfcalendarcurrentweek
   \pgfcalendar@launch@ifdate%
+}
+%
+% Overwritigin original \pgfcalendarifdate
+%
+\def\pgfcalendarifdate#1#2#3#4{%
+  \pgfcalendardatetojulian{#1}{\pgfutil@tempcnta}%
+  \pgfcalendarjuliantodate{\pgfutil@tempcnta}
+    {\pgfcalendarifdateyear}{\pgfcalendarifdatemonth}{\pgfcalendarifdateday}%
+  \edef\pgfcalendarifdatejulian{\the\pgfutil@tempcnta}%
+  % Compute info about date
+  \pgfcalendarjuliantoweekday{\pgfutil@tempcnta}{\pgfutil@tempcntb}%
+  \edef\pgfcalendarifdateweekday{\the\pgfutil@tempcntb}%
+  \pgfcalendarjulianyeartoweek{\pgfcalendarifdatejulian}{\pgfcalendarifdateyear}{\pgfutil@tempcntb}%
+  \edef\pgfcalendarifdateweek{\ifnum\pgfutil@tempcntb<10 0\fi\the\pgfutil@tempcntb}%
+  %
+  \pgfcalendar@launch@ifdate{#2}{#3}{#4}%
 }
 
 \pgfqkeys{/pgf/calendar/week}{.value required,.code=\ifnum#1=\pgfcalendarifdateweek\relax\expandafter\pgfcalendarmatchestrue\fi}
