@@ -290,7 +290,7 @@
       \ifdim\wd\pgfnodeparttextbox<\pgfutil@tempdima
         \pgfutil@tempdimb=\pgfutil@tempdima
         \advance\pgfutil@tempdimb-\wd\pgfnodeparttextbox
-        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikzext@nf@align@action\pgfutil@tempdimb\box\pgfnodeparttextbox}%
+        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikzext@nf@align@action\pgfutil@tempdimb\unhbox\pgfnodeparttextbox}%
       \fi
       \tikzext@nf@getandset{\the\dp\pgfnodeparttextbox}{text depth}{\pgfutil@tempdima}%
       \ifdim\dp\pgfnodeparttextbox<\pgfutil@tempdima
