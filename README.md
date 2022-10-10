@@ -30,7 +30,7 @@ These are
    * `ext.shapes.circlecrosssplit`
    * `ext.shapes.heatmark`
    * `ext.shapes.rectangleroundedcorners`
-   * `ext.shapes.superellopse`
+   * `ext.shapes.superellipse`
 
  These were developed in response to questions on tex.stackexchange.com.
  Some of these can be find by searching for my [user id](https://tex.stackexchange.com/search?q=user%3A16595+%22my+library%22).
