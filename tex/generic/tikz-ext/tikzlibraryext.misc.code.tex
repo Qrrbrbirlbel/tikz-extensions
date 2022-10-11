@@ -5,6 +5,8 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+\usepgflibrary{ext.pgfkeys-plus}%
+
 %% full arc
 %% https://tex.stackexchange.com/a/144297/16595
 %% The postfix operator R is added to PGFmath,
@@ -72,28 +74,6 @@
            \expandafter\pgfutil@secondoftwo\fi
          {\tikzext@pgf@foreach@no@listfalse\pgffor@macro@list\tikzext@pgf@foreach@no@list@list}
          {\pgffor@@vars}}}}}%
-
-%% Handlers
-%% .pgfmath evaluates values given to keys in PGFmath before handing them over.
-%% .pgfmath int truncates the result
-%% .pgfmath strcat concatenates the given values
-\pgfkeys{/handlers/.pgfmath/.code=\pgfmathparse{#1}\expandafter\pgfkeys@exp@call\expandafter{\pgfmathresult}}
-\pgfkeys{/handlers/.pgfmath int/.code=\pgfmathint{#1}\expandafter\pgfkeys@exp@call\expandafter{\pgfmathresult}}
-\pgfkeys{/handlers/.pgfmath strcat/.code=\pgfmathstrcat{#1}\expandafter\pgfkeys@exp@call\expandafter{\pgfmathresult}}
-
-%% http://tex.stackexchange.com/a/144187/16595
-%% key/.List={(point-1),(point-2),(point-...),(point-6)} will call
-%% key=(point-1)(point-2)(point-3)(point-4)(point-5),(point-6)
-\pgfkeys{/handlers/.List/.code={%
-    \let\pgfkeys@global@temp\pgfutil@empty
-    \foreach \pgfkeys@temp in{#1}{
-      \ifx\pgfkeys@global@temp\pgfutil@empty
-        \global\let\pgfkeys@global@temp\pgfkeys@temp
-      \else
-        \expandafter\pgfutil@g@addto@macro\expandafter\pgfkeys@global@temp\expandafter
-          {\pgfkeys@temp}%
-      \fi}%
-    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@global@temp}}}
 
 %% PGFmath
 %% strrepeat("x", 5) = "xxxxx"
@@ -175,61 +155,10 @@
 
 \pgfmathdeclarefunction{isEmpty}{1}{%
   \begingroup
-    \edef\pgfmath@temp{#1}%
+    \def\pgfmath@temp{#1}%
     \pgfutil@ifxempty\pgfmath@temp{\def\pgfmathresult{1}}{\def\pgfmathresult{0}}%                           
     \pgfmath@smuggleone\pgfmathresult
   \endgroup}
-
-\pgfqkeys{/utils}{
-  if/.code n args=3{%
-    \pgfmathparse{#1}%
-    \ifdim\pgfmathresult pt=0pt
-      \expandafter\pgfutil@firstoftwo
-    \else
-      \expandafter\pgfutil@secondoftwo
-    \fi
-    {\pgfkeysalso{#3}}%
-    {\pgfkeysalso{#2}}},
-  IF/.code args={(#1)#2}{%
-    \pgfmathparse{#1}%
-    \pgfutil@in@{else}{#2}%
-    \ifpgfutil@in@
-      \expandafter\pgfutil@firstoftwo
-    \else
-      \expandafter\pgfutil@secondoftwo
-    \fi
-    {\tikzext@misc@handle@else#2\pgf@stop}{\tikzext@misc@handle@else#2else\pgf@stop}%
-  },
-  TeX/if/.code n args={4}{%
-    \if#1#2\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
-    {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
-  },
-  TeX/ifnum/.code n args={3}{%
-    \ifnum#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
-    {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
-  },
-  TeX/ifdim/.code n args={3}{%
-    \ifdim#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
-    {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
-  },
-  TeX/ifx/.code n args={4}{%
-    \ifx#1#2\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
-    {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
-  },
-  TeX/ifempty/.code n args={3}{%
-    \edef\pgfkeys@temp{#1}%
-    \pgfutil@ifxempty\pgfkeys@temp{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
-  },
-  tex/.search also=/utils/TeX,
-}
-\def\tikzext@misc@handle@else#1else#2\pgf@stop{%
-  \ifdim\pgfmathresult pt=0pt
-    \expandafter\pgfutil@firstoftwo
-  \else
-    \expandafter\pgfutil@secondoftwo
-  \fi
-  {\pgfkeysalso{#2}}%
-  {\pgfkeysalso{#1}}}
 
 \pgfset{
   declare constant/.code={%
