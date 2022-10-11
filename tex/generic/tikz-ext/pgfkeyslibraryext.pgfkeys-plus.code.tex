@@ -24,12 +24,12 @@
     \expandafter\endgroup\expandafter
     \pgfkeys@exp@call\expandafter{\pgfmathresult},
   .pgfmath wrap/.code 2 args={%
-    \def\pgfkeys@temp##1{#1}%
+    \def\pgfkeys@temp##1{\def\pgfkeys@temp{#1}}%
     \begingroup
       \pgfmathparse{#2}%
-      \expandafter\def\expandafter\pgfmathresult\expandafter{\pgfkeys@temp{\pgfmathresult}}%
+      \expandafter\pgfkeys@temp\expandafter{\pgfmathresult}%
     \expandafter\endgroup\expandafter
-    \pgfkeys@exp@call\expandafter{\pgfmathresult}%
+    \pgfkeys@exp@call\expandafter{\pgfkeys@temp}%
   },
   .pgfmath if/.code n args={3}{%
     \begingroup
