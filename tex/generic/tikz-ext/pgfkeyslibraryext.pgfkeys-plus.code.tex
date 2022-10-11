@@ -1,0 +1,139 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\input pgfmath.tex
+
+%% Handlers
+%% .pgfmath evaluates values given to keys in PGFmath before handing them over.
+%% .pgfmath int truncates the result
+%% .pgfmath strcat concatenates the given values
+\pgfqkeys{/handlers}{
+  .pgfmath/.code=%
+    \begingroup
+      \pgfmathparse{#1}%
+    \expandafter\endgroup\expandafter
+    \pgfkeys@exp@call\expandafter{\pgfmathresult},
+  .pgfmath int/.code=%
+    \begingroup
+      \pgfmathint{#1}%
+    \expandafter\endgroup\expandafter
+    \pgfkeys@exp@call\expandafter{\pgfmathresult},
+  .pgfmath wrap/.code 2 args={%
+    \def\pgfkeys@temp##1{#1}%
+    \begingroup
+      \pgfmathparse{#2}%
+      \expandafter\def\expandafter\pgfmathresult\expandafter{\pgfkeys@temp{\pgfmathresult}}%
+    \expandafter\endgroup\expandafter
+    \pgfkeys@exp@call\expandafter{\pgfmathresult}%
+  },
+  .pgfmath if/.code n args={3}{%
+    \begingroup
+      \pgfmathifthenelse{#1}{"1"}{"0"}%
+    \expandafter\endgroup\expandafter
+    \ifcase\pgfmathresult\relax
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeys@exp@call{#3}}%
+    {\pgfkeys@exp@call{#2}}%
+  },
+  .if/.code n args={4}{%
+    \if#1#2%
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeys@exp@call{#3}}%
+    {\pgfkeys@exp@call{#4}}%
+  },
+  .ifnum/.code n args={3}{%
+    \ifnum#1\relax
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeys@exp@call{#2}}%
+    {\pgfkeys@exp@call{#3}}%
+  },
+  .ifdim/.code n args={3}{%
+    \ifdim#1\relax
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeys@exp@call{#2}}%
+    {\pgfkeys@exp@call{#3}}%
+  },
+  .ifx/.code n args={4}{%
+    \ifx#1#2%
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeys@exp@call{#3}}%
+    {\pgfkeys@exp@call{#4}}%
+  },
+  .ifxempty/.code n args={3}{%
+    \edef\pgfkeys@temp{#1}%
+    \pgfutil@ifxempty\pgfkeys@temp{\pgfkeys@exp@call{#2}}{\pgfkeys@exp@call{#3}}%
+  },
+  .ifempty/.code n args={3}{%
+    \pgfutil@ifempty{#1}{\pgfkeys@exp@call{#2}}{\pgfkeys@exp@call{#3}}%
+  },
+  %% http://tex.stackexchange.com/a/144187/16595
+  %% key/.List={(point-1),(point-2),(point-...),(point-6)} will call
+  %% key=(point-1)(point-2)(point-3)(point-4)(point-5),(point-6)
+  .List/.code=%
+    \let\pgfkeys@global@temp\pgfutil@empty
+    \foreach\pgfkeys@temp in{#1}{%
+        \expandafter\pgfutil@g@addto@macro\expandafter\pgfkeys@global@temp\expandafter{\pgfkeys@temp}%
+    }%
+    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@global@temp}%
+}
+
+\pgfqkeys{/utils}{
+  if/.code n args=3{%
+    \begingroup
+      \pgfmathifthenelse{#1}{"1"}{"0"}%
+    \expandafter\endgroup\expandafter
+    \ifcase\pgfmathresult\relax
+      \expandafter\pgfutil@firstoftwo
+    \else
+      \expandafter\pgfutil@secondoftwo
+    \fi
+    {\pgfkeysalso{#3}}
+    {\pgfkeysalso{#2}}%
+  },
+  TeX/if/.code n args={4}{%
+    \if#1#2\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
+    {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
+  },
+  TeX/ifnum/.code n args={3}{%
+    \ifnum#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
+    {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+  },
+  TeX/ifdim/.code n args={3}{%
+    \ifdim#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
+    {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+  },
+  TeX/ifx/.code n args={4}{%
+    \ifx#1#2\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
+    {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
+  },
+  TeX/ifxempty/.code n args={3}{%
+    \edef\pgfkeys@temp{#1}%
+    \pgfutil@ifxempty\pgfkeys@temp{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+  },
+  TeX/ifempty/.code n args={3}{%
+    \pgfutil@ifempty{#1}{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+  },
+  tex/.search also=/utils/TeX,
+}
+
+\endinput
