@@ -1,0 +1,50 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Shape: Uncentered Rectangle}
+\begin{pgflibrary}{ext.shapes.uncenteredrectangle}
+  A rectangle that has a variable horizontal center with three node parts.
+\end{pgflibrary}
+\begin{shape}{uncentered rectangle}
+
+For some alignment problems, this shape could be useful.
+
+It has three node parts: the standard |text| part,
+the |left| part that is to the left of |text|
+and the |right| part that is to the right of |text|.
+
+When edges are to be connected with this shape, the
+following key changes to which inner center this shape will
+calculate the appropriate point on the border.
+\begin{key}{/pgf/uncentered rectangle center=\meta{left}\textrm{ or }\meta{text}\textrm{ or }\meta{right}\textrm{ or }\meta{real} (initially text)}
+  Sets the center that is to be used for connecting edges.
+  
+  This will also move the anchors |north|, |mid|, |base| and |south| along.
+  In the picture below, this are marked red.
+\end{key}
+
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.uncenteredrectangle}]\tikzexternaldisable
+\begin{tikzpicture}[style north/.style=red, style south/.style=red, style center/.style=red, style base/.style=red, style mid/.style=red]
+\Huge
+\node[shape example, name=n, uncentered rectangle]
+  {centered \nodepart{left} Un \nodepart{right} \space Rectangle\vrule width 1pt height 2cm}
+  foreach \anchor/\pos in {
+   north west/above left, north/below, north east/above right, real north/above,  left north/above, right north/above, text north/above,
+         west/left,      center/above,       east/right,       real center/above, left center/above,right center/above,text center/below,
+     mid west/left,         mid/left,    mid east/right,       real mid/above,    left mid/above,   right mid/above,   text mid/above,
+    base west/left,        base/right,  base east/right,       real base/below,   left base/below,  right base/below,  text base/below,
+   south west/below left, south/above, south east/below right, real south/below,  left south/below, right south/below, text south/below,
+                             10/right,        130/below,                          left/left,        right/right,       text/right}{
+    plot[mark=x, only marks] coordinates {(n.\anchor)}
+    node[inner sep=.1em, style \anchor/.try, style/.expand once=\pos] {\tiny\ttfamily\anchor}};
+\end{tikzpicture}
+\end{codeexample}
+\end{shape}
+\endinput

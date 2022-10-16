@@ -1,0 +1,277 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\pgfutil@IfUndefined{pgfnodepartthreebox}{%
+  \newbox\pgfnodepartleftbox
+  \newbox\pgfnodepartrightbox
+}{%
+  \let\pgfnodepartleftbox\pgfnodeparttwobox
+  \let\pgfnodepartrightbox\pgfnodepartthreebox
+}
+\pgfset{
+  uncentered rectangle center/@center/.initial=2,
+  uncentered rectangle center/.is choice,
+  uncentered rectangle center/real/.code=\pgfkeyssetvalue{/pgf/uncentered rectangle center/@center}{0},
+  uncentered rectangle center/left/.code=\pgfkeyssetvalue{/pgf/uncentered rectangle center/@center}{1},
+  uncentered rectangle center/text/.code=\pgfkeyssetvalue{/pgf/uncentered rectangle center/@center}{2},
+  uncentered rectangle center/right/.code=\pgfkeyssetvalue{/pgf/uncentered rectangle center/@center}{3}}
+
+\pgfdeclareshape{uncentered rectangle}{%
+  \nodeparts{text,left,right}%
+  \savedanchor\middleCenter{%
+    \pgf@x=.5\wd\pgfnodeparttextbox
+    %
+    \pgf@y=\dp\pgfnodeparttextbox
+    \ifdim\dp\pgfnodepartleftbox>\pgf@y
+      \pgf@y=\dp\pgfnodepartleftbox
+    \fi
+    \ifdim\dp\pgfnodepartrightbox>\pgf@y
+      \pgf@y=\dp\pgfnodepartrightbox
+    \fi
+    %
+    \pgf@ya=\ht\pgfnodeparttextbox
+    \ifdim\ht\pgfnodepartleftbox>\pgf@ya
+      \pgf@ya=\ht\pgfnodepartleftbox
+    \fi
+    \ifdim\ht\pgfnodepartrightbox>\pgf@ya
+      \pgf@ya=\ht\pgfnodepartrightbox
+    \fi
+    \advance\pgf@ya by -\pgf@y
+    \pgf@y=.5\pgf@ya
+  }%
+  \savedanchor\leftCenter{%
+    % y should be still the same as before
+    \pgf@x=-.5\wd\pgfnodepartleftbox
+  }%
+  \savedanchor\rightCenter{%
+    % y should be still the same as before
+    \pgf@x=.5\wd\pgfnodepartrightbox
+    \advance\pgf@x by \wd\pgfnodeparttextbox
+  }%
+  \savedanchor\realCenter{%
+    % y should be still the same as before
+    \pgf@x=-.5\wd\pgfnodepartleftbox
+    \advance\pgf@x by .5\wd\pgfnodeparttextbox
+    \advance\pgf@x by .5\wd\pgfnodepartrightbox
+  }%
+  \savedanchor\southwest{%
+    % total width
+    \pgf@xa=\wd\pgfnodepartleftbox
+    \advance\pgf@xa by\wd\pgfnodepartrightbox
+    \advance\pgf@xa by\wd\pgfnodeparttextbox
+    %
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@xa by 2\pgf@xc
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
+    \ifdim\pgf@xb>\pgf@xa
+      \pgf@xa=\pgf@xb
+    \fi
+    % left side of shape
+    \advance\pgf@x by -.5\pgf@xa
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by -\pgf@xa
+    %
+    % total height
+    \pgf@ya=\dp\pgfnodepartleftbox
+    \ifdim\pgf@ya<\dp\pgfnodeparttextbox
+      \pgf@ya=\dp\pgfnodeparttextbox
+    \fi
+    \ifdim\pgf@ya<\dp\pgfnodepartrightbox
+      \pgf@ya=\dp\pgfnodepartrightbox
+    \fi
+    \pgf@yb=\ht\pgfnodepartleftbox
+    \ifdim\pgf@yb<\ht\pgfnodeparttextbox
+      \pgf@yb=\ht\pgfnodeparttextbox
+    \fi
+    \ifdim\pgf@yb<\ht\pgfnodepartrightbox
+      \pgf@yb=\ht\pgfnodepartrightbox
+    \fi
+    \advance\pgf@ya by \pgf@yb
+    %
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@ya by 2\pgf@yc
+    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@yb>\pgf@ya
+      \pgf@ya=\pgf@yb
+    \fi
+    % lower side of the shape
+    \advance\pgf@y by -.5\pgf@ya
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by -\pgf@ya
+  }%
+  \savedanchor\northeast{%
+    % first, let's calculate the real center again:
+    %
+    \pgf@x=-.5\wd\pgfnodepartleftbox
+    \advance\pgf@x by .5\wd\pgfnodeparttextbox
+    \advance\pgf@x by .5\wd\pgfnodepartrightbox
+    %
+    \pgf@y=\dp\pgfnodeparttextbox
+    \ifdim\dp\pgfnodepartleftbox>\pgf@y
+      \pgf@y=\dp\pgfnodepartleftbox
+    \fi
+    \ifdim\dp\pgfnodepartrightbox>\pgf@y
+      \pgf@y=\dp\pgfnodepartrightbox
+    \fi
+    %
+    \pgf@ya=\ht\pgfnodeparttextbox
+    \ifdim\ht\pgfnodepartleftbox>\pgf@ya
+      \pgf@ya=\ht\pgfnodepartleftbox
+    \fi
+    \ifdim\ht\pgfnodepartrightbox>\pgf@ya
+      \pgf@ya=\ht\pgfnodepartrightbox
+    \fi
+    \advance\pgf@ya by -\pgf@y
+    \pgf@y=.5\pgf@ya
+    %
+    % now we can calculate the anchor
+    % total width
+    %
+    \pgf@xa=\wd\pgfnodepartleftbox
+    \advance\pgf@xa by\wd\pgfnodepartrightbox
+    \advance\pgf@xa by\wd\pgfnodeparttextbox
+    %
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@xa by 2\pgf@xc
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
+    \ifdim\pgf@xb>\pgf@xa
+      \pgf@xa=\pgf@xb
+    \fi
+    % right side of shape
+    \advance\pgf@x by .5\pgf@xa
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by \pgf@xa
+    %
+    % total height
+    \pgf@ya=\dp\pgfnodepartleftbox
+    \ifdim\pgf@ya<\dp\pgfnodeparttextbox
+      \pgf@ya=\dp\pgfnodeparttextbox
+    \fi
+    \ifdim\pgf@ya<\dp\pgfnodepartrightbox
+      \pgf@ya=\dp\pgfnodepartrightbox
+    \fi
+    \pgf@yb=\ht\pgfnodepartleftbox
+    \ifdim\pgf@yb<\ht\pgfnodeparttextbox
+      \pgf@yb=\ht\pgfnodeparttextbox
+    \fi
+    \ifdim\pgf@yb<\ht\pgfnodepartrightbox
+      \pgf@yb=\ht\pgfnodepartrightbox
+    \fi
+    \advance\pgf@ya by \pgf@yb
+    %
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@ya by 2\pgf@yc
+    \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@yb>\pgf@ya
+      \pgf@ya=\pgf@yb
+    \fi
+    % upper side of the shape
+    \advance\pgf@y by .5\pgf@ya
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by \pgf@ya
+  }%
+  %
+  \anchor{center}{%
+    \ifcase\pgfkeysvalueof{/pgf/uncentered rectangle center/@center}\relax
+      \realCenter\or
+      \leftCenter\or
+      \middleCenter\or
+      \rightCenter\else
+      \realCenter
+    \fi
+  }%
+  \anchor{left}        {\leftCenter  \multiply\pgf@x by2 \pgf@y=0pt }
+  \anchor{right}       {\middleCenter\multiply\pgf@x by2 \pgf@y=0pt }
+  \anchor{real center} {\realCenter}
+  \anchor{left center} {\leftCenter}
+  \anchor{right center}{\rightCenter}
+  \anchor{text center} {\middleCenter}
+  \anchor{south west}  {\southwest}
+  \anchor{north east}  {\northeast}
+  \anchor{mid}{%
+    \csname pgf@anchor@uncentered rectangle@center\endcsname
+    \pgfmathsetlength\pgf@y{.5ex}}%
+  \anchor{base}{%
+    \csname pgf@anchor@uncentered rectangle@center\endcsname
+    \pgf@y=0pt }%
+  \anchor{left mid}   {\leftCenter  \pgfmathsetlength\pgf@y{+.5ex}}
+  \anchor{text mid}   {\middleCenter\pgfmathsetlength\pgf@y{+.5ex}}
+  \anchor{right mid}  {\rightCenter \pgfmathsetlength\pgf@y{+.5ex}}
+  \anchor{real mid}   {\realCenter  \pgfmathsetlength\pgf@y{+.5ex}}
+  \anchor{left base}  {\leftCenter  \pgf@y=0pt }
+  \anchor{text base}  {\middleCenter\pgf@y=0pt }
+  \anchor{right base} {\rightCenter \pgf@y=0pt }
+  \anchor{real base}  {\realCenter  \pgf@y=0pt }
+  \anchor{real south} {\pgf@anchor@rectangle@south}
+  \anchor{real north} {\pgf@anchor@rectangle@north}
+  \anchor{text north} {\pgf@anchor@rectangle@north\pgf@ya=\pgf@y\middleCenter\pgf@y=\pgf@ya}
+  \anchor{left north} {\pgf@anchor@rectangle@north\pgf@ya=\pgf@y\leftCenter  \pgf@y=\pgf@ya}
+  \anchor{right north}{\pgf@anchor@rectangle@north\pgf@ya=\pgf@y\rightCenter \pgf@y=\pgf@ya}
+  \anchor{text south} {\pgf@anchor@rectangle@south\pgf@ya=\pgf@y\middleCenter\pgf@y=\pgf@ya}
+  \anchor{left south} {\pgf@anchor@rectangle@south\pgf@ya=\pgf@y\leftCenter  \pgf@y=\pgf@ya}
+  \anchor{right south}{\pgf@anchor@rectangle@south\pgf@ya=\pgf@y\rightCenter \pgf@y=\pgf@ya}
+  \anchor{north}{%
+    \pgf@anchor@rectangle@north
+    \pgf@ya=\pgf@y
+    \csname pgf@anchor@uncentered rectangle@center\endcsname
+    \pgf@y=\pgf@ya
+  }
+  \anchor{south}{%
+    \pgf@anchor@rectangle@south
+    \pgf@ya=\pgf@y
+    \csname pgf@anchor@uncentered rectangle@center\endcsname
+    \pgf@y=\pgf@ya
+  }
+  %\anchor{base right}{\middleCenter\pgf@xa=2\pgf@x}% TODO
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{mid west}
+  \inheritanchor[from=rectangle]{mid east}
+  \inheritanchor[from=rectangle]{base west}
+  \inheritanchor[from=rectangle]{base east}
+  \inheritbackgroundpath[from=rectangle]
+  \anchorborder{%
+    % xa/ya is target
+    \pgf@xa=\pgf@x
+    \pgf@ya=\pgf@y
+    % xc/yc is "center"
+    \pgf@sh@reanchor{uncentered rectangle}{center}%
+    \pgf@xc=\pgf@x
+    \pgf@yc=\pgf@y
+    \ifdim\pgf@xa<0pt
+      % left side
+      \southwest
+      \advance\pgf@x by -\pgf@xc
+      \advance\pgf@y by -\pgf@yc
+      \pgf@x=-\pgf@x
+      \pgf@y=-\pgf@y
+      \edef\pgf@marshal{%
+        \noexpand\pgfpointborderrectangle
+          {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
+          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+      }%
+    \else
+      % right side
+      \northeast
+      \advance\pgf@x by -\pgf@xc
+      \advance\pgf@y by -\pgf@yc
+      \edef\pgf@marshal{%
+        \noexpand\pgfpointborderrectangle
+          {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
+          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+      }%
+    \fi
+    \pgf@process{\pgf@marshal}%
+    \advance\pgf@x by\pgf@xc
+    \advance\pgf@y by\pgf@yc
+  }%
+}
+\endinput
