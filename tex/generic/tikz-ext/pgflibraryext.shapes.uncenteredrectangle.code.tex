@@ -13,6 +13,7 @@
   \let\pgfnodepartrightbox\pgfnodepartthreebox
 }
 \pgfset{
+  uncentered rectangle center yshift/.initial=,
   uncentered rectangle center/@center/.initial=2,
   uncentered rectangle center/.is choice,
   uncentered rectangle center/real/.code=\pgfkeyssetvalue{/pgf/uncentered rectangle center/@center}{0},
@@ -183,6 +184,11 @@
       \rightCenter\else
       \realCenter
     \fi
+    \pgfkeysgetvalue{/pgf/uncentered rectangle center yshift}\pgf@temp
+    \pgfutil@ifxempty\pgf@temp{% real center used
+    }{% calculate center
+      \pgfmathsetlength\pgf@y{\pgf@temp}%
+    }%
   }%
   \anchor{left}        {\leftCenter  \multiply\pgf@x by2 \pgf@y=0pt }
   \anchor{right}       {\middleCenter\multiply\pgf@x by2 \pgf@y=0pt }
@@ -227,12 +233,36 @@
     \pgf@y=\pgf@ya
   }
   %\anchor{base right}{\middleCenter\pgf@xa=2\pgf@x}% TODO
+  \anchor{real west}{%
+    \pgf@process{\northeast}%
+    \pgf@ya=.5\pgf@y
+    \pgf@process{\southwest}%
+    \pgf@y=.5\pgf@y
+    \advance\pgf@y by \pgf@ya
+  }%
+  \anchor{real east}{%
+    \pgf@process{\southwest}%
+    \pgf@ya=.5\pgf@y
+    \pgf@process{\northeast}%
+    \pgf@y=.5\pgf@y
+    \advance\pgf@y by \pgf@ya
+  }%
+  \anchor{west}{%
+    \pgf@process{\southwest}%
+    \pgf@xa=\pgf@x
+    \pgf@process{\csname pgf@anchor@uncentered rectangle@center\endcsname}%
+    \pgf@x=\pgf@xa
+  }%
+  \anchor{east}{%
+    \pgf@process{\northeast}%
+    \pgf@xa=\pgf@x
+    \pgf@process{\csname pgf@anchor@uncentered rectangle@center\endcsname}%
+    \pgf@x=\pgf@xa
+  }%
   \inheritanchor[from=rectangle]{south west}
   \inheritanchor[from=rectangle]{north west}
   \inheritanchor[from=rectangle]{south east}
   \inheritanchor[from=rectangle]{north east}
-  \inheritanchor[from=rectangle]{west}
-  \inheritanchor[from=rectangle]{east}
   \inheritanchor[from=rectangle]{mid west}
   \inheritanchor[from=rectangle]{mid east}
   \inheritanchor[from=rectangle]{base west}
