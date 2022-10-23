@@ -11,6 +11,7 @@
 \section{Shape: Uncentered Rectangle}
 \begin{pgflibrary}{ext.shapes.uncenteredrectangle}
   A rectangle that has a variable horizontal center with three node parts.
+  \inspiration{UncRectCD-Q,UncRectForest-Q}{UncRectCD-A,UncRectForest-A}
 \end{pgflibrary}
 \begin{shape}{uncentered rectangle}
 
@@ -47,30 +48,22 @@ this shape also supports a dynamic $y$ value for its anchors |center|, |west| an
 \makeatletter
 \tikzcdset{
   every diagram/.append style={
-    /pgf/uncentered rectangle center=real,
-    arrows={/pgf/uncentered rectangle center=text},
+    /pgf/uncentered rectangle center=text,
     /tikz/math align/.style={
       shape=uncentered rectangle,
       /pgf/uncentered rectangle center yshift=axis_height,
-      commutative diagrams/math mode=false
-    },
+      commutative diagrams/math mode=false},
     /tikz/math align left/.style={
       math align,
-      /utils/exec={\def\mathalign####1=####2;{$####2$\nodepart{left}$####1={}$}}
-    },
+      /utils/exec={\def\mathalign####1=####2;{$####2$\nodepart{left}$####1={}$}}},
     /tikz/math align right/.style={
       math align,
-      /utils/exec={\def\mathalign####1=####2;{$####1$\nodepart{right}${}=####2$}}
-    },
+      /utils/exec={\def\mathalign####1=####2;{$####1$\nodepart{right}${}=####2$}}},
     /tikz/matrix of math nodes/.style={
       matrix of nodes,
       nodes={
         execute at begin node=\iftikzcd@mathmode$\fi,
-        execute at end node  =\iftikzcd@mathmode$\fi
-      }
-    }
-  }
-}
+        execute at end node  =\iftikzcd@mathmode$\fi}}}}
 \makeatother
 \tikzcdset{install C shortcut/.code=\newcommand*\C[1]{C_{\%_{##1}}}}
 \begin{tikzcd}[
@@ -81,10 +74,11 @@ this shape also supports a dynamic $y$ value for its anchors |center|, |west| an
 ]
 \C{1} \drar &         & |[math align right]| \mathalign m_{r_1} = \C{2}-C_\%; \dlar\\
             & C_\% \\
-\C{2} \urar &         & |[math align right]| \mathalign m_{r_1} = \C{2}-C_\%; \ular
+\C{2} \urar &         & |[math align right]| \mathalign m_{r_2} = \C{1}-C_\%; \ular
 \end{tikzcd}
 \end{codeexample}
 \end{key}
+\pagebreak
 \begin{codeexample}[preamble=\usepgflibrary{ext.shapes.uncenteredrectangle}]
 \begin{tikzpicture}[style north/.style=red, style south/.style=red, style center/.style=red, style base/.style=red, style mid/.style=red]
 \Huge

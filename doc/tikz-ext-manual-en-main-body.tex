@@ -164,6 +164,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 %%% END
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}
+\newcommand*{\addPGFkeys}[1]{Added \pgfname keys library \texttt{ext.#1}.}
 \newcommand*{\addShape}[2][]{Added shape \texttt{\ifx\\#1\\#2\else#1\fi}\\(\pgfname\space library \texttt{ext.shapes.#2}).}
 \part{Changelog, Index \& References}
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
@@ -171,9 +172,10 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \noindent
 Version 0.4.1
 \begin{itemize}
-\item Cleaned up directory strucuture of documentary.
-\item \addPGF{pgfkeys-plus}
+\item Cleaned up directory structure of documentary.
+\item \addPGFkeys{pgfkeys-plus}
 \item \addShape[uncentered rectangle]{uncenteredrectangle}
+\item Fixed |ext.paths.arcto| -- again \cite{GH2}.
 \end{itemize}
 Version 0.4
 \begin{itemize}

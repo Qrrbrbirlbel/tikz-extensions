@@ -98,7 +98,7 @@
 }
 
 \pgfqkeys{/utils}{
-  if/.code n args=3{%
+  if/.code n args={3}{%
     \begingroup
       \pgfmathifthenelse{#1}{"1"}{"0"}%
     \expandafter\endgroup\expandafter

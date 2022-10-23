@@ -41,6 +41,21 @@
 \tracinglostchars=3
 
 \input{pgfmanual-en-macros}
+\newenvironment{pgfkeyslibrary}[1]{% from pgfmanual-en-macros
+  \begin{pgfmanualentry}%
+    \pgfmanualentryheadline{%
+      \pgfmanualpdflabel{#1}{}%
+      \textbf{pgfkeys Library} \texttt{\declare{#1}}}%
+    \index{#1@\protect\texttt{#1} pgfkeys library}%
+    \index{pgfkeys Libraries!#1@\protect\texttt{#1}}%
+    \vskip.25em
+    {{\ttfamily\char`\\usepgfkeyslibrary\char`\{\declare{#1}\char`\}\space\space \char`\%\space\space  \LaTeX\space and plain \TeX}}\\
+    {{\ttfamily\char`\\usepgfkeyslibrary[\declare{#1}]\space \char`\%\space\space Con\TeX t}}\\[.5em]%
+    \pgfmanualbody
+}%
+{%
+  \end{pgfmanualentry}%
+}
 
 \usepackage{unicode-math}
 \setmathfont[Scale=MatchUppercase]{libertinusmath-regular.otf}

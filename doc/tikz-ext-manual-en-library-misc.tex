@@ -155,10 +155,14 @@ Same as above, however the results are not truncated.
 %\pagebreak
 
 \subsection{\pgfname keys}
-\begin{pgflibrary}{ext.pgfkeys-plus}
+\begin{pgfkeyslibrary}{ext.pgfkeys-plus}
   This extends \pgfname keys and adds helpful |/utils| keys as well as handlers.
-  This library gets loaded by the |ext.misc| library.
-\end{pgflibrary}
+  This library gets loaded by the |ext.misc| library.%
+  \footnote{\texttt{\string\usepgfkeyslibrary} is an upcoming feature of \pgfname/\tikzname.
+    For now, you need to load \texttt{ext.misc}
+    or manually \texttt{\string\input} the file \texttt{pgfkeyslibraryext.pgfkeys-plus.code.tex}
+    with \texttt{@} being a letter.}
+\end{pgfkeyslibrary}
 
 \begin{multicols}{2}
 \subsubsection{Conditionals}
