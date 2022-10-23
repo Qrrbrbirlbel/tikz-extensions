@@ -359,7 +359,7 @@
   \pgfcalendar@launch@ifdate{#2}{#3}{#4}%
 }
 
-\pgfqkeys{/pgf/calendar/week}{.value required,.code=\ifnum#1=\pgfcalendarifdateweek\relax\expandafter\pgfcalendarmatchestrue\fi}
+\pgfqkeys{/pgf/calendar/week}{.value required,.code={\ifnum#1=\pgfcalendarifdateweek\relax\expandafter\pgfcalendarmatchestrue\fi}}
 
 % Overwriting shorthands of pgfcalendar
 \expandafter\def\csname pgfcalendar@shorthand@d-\endcsname{%

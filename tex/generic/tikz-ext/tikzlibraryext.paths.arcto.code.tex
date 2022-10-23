@@ -306,12 +306,12 @@
     % make sure direction is properly followed
     \ifdim\pgf@arcto@fS pt=1pt
       % counter clockwise
-      \ifdim\pgf@arcto@theta@end pt<\pgf@arcto@theta@start path
+      \ifdim\pgf@arcto@theta@end pt<\pgf@arcto@theta@start pt
         \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end+360}%
       \fi
     \else
       % clockwise
-      \ifdim\pgf@arcto@theta@end pt>\pgf@arcto@theta@start path
+      \ifdim\pgf@arcto@theta@end pt>\pgf@arcto@theta@start pt
         \pgfmathsetmacro\pgf@arcto@theta@end{\pgf@arcto@theta@end-360}%
       \fi
     \fi
