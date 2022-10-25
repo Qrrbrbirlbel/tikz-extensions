@@ -67,7 +67,7 @@
 \tikzset{east below/.code=\tikz@lib@place@handle@{#1}{north east}{0}{-1}{south east}{1}}
 
 \newif\iftikzext@tikz@lib@place@postransform
-\tikzset{node distance transformation/.is if=qrr@tikz@lib@place@postransform}
+\tikzset{node distance transformation/.is if=tikzext@tikz@lib@place@postransform}
 \def\tikz@lib@place@handle@@#1#2#3#4{%
   \pgfutil@in@{of }{#1}%
   \ifpgfutil@in@

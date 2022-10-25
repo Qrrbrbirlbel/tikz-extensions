@@ -6,8 +6,8 @@
 % 2. under the GNU Free Documentation License.
 %
 \pgfutil@IfUndefined{pgfnodepartthreebox}{%
-  \newbox\pgfnodepartleftbox
-  \newbox\pgfnodepartrightbox
+  \csname newbox\endcsname\pgfnodepartleftbox
+  \csname newbox\endcsname\pgfnodepartrightbox
 }{%
   \let\pgfnodepartleftbox\pgfnodeparttwobox
   \let\pgfnodepartrightbox\pgfnodepartthreebox
