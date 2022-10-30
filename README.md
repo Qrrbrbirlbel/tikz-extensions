@@ -10,18 +10,17 @@ Name: Qrrbrbirlbel
 
 ## Introduction
 
-This is not a LaTeX package but a collection of libraries for PGF and TikZ.
+This is not a LaTeX package but a collection of libraries for PGF and TikZ;
 
-These are
-
- * `ext.calendar-plus`
- * `ext.node-families`
+ * `ext.calendar-plus` extends the `calendar` library with more tests, week numbers and a few goodies.
+ * `ext.node-families` uses the AUX file to sync the sizes of nodes.
     * `ext.node-families.shapes.geometric`
- * `ext.paths.arcto`
- * `ext.paths.ortho`
- * `ext.paths.timer`
- * `ext.patterns.images`
- * `ext.positioning-plus`
+ * `ext.paths.arcto` uses `\pgfpatharcto` to construct an arc *to* a point.
+ * `ext.paths.ortho` provides orthogonal path operations `-|-`, `|-|`, `r-rl`, `r-lr`, `r-du` and `r-ud`.
+ * `ext.paths.timer` adds timers to `rectangle`, `parabola`, `sin` and `cos`.
+ * `ext.patterns.images` allows images to be used as a path‘s pattern.
+ * `ext.positioning-plus` adds more ways to position nodes in reference to each other.
+ * `ext.scalepicture`
  * `ext.topaths.arcthrough`
  * `ext.transformations.mirror`
  * `ext.misc`
@@ -31,6 +30,6 @@ These are
    * `ext.shapes.heatmark`
    * `ext.shapes.rectangleroundedcorners`
    * `ext.shapes.superellipse`
+   * `ext.shapes.uncenteredrectangle`
 
- These were developed in response to questions on tex.stackexchange.com.
- Some of these can be find by searching for my [user id](https://tex.stackexchange.com/search?q=user%3A16595+%22my+library%22).
+ These were developed in response to questions on tex.stackexchange.com or texwelt.de
