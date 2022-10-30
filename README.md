@@ -20,9 +20,9 @@ This is not a LaTeX package but a collection of libraries for PGF and TikZ;
  * `ext.paths.timer` adds timers to `rectangle`, `parabola`, `sin` and `cos`.
  * `ext.patterns.images` allows images to be used as a path‘s pattern.
  * `ext.positioning-plus` adds more ways to position nodes in reference to each other.
- * `ext.scalepicture`
- * `ext.topaths.arcthrough`
- * `ext.transformations.mirror`
+ * `ext.scalepicture` scales a TikZ picture to the desired dimensions.
+ * `ext.topaths.arcthrough` installs a `to path` that expects a third point that defines an arc.
+ * `ext.transformations.mirror` adds transformations that reflect on arbitrary lines.
  * `ext.misc`
  * Shapes:
    * `ext.shapes.circlearrow`
@@ -32,4 +32,4 @@ This is not a LaTeX package but a collection of libraries for PGF and TikZ;
    * `ext.shapes.superellipse`
    * `ext.shapes.uncenteredrectangle`
 
- These were developed in response to questions on tex.stackexchange.com or texwelt.de
+ These were developed in response to questions on tex.stackexchange.com or texwelt.de.

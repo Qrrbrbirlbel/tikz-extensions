@@ -18,7 +18,7 @@
 
 \begin{multicols}{2}
 If one of the keys below are used on a \tikzname\ picture, i.\,e.
-as an option |\tikzpicture| or \texttt{\textbackslash begin\{tikzpicture\}}
+as an option to |\tikzpicture| or \texttt{\textbackslash begin\{tikzpicture\}}
 the size of the picture\footnote{This is the size of the pseudo-node \texttt{current bounding box}.}
 will be measured and written to the \filetype{aux} file
 so that it will be available at the next compilation run
@@ -35,6 +35,10 @@ and an appropriate scaling for the picture can be installed.
   This will expand to |0pt| if the picture hasn't been measured before.
 \end{command}
 
+\begin{stylekey}{/tikz/save picture size}
+  This key is usually used by the keys provided by this library.
+  Normally, this is not needed to be explicitly given.
+\end{stylekey}
 \subsection{Keeping the aspect ratio}
 The following \emph{unstarred} keys do not change the aspect ratio of the picture.
 
@@ -81,11 +85,29 @@ The following \emph{unstarred} keys do not change the aspect ratio of the pictur
 \subsection{Changing the aspect ratio.}
 The following \emph{starred} keys do change the aspect ratio.
 \begin{key}{/tikz/picture width*=\meta{dimension}}
+  Scales the picture so that the width of the picture will be \meta{dimension}.
+  This will only scale the $x$ axis.
+\end{key}
+
+\begin{key}{/tikz/minimum picture width*=\meta{dimension}}
+  As above but will not change the size of the picture
+  if its width is greater than \meta{dimension}.
+\end{key}
+
+\begin{key}{/tikz/maximum picture width*=\meta{dimension}}
+  As above but will not change the size of the picture
+  if its width is less than \meta{dimension}.
 \end{key}
 
 \begin{key}{/tikz/picture height*=\meta{dimension}}
+  Scales the picture so that the height of the picture will be \meta{dimension}.
+  This will only scale the $y$ axis.
 \end{key}
 
-\begin{key}{/tikz/picture size*=\meta{dimension}}
+\begin{key}{/tikz/picture size*=\marg{width}\marg{height}}
+  Scales the picture so that its width will be \meta{width}
+  and its height will be \meta{height}.
+  
+  This will scale both axes but independent from each other.
 \end{key}
 \end{multicols}
