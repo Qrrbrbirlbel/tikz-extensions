@@ -8,7 +8,7 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\newcommand*\tikzextversion{0.4.2}
+\newcommand*\tikzextversion{0.5}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
@@ -161,9 +161,11 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \vfill
 
 \tikzsetfigurename{misc.calendar}\include{tikz-ext-manual-en-calendar}
+\tikzsetfigurename{misc.pgffor}\include{tikz-ext-manual-en-library-pgffor}
 \tikzsetfigurename{misc.misc}\include{tikz-ext-manual-en-library-misc}
 
 %%% END
+\newcommand*{\addPackage}[1]{Added package \texttt{#1-ext}.}
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGFkeys}[1]{Added \pgfname keys library \texttt{ext.#1}.}
@@ -172,6 +174,12 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
+Version 0.5
+\begin{itemize}
+\item \addPackage{pgffor}
+\item Bugfixes to |ext.calendar-plus|.
+\item Allow the original |rectangle| timer with |ext.paths.timer|.
+\end{itemize}
 Version 0.4.2
 \begin{itemize}
 \item \addTikz{scalepicture}

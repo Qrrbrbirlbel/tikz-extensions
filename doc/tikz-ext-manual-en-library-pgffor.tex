@@ -1,0 +1,85 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\section{Repeating Things and Other Things}
+\label{pkg:pgffor-ext}
+\begin{latexpackage}{pgffor-ext}
+  This package adds small niceties to the \referencePackageandIndexO{pgffor} package.
+  Most of these additions are also available
+  with the \referenceLibraryandIndex{ext.misc} library.
+
+  \textbf{Warning:} Consider this package experimental.
+  At the very least, it will break the |...| notation and possibly gobbles spaces after the body.
+  
+  \inspiration{ForeachUse-Q, ForeachNoSep-Q, ForeachXparse-Q}{ForeachUse-A, ForeachNoSep-A, ForeachXparse-A}
+\end{latexpackage}
+
+Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
+|\foreach \var[use int=start to end step delta]|.
+
+\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
+The part |step |\meta{delta} is optional (\meta{delta} = 1).
+\end{key}
+
+\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+Same as above, however the results are not truncated.
+\end{key}
+
+\begin{key}{/pgf/foreach/no separator}
+This key disables any separator between elements of the list.
+Every token is its own element. This also means that Unicode characters
+need to be grouped between |{| and |}| if Lua\TeX\space isn't used.
+Spaces will be ignored.
+
+\begin{codeexample}[preamble=\usetikzlibrary{ext.misc}]
+\newcommand*{\board}[3][]{%
+  \begin{tikzpicture}[#1]
+    \foreach[
+      count=\i from 0,
+      no separator,
+      evaluate=\i as \colX using {mod(\i,#2)},
+      evaluate=\i as \rowY using {int(\i/#2)}
+    ] \elem in {#3} {
+        \draw[black, board/\elem/.try, rectangle timer/.try=line]
+          (\colX,\rowY) rectangle node {\elem} ++(1, 1);}
+  \end{tikzpicture}}
+\board[
+  board/W/.style={fill=red},
+  board/X/.style={fill=blue!50},
+  board/B/.style={fill=green},
+  board/-/.style={fill=gray},
+]{3}{WXX---BXX}
+\end{codeexample}
+\end{key}
+
+\begin{key}{/pgf/foreach/normal list}
+This key simply disables all other special parsers and returns to the original list parser.
+\end{key}
+
+The following keys only work with \LaTeX\ and cannot be used when only the \indexLibrary{ext.misc}
+library is loaded. For this, the package |pgffor-ext| needs to be used.
+\begin{key}{/pgf/xparser=\marg{argument specification}\marg{foreach value}}
+This key can be used to specify a \referencePackageandIndeXExt{xparse}
+specification for each element in the list.
+
+For this to work somewhat seamless, the following needs to observed:
+\begin{itemize}
+  \item Every \marg{argument specification} get appended |u,|.
+        This means there's always one additional mandatory argument at the end of every element.
+  \item The \marg{foreach value} needs to be set so
+        that the \referenceKeyandIndexO[/pgf/foreach/]{var}
+        value is set accordingly.
+\end{itemize}
+\end{key}
+
+\begin{key}{/pgf/foreach/xparser Om}
+Sets up a list that may contains an optional argment inside |[]| which correspond to
+two |\foreach| variables, say |\Options/\Text|.
+\end{key}

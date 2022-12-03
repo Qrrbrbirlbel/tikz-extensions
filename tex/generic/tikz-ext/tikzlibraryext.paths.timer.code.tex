@@ -5,6 +5,7 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+
 \def\tikz@rectB#1{% originally from tikz.code.tex
   \tikz@make@last@position{#1}%
   \edef\tikz@timer@end{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
@@ -63,7 +64,7 @@
   \tikz@scan@next@command
 }
 
-\def\tikz@timer@rectangle{%
+\def\tikzext@timer@rectangle{%
   \pgfutil@tempdima\tikz@time pt
   \ifdim\pgfutil@tempdima<.5pt\else % if we're at the return pos-ition we switch start and end
     \advance\pgfutil@tempdima-.5pt
@@ -184,5 +185,12 @@
     {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
     {\noexpand\tikz@timer@end}}%
   \tikz@marshall
+}
+
+\tikzset{
+  rectangle timer/.is choice,
+  rectangle timer/line/.code=\let\tikz@timer@rectangle\tikz@timer@line,
+  rectangle timer/rectangle/.code=\let\tikz@timer@rectangle\tikzext@timer@rectangle,
+  rectangle timer=rectangle
 }
 \endinput

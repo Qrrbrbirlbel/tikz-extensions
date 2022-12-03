@@ -31,6 +31,10 @@ For the |rectangle| path operator, the timer starts with |pos = 0| (= |at start|
 the starting coordinate in a counter-clockwise direction along the rectangle.
 The corners will be at positions 0.0, 0.25, 0.5, 0.75 and 1.0.
 
+\begin{key}{/tikz/rectangle timer=|line| or |rectangle| (default |rectangle|)}
+By default, the library activates the new (correct) timer for |rectangle|.
+With |rectangle timer = line| the original line timer can be reinstated.
+\end{key}
 \begin{codeexample}[width=10cm,preamble=\usetikzlibrary{ext.paths.timer}]
 \begin{tikzpicture}[scale=2, every pin edge/.style={latex-, gray}]
 \coordinate [label=above right:Target] (A) at (0,0);

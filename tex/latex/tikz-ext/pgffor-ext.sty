@@ -1,0 +1,33 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\RequirePackage{pgffor}
+\ifcsname tikzext@pgf@foreach@no@list@parse@to\endcsname
+  \expandafter\@gobble
+\else
+  \expandafter\@firstofone
+\fi
+{
+  \input{pgffor-ext.tex}
+}
+
+\pgfqkeys{/pgf/foreach}{
+  xparser/.code 2 args={%
+    \DeclareDocumentCommand\pgffor@scan@custom{ #1 u, }{%
+      \def\pgffor@value{#2}%
+      \pgffor@scanned
+    }%
+    \def\pgffor@scan{%
+      \pgfutil@ifnextchar\pgffor@stop\pgffor@scanone\pgffor@scan@custom
+    }%
+  },
+  xparser Om/.style={
+      xparser={ O{} }{{##1}/{##2}}
+  },
+}
+\endinput

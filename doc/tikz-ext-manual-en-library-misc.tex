@@ -11,7 +11,7 @@
 \section{And a little bit more}
 \begin{tikzlibrary}{ext.misc}
   This library adds miscellaneous utilities to \pgfname math, \pgfname\space or \tikzname.
-  \inspiration{FullArc-Q,ForeachUse-Q}{FullArc-A,ForeachUse-A}
+  \inspiration{FullArc-Q}{FullArc-A}
 \end{tikzlibrary}
 
 \subsection{\pgfname math}
@@ -23,7 +23,7 @@
 Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
 to use an arbitrary number of segments of a circle to be used instead of an angle.
 
-\begin{key}{/tikz/full arc=\meta{num} (default |{}|)}
+\begin{key}{/tikz/full arc=\meta{num} (default |\{\}|)}
   The number \meta{num} of segments will be set up.
   Using |full arc| with an empty value disables the segmentation and |1R| equals $1^\circ$.
   
@@ -139,17 +139,20 @@ them in |"|.
 
 \subsection{\pgfname for}
 
-Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
-|\foreach \var[use int=start to end step delta]|.
-
-\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
-The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
-The part |step |\meta{delta} is optional (\meta{delta} = 1).
-\end{key}
-
-\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
-Same as above, however the results are not truncated.
-\end{key}
+This library loads also most of the functions of the
+\referencePackageandIndex{pgffor-ext} of section~\ref{pkg:pgffor-ext}
+on page~\pageref{pkg:pgffor-ext}.
+%Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
+%|\foreach \var[use int=start to end step delta]|.
+%
+%\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+%The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
+%The part |step |\meta{delta} is optional (\meta{delta} = 1).
+%\end{key}
+%
+%\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+%Same as above, however the results are not truncated.
+%\end{key}
 
 %TODO: edges to and edges through
 %\pagebreak

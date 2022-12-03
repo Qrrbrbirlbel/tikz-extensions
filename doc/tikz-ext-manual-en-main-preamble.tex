@@ -133,7 +133,7 @@
   through,
   trees,
 }
-
+\usepackage{pgffor-ext}
 %% needs Lua!
 \usetikzlibrary{graphs,graphdrawing}
 \usegdlibrary{force}
@@ -306,6 +306,15 @@
   \index{Path operations!#1@\protect\texttt{#1}}%
 }
 
+\newcommand*{\indexPackage}[1]{%
+  \index{#1@\protect\texttt{#1} package}%
+  \index{Packages and files!#1@\protect\texttt{#1}}%
+}
+\newcommand*{\indexPackageO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} package\originalsuffix}%
+  \index{Packages and files!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+
 %% references to original
 \newcommand*{\indexLibraryO}[1]{%
   \index{#1@\originalprefix\protect\texttt{\original{#1}} library\originalsuffix}%
@@ -384,23 +393,37 @@
 \newcommand*{\referenceShapeandIndex}[1]{\texttt{#1}\indexShape{#1}}
 \newcommand*{\referenceShapeandIndexO}[1]{\texttt{#1}\indexShapeO{#1}}
 \newcommand*{\referenceLibraryandIndexO}[1]{\texttt{#1}\indexLibraryO{#1}}
-
+\newcommand*{\referenceLibraryandIndex}[1]{\texttt{#1}\indexLibrary{#1}}
+\newcommand*{\referencePackageandIndex}[1]{\texttt{#1}\indexPackage{#1}}
+\newcommand*{\referencePackageandIndexO}[1]{\texttt{#1}\indexPackageO{#1}}
+\newcommand*{\referencePackageandIndeXExt}[1]{\texttt{#1}\indexPackageExt{#1}}
 \colorlet{originalindex}{gray}
-\newcommand*{\original}[1]{\textcolor{originalindex}{#1}}
+\newcommand*{\original}[1]{\textcolor{originalindex}{#1}}%
 \newcommand*{\originalsuffix}{}%\textsuperscript{\textdagger}}%\normalsize
 \newcommand*{\originalprefix}{}%\footnotesize
 
-%\newcommand*{\original}[1]{\textcolor{originalindex}{#1}}
-%\newcommand*{\original}[1]{#1}%\textcolor{originalindex}{#1}}
-%\newcommand*{\originalsuffix}{}%\textsuperscript{\color{blue}\tikzname}}
-%\DeclareRobustCommand*{\originalprefix}{\smash{\footnotesize\llap{\textbullet\space}}}
+\newcommand*{\indexPackageExt}[1]{%
+  \begingroup
+%    \originalExternals
+    \index{#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}} package\originalsuffix}}%
+    \index{Packages and files!#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}}\originalsuffix}}%
+  \endgroup
+}
+\DeclareRobustCommand*{\originalExternals}[1]{%
+  \begingroup
+    \colorlet{originalindex}{blue!50!gray}%
+%    \renewcommand*{\original}[1]{\textcolor{originalindex}{##1}}%
+    #1%
+  \endgroup
+}
 
 \newcommand*{\filetype}[1]{\textsc{#1}}
 
 \makeatletter
 \def\index@prologue{\section*{Index}\addcontentsline{toc}{section}{Index}
   This index contains automatically generated entries as well as {\originalprefix\original{references}\originalsuffix} to
-  original functionalities of \pgfname/\tikzname.
+  original functionalities of \pgfname/\tikzname\space
+  and \originalExternals{\originalprefix\original{references}\originalsuffix} to functionalities outside of \pgfname/\tikzname.
   \bigskip
 }
 \makeatother
@@ -418,3 +441,32 @@
   \par\textbf{Q\,\&\,A:} \cite{#1} \& \cite{#2}\par
 }
 \newcommand*\inspirationQ[1]{\par\textbf{Q:} \cite{#1}}
+
+\newenvironment{texpackage}[1]{% no context
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{%
+      \pgfmanualpdflabel{#1}{}%
+      {\ttfamily\char`\\usepackage\char`\{\declare{#1}\char`\}\space\space \char`\%\space\space  \LaTeX}}
+    \index{#1@\protect\texttt{#1} package}%
+    \index{Packages and files!#1@\protect\texttt{#1}}%
+    \pgfmanualentryheadline{{\ttfamily\char`\\input \declare{#1}.tex\space\space\space \char`\%\space\space  plain \TeX}}
+%    \pgfmanualentryheadline{{\ttfamily\char`\\usemodule[\declare{#1}]\space\space \char`\%\space\space  Con\TeX t}}
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
+\newenvironment{latexpackage}[1]{
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{%
+      \pgfmanualpdflabel{#1}{}%
+      {\ttfamily\char`\\usepackage\char`\{\declare{#1}\char`\}\space\space \char`\%\space\space  \LaTeX}}
+    \index{#1@\protect\texttt{#1} package}%
+    \index{Packages and files!#1@\protect\texttt{#1}}%
+%    \pgfmanualentryheadline{{\ttfamily\char`\\input \declare{#1}.tex\space\space\space \char`\%\space\space  plain \TeX}}
+%    \pgfmanualentryheadline{{\ttfamily\char`\\usemodule[\declare{#1}]\space\space \char`\%\space\space  Con\TeX t}}
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
