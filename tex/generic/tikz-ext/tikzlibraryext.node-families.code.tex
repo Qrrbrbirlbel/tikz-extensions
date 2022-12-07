@@ -67,6 +67,19 @@
     }%
 }
 
+% #1 = family type
+% #2 = family
+\def\tikzext@nf@get#1#2{%
+  \pgfutil@IfUndefined{tikzext@nf@#1@\pgfkeysvalueof{/tikz/node family/prefix}#2@previous}
+                      {0pt}
+                      {\csname tikzext@nf@#1@\pgfkeysvalueof{/tikz/node family/prefix}#2@previous\endcsname}%
+}
+\def\tikzextnodefamiliesgetwidth{\tikzext@nf@get{width}}
+\def\tikzextnodefamiliesgetheight{\tikzext@nf@get{height}}
+\def\tikzextnodefamiliesgettextwidth{\tikzext@nf@get{text width}}
+\def\tikzextnodefamiliesgettextdepth{\tikzext@nf@get{text depth}}
+\def\tikzextnodefamiliesgettextheight{\tikzext@nf@get{text height}}
+
 \pgfdeclareshape{Rectangle}{%
   \savedanchor\northeast{%
     % Calculate x

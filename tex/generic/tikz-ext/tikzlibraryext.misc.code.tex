@@ -36,7 +36,7 @@
   \endgroup}
 
 \pgfutil@IfUndefined{tikzext@pgf@foreach@no@list@parse@to}{% stupid test
-  \input pgffor-ext.tex
+  \input pgffor-ext.code.tex
 }{}
 
 %% PGFmath
@@ -156,3 +156,51 @@
 }
 
 %%% Some shape
+
+\tikzset{% quick versions of reverse clips
+  reverse clip/.is choice,
+  reverse clip/clockwise/.code={%
+    \begingroup
+      \pgfsetcornersarced{\pgfpointorigin}%
+      \pgfpathqmoveto{16000pt}{16000pt}%
+      \pgfpathqlineto{16000pt}{-16000pt}%
+      \pgfpathqlineto{-16000pt}{-16000pt}%
+      \pgfpathqlineto{-16000pt}{16000pt}%
+      \pgfpathclose
+    \endgroup
+  },
+  reverse clip/counter clockwise/.code={%
+    \begingroup
+      \pgfsetcornersarced{\pgfpointorigin}%
+      \pgfpathqmoveto{16000pt}{16000pt}%
+      \pgfpathqlineto{-16000pt}{16000pt}%
+      \pgfpathqlineto{-16000pt}{-16000pt}%
+      \pgfpathqlineto{16000pt}{-16000pt}%
+      \pgfpathclose
+    \endgroup
+  },
+  reverse clip/.default=counter clockwise,
+  remember path/.code={%
+    \tikz@addmode{%
+      \expandafter\pgfsyssoftpath@getcurrentpath\csname tikz@intersect@path@name@remember path-#1\endcsname
+      \immediate\write\pgfutil@auxout{%
+        \noexpand\expandafter\gdef\noexpand\csname tikz@intersect@path@name@remember path-#1\endcsname{%
+          \expandafter\expandafter\expandafter\unexpanded
+          \expandafter\expandafter\expandafter{%
+            \csname tikz@intersect@path@name@remember path-#1\endcsname
+          }%
+        }%
+      }%
+    }%
+  },
+  remembered path/.code={%
+    \pgfutil@IfUndefined{tikz@intersect@path@name@remember path-#1}{}{%
+      \tikz@addmode{%
+        \expandafter\pgfsyssoftpath@setcurrentpath
+        \expandafter{%
+          \csname tikz@intersect@path@name@remember path-#1\endcsname
+        }%
+      }%
+    }%
+  },%
+}       
