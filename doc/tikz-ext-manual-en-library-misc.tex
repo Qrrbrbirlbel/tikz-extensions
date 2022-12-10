@@ -16,14 +16,14 @@
 
 \subsection{\pgfname math}
 
-\begin{multicols}{2}
+\begin{multicols}{2}\
 \pgfkeys{/codeexample/every codeexample/.append style={width=3cm}}
 \subsubsection{Postfix operator \texttt{R}}
 
 Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
 to use an arbitrary number of segments of a circle to be used instead of an angle.
 
-\begin{key}{/tikz/full arc=\meta{num} (default |\{\}|)}
+\begin{key}{/pgf/full arc=\meta{num} (default |\{\}|)}
   The number \meta{num} of segments will be set up.
   Using |full arc| with an empty value disables the segmentation and |1R| equals $1^\circ$.
   
@@ -289,4 +289,44 @@ not all of them are.
 \end{tikzpicture}
 \end{codeexample}
 
+\pagebreak
+\section{\tikzname}
+\begin{multicols}{2}
+\begin{key}{/tikz/reverse clip=\meta{direction} (default counter clockwise)}
+This key installs a very big rectangle which is either constructed
+|counter clockwise| (like the \referencePathOperationandIndexO{circle}
+path operation) or |clockwise|.
+\end{key}
+\begin{key}{/tikz/clip rule=\meta{direction} (default even odd)}
+This key switches directly\footnote{%
+  Meaning, it directly executes
+  \referenceCommandandIndexO{\pgfseteorule}/%
+  \referenceCommandandIndexO{\pgfsetnonzerorule}
+  and doesn't accumulates where \tikzname\space
+  throws an error.}
+to the specified rule which is
+either |even odd| or |nonzero|.
+This corresponds to the \referenceKeyandIndexO{even odd rule} and
+\referenceKeyandIndexO{nonzero rule} keys.
+\end{key}
+\end{multicols}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.misc},width=6cm]
+\newcommand*\myDiagram[1]{
+  \fill[left color=blue, right color=green] (0, 0) rectangle (2, 1);
+  \clip (1, .5) #1 [reverse clip];
+  \fill[left color=green, right color=blue] (0, 0) rectangle (2, 1);
+}
+\begin{tikzpicture}[radius=.4, row sep=5mm, column sep=5mm]
+\matrix[
+  row 2/.append style={clip rule=even odd},
+  column 1/.append style={reverse clip/.default=clockwise}
+]{
+  \myDiagram{circle[]} &
+  \myDiagram{+(0:.4) arc[start angle=0, delta angle=-360] -- cycle}
+\\
+  \myDiagram{circle[]} &
+  \myDiagram{+(0:.4) arc[start angle=0, delta angle=-360] -- cycle}
+\\};
+\end{tikzpicture}
+\end{codeexample}
 \endinput

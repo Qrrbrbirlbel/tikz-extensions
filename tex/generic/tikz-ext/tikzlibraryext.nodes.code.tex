@@ -1,0 +1,139 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\newcount\tikzext@nodesonpath
+\tikzset{
+  /tikz-ext/nodes/node on line/.style 2 args={
+    /tikz/to path={
+      \pgfextra{%
+        \edef\tikz@temp{% rescuing nodes and target for edge
+          edge[
+            line to,%   --
+            path only,% no draw, no fill, …
+            every edge quotes/.append style={auto=false},% node *on* the line
+            nodes={alias=tikzext-node on line}]
+          coordinate(tikzext-node on line)% fallback coordinate
+          \unexpanded\expandafter{\tikz@tonodes}(\tikztotarget)
+        }\expandafter
+      }\tikz@temp
+      -- (tikzext-node on line#1)
+         (tikzext-node on line#2)
+      -- (\tikztotarget)
+    }
+  },
+  /tikz-ext/nodes/@node on line/.style args={#1 and #2}{
+    /tikz-ext/nodes/node on line={.#1}{.#2}
+  },
+  node on line/.default=,
+  node on line/.code={%
+    \pgfutil@ifempty{#1}{%
+      \pgfkeys{/tikz-ext/nodes/node on line={}{}}%
+    }{%
+      \pgfutil@in@{ and }{#1}%
+      \ifpgfutil@in@
+        \pgfkeys{/tikz-ext/nodes/@node on line={#1}}%
+      \else
+        \pgfkeys{/tikz-ext/nodes/@node on line={#1 and #1}}%
+      \fi
+    }%
+  },
+  nodes on line/.style={
+    /tikz/to path={
+      \pgfextra{%
+        \tikzext@nodesonpath=0
+        \edef\tikz@temp{% rescuing nodes and target for edge
+          edge[
+            line to,%   --
+            path only,% no draw, no fill, …
+            every edge quotes/.append style={auto=false},% node *on* the line
+            nodes={
+              /utils/exec=\global\noexpand\advance\tikzext@nodesonpath by 1,
+              alias=tikzext-node on line-\noexpand\the\tikzext@nodesonpath
+            }]
+          \pgfutil@unexpanded\expandafter{\tikz@tonodes}(\tikztotarget)
+        }\expandafter
+      }\tikz@temp
+      \ifnum\tikzext@nodesonpath=0
+        -- (\tikztotarget)
+      \else
+        -- (tikzext-node on line-1)
+        \unless\ifnum\tikzext@nodesonpath=1
+          foreach[expand list] \tikzext@counter in {2, ..., \the\tikzext@nodesonpath} {
+               (tikzext-node on line-\pgfinteval{\tikzext@counter-1})
+            -- (tikzext-node on line-\tikzext@counter)
+          }
+        \fi
+        (tikzext-node on line-\the\tikzext@nodesonpath) -- (\tikztotarget)
+      \fi
+    }
+  },
+  %%% nodes on curve, needs spath3
+  /tikz-ext/spath/split multiple at intersections/.style n args={3}{
+    /utils/temp/.style={
+      /tikz/spath/split at intersections with={#1}{#2##1}
+    },
+    /utils/temp/.list={#3}
+  },
+  nodes on curve/.default=line to,
+  nodes on curve'/.default=line to,
+  nodes on curve/.style={% normal path
+    /tikz-ext/nodes/nodes on curve={#1}{/tikz/spath/append}{}
+  },
+  nodes on curve'/.style={% for edges and tos
+    /tikz-ext/nodes/nodes on curve={#1}{/tikz/spath/use}{%
+      \ifx\tikz@to@or@edge@function\tikz@do@to(\tikztotarget)\fi
+    }
+  },
+  % spath/prefix/tikzext-nodes/.style={
+  %   set prefix=tikzext-node on curve
+  % },
+  % spath/suffix/tikzext-nodes/.style={
+  %   set suffix=
+  % },
+  /tikz-ext/nodes/nodes on curve/.code n args={3}{%
+    \pgfutil@IfUndefined{tikz@library@spath3@loaded}{%
+      \pgfutil@packagerror{tikz-ext}{%
+        You need to say \string\usetikzlibrary{spath3} to use nodes on curve.}{}%
+    }{%
+      \tikzset{to path={%
+      % \def\tikz@to@path{% to path = 
+        \pgfextra{%
+          \tikzext@nodesonpath=0
+          \edef\tikz@temp{% rescuing nodes and target for edge
+            edge[%
+              #1, path only,% path only = no draw, no fill, …
+              every edge quotes/.append style={auto=false},% node *on* the line
+              nodes={
+                /utils/exec=\global\noexpand\advance\tikzext@nodesonpath by 1,
+                % spath/set name=tikzext-nodes,
+                spath/save global=tikzext-node on curve-\noexpand\the\tikzext@nodesonpath,
+              },
+              % spath/set name=tikzext-nodes,
+              spath/save global=tikzext-node on curve-curve
+            ]
+            \pgfutil@unexpanded\expandafter{\tikz@tonodes}(\tikztotarget)
+          }\expandafter
+        }\tikz@temp
+        [%
+          /tikz-ext/spath/split multiple at intersections/.expanded=%
+            {tikzext-node on curve-curve}%
+            {tikzext-node on curve-}%
+            {1\ifnum\tikzext@nodesonpath>1 ,...,\the\tikzext@nodesonpath\fi},
+          spath/remove components/.expanded={tikzext-node on curve-curve}{%
+            2%
+            \ifnum\tikzext@nodesonpath>1
+              ,4,...,\pgfinteval{2*\the\tikzext@nodesonpath}%
+            \fi
+          },
+          #2=tikzext-node on curve-curve%
+        ]%
+        #3%
+      }}%
+    }
+  }
+}

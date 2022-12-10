@@ -1,0 +1,80 @@
+% !TeX root = tikz-ext-manual.tex
+% !TeX spellcheck = en_US
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Nodes}
+\begin{tikzlibrary}{ext.nodes}
+\end{tikzlibrary}
+
+\begin{stylekey}{/tikz/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
+This installs a \referenceKeyandIndexO{to path} that places \emph{one}
+node along a straight line but connect the line with it.
+
+This allows a node to be placed \emph{on} a straight line without having to
+use |fill = white| or similar tricks to make the line disappear 
+beneath the node.
+
+The optional \meta{anchor specification} allows to specify the
+anchors to which the line should connect.
+It allows one or two anchors divided by | and | to be specified.
+\end{stylekey}
+
+\begin{stylekey}{/tikz/nodes on line}
+This is similar to the previous key but allows
+multiple nodes to be placed on a straight line
+\emph{if} they are in the correct order (from start to target),
+don't overlap with each other, the start or the target.
+
+It allows \emph{no} anchor specification.
+\end{stylekey}
+
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}, width=7cm]
+\tikz[inner sep=.15em, circle, nodes=draw, sloped]
+  \draw[ultra thick, ->, node on line] (0,0) to["0"] (1,1)
+                                             to["1"] (2,0)
+          to[nodes on line, "2.1" near start, "2.2", "2.3" near end] (5,1);
+\end{codeexample}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}, width=7cm]
+\tikz[inner sep=.15em, nodes=draw]
+  \draw[thick, ->, node on line=west and east] (0,0) to["0"] (1,1)
+                                                     to["1"] (2,0)
+                                                     to["2"] (4,1);
+\end{codeexample}
+
+The following keys need the \referenceLibraryandIndexO{intersections}
+and the \referenceLibraryandIndexExt{spath3} \cite{spath3}
+library to be loaded. They will not be automatically
+loaded by this library.
+
+\begin{stylekey}{/tikz/nodes on curve=\meta{to path} (default line to)}
+Similar to \referenceKeyandIndex{nodes on line}, this key allows
+to have nodes on arbitrary paths
+\end{stylekey}
+
+\begin{stylekey}{/tikz/nodes on curve'=\meta{to path} (default line to)}
+\end{stylekey}
+
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}, width=7cm]
+\begin{tikzpicture}[ultra thick]
+  \node (A) at (0, 0) {A} ;
+  \node (B) at (3, 0) {B} ;
+  \draw [red, ->, nodes on curve'=bend left]
+    (A) to node[blue,draw]{label} (B)
+        to ["X" {sloped, near start},
+            "Z" {sloped, near end},
+            "Y"] (A);
+\end{tikzpicture}
+\end{codeexample}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}, width=7cm]
+\tikz[inner sep=.15em, circle, nodes={draw, green}, sloped, ultra thick]
+  \draw[->, nodes on curve=bend left] (0,0) to["0"] (1,1)
+                                            to["1"] (2,0)
+              to["2" near start, "3", "4" near end] (4,1)
+                                            -- ++(down:1);
+\end{codeexample}

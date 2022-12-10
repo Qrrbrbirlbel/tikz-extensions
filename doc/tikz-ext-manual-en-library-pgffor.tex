@@ -9,7 +9,7 @@
 %
 \section{Repeating Things and Other Things}
 \label{pkg:pgffor-ext}
-\begin{latexpackage}{pgffor-ext}
+\begin{texpackage}{pgffor-ext}
   This package adds small niceties to the \referencePackageandIndexO{pgffor} package.
   Most of these additions are also available
   with the \referenceLibraryandIndex{ext.misc} library.
@@ -18,7 +18,7 @@
   At the very least, it will break the |...| notation and possibly gobbles spaces after the body.
   
   \inspiration{ForeachUse-Q, ForeachNoSep-Q, ForeachXparse-Q}{ForeachUse-A, ForeachNoSep-A, ForeachXparse-A}
-\end{latexpackage}
+\end{texpackage}
 
 Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
 |\foreach \var[use int=start to end step delta]|.
@@ -64,8 +64,9 @@ This key simply disables all other special parsers and returns to the original l
 \end{key}
 
 The following keys only work with \LaTeX\ and cannot be used when only the \indexLibrary{ext.misc}
-library is loaded. For this, the package |pgffor-ext| needs to be used.
-\begin{key}{/pgf/xparser=\marg{argument specification}\marg{foreach value}}
+library or the plain\TeX\space |pgffor-ext.tex| are loaded.
+For this, you will need to use |\usepackage{pgffor-ext}|.
+\begin{key}{/pgf/foreach/xparser=\marg{argument specification}\marg{foreach value}}
 This key can be used to specify a \referencePackageandIndeXExt{xparse}
 specification for each element in the list.
 

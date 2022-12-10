@@ -179,6 +179,9 @@
       \pgfpathclose
     \endgroup
   },
+  clip rule/.is choice,
+  clip rule/even odd/.code=\pgfseteorule,
+  clip rule/nonzero/.code=\pgfsetnonzerorule,
   reverse clip/.default=counter clockwise,
   remember path/.code={%
     \tikz@addmode{%

@@ -1,4 +1,4 @@
-% !TeX spellcheck = en_US
+% !TeX spellcheck = <none>
 % !TeX root = tikz-ext-manual.tex
 % Copyright 2022 by Qrrbrbirlbel
 %
@@ -110,6 +110,7 @@
   ext.misc,
   ext.node-families,
   ext.node-families.shapes.geometric,
+  ext.nodes,
   ext.paths.arcto,
   ext.paths.ortho,
   ext.paths.timer,
@@ -128,8 +129,10 @@
   calc,
   cd,
   fit,
+  intersections,
   matrix,
   shapes.geometric,
+  spath3,
   through,
   trees,
 }
@@ -383,6 +386,10 @@
   \index{Path operations!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
 }
 
+\newcommand*{\indexCommand}[1]{%
+  \removeats{#1}%
+  \index{\strippedat @\protect\texttt{\protect\string\protect#1}}%
+}
 \newcommand*{\indexCommandO}[1]{%
   \removeats{#1}%
   \index{\strippedat @\originalprefix\protect\texttt{\original{\protect\string\protect#1}}\originalsuffix}%
@@ -393,10 +400,15 @@
 \newcommand*{\referenceShapeandIndex}[1]{\texttt{#1}\indexShape{#1}}
 \newcommand*{\referenceShapeandIndexO}[1]{\texttt{#1}\indexShapeO{#1}}
 \newcommand*{\referenceLibraryandIndexO}[1]{\texttt{#1}\indexLibraryO{#1}}
+\newcommand*{\referenceLibraryandIndexExt}[1]{\texttt{#1}\indexLibraryExt{#1}}
 \newcommand*{\referenceLibraryandIndex}[1]{\texttt{#1}\indexLibrary{#1}}
 \newcommand*{\referencePackageandIndex}[1]{\texttt{#1}\indexPackage{#1}}
 \newcommand*{\referencePackageandIndexO}[1]{\texttt{#1}\indexPackageO{#1}}
 \newcommand*{\referencePackageandIndeXExt}[1]{\texttt{#1}\indexPackageExt{#1}}
+\newcommand*{\referencePathOperationandIndex}[1]{\texttt{#1}\indexPathOperation{#1}}
+\newcommand*{\referencePathOperationandIndexO}[1]{\texttt{#1}\indexPathOperationO{#1}}
+\newcommand*{\referenceCommandandIndex}[1]{\texttt{\string#1}\indexCommand{#1}}
+\newcommand*{\referenceCommandandIndexO}[1]{\texttt{\string#1}\indexCommandO{#1}}
 \colorlet{originalindex}{gray}
 \newcommand*{\original}[1]{\textcolor{originalindex}{#1}}%
 \newcommand*{\originalsuffix}{}%\textsuperscript{\textdagger}}%\normalsize
@@ -408,6 +420,10 @@
     \index{#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}} package\originalsuffix}}%
     \index{Packages and files!#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}}\originalsuffix}}%
   \endgroup
+}
+\newcommand*{\indexLibraryExt}[1]{%
+  \index{#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}} library\originalsuffix}}%
+  \index{Libraries!#1@\originalExternals{\originalprefix\protect\texttt{\original{#1}}\originalsuffix}}%
 }
 \DeclareRobustCommand*{\originalExternals}[1]{%
   \begingroup
