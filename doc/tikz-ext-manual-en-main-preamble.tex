@@ -395,6 +395,11 @@
   \index{\strippedat @\originalprefix\protect\texttt{\original{\protect\string\protect#1}}\originalsuffix}%
 }
 
+\newcommand*{\indexDecorationO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} decoration\originalsuffix}%
+  \index{Decorations!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\referenceDecorationandIndexO}[1]{\texttt{#1}\indexDecorationO{#1}}
 \newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}
 \newcommand*{\referenceKeyandIndex}[2][/tikz/]{\texttt{#1#2}\indexKey[#1]{#2}}
 \newcommand*{\referenceShapeandIndex}[1]{\texttt{#1}\indexShape{#1}}

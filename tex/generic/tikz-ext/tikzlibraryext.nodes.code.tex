@@ -8,6 +8,7 @@
 
 \newcount\tikzext@nodesonpath
 \tikzset{
+  pic/.is if=tikz@node@is@pic,
   /tikz-ext/nodes/node on line/.style 2 args={
     /tikz/to path={
       \pgfextra{%

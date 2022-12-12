@@ -10,7 +10,42 @@
 
 \section{Nodes}
 \begin{tikzlibrary}{ext.nodes}
+This library extends \tikzname's functionalities when it comes to nodes.
+\inspiration{NodesOnLine-Q, NodesOnCurve-Q}{NodesOnLine-A, NodesOnCurve-A}
 \end{tikzlibrary}
+
+\begin{multicols}{2}
+
+\subsection{Pic as a node}
+\begin{key}{/tikz/pic=\opt{\meta{boolean}} (default true, initially false)}
+This key allows one to use a pic where usually only nodes are accepted,
+for example as a label.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.misc}]
+\begin{tikzpicture}[
+  slsl/.pic={\draw (-2pt, 1.5pt) -- (2pt, .5pt)
+                   (2pt, -1.5pt) -- (-2pt, -.5pt);}]
+\node[draw, minimum width=3cm, minimum height=1cm,
+     label={[pic           ]  east:slsl},
+     label={[pic, rotate=90] north:slsl},
+     label={[pic            ] west:slsl},
+     label={[pic, rotate=-90]south:slsl}]{};
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\subsection{Nodes on paths}
+When nodes are placed along paths they don't interrupt
+the path at that place.
+The decoration \referenceLibraryandIndexO{markings}
+and its \referenceKeyandIndexO[/pgf/decoration/]{mark connection node}
+key can help but only works for straight paths and
+doesn't play nicely with arrow tips.
+
+This library provides alternatives.
+These are separated into straight paths, i.\,e. \referencePathOperationandIndexO{--},
+and everything else (including any |to path|).
+
+\subsubsection{Nodes on Lines}
 
 \begin{stylekey}{/tikz/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
 This installs a \referenceKeyandIndexO{to path} that places \emph{one}
@@ -34,33 +69,43 @@ don't overlap with each other, the start or the target.
 It allows \emph{no} anchor specification.
 \end{stylekey}
 
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}, width=7cm]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}]
 \tikz[inner sep=.15em, circle, nodes=draw, sloped]
   \draw[ultra thick, ->, node on line] (0,0) to["0"] (1,1)
                                              to["1"] (2,0)
-          to[nodes on line, "2.1" near start, "2.2", "2.3" near end] (5,1);
+    to[nodes on line, "2.1" near start, "2.2", "2.3" near end] (5,1);
 \end{codeexample}
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}, width=7cm]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}]
 \tikz[inner sep=.15em, nodes=draw]
-  \draw[thick, ->, node on line=west and east] (0,0) to["0"] (1,1)
-                                                     to["1"] (2,0)
-                                                     to["2"] (4,1);
+  \draw[thick, ->, node on line=west and east]
+     (0,0) to["0"] (1,1)
+           to["1"] (2,0)
+           to["2"] (4,1);
 \end{codeexample}
 
+\subsubsection{Nodes on Curves}
 The following keys need the \referenceLibraryandIndexO{intersections}
 and the \referenceLibraryandIndexExt{spath3} \cite{spath3}
 library to be loaded. They will not be automatically
 loaded by this library.
 
+Any \referenceKeyandIndexO[/pgf/]{outer sep} will be ignored.
+
+If you can, use \texttt{fill=\meta{bg color}}
+instead of these keys, it will be much faster and easier.
+
 \begin{stylekey}{/tikz/nodes on curve=\meta{to path} (default line to)}
 Similar to \referenceKeyandIndex{nodes on line}, this key allows
-to have nodes on arbitrary paths
+to have nodes on arbitrary paths.
+
+This is not suitable for paths connecting nodes.
 \end{stylekey}
 
 \begin{stylekey}{/tikz/nodes on curve'=\meta{to path} (default line to)}
+As above but suitable for connecting nodes.
 \end{stylekey}
 
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}, width=7cm]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}]
 \begin{tikzpicture}[ultra thick]
   \node (A) at (0, 0) {A} ;
   \node (B) at (3, 0) {B} ;
@@ -71,10 +116,11 @@ to have nodes on arbitrary paths
             "Y"] (A);
 \end{tikzpicture}
 \end{codeexample}
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}, width=7cm]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}]
 \tikz[inner sep=.15em, circle, nodes={draw, green}, sloped, ultra thick]
   \draw[->, nodes on curve=bend left] (0,0) to["0"] (1,1)
                                             to["1"] (2,0)
               to["2" near start, "3", "4" near end] (4,1)
                                             -- ++(down:1);
 \end{codeexample}
+\end{multicols}

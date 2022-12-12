@@ -13,6 +13,7 @@ Name: Qrrbrbirlbel
 This is not a LaTeX package but a collection of libraries for PGF and TikZ;
 
  * `ext.calendar-plus` extends the `calendar` library with more tests, week numbers and a few goodies.
+ * `ext.nodes` extends the functionalities around nodes.
  * `ext.node-families` uses the AUX file to sync the sizes of nodes.
     * `ext.node-families.shapes.geometric`
  * `ext.paths.arcto` uses `\pgfpatharcto` to construct an arc *to* a point.
