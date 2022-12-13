@@ -1,0 +1,212 @@
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\pgfdeclarelayer{discard}
+
+\def\tikzext@layers@swapfirstsetbox#1\setbox#2\tikzext@stop{%
+  #1\tikzext@layers@setbox@which#2%
+}
+\let\tikzext@layers@setbox@which\setbox
+
+\def\tikzshowdiscardlayeranyway{\box\pgf@layerbox@discard}
+\tikzset{
+  discard layer/.code=\expandafter\let\csname pgf@layerbox@#1\endcsname\pgfutil@voidb@x,
+  discard layer global/.code=\expandafter\global\expandafter\let\csname pgf@layerbox@#1\endcsname\pgfutil@voidb@x,
+}
+\pgfqkeys{/tikz-ext/layers}{
+  in box/.code=\def\tikz@whichbox{#1}\def\tikzext@layers@setbox@which{\global\setbox},
+  on layer/.style={/tikz-ext/layers/in box/.expand once=\csname pgf@layerbox@#1\endcsname},
+  discard/.style={/tikz-ext/layers/on layer=discard},
+  @common patch/.style={
+    behind path/.append code=\let\tikzext@layers@setbox@which\setbox,
+    in front of path/.append code=\let\tikzext@layers@setbox@which\setbox,
+    /tikz-ext/layers/@common patch/.code=%
+  },
+  patch/.is choice,
+  patch/all/.style={
+    /tikz-ext/layers/@common patch,
+    /tikz-ext/layers/path/node,
+    /tikz-ext/layers/path/matrix,
+    /tikz-ext/layers/path/pic,
+    /tikz-ext/layers/path/edge,
+  },
+  patch/node/.code={%
+    \expandafter\expandafter\expandafter\def
+    \expandafter\expandafter\expandafter\tikz@fig@continue
+    \expandafter\expandafter\expandafter{\expandafter\tikzext@layers@swapfirstsetbox\tikz@fig@continue\tikzext@stop}%
+    \pgfkeys{
+      /tikz-ext/layers/@common patch,
+      /tikz-ext/layers/patch/node/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+      /tikz/discard node/.style={/tikz-ext/layers/discard},
+      /tikz/node on layer/.style={/tikz-ext/layers/on layer={##1}},
+      /tikz/node in box/.style={/tikz-ext/layers/in box={##1}},
+    }%
+  },
+  patch/matrix/.code={%
+    \expandafter\expandafter\expandafter\def
+    \expandafter\expandafter\expandafter\tikz@fig@continue
+    \expandafter\expandafter\expandafter{\expandafter\tikzext@layers@swapfirstsetbox\tikz@do@matrix\tikzext@stop}%
+    \pgfkeys{
+      /tikz-ext/layers/@common patch,
+      /tikz-ext/layers/patch/matrix/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+      /tikz/discard matrix/.style={/tikz-ext/layers/discard},
+      /tikz/matrix on layer/.style={/tikz-ext/layers/on layer={##1}},
+      /tikz/matrix in box/.style={/tikz-ext/layers/in box={##1}},
+    }%
+  },
+  patch/edge/.style={%
+    /utils/exec=\let\tikz@do@edge\tikzext@layers@tikz@do@edge,
+    /tikz-ext/layers/@common patch,
+    /tikz-ext/layers/patch/edge/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+    /tikz/discard edge/.style={/tikz-ext/layers/discard},
+    /tikz/edge on layer/.style={/tikz-ext/layers/on layer={##1}},
+    /tikz/edge in box/.style={/tikz-ext/layers/in box={##1}},
+  },
+  patch/pic/.code=%
+    \let\tikz@subpicture@handle@\tikzext@layers@tikz@subpicture@handle@
+    \pgfkeys{
+      /tikz-ext/layers/@common patch,
+      /tikz-ext/layers/patch/pic/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+      /tikz/discard pic/.style={/tikz-ext/layers/discard},
+      /tikz/pic on layer/.style={/tikz-ext/layers/on layer={##1}},
+      /tikz/pic in box/.style={/tikz-ext/layers/in box={##1}},
+    }%
+}
+\def\tikzext@layers@tikz@do@edge{%
+  \ifx\tikz@edge@macro\pgfutil@empty%
+    \tikzext@layers@setbox@which\tikz@whichbox=\hbox\bgroup%
+      \unhbox\tikz@whichbox%
+      \hbox\bgroup
+        \bgroup%
+          \pgfinterruptpath%
+            \pgfscope%
+              \let\tikz@transform=\pgfutil@empty%
+              \let\tikz@options=\pgfutil@empty%
+              \tikz@clear@rdf@options%
+              \let\tikz@tonodes=\tikz@collected@onpath%
+              \def\tikztonodes{{\pgfextra{\tikz@node@is@a@labeltrue}\tikz@tonodes}}%
+              \let\tikz@collected@onpath=\pgfutil@empty%
+              \tikz@options%
+              \tikz@do@rdf@pre@options%
+              \pgfidscope%
+              \tikz@do@rdf@post@options%
+              \tikz@transform%
+              \let\tikz@transform=\relax%
+              % Typeset node:
+              \let\tikz@after@path\pgfutil@empty%
+              \tikz@atbegin@to%
+                \tikz@enable@edge@quotes%
+                \path[style=every edge]\expandafter[\tikz@@to@local@options](\tikztostart)\tikz@to@path
+                \pgfextra{\global\let\tikz@after@path@smuggle=\tikz@after@path};%
+              \tikz@atend@to%
+              \endpgfidscope%
+            \endpgfscope%
+          \endpgfinterruptpath%
+        \egroup
+      \egroup%
+    \egroup%
+    \ifx\tikzext@layers@setbox@which\setbox
+      \global\setbox\tikz@tempbox=\box\tikz@whichbox%
+      \expandafter\endgroup%
+      \expandafter\setbox\tikz@whichbox=\box\tikz@tempbox%
+    \else
+      \endgroup
+    \fi
+  \else%
+      \expandafter\expandafter\expandafter\tikz@edge@macro%
+      \expandafter\expandafter\expandafter{\expandafter\tikz@@to@local@options\expandafter}\expandafter{\tikz@collected@onpath}%
+    \endgroup%
+    \let\tikz@after@path@smuggle=\pgfutil@empty%
+  \fi%
+  \expandafter\tikz@scan@next@command\tikz@after@path@smuggle%
+}%
+\def\tikzext@layers@tikz@subpicture@handle@#1{
+  \pgfkeys{/tikz/pics/.cd,#1}%
+  \tikz@node@transformations%
+  \let\tikz@transform=\relax%
+  \let\tikz@picmode\tikz@mode%
+  \tikzset{name prefix ../.style/.expanded={/tikz/name prefix=\pgfkeysvalueof{/tikz/name prefix}}}%
+  \ifx\tikz@fig@name\pgfutil@empty\else%
+    \tikzset{name prefix/.expanded=\tikz@fig@name}%
+  \fi%
+  \pgfkeysvalueof{/tikz/pics/setup code}%
+  \pgfkeysgetvalue{/tikz/pics/code}{\tikz@pic@code}
+  \ifx\tikz@pic@code\pgfutil@empty\else%
+  \tikzext@layers@setbox@which\tikz@whichbox=\hbox\bgroup%
+    \unhbox\tikz@whichbox%
+      \hbox\bgroup
+        \bgroup%
+          \pgfinterruptpath%
+            \pgfscope%
+              \tikz@options%
+              \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+              \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+              \tikz@atbegin@scope%
+              \scope[every pic/.try]%
+                \tikz@pic@code%
+              \endscope%
+              \tikz@atend@scope%
+            \endpgfscope%
+          \endpgfinterruptpath%
+        \egroup
+      \egroup%
+    \egroup%
+  \fi%
+  \pgfkeysgetvalue{/tikz/pics/foreground code}{\tikz@pic@code}
+  \ifx\tikz@pic@code\pgfutil@empty\else%
+  \unless\ifx\tikzext@layers@setbox@which\setbox
+    \pgfutil@packagewarning{tikz-ext}{Only the main pic code can be placed on selective layers.}
+  \fi
+  \setbox\tikz@figbox=\hbox\bgroup%
+    \unhbox\tikz@figbox%
+      \hbox\bgroup
+        \bgroup%
+          \pgfinterruptpath%
+            \pgfscope%
+              \tikz@options%
+              \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+              \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+              \tikz@atbegin@scope%
+              \scope[every front pic/.try]%
+                \tikz@pic@code%
+              \endscope%
+              \tikz@atend@scope%
+            \endpgfscope%
+          \endpgfinterruptpath%
+        \egroup
+      \egroup%
+    \egroup%
+  \fi%
+  \pgfkeysgetvalue{/tikz/pics/background code}{\tikz@pic@code}
+  \ifx\tikz@pic@code\pgfutil@empty\else%
+  \unless\ifx\tikzext@layers@setbox@which\setbox
+    \pgfutil@packagewarning{tikz-ext}{Only the main pic code can be placed on selective layers.}
+  \fi
+  \setbox\tikz@figbox@bg=\hbox\bgroup%
+    \unhbox\tikz@figbox@bg%
+      \hbox\bgroup
+        \bgroup%
+          \pgfinterruptpath%
+            \pgfscope%
+              \tikz@options%
+              \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+              \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+              \tikz@atbegin@scope%
+              \scope[every behind pic/.try]%
+                \tikz@pic@code%
+              \endscope%
+              \tikz@atend@scope%
+            \endpgfscope%
+          \endpgfinterruptpath%
+        \egroup
+      \egroup%
+    \egroup%
+  \fi%
+  \tikz@node@finish%
+}%
+\endinput
