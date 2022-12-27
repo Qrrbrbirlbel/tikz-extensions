@@ -80,8 +80,7 @@
     /tikz-ext/layers/@common patch,
     /tikz-ext/layers/patch/edge/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
     /tikz/discard edge/.style={/tikz-ext/layers/discard},
-    /tikz/edge on layer/.style={% need to reset the box and \setbox for everything on a edge
-      % /tikz/every edge/.append style={/tikz/in front of path},
+    /tikz/edge on layer/.style={
       /tikz-ext/layers/on layer={##1}
     },
     /tikz/edge in box/.style={/tikz-ext/layers/in box={##1}},
@@ -157,7 +156,7 @@
   \fi%
   \pgfkeysvalueof{/tikz/pics/setup code}%
   \pgfkeysgetvalue{/tikz/pics/code}{\tikz@pic@code}
-  \ifx\tikz@pic@code\pgfutil@empty\else%
+  \ifx\tikz@pic@code\pgfutil@empty\else% Qrr: next line
   \tikzext@layers@setbox@which\tikz@whichbox=\hbox\bgroup%
     \unhbox\tikz@whichbox%
       \hbox\bgroup
@@ -165,6 +164,9 @@
           \pgfinterruptpath%
             \pgfscope%
               \tikz@options%
+              % Qrr: in case patched node/matrix/edge/pic is used inside the pic
+              \let\tikzext@layers@setbox@which\setbox
+              \def\tikz@whichbox{\tikz@figbox}%
               \setbox\tikz@figbox=\box\pgfutil@voidb@x%
               \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
               \tikz@atbegin@scope%

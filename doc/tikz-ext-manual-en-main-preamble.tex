@@ -399,6 +399,16 @@
   \index{#1@\originalprefix\protect\texttt{\original{#1}} decoration\originalsuffix}%
   \index{Decorations!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
 }
+
+\newcommand*{\indexEnvironment}[1]{%
+  \index{#1@\protect\texttt{#1} environment}%
+  \index{Environments!#1@\protect\texttt{#1}}%
+}
+\newcommand*{\indexEnvironmentO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} environment\originalsuffix}%
+  \index{Environments!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\referenceEnvironmentandIndexO}[1]{\texttt{#1}\indexEnvironmentO{#1}}
 \newcommand*{\referenceDecorationandIndexO}[1]{\texttt{#1}\indexDecorationO{#1}}
 \newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}
 \newcommand*{\referenceKeyandIndex}[2][/tikz/]{\texttt{#1#2}\indexKey[#1]{#2}}

@@ -1,0 +1,68 @@
+% !TeX root = tikz-ext-manual.tex
+% !TeX spellcheck = en_US
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Nodes}
+\begin{tikzlibrary}{ext.layers}
+This library extends \tikzname's functionalities to put nodes, edges, matrices and pics
+on a separate layer without having to use the \referenceEnvironmentandIndexO{pgfonlayer} environment.
+
+\textbf{Consider this library experimental.}
+If you can, avoid it and use the |pgfonlayer| environment
+or change the drawing order.
+\end{tikzlibrary}
+
+\begin{multicols}{2}
+\subsection{Internal keys}
+\begin{key}{/tikz-ext/patch=\meta{specification}}
+Since this library is experimental, its functionality needs to be activated explicitly.
+The \meta{specification} is one of
+\begin{itemize}
+\item |node|,
+\item |matrix|,
+\item |pic|%
+  \footnote{Only the normal \referenceKeyandIndexO[/tikz/pics/]{code}
+            can be placed on different layers.
+            Both \referenceKeyandIndexO[/tikz/pics/]{background code}
+            and \referenceKeyandIndexO[/tikz/pics/]{foreground code}
+            will not be affected.},
+\item |edge| or
+\item |all| which applies all the patches at once.
+\end{itemize}
+\end{key}
+
+These keys only work when a patch is applied but don't need to be used
+since the patching activated specific
+\begin{key}{/tikz-ext/layers/in box=\meta{box}}
+\end{key}
+
+\begin{key}{/tikz-ext/layers/on layer=\meta{layer}}
+\end{key}
+
+\subsection{User-level keys}
+\begin{key}{/tikz/node on layer=\meta{layer}}
+\end{key}
+\begin{key}{/tikz/node in box=\meta{box}}
+\end{key}
+
+\begin{key}{/tikz/matrix on layer=\meta{layer}}
+\end{key}
+\begin{key}{/tikz/matrix in box=\meta{box}}
+\end{key}
+
+\begin{key}{/tikz/edge on layer=\meta{layer}}
+\end{key}
+\begin{key}{/tikz/edge in box=\meta{box}}
+\end{key}
+
+\begin{key}{/tikz/pic on layer=\meta{layer}}
+\end{key}
+\begin{key}{/tikz/pic in box=\meta{box}}
+\end{key}
+\end{multicols}

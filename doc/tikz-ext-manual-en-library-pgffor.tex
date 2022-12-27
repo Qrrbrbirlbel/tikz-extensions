@@ -63,7 +63,7 @@ Spaces will be ignored.
 This key simply disables all other special parsers and returns to the original list parser.
 \end{key}
 
-The following keys only work with \LaTeX\ and cannot be used when only the \indexLibrary{ext.misc}
+The following keys only work with \LaTeX\ and cannot be used when only the \referenceLibraryandIndex{ext.misc}
 library or the plain\TeX\space |pgffor-ext.tex| are loaded.
 For this, you will need to use |\usepackage{pgffor-ext}|.
 \begin{key}{/pgf/foreach/xparser=\marg{argument specification}\marg{foreach value}}
@@ -74,13 +74,20 @@ For this to work somewhat seamless, the following needs to observed:
 \begin{itemize}
   \item Every \marg{argument specification} get appended |u,|.
         This means there's always one additional mandatory argument at the end of every element.
-  \item The \marg{foreach value} needs to be set so
-        that the \referenceKeyandIndexO[/pgf/foreach/]{var}
-        value is set accordingly.
+  \item The \marg{foreach value} needs to correspond to the
+        \referenceKeyandIndexO[/pgf/foreach/]{var}
+        value.
 \end{itemize}
 \end{key}
 
 \begin{key}{/pgf/foreach/xparser Om}
-Sets up a list that may contains an optional argment inside |[]| which correspond to
+Sets up a list whose elements may contain an optional argment inside |[]| which correspond to
 two |\foreach| variables, say |\Options/\Text|.
 \end{key}
+
+\begin{handler}{{.list xparse}|=|\marg{argument specification}\marg{comma-separated list of values}}
+  This handler causes the key to be used repeatedly, namely
+  once for every element of the list of values.
+  The \meta{comma-separated list of values} is processed using |\foreach|
+  and the given |xparse| \meta{argument specification} with the aforementioned |xparser| key.
+\end{handler}
