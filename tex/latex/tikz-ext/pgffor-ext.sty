@@ -30,7 +30,15 @@
       xparser={ O{} }{{##1}/{##2}}
   },
 }
-% \pgfqkeys{/handlers}{
-
-% }
+\pgfqkeys{/handlers}{
+  .list xparse/.code n args={3}{%
+    \def\pgf@keys@temp{}%
+    \foreach[xparser={#1}{#2}]\pgf@keys@key in{#3}{%
+      \expandafter\pgfutil@g@addto@macro\expandafter\pgf@keys@temp\expandafter{\expandafter{\pgf@keys@key}}}%
+    \edef\pgf@keys@list@path{\pgfkeyscurrentpath}%
+    \expandafter\expandafter\expandafter\pgf@keys@do@list%
+      \expandafter\expandafter\expandafter{%
+      \expandafter\pgf@keys@list@path\expandafter}%
+      \pgf@keys@temp\pgf@stop}%
+}
 \endinput
