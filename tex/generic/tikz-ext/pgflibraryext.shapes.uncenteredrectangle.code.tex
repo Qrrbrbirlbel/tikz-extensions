@@ -276,27 +276,54 @@
     \pgf@sh@reanchor{uncentered rectangle}{center}%
     \pgf@xc=\pgf@x
     \pgf@yc=\pgf@y
+    \pgfkeysgetvalue{/pgf/uncentered rectangle center yshift}\pgf@temp
+    \pgfutil@ifxempty\pgf@temp{%
+      \pgfutil@tempdima=\pgf@yc
+    }{%
+      \pgfmathsetlength\pgfutil@tempdima{\pgf@temp}%
+    }%
     \ifdim\pgf@xa<0pt
       % left side
       \southwest
-      \advance\pgf@x by -\pgf@xc
-      \advance\pgf@y by -\pgf@yc
-      \pgf@x=-\pgf@x
-      \pgf@y=-\pgf@y
+      \pgf@xb=\pgf@x
+      \pgf@yb=\pgf@y
+      \advance\pgf@xb by -\pgf@xc
+      \ifdim\pgf@ya<0pt
+        % south west side
+        \advance\pgf@yb by -\pgf@yc
+        \pgf@yb=-\pgf@yb
+      \else
+        % north west side
+        \northeast
+        \pgf@yb=\pgf@y
+        \advance\pgf@yb by -\pgf@yc
+      \fi
+      \pgf@xb=-\pgf@xb
       \edef\pgf@marshal{%
         \noexpand\pgfpointborderrectangle
           {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
-          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+          {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       }%
     \else
       % right side
       \northeast
-      \advance\pgf@x by -\pgf@xc
-      \advance\pgf@y by -\pgf@yc
+      \pgf@xb=\pgf@x
+      \pgf@yb=\pgf@y
+      \advance\pgf@xb by -\pgf@xc
+      \ifdim\pgf@ya>0pt
+        % north east side
+        \advance\pgf@yb by -\pgf@yc
+      \else
+        % south east side
+        \southwest
+        \pgf@yb=\pgf@y
+        \advance\pgf@yb by -\pgf@yc
+        \pgf@yb=-\pgf@yb
+      \fi
       \edef\pgf@marshal{%
         \noexpand\pgfpointborderrectangle
           {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
-          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+          {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       }%
     \fi
     \pgf@process{\pgf@marshal}%

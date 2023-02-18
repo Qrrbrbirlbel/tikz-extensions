@@ -1,0 +1,42 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\usepgflibrary{ext.shapes.uncenteredrectangle}
+\newif\iftikzext@uncrec@mathmode
+\pgfqkeys{/tikz-ext}{
+  tikz-cd fix/.code={% #1
+    \tikzcdset{
+      urc/.style={/pgf/uncentered rectangle center={##1}},
+      every diagram/.append style={% ##1
+        /tikz/uncentered rectangle/.style={
+          /tikz/shape=uncentered rectangle,
+          /pgf/uncentered rectangle center yshift=axis_height,
+          /tikz/commutative diagrams/math mode=false,
+        },
+        /tikz/matrix of math nodes/.style={
+          /tikz/matrix of nodes,
+          /tikz/nodes={
+            execute at begin node=\iftikzcd@mathmode$\fi,
+            execute at end node=\iftikzcd@mathmode$\fi
+          }
+        },
+        /utils/exec=%
+          \def\uncrec####1####2####3{%
+            \iftikzext@uncrec@mathmode$\fi####2\iftikzext@cd@mathmode$\fi
+            \nodepart{left}\iftikzext@uncrec@mathmode$\fi####1\iftikzext@cd@mathmode$\fi
+            \nodepart{right}\iftikzext@uncrec@mathmode$\fi####3\iftikzext@cd@mathmode$\fi
+          },
+        /tikz/uncrec math mode/.is if=tikzext@uncrec@mathmode,
+        /tikz/uncrec math mode=true,
+        /tikz/uncrec/.style={% ####1
+          /tikz/uncentered rectangle,
+          /pgf/uncentered rectangle center={####1}
+        }%
+      }
+    }
+  }
+}
