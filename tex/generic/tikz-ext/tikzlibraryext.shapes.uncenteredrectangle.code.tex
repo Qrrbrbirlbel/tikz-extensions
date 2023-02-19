@@ -10,11 +10,12 @@
 \pgfqkeys{/tikz-ext}{
   tikz-cd fix/.code={% #1
     \tikzcdset{
+    /tikz-ext/tikz-cd fix/.code=,
       urc/.style={/pgf/uncentered rectangle center={##1}},
       every diagram/.append style={% ##1
+        /pgf/uncentered rectangle center yshift=axis_height,
         /tikz/uncentered rectangle/.style={
           /tikz/shape=uncentered rectangle,
-          /pgf/uncentered rectangle center yshift=axis_height,
           /tikz/commutative diagrams/math mode=false,
         },
         /tikz/matrix of math nodes/.style={
@@ -26,16 +27,19 @@
         },
         /utils/exec=%
           \def\uncrec####1####2####3{%
-            \iftikzext@uncrec@mathmode$\fi####2\iftikzext@cd@mathmode$\fi
-            \nodepart{left}\iftikzext@uncrec@mathmode$\fi####1\iftikzext@cd@mathmode$\fi
-            \nodepart{right}\iftikzext@uncrec@mathmode$\fi####3\iftikzext@cd@mathmode$\fi
+            \iftikzext@uncrec@mathmode$\fi####2\iftikzext@uncrec@mathmode$\fi
+            \nodepart{left}\iftikzext@uncrec@mathmode$\fi####1\iftikzext@uncrec@mathmode$\fi
+            \nodepart{right}\iftikzext@uncrec@mathmode$\fi####3\iftikzext@uncrec@mathmode$\fi
           },
         /tikz/uncrec math mode/.is if=tikzext@uncrec@mathmode,
         /tikz/uncrec math mode=true,
         /tikz/uncrec/.style={% ####1
           /tikz/uncentered rectangle,
           /pgf/uncentered rectangle center={####1}
-        }%
+        },
+        install uncentered rectangle in column/.style={
+          /tikz/column ####1/.append style={/tikz/uncentered rectangle}
+        }
       }
     }
   }
