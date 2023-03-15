@@ -88,13 +88,22 @@
   },
   %% http://tex.stackexchange.com/a/144187/16595
   %% key/.List={(point-1),(point-2),(point-...),(point-6)} will call
-  %% key=(point-1)(point-2)(point-3)(point-4)(point-5),(point-6)
+  %% key=(point-1)(point-2)(point-3)(point-4)(point-5)(point-6)
   .List/.code=%
     \let\pgfkeys@global@temp\pgfutil@empty
     \foreach\pgfkeys@temp in{#1}{%
         \expandafter\pgfutil@g@addto@macro\expandafter\pgfkeys@global@temp\expandafter{\pgfkeys@temp}%
     }%
-    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@global@temp}%
+    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@global@temp},
+  .--/.code=% decrements a value (only TeX integers!)
+    \pgfkeyssetevalue{\pgfkeyscurrentpath}
+      {\the\numexpr\pgfkeysvalueof{\pgfkeyscurrentpath}-1\relax},
+  .++/.code=% increments a value (only TeX integers!)
+    \pgfkeyssetevalue{\pgfkeyscurrentpath}
+      {\the\numexpr\pgfkeysvalueof{\pgfkeyscurrentpath}+1\relax},
+  .value/.code=% copies the value of one key to another w/o expanding it
+    \pgfkeysgetvalue{#1}\pgfkeys@temp
+    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@temp}}
 }
 
 \pgfqkeys{/utils}{
@@ -134,6 +143,7 @@
     \pgfutil@ifempty{#1}{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
   },
   tex/.search also=/utils/TeX,
+  loops/do until/.code 2 args={\pgfutil@loop\pgfkeysalso{#1}#2\relax\pgfutil@repeat}%
 }
 
 \endinput

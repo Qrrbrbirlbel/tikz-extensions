@@ -9,10 +9,10 @@
 %
 
 \section{Shape: Uncentered Rectangle}
-\begin{pgflibrary}{ext.shapes.uncenteredrectangle}
+\begin{purepgflibrary}{ext.shapes.uncenteredrectangle}
   A rectangle that has a variable horizontal center with three node parts.
   \inspiration{UncRectCD-Q,UncRectForest-Q}{UncRectCD-A,UncRectForest-A}
-\end{pgflibrary}
+\end{purepgflibrary}
 \begin{shape}{uncentered rectangle}
 
 For some alignment problems, this shape could be useful.
@@ -31,54 +31,21 @@ calculate the appropriate point on the border.
   In the picture below, this are marked red.
 \end{key}
 
+\begin{key}{/pgf/uncentered rectangle use saved center=\meta{true}\textrm{ or }\meta{false} (default true)}
+When this is set to true, the border anchors will use the horizontal center that was used when
+the node was created.
+\end{key}
+
 For support of the \referenceLibraryandIndexO{cd} library of the |tikz-cd| package,
 this shape also supports a dynamic $y$ value for its anchors |center|, |west| and |east|.
 \begin{key}{/pgf/uncentered rectangle center yshift=\meta{dimension} (initially \{\})}
   This determines the distance between the baseline and the |center| anchors.
   
-  If \meta{dimension} is empty, the real center will be used which is the default.
+  If \meta{dimension} is empty, the real vertical center will be used.
   
   For use with |cd|, set this to |axis_height|.
-  Due to a bug with \referenceKeyandIndexO{execute at end node}
-  this needs a lot of fixing to be able to use in a commutative diagram, though.
-
-\tikzexternaldisable
-\catcode`\|=12
-\begin{codeexample}[leave comments, preamble=\usetikzlibrary{cd, ext.shapes.uncenteredrectangle}]
-\makeatletter
-\tikzcdset{
-  every diagram/.append style={
-    /pgf/uncentered rectangle center=text,
-    /tikz/math align/.style={
-      shape=uncentered rectangle,
-      /pgf/uncentered rectangle center yshift=axis_height,
-      commutative diagrams/math mode=false},
-    /tikz/math align left/.style={
-      math align,
-      /utils/exec={\def\mathalign####1=####2;{$####2$\nodepart{left}$####1={}$}}},
-    /tikz/math align right/.style={
-      math align,
-      /utils/exec={\def\mathalign####1=####2;{$####1$\nodepart{right}${}=####2$}}},
-    /tikz/matrix of math nodes/.style={
-      matrix of nodes,
-      nodes={
-        execute at begin node=\iftikzcd@mathmode$\fi,
-        execute at end node  =\iftikzcd@mathmode$\fi}}}}
-\makeatother
-\tikzcdset{install C shortcut/.code=\newcommand*\C[1]{C_{\%_{##1}}}}
-\begin{tikzcd}[
-  install C shortcut,
-  sep=tiny,
-  arrows={-, gray},
-  cells={font=\strut, inner xsep=.2ex, inner ysep=.1ex}
-]
-\C{1} \drar &         & |[math align right]| \mathalign m_{r_1} = \C{2}-C_\%; \dlar\\
-            & C_\% \\
-\C{2} \urar &         & |[math align right]| \mathalign m_{r_2} = \C{1}-C_\%; \ular
-\end{tikzcd}
-\end{codeexample}
 \end{key}
-\pagebreak
+%\pagebreak
 \begin{codeexample}[preamble=\usepgflibrary{ext.shapes.uncenteredrectangle}]
 \begin{tikzpicture}[style north/.style=red, style south/.style=red, style center/.style=red, style base/.style=red, style mid/.style=red]
 \Huge
@@ -96,4 +63,69 @@ this shape also supports a dynamic $y$ value for its anchors |center|, |west| an
 \end{tikzpicture}
 \end{codeexample}
 \end{shape}
+
+\begin{tikzlibrary}{ext.shapes.uncenteredrectangle}
+This library extends the \referenceLibraryandIndexO{cd} library (from the |tikz-cd| package)
+so that it can be used with the |uncentered rectangle| shape.
+
+\inspirationQ{UncRectCD2-Q}
+\end{tikzlibrary}
+
+This library provides only one key.
+\begin{stylekey}{/tikz-ext/tikz-cd fix}
+This key installs various \enquote{fixes} to the \referenceKeyandIndexO[/tikz/commutative diagrams/]{every diagram} style:
+
+\begin{itemize}
+\item Firstly, is defines a \referenceKeyandIndexO{matrix of math nodes} key (only for the \referenceEnvironmentandIndexO{tikzcd} environment)
+      which allows to toggle the \referenceKeyandIndexO[/tikz/commutative diagrams/]{math mode} for each node.%
+      \footnote{Due to a bug with \referenceKeyandIndexO{execute at end node}, the \enquote{automatic} math mode in matrices can't be used
+        with multipart nodes.}
+\item The helpful macro |\uncrec| will be installed.
+\begin{command}{\uncrec\marg{left}\marg{center}\marg{right}}
+  When used as the content of |uncentered rectangle|,
+  the node parts will be setup so that \meta{left} is in the left part of the node part etc.
+\end{command}
+\item Since math mode will be disabled with the |uncentered rectangle|, it is automatically enabled for each node part with |\uncrec| but it can be disabled with the following key.
+\begin{key}{/tikz/uncrec math mode=\meta{true}\textrm{ or }\meta{false} (default true)}
+When enabled the contents of |\uncrec| will be set in math mode.
+\end{key}
+\item For easy access to the |uncentered rectangle| shape, the following keys are available inside a Commutative Diagram.
+\begin{stylekey}{/tikz/uncrec=\meta{left}\textrm{ or }\meta{text}\textrm{ or }\meta{right}\textrm{ or }\meta{real} (initially text)}
+This key sets the shape to |uncentered rectangle| and \referenceKeyandIndex[/pgf/]{uncentered rectangle center} to its argument.
+\end{stylekey}
+\begin{stylekey}{/tikz/commutative diagrams/install uncentered rectangle in columns=\meta{column}}
+All nodes in column \meta{column} will be set to the |uncentered rectangle| shape.
+\end{stylekey}
+\end{itemize}
+\end{stylekey}
+
+\begingroup
+\tikzexternaldisable
+%\catcode`\|=12
+\begin{codeexample}[leave comments, width=8cm, preamble=\usetikzlibrary{cd, ext.shapes.uncenteredrectangle}]
+\tikzcdset{/tikz-ext/tikz-cd fix}
+\newcommand*\C[1]{C_{\%_{#1}}}
+\begin{tikzcd}[
+  sep=tiny,
+  arrows={-, gray},
+  cells={font=\strut, inner xsep=.2ex, inner ysep=.1ex},
+  install uncentered rectangle in column=3
+]
+\C{1} \drar &         & \uncrec{}{m_{r_1}}{{} = \C{2}-C_\%} \dlar\\
+            & C_\% \\
+\C{2} \urar &         & \uncrec{}{m_{r_2}}{{} = \C{1}-C_\%} \ular
+\end{tikzcd}
+\end{codeexample}
+\begin{codeexample}[leave comments, width=8cm, preamble=\usetikzlibrary{cd, ext.shapes.uncenteredrectangle}]
+\tikzset{/tikz-ext/tikz-cd fix}
+\begin{tikzcd}[install uncentered rectangle in column/.list={1,2}]
+  \uncrec{S \supset {}}{U_\tau}{}                                      \arrow[r, "\varphi_0"]
+                                                                       \arrow[d, "\tau", "\sim"']
+& \uncrec{}{U_\pi}{{} \subset T}                                       \arrow[d, "\pi",  "\sim"']
+\\
+  \uncrec{\operatorname{Bl}_{(0,0)}(\mathbb{A}^2) \supset{}}{V_\tau}{} \arrow[r, "\epsilon"]
+& \uncrec{}{V_\pi}{{} \subset \mathbb{A}^2}
+\end{tikzcd}
+\end{codeexample}
+\endgroup
 \endinput

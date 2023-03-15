@@ -12,7 +12,11 @@
   \let\pgfnodepartleftbox\pgfnodeparttwobox
   \let\pgfnodepartrightbox\pgfnodepartthreebox
 }
+
+\newif\iftikzext@uncenteredrectangle@usesavedcenter
+
 \pgfset{
+  uncentered rectangle use saved center/.is if=tikzext@uncenteredrectangle@usesavedcenter,
   uncentered rectangle center yshift/.initial=,
   uncentered rectangle center/@center/.initial=2,
   uncentered rectangle center/.is choice,
@@ -176,8 +180,16 @@
     \advance\pgf@y by \pgf@ya
   }%
   %
+  \savedmacro\center{%
+    \pgfkeysgetvalue{/pgf/uncentered rectangle center/@center}\center
+  }
   \anchor{center}{%
-    \ifcase\pgfkeysvalueof{/pgf/uncentered rectangle center/@center}\relax
+    \ifcase
+      \iftikzext@uncenteredrectangle@usesavedcenter
+        \center
+      \else
+        \pgfkeysvalueof{/pgf/uncentered rectangle center/@center}%
+      \fi\relax
       \realCenter\or
       \leftCenter\or
       \middleCenter\or
@@ -203,7 +215,8 @@
     \pgfmathsetlength\pgf@y{.5ex}}%
   \anchor{base}{%
     \csname pgf@anchor@uncentered rectangle@center\endcsname
-    \pgf@y=0pt }%
+    \pgf@y=0pt
+  }%
   \anchor{left mid}   {\leftCenter  \pgfmathsetlength\pgf@y{+.5ex}}
   \anchor{text mid}   {\middleCenter\pgfmathsetlength\pgf@y{+.5ex}}
   \anchor{right mid}  {\rightCenter \pgfmathsetlength\pgf@y{+.5ex}}
@@ -273,30 +286,51 @@
     \pgf@xa=\pgf@x
     \pgf@ya=\pgf@y
     % xc/yc is "center"
-    \pgf@sh@reanchor{uncentered rectangle}{center}%
+    \pgf@process{\csname pgf@anchor@uncentered rectangle@center\endcsname}%
     \pgf@xc=\pgf@x
     \pgf@yc=\pgf@y
     \ifdim\pgf@xa<0pt
       % left side
       \southwest
-      \advance\pgf@x by -\pgf@xc
-      \advance\pgf@y by -\pgf@yc
-      \pgf@x=-\pgf@x
-      \pgf@y=-\pgf@y
+      \pgf@xb=\pgf@x
+      \pgf@yb=\pgf@y
+      \advance\pgf@xb by -\pgf@xc
+      \ifdim\pgf@ya<0pt
+        % south west side
+        \advance\pgf@yb by -\pgf@yc
+        \pgf@yb=-\pgf@yb
+      \else
+        % north west side
+        \northeast
+        \pgf@yb=\pgf@y
+        \advance\pgf@yb by -\pgf@yc
+      \fi
+      \pgf@xb=-\pgf@xb
       \edef\pgf@marshal{%
         \noexpand\pgfpointborderrectangle
           {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
-          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+          {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       }%
     \else
       % right side
       \northeast
-      \advance\pgf@x by -\pgf@xc
-      \advance\pgf@y by -\pgf@yc
+      \pgf@xb=\pgf@x
+      \pgf@yb=\pgf@y
+      \advance\pgf@xb by -\pgf@xc
+      \ifdim\pgf@ya>0pt
+        % north east side
+        \advance\pgf@yb by -\pgf@yc
+      \else
+        % south east side
+        \southwest
+        \pgf@yb=\pgf@y
+        \advance\pgf@yb by -\pgf@yc
+        \pgf@yb=-\pgf@yb
+      \fi
       \edef\pgf@marshal{%
         \noexpand\pgfpointborderrectangle
           {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
-          {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+          {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       }%
     \fi
     \pgf@process{\pgf@marshal}%
