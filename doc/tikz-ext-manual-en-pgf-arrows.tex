@@ -1,0 +1,72 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Untipped Arrow Tips}
+\label{pgflibrary:arrows}
+
+\begin{pgflibrary}{ext.arrows}
+  This library adds so-called \emph{untipped} arrow tips \pgfname.
+  These can be used so that the arrow tip is somewhat centered around the line end.
+\end{pgflibrary}
+
+These arrow tips lie in a way that don't \emph{not} overshoot the actual line end.
+It usually makes only sense to use these \emph{untipped}
+arrow tips at the very first or very last tip in a arrow tip specification
+since they are essentially shifted along the arrow path without consideration for what
+comes after it.
+
+The effect of these can be best seen in the examples below with the Geometric arrow tips.
+
+As with the original tips of the \referenceLibraryandIndexO{arrows.meta} library
+these can be organized in the following categories.
+{\tikzset{external/export/.try=false}%
+\begin{itemize}
+\item \emph{Barbed} arrow tips
+  \begin{arrowexamples}
+      \arrowexample Untipped Arc Barb[]
+      \arrowexample Untipped Bar[]
+      \arrowexample Untipped Bracket[]
+      \arrowexample Untipped Hooks[]
+      \arrowexample Untipped Parenthesis[]
+%      \arrowexample Untipped Straight Barb[]
+      \arrowexample Untipped Tee Barb[]
+  \end{arrowexamples}
+\item \emph{Mathematical} arrow tips don't have an \enquote{untipped} version, yet.
+\item \emph{Geometric} arrow tips
+  \begin{arrowexamples}
+      \arrowexample Untipped Circle[]
+      \arrowexample Untipped Diamond[]
+      \arrowexample Untipped Ellipse[]
+      \arrowexample Untipped Kite[]
+%      \arrowexample Untipped Latex[]
+%      \arrowexample Untipped Latex[round]
+%      \arrowexample Untipped Rectangle[]
+%      \arrowexample Untipped Square[]
+%      \arrowexample Untipped Stealth[]
+%      \arrowexample Untipped Stealth[round]
+%      \arrowexample Untipped Triangle[]
+      \arrowexample Untipped Turned Square[]
+  \end{arrowexamples}
+  \begin{arrowexamples}
+      \arrowexample Untipped Circle[open]
+      \arrowexample Untipped Diamond[open]
+      \arrowexample Untipped Ellipse[open]
+      \arrowexample Untipped Kite[open]
+%      \arrowexample Untipped Latex[open]
+%      \arrowexample Untipped Latex[round]
+%      \arrowexample Untipped Rectangle[open]
+%      \arrowexample Untipped Square[open]
+%      \arrowexample Untipped Stealth[open]
+%      \arrowexample Untipped Stealth[round]
+%      \arrowexample Untipped Triangle[open]
+      \arrowexample Untipped Turned Square[open]
+  \end{arrowexamples}
+\item Neither \emph{Caps} nor \emph{Rays} arrow tips have an \enquote{untipped} version.
+\end{itemize}
