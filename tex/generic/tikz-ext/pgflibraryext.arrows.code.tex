@@ -17,14 +17,106 @@
     \pgfutil@namelet{pgf@decl@arrow@par}{pgf@ar@par@#1}%
     \pgfutil@namelet{pgf@decl@arrow@cache}{pgf@ar@do@cache@#1}%
   },
-  append setup code/.code=%
+  append setup code/.code=
     \begingroup
       \pgfutil@toks@\expandafter{\pgf@decl@arrow@setup#1}%
     \expandafter\endgroup
-    \expandafter\def\expandafter\pgf@decl@arrow@setup\expandafter{\the\pgfutil@toks@}%
+    \expandafter\def\expandafter\pgf@decl@arrow@setup\expandafter
+      {\the\pgfutil@toks@ },
+  % append parameters/.code=
+  %   \begingroup
+  %     \show\pgf@decl@arrow@par
+  %     \pgfutil@toks@\expandafter{\pgf@decl@arrow@par#1}%
+  %   \expandafter\endgroup
+  %   \expandafter\def\expandafter\pgf@decl@arrow@par\expandafter
+  %     {\the\pgfutil@toks@ }
+}
+% \pgfkeyssetvalue{/pgf/arrow keys/weight}{true}
+
+%%% Barbed
+%   Arc Barb, Parenthesis
+\pgfdeclarearrow{
+  clone =          Arc Barb,
+  name  = Centered Arc Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
+\pgfdeclarearrow{
+  clone =          Arc Barb,
+  name  = Untipped Arc Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{\pgfarrowlength}
+    \fi
 }
 
+%   Hooks
+\pgfdeclarearrow{
+  clone =          Hooks,
+  name  = Centered Hooks,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
 
+%   Straight Barb
+\pgfdeclarearrow{
+  clone = Straight Barb,
+  name  = Centered Straight Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{.5\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{.5\pgfarrowlength}
+    \fi
+}
+
+%   Tee Barb, Bar, Bracket
+\pgfdeclarearrow{
+  clone =          Tee Barb,
+  name  = Centered Tee Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
+\pgfdeclarearrow{
+  clone =          Tee Barb,
+  name  = Untipped Tee Barb,
+  append setup code = 
+    \ifpgfarrowreversed\expandafter\pgfarrowssetbackend\else\expandafter\pgfarrowssettipend\fi
+    {\pgfutil@tempdima
+      \ifpgfutil@tempswa % does it not extend to the right?
+        \advance\pgf@x-.5\pgfarrowlinewidth
+      \else
+        \ifpgfutil@tempswb
+        \else
+          \pgf@x=.5\pgfarrowlength
+        \fi
+        \ifpgfarrowroundcap\else
+          \advance\pgf@x-.5\pgfarrowlinewidth
+        \fi
+      \fi
+    }
+}
+%%% Mathematical
+%   Classical TikZ Rightarrow
+%   Computer Modern Rightarrow, To
+%   Implies
+
+%%% Geometric
+%   Circle, Ellipse
 \pgfdeclarearrow{
   clone =          Circle,
   name  = Centered Circle,
@@ -46,71 +138,7 @@
     \fi
 }
 
-\pgfdeclarearrow{
-  clone =          Tee Barb,
-  name  = Centered Tee Barb,
-  append setup code = 
-    \ifpgfarrowreversed
-      \pgfarrowssetbackend{0pt}
-    \else
-      \pgfarrowssettipend{0pt}
-    \fi
-}
-
-\pgfdeclarearrow{
-  clone =          Tee Barb,
-  name  = Untipped Tee Barb,
-  append setup code = 
-    \ifpgfarrowreversed\expandafter\pgfarrowssetbackend\else\expandafter\pgfarrowssettipend\fi
-    {\pgfutil@tempdima
-      \ifpgfutil@tempswa % does it not extend to the right?
-        \advance\pgf@x-.5\pgfarrowlinewidth
-      \else
-        \ifpgfutil@tempswb
-        \else
-          \pgf@x=.5\pgfarrowlength
-        \fi
-        \ifpgfarrowroundcap\else
-          \advance\pgf@x-.5\pgfarrowlinewidth
-        \fi
-      \fi
-    }
-}
-\pgfdeclarearrow{
-  clone =          Arc Barb,
-  name  = Centered Arc Barb,
-  append setup code = 
-    \ifpgfarrowreversed
-      \pgfarrowssetbackend{0pt}
-    \else
-      \pgfarrowssettipend{0pt}
-    \fi
-}
-
-\pgfdeclarearrow{
-  clone =          Arc Barb,
-  name  = Untipped Arc Barb,
-  append setup code = 
-    \ifpgfarrowreversed
-      \pgfarrowssetbackend{\pgfarrowlength}
-    \else
-      \pgfarrowssettipend{\pgfarrowlength}
-    \fi
-}
-
-\pgfdeclarearrow{
-  clone =          Hooks,
-  name  = Centered Hooks,
-  append setup code = 
-    \ifpgfarrowreversed
-      \pgfarrowssetbackend{0pt}
-    \else
-      \pgfarrowssettipend{0pt}
-    \fi
-}
-
-% TODO: Untipped Hooks
-
+%   Kite, Diamond, Turned Square
 \pgfdeclarearrow{
   clone =          Kite,
   name  = Centered Kite,
@@ -122,6 +150,8 @@
     \fi
 }
 
+%   LaTeX
+%   Square, Rectangle
 \pgfdeclarearrow{
   clone =          Square,
   name  = Centered Square,
@@ -133,6 +163,41 @@
     \fi
 }
 
+%   Stealth, Triangle
+\pgfdeclarearrow{
+  clone =          Stealth,
+  name  = Centered Stealth,
+  append setup code =
+    % \pgfkeysgetvalue{/pgf/arrow keys/weight}\pgf@temp
+    % \ifx\pgf@temp\pgf@truetext
+      \ifpgfarrowreversed
+        \pgfarrowssetbackend{.25\pgfarrowlength \advance\pgf@x .25\pgfarrowinset}
+      \else
+        \pgfarrowssettipend{.25\pgfarrowlength \advance\pgf@x .25\pgfarrowinset}
+      \fi
+    % \else
+    %   \ifpgfarrowreversed
+    %     \pgfarrowssetbackend{\pgf@temp\pgfarrowlength}
+    %   \else
+    %     \pgfarrowssettipend{\pgf@temp\pgfarrowlength}
+    %   \fi
+    % \fi
+    ,
+  % append parameters = {,\pgfkeysvalueof{/pgf/arrow keys/weight}},
+  % parameters = {
+  %   \the\pgfarrowlinewidth,%
+  %   \the\pgfarrowlength,%
+  %   \the\pgfarrowwidth,%
+  %   \the\pgfarrowinset,%
+  %   \pgfkeysvalueof{/pgf/arrow keys/weight},%
+  %   \ifpgfarrowharpoon h\fi%
+  %   \ifpgfarrowopen o\fi%
+  %   \ifpgfarrowroundjoin j\fi%
+  % },
+}
+%%% Caps
+
+%%% Rays
 \pgfdeclarearrow{
   clone = Rays,
   name  = Centered Rays,
@@ -143,16 +208,19 @@
       \pgfarrowssettipend{0pt}%\pgfarrowssetvisualtipend{\pgf@xa}
     \fi
 }
+
+%%% Variants
 \pgfkeys{
   Centered Ellipse /.tip       = {Centered Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
-  Untipped Ellipse /.tip       = {Untipped Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
   Centered Parenthesis /.tip   = {Centered Arc Barb[arc=+120,length=+1.725pt +2.3]},
-  Untipped Parenthesis /.tip   = {Untipped Arc Barb[arc=+120,length=+1.725pt +2.3]},
   Centered Bar /.tip           = {Centered Tee Barb[length=+0pt]},
   Centered Bracket /.tip       = {Centered Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
-  Untipped Bar /.tip           = {Untipped Tee Barb[length=+0pt]},
-  Untipped Bracket /.tip       = {Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
   Centered Diamond /.tip       = {Centered Kite[inset'=+0pt .5]},
   Centered Turned Square /.tip = {Centered Kite[length=+3pt 4,width'= +0pt 1,inset'= +0pt 0.5]},
   Centered Rectangle /.tip     = {Centered Square[length=+3pt +4.5,width'=+0pt +.5]},
+  Centered Triangle /.tip      = {Centered Stealth[inset=+0pt, angle=+60:+2.7pt +3.6]},
+  Untipped Ellipse /.tip       = {Untipped Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
+  Untipped Parenthesis /.tip   = {Untipped Arc Barb[arc=+120,length=+1.725pt +2.3]},
+  Untipped Bar /.tip           = {Untipped Tee Barb[length=+0pt]},
+  Untipped Bracket /.tip       = {Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
 }

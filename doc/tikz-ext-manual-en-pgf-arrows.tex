@@ -10,63 +10,177 @@
 
 \section{Untipped Arrow Tips}
 \label{pgflibrary:arrows}
-
+\tikzset{external/export/.try=false}%
 \begin{pgflibrary}{ext.arrows}
-  This library adds so-called \emph{untipped} arrow tips \pgfname.
-  These can be used so that the arrow tip is somewhat centered around the line end.
+  This library adds arrows to \pgfname/\tikzname.
 \end{pgflibrary}
 
-These arrow tips lie in a way that don't \emph{not} overshoot the actual line end.
-It usually makes only sense to use these \emph{untipped}
-arrow tips at the very first or very last tip in a arrow tip specification
-since they are essentially shifted along the arrow path without consideration for what
-comes after it.
+The arrow tips of the \referenceLibraryandIndexO{arrows.meta} library always
+just touch the end of original line -- which is usually
+what you want.
 
-The effect of these can be best seen in the examples below with the Geometric arrow tips.
-
+But for some arrow tips (and when they lie along a path) it makes sense
+that these tips shoot a bit over the end of the line.
+This is why these arrow tips exist.
+They can be categorized into three groups:
+\begin{enumerate}
+\item Centered
+\item Untipped
+\item Overtipped\footnote{The Overtipped arrow tips aren't yet implemented.}
+\end{enumerate}
+Not all original arrow tips got all variants.
+For a summary, refer to table~\ref{tab:tips}.
+\begin{table}
+\newcommand*\tip[2][]{%
+  \tikzset{external/export/.try=false}%
+  \tikz[arrows={#2 \arrowtiprow[reversed] - \arrowtiprow[sep] . #2 \arrowtiprow[]}, baseline=+-.5ex,
+    trim left=+-3mm, trim right=+23mm]
+    \draw[line width=+.5mm, postaction={draw, gray, thin,-}] (0,0) -- + (right:2);%
+}%
+\def\tiprow#1 &{#1\gdef\arrowtiprow{#1} &}%
+\def\Tiprow#1 &{\quad#1\gdef\arrowtiprow{#1} &}%
+\centering
+\caption{Variants of the original \texttt{arrows.meta} arrow tips.
+  For each example, the order is 1. reversed variant, 2. original, 3. variant.
+  They gray line shows where the line actually ends.
+}\label{tab:tips}
+\begin{tabular}{ll ccc}
+  \toprule
+  Group        & Original                   & Centered       &    Untipped    & Overtipped \\ \midrule
+  Barbed       & \tiprow Arc Barb           & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \Tiprow Parenthesis        & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \tiprow Hooks              & \tip{Centered} &       --       &     --     \\
+               & \tiprow Straight Barb      & \tip{Centered} &       --       &     --     \\
+               & \tiprow Tee Barb           & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \Tiprow Bar                & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \Tiprow Bracket            & \tip{Centered} & \tip{Untipped} &     --     \\ \midrule
+  Mathematical & Classical TikZ Rightarrow  & --             &       --       &     --     \\
+               & Computer Modern Rightarrow & --             &       --       &     --     \\
+               & \quad To                   & --             &       --       &     --     \\
+               & Implies                    & --             &       --       &     --     \\ \midrule
+  Geometric    & \tiprow Circle             & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \Tiprow Ellipse            & \tip{Centered} & \tip{Untipped} &     --     \\
+               & \tiprow Kite               & \tip{Centered} &       --       &     --     \\
+               & \Tiprow Diamond            & \tip{Centered} &       --       &     --     \\
+               & \Tiprow Turned Square      & \tip{Centered} &       --       &     --     \\
+               & \tiprow LaTeX              & --             &       --       &     --     \\
+               & \tiprow Square             & \tip{Centered} &       --       &     --     \\
+               & \Tiprow Rectangle          & \tip{Centered} &       --       &     --     \\
+               & \tiprow Stealth            & \tip{Centered} &       --       &     --     \\
+               & \Tiprow Triangle           & \tip{Centered} &       --       &     --     \\ \midrule
+  Caps         &                            & --             &       --       &     --     \\
+  Rays         & \tiprow Rays               & \tip{Centered} &       --       &     --     \\ \bottomrule
+\end{tabular}
+\end{table}
+\begin{multicols}{2}
 As with the original tips of the \referenceLibraryandIndexO{arrows.meta} library
 these can be organized in the following categories.
-{\tikzset{external/export/.try=false}%
+\subsection{Centered}
+\subsubsection{Barbed Arrow Tips}
+\begin{arrowtipsimple}{Centered Arc Barb}
+    This is a variant of the \referenceArrowtipandIndexO{Arc Barb} tip.
+    The center of the arc lies on the original end of the path.
+
+    \begin{arrowexamples}
+        \arrowexample[]
+        \arrowexampledup[sep]
+        \arrowexampledupdot[sep]
+        \arrowexample[arc=120]
+        \arrowexample[arc=270]
+        \arrowexample[length=2pt]
+        \arrowexample[length=2pt,width=5pt]
+        \arrowexample[line width=2pt]
+        \arrowexample[reversed]
+        \arrowexample[round]
+        \arrowexample[slant=.3]
+        \arrowexample[left]
+        \arrowexample[right]
+        \arrowexample[harpoon,reversed]
+        \arrowexample[red]
+    \end{arrowexamples}
+    %
+    The following options have no effect: |open|, |fill|.
+
+    On |double| lines, the arrow tip will not look correct.
+\end{arrowtipsimple}
+
+\begin{arrowtipsimple}{Centered Bar}
+    A simple bar. This is a simple instance of |Centered Tee Barb| for length zero.
+    
+    The middle of the line will lie on original end of the path.
+\end{arrowtipsimple}
+
+\begin{arrowtip}{Centered Bracket}{
+    This is an instance of the |Centered Tee Barb| arrow tip that results in something
+    resembling a bracket.
+    
+    The middle of the vertical part will lie on the original end of the path.
+}%
+{}%
+{}
+
+    \begin{arrowexamples}
+        \arrowexample[]
+        \arrowexampledup[sep]
+        \arrowexampledupdot[sep]
+        \arrowexample[reversed]
+        \arrowexample[round]
+        \arrowexample[slant=.3]
+        \arrowexample[left]
+        \arrowexample[right]
+        \arrowexample[harpoon,reversed]
+        \arrowexample[red]
+    \end{arrowexamples}
+    %
+    The following options have no effect: |open|, |fill|.
+
+    On |double| lines, the arrow tip will not look correct.
+\end{arrowtip}
+\end{multicols}
+\tikzset{external/export/.try=true}%
+\endinput
 \begin{itemize}
 \item \emph{Barbed} arrow tips
   \begin{arrowexamples}
-      \arrowexample Untipped Arc Barb[]
-      \arrowexample Untipped Bar[]
-      \arrowexample Untipped Bracket[]
-      \arrowexample Untipped Hooks[]
-      \arrowexample Untipped Parenthesis[]
-%      \arrowexample Untipped Straight Barb[]
-      \arrowexample Untipped Tee Barb[]
+    \arrowexample Centered Arc Barb[]
+    \arrowexample Centered Bar[]
+    \arrowexample Centered Bracket[]
+    \arrowexample Centered Hooks[]
+    \arrowexample Centered Parenthesis[]
+    \arrowexample Centered Straight Barb[]
+    \arrowexample Centered Tee Barb[]
   \end{arrowexamples}
-\item \emph{Mathematical} arrow tips don't have an \enquote{untipped} version, yet.
-\item \emph{Geometric} arrow tips
+\item \emph{Mathematical} arrow tips don't have any variants.
+\item \emph{Geometric} arrow tips.
+  The |Stealth| variant is \enquote{centered} on its centroid.
+  The |Kite| is \enquote{centered} around its widest part.
   \begin{arrowexamples}
-      \arrowexample Untipped Circle[]
-      \arrowexample Untipped Diamond[]
-      \arrowexample Untipped Ellipse[]
-      \arrowexample Untipped Kite[]
-%      \arrowexample Untipped Latex[]
-%      \arrowexample Untipped Latex[round]
-%      \arrowexample Untipped Rectangle[]
-%      \arrowexample Untipped Square[]
-%      \arrowexample Untipped Stealth[]
-%      \arrowexample Untipped Stealth[round]
-%      \arrowexample Untipped Triangle[]
-      \arrowexample Untipped Turned Square[]
+      \arrowexample Centered Circle[]
+      \arrowexample Centered Diamond[]
+      \arrowexample Centered Ellipse[]
+      \arrowexample Centered Kite[]
+      \arrowexample Centered Rectangle[]
+      \arrowexample Centered Square[]
+      \arrowexample Centered Stealth[]
+      \arrowexample Centered Stealth[round]
+      \arrowexample Centered Triangle[]
+      \arrowexample Centered Turned Square[]
   \end{arrowexamples}
   \begin{arrowexamples}
-      \arrowexample Untipped Circle[open]
-      \arrowexample Untipped Diamond[open]
-      \arrowexample Untipped Ellipse[open]
-      \arrowexample Untipped Kite[open]
-%      \arrowexample Untipped Latex[open]
-%      \arrowexample Untipped Latex[round]
-%      \arrowexample Untipped Rectangle[open]
-%      \arrowexample Untipped Square[open]
-%      \arrowexample Untipped Stealth[open]
-%      \arrowexample Untipped Stealth[round]
-%      \arrowexample Untipped Triangle[open]
-      \arrowexample Untipped Turned Square[open]
+      \arrowexample Centered Circle[open]
+      \arrowexample Centered Diamond[open]
+      \arrowexample Centered Ellipse[open]
+      \arrowexample Centered Kite[open]
+      \arrowexample Centered Rectangle[open]
+      \arrowexample Centered Square[open]
+      \arrowexample Centered Stealth[open]
+      \arrowexample Centered Stealth[round]
+      \arrowexample Centered Triangle[open]
+      \arrowexample Centered Turned Square[open]
   \end{arrowexamples}
-\item Neither \emph{Caps} nor \emph{Rays} arrow tips have an \enquote{untipped} version.
+\item No \emph{Caps} tip have variants.
+\item \emph{Rays} have the Centered variant.
+  \begin{arrowexamples}
+    \arrowexample Centered Rays[]
+  \end{arrowexamples}
 \end{itemize}
