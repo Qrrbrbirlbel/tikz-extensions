@@ -224,3 +224,34 @@
   Untipped Bar /.tip           = {Untipped Tee Barb[length=+0pt]},
   Untipped Bracket /.tip       = {Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
 }
+
+%%% New Arrows
+\pgfdeclarearrow{
+  name = Hug Cap,
+  parameters = \the\pgfarrowlength,
+  defaults = {
+   length = +0pt +1
+  },
+  setup code={
+    % h = r - .5 sqrt(4 r^2 - s^2)
+    \ifdim2\pgfarrowlength<\pgflinewidth
+      \pgfarrowlength=.51\pgflinewidth
+    \fi
+    \pgfmathsetlengthmacro\pgfarrowh{\pgfarrowlength-.5*sqrt(4*\pgfarrowlength*\pgfarrowlength-\pgflinewidth*\pgflinewidth}
+    % a = asin(s / (2 r))
+    \pgfmathsetmacro\pgfarrowangle{asin(\the\pgflinewidth/(2*\the\pgfarrowlength))}
+    \pgfarrowssavethe\pgfarrowlength % radius
+    \pgfarrowssave\pgfarrowh         % h
+    \pgfarrowssave\pgfarrowangle     % a
+    \pgfarrowsupperhullpoint{0pt}{.5\pgflinewidth}
+    \pgfarrowsupperhullpoint{\pgfarrowh}{.5\pgflinewidth}
+  },
+  drawing code={
+    \pgfpathmoveto{\pgfqpoint{\pgfarrowh}{-.5\pgflinewidth}}
+    \pgfpatharc{180+\pgfarrowangle}{180-\pgfarrowangle}{\pgfarrowlength}
+    \pgfpathlineto{\pgfqpoint{-.1pt}{.5\pgflinewidth}}
+    \pgfpathlineto{\pgfqpoint{-.1pt}{-.5\pgflinewidth}}
+    \pgfpathclose
+    \pgfusepathqfill
+  }
+}
