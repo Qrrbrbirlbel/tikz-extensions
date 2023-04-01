@@ -69,10 +69,12 @@ The actual week number algorithm is implemented by the |pgfcalendar-ext| package
     %
 \begin{codeexample}[preamble={\usetikzlibrary{ext.calendar-plus}}]
 \tikz
-  \calendar [week list, month label above centered,
-             dates=2022-07-01 to 2022-07-31,
-             week label left,
-             every week/.append style={gray!50!black,font=\sffamily}];
+  \calendar[
+    week list, month label above centered,
+    dates=2022-07-01 to 2022-07-31,
+    week label left,
+    every week/.append style={
+      gray!50!black, font=\sffamily}];
 \end{codeexample}
     %
 \end{stylekey}

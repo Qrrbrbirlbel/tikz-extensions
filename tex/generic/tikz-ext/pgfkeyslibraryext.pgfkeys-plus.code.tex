@@ -103,7 +103,7 @@
       {\the\numexpr\pgfkeysvalueof{\pgfkeyscurrentpath}+1\relax},
   .value/.code=% copies the value of one key to another w/o expanding it
     \pgfkeysgetvalue{#1}\pgfkeys@temp
-    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@temp}}
+    \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@temp}%
 }
 
 \pgfqkeys{/utils}{

@@ -8,10 +8,11 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\newcommand*\tikzextversion{0.5}
+\newcommand*\tikzextversion{0.5.1}
 %\includeonly{
-%  tikz-ext-manual-en-library-misc,
-%  tikz-ext-manual-en-library-nodes,
+%%  tikz-ext-manual-en-library-misc,
+%%  tikz-ext-manual-en-library-nodes,
+%  tikz-ext-manual-en-pgf-arrows,
 %}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
@@ -126,6 +127,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \end{codeexample}
 \end{center}
 
+\tikzsetfigurename{PGF.arrows}\include{tikz-ext-manual-en-pgf-arrows}
 \tikzsetfigurename{PGF.trans}\include{tikz-ext-manual-en-pgf-trans}
 \tikzsetfigurename{PGF.shapes}%
 \include{tikz-ext-manual-en-pgf-shapes-circlearrow}
@@ -180,6 +182,11 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
+Version 0.5.1
+\begin{itemize}
+\item \addPGF{arrows}
+\item Bugfix to |ext.pgfkeys-plus|. \cite{GH6}
+\end{itemize}
 Version 0.5
 \begin{itemize}
 \item \addPackage{pgffor}

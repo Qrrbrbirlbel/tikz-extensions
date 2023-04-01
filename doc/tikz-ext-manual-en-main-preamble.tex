@@ -41,21 +41,6 @@
 \tracinglostchars=3
 
 \input{pgfmanual-en-macros}
-\newenvironment{pgfkeyslibrary}[1]{% from pgfmanual-en-macros
-  \begin{pgfmanualentry}%
-    \pgfmanualentryheadline{%
-      \pgfmanualpdflabel{#1}{}%
-      \textbf{pgfkeys Library} \texttt{\declare{#1}}}%
-    \index{#1@\protect\texttt{#1} pgfkeys library}%
-    \index{pgfkeys Libraries!#1@\protect\texttt{#1}}%
-    \vskip.25em
-    {{\ttfamily\char`\\usepgfkeyslibrary\char`\{\declare{#1}\char`\}\space\space \char`\%\space\space  \LaTeX\space and plain \TeX}}\\
-    {{\ttfamily\char`\\usepgfkeyslibrary[\declare{#1}]\space \char`\%\space\space Con\TeX t}}\\[.5em]%
-    \pgfmanualbody
-}%
-{%
-  \end{pgfmanualentry}%
-}
 
 \usepackage{unicode-math}
 \setmathfont[Scale=MatchUppercase]{libertinusmath-regular.otf}
@@ -104,8 +89,9 @@
     \@tempswatrue
   \fi}
 \makeatother
-
+\usepgfkeyslibrary{ext.pgfkeys-plus}
 \usetikzlibrary{
+  ext.arrows,
   ext.calendar-plus,
   ext.misc,
   ext.node-families,
@@ -408,6 +394,12 @@
   \index{#1@\originalprefix\protect\texttt{\original{#1}} environment\originalsuffix}%
   \index{Environments!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
 }
+
+\newcommand*{\indexArrowtipO}[1]{%
+  \index{#1@\originalprefix\protect\texttt{\original{#1}} arrow tip\originalsuffix}%
+  \index{Arrow tips!#1@\originalprefix\protect\texttt{\original{#1}}\originalsuffix}%
+}
+\newcommand*{\referenceArrowtipandIndexO}[1]{\texttt{#1}\indexArrowtipO{#1}}
 \newcommand*{\referenceEnvironmentandIndexO}[1]{\texttt{#1}\indexEnvironmentO{#1}}
 \newcommand*{\referenceDecorationandIndexO}[1]{\texttt{#1}\indexDecorationO{#1}}
 \newcommand*{\referenceKeyandIndexO}[2][/tikz/]{\texttt{#1#2}\indexKeyO[#1]{#2}}
@@ -501,3 +493,42 @@
 {
   \end{pgfmanualentry}
 }
+
+\usepackage{booktabs}
+
+\renewenvironment{arrowtip}[4]{
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{\textbf{Arrow Tip Kind} {\ttfamily#1}}
+    \index{#1@\protect\texttt{#1} arrow tip}%
+    \index{Arrow tips!#1@\protect\texttt{#1}}%
+    \pgfmanualbody
+    \def\currentarrowtype{#1}
+    \begin{minipage}[t]{\dimexpr\linewidth-5cm\relax}
+      #2
+    \end{minipage}\hskip5mm\begin{minipage}[t]{4.75cm}
+      \leavevmode\vskip-2em
+    \tikz{
+      \draw [black!50,line width=5mm,-{#1[#3,color=black]}] (-4,0) -- (0,0);
+      \foreach \action in {#4}
+      { \expandafter\processaction\action\relax }
+    }
+    \end{minipage}\par\smallskip
+  }
+{
+  \end{pgfmanualentry}
+}
+\makeatletter
+\def\arrowexample@#1[#2]{%
+  {\sfcode`\.1000\scriptsize\texttt{#1[#2]}} \>
+  \tikz [baseline,>={#1[#2]}] \draw [line
+  width=0.4pt,->] (0,.5ex) -- (2em,.5ex); thin \>
+  \tikz [baseline,>={#1[#2]}] \draw [line
+  width=0.8pt,->] (0,.5ex) -- (2em,.5ex); \textbf{thick} \>
+  \tikz [baseline,>={#1[#2]}] \draw [line
+  width=1.6pt,->] (0,.5ex) -- (3em,.5ex); \\
+}
+\def\manual@action@radius#1/#2/#3\relax{%
+  \draw [red,|<->|,semithick] ([xshift=-#1,yshift=#1]current bounding
+  box.north east) -- node [above, overlay] {\texttt{radius}} ++(-#1,0);
+}
+\makeatother

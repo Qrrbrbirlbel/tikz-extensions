@@ -1,0 +1,288 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\usepgflibrary{arrows.meta}
+
+\pgfqkeys{/pgf/@arrows decl}{
+  clone/.code={%
+    \pgfutil@namelet{pgf@decl@arrow@code}{pgf@ar@code@#1}%
+    \pgfutil@namelet{pgf@decl@arrow@defaults}{pgf@ar@defaults@#1}%
+    \pgfutil@namelet{pgf@decl@arrow@setup}{pgf@ar@setup@#1}%
+    \pgfutil@namelet{pgf@decl@arrow@bending@mode}{pgf@ar@bending@mode@#1}%
+    \pgfutil@namelet{pgf@decl@arrow@par}{pgf@ar@par@#1}%
+    \pgfutil@namelet{pgf@decl@arrow@cache}{pgf@ar@do@cache@#1}%
+  },
+  append setup code/.code=
+    \begingroup
+      \pgfutil@toks@\expandafter{\pgf@decl@arrow@setup#1}%
+    \expandafter\endgroup
+    \expandafter\def\expandafter\pgf@decl@arrow@setup\expandafter
+      {\the\pgfutil@toks@ },
+  % append parameters/.code=
+  %   \begingroup
+  %     \show\pgf@decl@arrow@par
+  %     \pgfutil@toks@\expandafter{\pgf@decl@arrow@par#1}%
+  %   \expandafter\endgroup
+  %   \expandafter\def\expandafter\pgf@decl@arrow@par\expandafter
+  %     {\the\pgfutil@toks@ }
+}
+% \pgfkeyssetvalue{/pgf/arrow keys/weight}{true}
+
+%%% Barbed
+%   Arc Barb, Parenthesis
+\pgfdeclarearrow{
+  clone =          Arc Barb,
+  name  = Centered Arc Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
+\pgfdeclarearrow{
+  clone =          Arc Barb,
+  name  = Untipped Arc Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{\pgfarrowlength}
+    \fi
+}
+
+%   Hooks
+\pgfdeclarearrow{
+  clone =          Hooks,
+  name  = Centered Hooks,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
+
+%   Straight Barb
+\pgfdeclarearrow{
+  clone = Straight Barb,
+  name  = Centered Straight Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{.5\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{.5\pgfarrowlength}
+    \fi
+}
+
+%   Tee Barb, Bar, Bracket
+\pgfdeclarearrow{
+  clone =          Tee Barb,
+  name  = Centered Tee Barb,
+  append setup code = 
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}
+    \fi
+}
+\pgfdeclarearrow{
+  clone =          Tee Barb,
+  name  = Untipped Tee Barb,
+  append setup code = 
+    \ifpgfarrowreversed\expandafter\pgfarrowssetbackend\else\expandafter\pgfarrowssettipend\fi
+    {\pgfutil@tempdima
+      \ifpgfutil@tempswa % does it not extend to the right?
+        \advance\pgf@x-.5\pgfarrowlinewidth
+      \else
+        \ifpgfutil@tempswb
+        \else
+          \pgf@x=.5\pgfarrowlength
+        \fi
+        \ifpgfarrowroundcap\else
+          \advance\pgf@x-.5\pgfarrowlinewidth
+        \fi
+      \fi
+    }
+}
+%%% Mathematical
+%   Classical TikZ Rightarrow
+%   Computer Modern Rightarrow, To
+%   Implies
+
+%%% Geometric
+%   Circle, Ellipse
+\pgfdeclarearrow{
+  clone =          Circle,
+  name  = Centered Circle,
+  append setup code =
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{.5\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{.5\pgfarrowlength}
+    \fi
+}
+\pgfdeclarearrow{
+  clone =          Circle,
+  name  = Untipped Circle,
+  append setup code =
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{\pgfarrowlength \advance\pgf@x -.5\pgfarrowlinewidth}
+    \else
+      \pgfarrowssettipend{\pgfarrowlength \advance\pgf@x -.5\pgfarrowlinewidth}
+    \fi
+}
+
+%   Kite, Diamond, Turned Square
+\pgfdeclarearrow{
+  clone =          Kite,
+  name  = Centered Kite,
+  append setup code =
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{\pgfarrowinset}
+    \else
+      \pgfarrowssettipend{\pgfarrowinset}
+    \fi
+}
+
+%   LaTeX
+%   Square, Rectangle
+\pgfdeclarearrow{
+  clone =          Square,
+  name  = Centered Square,
+  append setup code =
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{.5\pgfarrowlength}
+    \else
+      \pgfarrowssettipend{.5\pgfarrowlength}
+    \fi
+}
+
+%   Stealth, Triangle
+\pgfdeclarearrow{
+  clone =          Stealth,
+  name  = Centered Stealth,
+  append setup code =
+    % \pgfkeysgetvalue{/pgf/arrow keys/weight}\pgf@temp
+    % \ifx\pgf@temp\pgf@truetext
+      \ifpgfarrowreversed
+        \pgfarrowssetbackend{.25\pgfarrowlength \advance\pgf@x .25\pgfarrowinset}
+      \else
+        \pgfarrowssettipend{.25\pgfarrowlength \advance\pgf@x .25\pgfarrowinset}
+      \fi
+    % \else
+    %   \ifpgfarrowreversed
+    %     \pgfarrowssetbackend{\pgf@temp\pgfarrowlength}
+    %   \else
+    %     \pgfarrowssettipend{\pgf@temp\pgfarrowlength}
+    %   \fi
+    % \fi
+    ,
+  % append parameters = {,\pgfkeysvalueof{/pgf/arrow keys/weight}},
+  % parameters = {
+  %   \the\pgfarrowlinewidth,%
+  %   \the\pgfarrowlength,%
+  %   \the\pgfarrowwidth,%
+  %   \the\pgfarrowinset,%
+  %   \pgfkeysvalueof{/pgf/arrow keys/weight},%
+  %   \ifpgfarrowharpoon h\fi%
+  %   \ifpgfarrowopen o\fi%
+  %   \ifpgfarrowroundjoin j\fi%
+  % },
+}
+%%% Caps
+
+%%% Rays
+\pgfdeclarearrow{
+  clone = Rays,
+  name  = Centered Rays,
+  append setup code =
+    \ifpgfarrowreversed
+      \pgfarrowssetbackend{0pt}
+    \else
+      \pgfarrowssettipend{0pt}%\pgfarrowssetvisualtipend{\pgf@xa}
+    \fi
+}
+
+%%% Variants
+\pgfkeys{
+  Centered Ellipse /.tip       = {Centered Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
+  Centered Parenthesis /.tip   = {Centered Arc Barb[arc=+120,length=+1.725pt +2.3]},
+  Centered Bar /.tip           = {Centered Tee Barb[length=+0pt]},
+  Centered Bracket /.tip       = {Centered Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
+  Centered Diamond /.tip       = {Centered Kite[inset'=+0pt .5]},
+  Centered Turned Square /.tip = {Centered Kite[length=+3pt 4,width'= +0pt 1,inset'= +0pt 0.5]},
+  Centered Rectangle /.tip     = {Centered Square[length=+3pt +4.5,width'=+0pt +.5]},
+  Centered Triangle /.tip      = {Centered Stealth[inset=+0pt, angle=+60:+2.7pt +3.6]},
+  Untipped Ellipse /.tip       = {Untipped Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
+  Untipped Parenthesis /.tip   = {Untipped Arc Barb[arc=+120,length=+1.725pt +2.3]},
+  Untipped Bar /.tip           = {Untipped Tee Barb[length=+0pt]},
+  Untipped Bracket /.tip       = {Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
+}
+
+%%% New Arrows
+\pgfdeclarearrow{
+  name = Hug Cap,
+  parameters = \the\pgfarrowlength,
+  defaults = {
+   length = +0pt +1
+  },
+  setup code={
+    % h = r - .5 sqrt(4 r^2 - s^2)
+    \ifdim2\pgfarrowlength<\pgflinewidth
+      \pgfarrowlength=.51\pgflinewidth
+    \fi
+    \pgfmathsetlengthmacro\pgfarrowh{\pgfarrowlength-.5*sqrt(4*\pgfarrowlength*\pgfarrowlength-\pgflinewidth*\pgflinewidth}
+    % a = asin(s / (2 r))
+    \pgfmathsetmacro\pgfarrowangle{asin(\the\pgflinewidth/(2*\the\pgfarrowlength))}
+    \pgfarrowssavethe\pgfarrowlength % radius
+    \pgfarrowssave\pgfarrowh         % h
+    \pgfarrowssave\pgfarrowangle     % a
+    \pgfarrowsupperhullpoint{0pt}{.5\pgflinewidth}
+    \pgfarrowsupperhullpoint{\pgfarrowh}{.5\pgflinewidth}
+  },
+  drawing code={
+    \pgfpathmoveto{\pgfqpoint{\pgfarrowh}{-.5\pgflinewidth}}
+    \pgfpatharc{180+\pgfarrowangle}{180-\pgfarrowangle}{\pgfarrowlength}
+    \pgfpathlineto{\pgfqpoint{-.1pt}{.5\pgflinewidth}}
+    \pgfpathlineto{\pgfqpoint{-.1pt}{-.5\pgflinewidth}}
+    \pgfpathclose
+    \pgfusepathqfill
+  }
+}
+
+\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}}
+\pgfdeclarearrow{
+  name = Loop,
+  parameters = {\the\pgfarrowlength,\the\pgfarrowinset,\ifpgfarrowopen o\fi},
+  defaults = {length = +3pt +1 +0, inset = +.75pt +1 +0},
+  setup code =
+    \ifdim\pgfarrowlength<\dimexpr2\pgfarrowinset+\pgflinewidth\relax
+      \pgfarrowlength\dimexpr2\pgfarrowinset+\pgflinewidth\relax
+    \fi
+    \pgfarrowssettipend{\pgfarrowlength}%
+    \pgfarrowssetlineend{.5\pgflinewidth}%
+    \pgfarrowssavethe\pgfarrowlength
+    \pgfarrowssavethe\pgfarrowinset,
+  drawing code={%
+    \pgfsetroundcap
+    \pgfpathmoveto{\pgfqpoint{.5\pgflinewidth}{0pt}}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}
+                             {0pt}}%
+    \pgfpatharc{+-90}{+0}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth}
+                             {\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}}%
+    \pgfpatharc{+0}{+90}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth}
+                             {\dimexpr\pgfarrowlength-.5\pgflinewidth}}%
+    \pgfpatharc{+90}{+180}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth-\pgfarrowinset}
+                             {\dimexpr-\pgfarrowlength+.5\pgflinewidth}}%
+    \ifpgfarrowopen\pgfusepathqstroke\else\pgfusepathqfillstroke\fi
+  }
+}
