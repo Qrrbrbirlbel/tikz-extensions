@@ -255,3 +255,34 @@
     \pgfusepathqfill
   }
 }
+
+\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}}
+\pgfdeclarearrow{
+  name = Loop,
+  parameters = {\the\pgfarrowlength,\the\pgfarrowinset,\ifpgfarrowopen o\fi},
+  defaults = {length = +3pt +1 +0, inset = +.75pt +1 +0},
+  setup code =
+    \ifdim\pgfarrowlength<\dimexpr2\pgfarrowinset+\pgflinewidth\relax
+      \pgfarrowlength\dimexpr2\pgfarrowinset+\pgflinewidth\relax
+    \fi
+    \pgfarrowssettipend{\pgfarrowlength}%
+    \pgfarrowssetlineend{.5\pgflinewidth}%
+    \pgfarrowssavethe\pgfarrowlength
+    \pgfarrowssavethe\pgfarrowinset,
+  drawing code={%
+    \pgfsetroundcap
+    \pgfpathmoveto{\pgfqpoint{.5\pgflinewidth}{0pt}}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}
+                             {0pt}}%
+    \pgfpatharc{+-90}{+0}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth}
+                             {\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}}%
+    \pgfpatharc{+0}{+90}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth}
+                             {\dimexpr\pgfarrowlength-.5\pgflinewidth}}%
+    \pgfpatharc{+90}{+180}{+\pgfarrowinset}%
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth-\pgfarrowinset}
+                             {\dimexpr-\pgfarrowlength+.5\pgflinewidth}}%
+    \ifpgfarrowopen\pgfusepathqstroke\else\pgfusepathqfillstroke\fi
+  }
+}
