@@ -1,0 +1,300 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\usepgflibrary{ext.pathusage}
+\newif\iftikz@mode@undraw     % don't draw but add to bb
+\newif\iftikz@mode@drawundraw % draw but don't add to bb
+\tikzset{
+  undraw/.is choice,
+  undraw/true/.code=%
+    \tikz@addmode{%
+      \tikz@mode@drawfalse
+      \tikz@mode@undrawtrue
+      \tikz@mode@drawundrawfalse
+    },
+  undraw/false/.code=%
+    \tikz@addmode{%
+      \tikz@mode@undrawfalse
+    },
+  undraw/.default=true,
+  draw undraw/.default=,
+  draw undraw/.code=%
+    \edef\tikz@temp{#1}%
+    \ifx\tikz@temp\tikz@nonetext
+      \tikz@addmode{%
+        \tikz@mode@drawundrawfalse
+      }%
+    \else
+      \ifx\tikz@temp\pgfutil@empty
+      \else
+        \tikz@addoption{\pgfsetstrokecolor{#1}}%
+        \def\tikz@strokecolor{#1}%
+      \fi
+      \tikz@addmode{%
+        \tikz@mode@drawtrue
+        \tikz@mode@undrawfalse
+        \tikz@mode@drawundrawtrue
+      }%
+    \fi,
+  draw/.default=,
+  draw/.code=%
+    \edef\tikz@temp{#1}%
+    \ifx\tikz@temp\tikz@nonetext%
+      \tikz@addmode{\tikz@mode@drawfalse}%
+    \else%
+      \ifx\tikz@temp\pgfutil@empty%
+      \else%
+        \tikz@addoption{\pgfsetstrokecolor{#1}}%
+        \def\tikz@strokecolor{#1}%
+      \fi%
+      \tikz@addmode{%
+        \tikz@mode@drawtrue
+        \tikz@mode@undrawfalse
+      }%
+    \fi%,
+}
+
+\def\tikz@finish{%
+  % Rendering pipeline
+  %
+  % Step 1: The path background box
+  %
+  \box\tikz@figbox@bg%
+  %
+  % Step 2: Decorate path
+  %
+  \iftikz@decoratepath%
+    \tikz@lib@dec@decorate@path%
+  \fi%
+  %
+  % Step 3: Preactions
+  %
+  \pgfsyssoftpath@getcurrentpath\tikz@actions@path%
+  \edef\tikz@restorepathsize{%
+    \global\pgf@pathmaxx=\the\pgf@pathmaxx%
+    \global\pgf@pathmaxy=\the\pgf@pathmaxy%
+    \global\pgf@pathminx=\the\pgf@pathminx%
+    \global\pgf@pathminy=\the\pgf@pathminy%
+  }%
+  \tikz@preactions%
+  %
+  % Step 4: Reset modes
+  %
+  \let\tikz@path@picture=\pgfutil@empty%
+  \tikz@mode@fillfalse%
+  \tikz@mode@drawfalse%
+  \tikz@mode@undrawfalse     % ←
+  \tikz@mode@drawundrawfalse % ←
+  \tikz@mode@doublefalse%
+  \tikz@mode@clipfalse%
+  \tikz@mode@boundaryfalse%
+  \tikz@mode@fade@pathfalse%
+  \tikz@mode@fade@scopefalse%
+  \edef\tikz@pathextend{%
+    {\noexpand\pgfqpoint{\the\pgf@pathminx}{\the\pgf@pathminy}}%
+    {\noexpand\pgfqpoint{\the\pgf@pathmaxx}{\the\pgf@pathmaxy}}%
+  }%
+  \let\tikz@beamermode\pgfutil@empty % ← for ext.beamer
+  \tikz@mode% installs the mode settings
+  \tikz@beamermode                   % ← for ext.beamer
+  % Path fading counts as an option:
+  \iftikz@mode@fade@path%
+    \tikz@addoption{%
+      \iftikz@fade@adjust%
+        \iftikz@mode@draw%
+          \pgfsetfadingforcurrentpathstroked{\tikz@path@fading}{\tikz@do@fade@transform}%
+        \else%
+          \pgfsetfadingforcurrentpath{\tikz@path@fading}{\tikz@do@fade@transform}%
+        \fi%
+      \else%
+        \pgfsetfading{\tikz@path@fading}{\tikz@do@fade@transform}%
+      \fi%
+      \tikz@mode@fade@pathfalse% no more fading...
+    }%
+  \fi%
+  %
+  % Step 5: Install scope fading
+  %
+  \iftikz@mode@fade@scope%
+    \iftikz@fade@adjust%
+      \iftikz@mode@draw%
+        \pgfsetfadingforcurrentpathstroked{\tikz@scope@fading}{\tikz@do@fade@transform}%
+      \else%
+        \pgfsetfadingforcurrentpath{\tikz@scope@fading}{\tikz@do@fade@transform}%
+      \fi%
+    \else%
+      \pgfsetfading{\tikz@scope@fading}{\tikz@do@fade@transform}%
+    \fi%
+    \tikz@mode@fade@scopefalse%
+  \fi%
+  %
+  % Step 5': Setup options
+  %
+  \ifx\tikz@options\pgfutil@empty%
+  \else%
+    \pgfsys@beginscope%
+      \let\pgfscope@stroke@color=\pgf@strokecolor@global%
+      \let\pgfscope@fill@color=\pgf@fillcolor@global%
+      \begingroup%
+        \tikz@options%
+  \fi%
+  \tikz@do@rdf@pre@options%
+  %
+  % Step 5'': Setup animations
+  %
+  \tikz@is@nodefalse%
+  \tikz@call@id@hook%
+  \iftikz@mode@clip\else%
+    \pgfidscope%
+      \tikz@do@rdf@post@options%
+      \begingroup%
+  \fi% open an animation scope here, unless clipping is done
+  %
+  % Step 6: Do a fill if shade or a path picture follows.
+  %
+  \iftikz@mode@fill%
+    \iftikz@mode@shade%
+      \pgfsyssoftpath@getcurrentpath\tikz@temppath
+      \pgfprocessround{\tikz@temppath}{\tikz@temppath}% change the path
+      \pgfsyssoftpath@setcurrentpath\tikz@temppath%
+      \pgfsyssoftpath@invokecurrentpath%
+      \pgfpushtype%
+      \pgfusetype{.path fill}%
+      \pgfsys@fill%
+      \pgfpoptype%
+      \tikz@mode@fillfalse% no more filling...
+    \else%
+      \ifx\tikz@path@picture\pgfutil@empty%
+      \else%
+        \pgfsyssoftpath@getcurrentpath\tikz@temppath
+        \pgfprocessround{\tikz@temppath}{\tikz@temppath}% change the path
+        \pgfsyssoftpath@setcurrentpath\tikz@temppath%
+        \pgfsyssoftpath@invokecurrentpath%
+        \pgfpushtype%
+        \pgfusetype{.path fill}%
+        \pgfsys@fill%
+        \pgfpoptype%
+        \tikz@mode@fillfalse% no more filling...
+      \fi%
+    \fi%
+  \fi%
+  %
+  % Step 7: Do a shade if necessary.
+  %
+  \iftikz@mode@shade%
+    \pgfsyssoftpath@getcurrentpath\tikz@temppath
+    \pgfprocessround{\tikz@temppath}{\tikz@temppath}% change the path
+    \pgfsyssoftpath@setcurrentpath\tikz@temppath%
+    \pgfpushtype%
+    \pgfusetype{.path shade}%
+    \pgfshadepath{\tikz@shading}{\tikz@shade@angle}%
+    \pgfpoptype%
+    \tikz@mode@shadefalse% no more shading...
+  \fi%
+  %
+  % Step 8: Do a path picture if necessary.
+  %
+  \ifx\tikz@path@picture\pgfutil@empty%
+  \else%
+    \begingroup%
+      \pgfusetype{.path picture}%
+      \pgfidscope%
+      \pgfsys@beginscope%
+        \let\tikz@id@name\pgfutil@empty%
+        \pgfclearid%
+        \pgfsyssoftpath@getcurrentpath\tikz@temppath
+        \pgfprocessround{\tikz@temppath}{\tikz@temppath}% change the path
+        \pgfsyssoftpath@setcurrentpath\tikz@temppath%
+        \pgfsyssoftpath@invokecurrentpath%
+        \pgfsys@clipnext%
+        \pgfsys@discardpath%
+        \pgf@relevantforpicturesizefalse%
+        \expandafter\def\csname pgf@sh@ns@path picture bounding box\endcsname{rectangle}
+        \expandafter\edef\csname pgf@sh@np@path picture bounding box\endcsname{%
+          \def\noexpand\southwest{\noexpand\pgfqpoint{\the\pgf@pathminx}{\the\pgf@pathminy}}%
+          \def\noexpand\northeast{\noexpand\pgfqpoint{\the\pgf@pathmaxx}{\the\pgf@pathmaxy}}%
+        }
+        \expandafter\def\csname pgf@sh@nt@path picture bounding box\endcsname{{1}{0}{0}{1}{0pt}{0pt}}
+        \expandafter\def\csname pgf@sh@pi@path picture bounding box\endcsname{\pgfpictureid}
+        \pgfinterruptpath%
+          \tikz@path@picture%
+        \endpgfinterruptpath%
+      \pgfsys@endscope%
+      \endpgfidscope%
+    \endgroup%
+    \let\tikz@path@picture=\pgfutil@empty%
+  \fi%
+  %
+  % Step 9: Double stroke, if necessary
+  %
+  \iftikz@mode@draw%
+    \iftikz@mode@double%
+      % Change line width
+      \begingroup%
+        \pgfsys@beginscope%
+          \tikz@double@setup%
+    \fi%
+  \fi%
+  %
+  % Step 10: Do stroke/fill/clip as needed
+  %
+  \pgfpushtype%
+  \edef\tikz@temp{\noexpand\pgfusepath{%
+    \iftikz@mode@fill fill,\fi%
+    \iftikz@mode@undraw undraw,\fi%
+    \iftikz@mode@draw draw\iftikz@mode@drawundraw\space undraw\fi,\fi%
+    \iftikz@mode@clip clip\fi%
+    }}%
+  \pgfusetype{.path}%
+  \tikz@temp%
+  \pgfpoptype%
+  \tikz@mode@fillfalse% no more filling
+  %
+  % Step 11: Double stroke, if necessary
+  %
+  \iftikz@mode@draw%
+    \iftikz@mode@double%
+        \pgfsys@endscope%
+      \endgroup%
+    \fi%
+  \fi%
+  \tikz@mode@drawfalse% no more stroking
+  %
+  % Step 12: Postactions
+  %
+  \tikz@postactions%
+  %
+  % Step 13: Add labels and nodes
+  %
+  \box\tikz@figbox%
+  %
+  % Step 14: Close animations
+  %
+  \iftikz@mode@clip\else\endgroup\endpgfidscope\fi%
+  %
+  % Step 14: Close option brace
+  %
+  \ifx\tikz@options\pgfutil@empty%
+  \else%
+      \endgroup%
+      \global\let\pgf@strokecolor@global=\pgfscope@stroke@color%
+      \global\let\pgf@fillcolor@global=\pgfscope@fill@color%
+    \pgfsys@endscope%
+    \iftikz@mode@clip%
+      \tikzerror{Extra options not allowed for clipping path command.}%
+    \fi%
+  \fi%
+  \iftikz@mode@clip%
+    \aftergroup\pgf@relevantforpicturesizefalse%
+  \fi%
+  \iftikz@mode@boundary%
+    \aftergroup\pgf@relevantforpicturesizefalse%
+  \fi%
+  \endgroup%
+  \global\pgflinewidth=\tikzscope@linewidth%
+  \tikz@path@do@at@end%
+}%

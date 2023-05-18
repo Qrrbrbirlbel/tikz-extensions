@@ -1,0 +1,140 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\def\pgf@up@unstroke@text{unstroke}             % don't draw but add linewidth to bb
+\def\pgf@up@strokeunstroke@text{strokeunstroke} % draw but don't add linewidth to bb
+\let\pgfsys@unstroke\pgfutil@empty
+\let\pgfsys@fillunstroke\pgfsys@fill
+\let\pgfsys@strokeunstroke\pgfsys@stroke
+\let\pgfsys@fillstrokeunstroke\pgfsys@fillstroke
+\pgfset{
+  unstroke/.code=%
+    \let\pgf@up@stroke\pgf@up@unstroke@text      \pgf@up@path@neededfalse,
+  stroke unstroke/.code=%
+    \let\pgf@up@stroke\pgf@up@strokeunstroke@text\pgf@up@path@neededtrue,
+  undraw/.code=%
+    \let\pgf@up@stroke\pgf@up@unstroke@text      \pgf@up@path@neededfalse,
+  draw undraw/.code=%
+    \let\pgf@up@stroke\pgf@up@strokeunstroke@text\pgf@up@path@neededtrue,
+}
+\def\pgfusepath#1{%
+  \pgf@up@path@neededfalse%
+  \pgf@up@draw@arrowsfalse%
+  \let\pgf@up@stroke\pgfutil@empty%
+  \let\pgf@up@fill\pgfutil@empty%
+  \let\pgf@up@clip\pgfutil@empty%
+  \let\pgf@up@bb\pgfutil@empty%
+  \pgfset{#1}%
+  \expandafter\def\expandafter\pgf@up@action\expandafter{\csname pgfsys@\pgf@up@fill\pgf@up@stroke\endcsname}%
+  \ifnum\pgf@tips@mode=2\relax%
+    \pgf@up@path@neededtrue%
+  \fi%
+  \ifnum\pgf@tips@mode=4\relax%
+    \pgf@up@path@neededtrue%
+  \fi%
+  \ifpgf@up@path@needed%
+  \else%
+    \pgfsyssoftpath@setcurrentpath\pgfutil@empty%
+  \fi%
+  \ifx\pgf@up@stroke\pgfutil@empty%
+    \ifx\pgf@up@fill\pgfutil@empty%
+      \let\pgf@up@action=\pgfutil@empty%
+      \ifx\pgf@up@clip\pgfutil@empty%
+      \else%
+        % only clipping
+        \let\pgf@up@action=\pgfsys@discardpath%
+      \fi%
+    \fi%
+  \fi%
+  \pgfsyssoftpath@getcurrentpath\pgf@last@processed@path
+  \pgfprocessround{\pgf@last@processed@path}{\pgf@last@processed@path}% change the path
+  \pgfsyssoftpath@setcurrentpath\pgf@last@processed@path%
+  %
+  % Check whether the path is stroked. If so, add half the line width
+  % to the bounding box.
+  %
+  \ifpgf@relevantforpicturesize%
+    \ifx\pgf@up@stroke\pgfutil@empty%
+    \else%
+      % maybe we stroke unstroke (i.e. stroke but don't add to bb)
+      \ifx\pgf@up@stroke\pgf@up@strokeunstroke@text
+      \else
+        \ifdim\pgf@picmaxx=-16000pt\relax%
+        \else%
+          \pgf@x=\pgf@pathminx\advance\pgf@x by-.5\pgflinewidth%
+          \ifdim\pgf@x<\pgf@picminx\global\pgf@picminx\pgf@x\fi%
+          \pgf@y=\pgf@pathminy\advance\pgf@y by-.5\pgflinewidth%
+          \ifdim\pgf@y<\pgf@picminy\global\pgf@picminy\pgf@y\fi%
+          \pgf@x=\pgf@pathmaxx\advance\pgf@x by.5\pgflinewidth%
+          \ifdim\pgf@x>\pgf@picmaxx\global\pgf@picmaxx\pgf@x\fi%
+          \pgf@y=\pgf@pathmaxy\advance\pgf@y by.5\pgflinewidth%
+          \ifdim\pgf@y>\pgf@picmaxy\global\pgf@picmaxy\pgf@y\fi%
+        \fi%
+      \fi
+    \fi%
+  \fi%
+  %
+  \ifx\pgf@up@clip\pgfutil@empty%
+    \ifx\pgf@up@stroke\pgfutil@empty%
+      \ifx\pgf@up@action\pgfutil@empty%
+        \ifnum\pgf@tips@mode=2\relax%
+          \pgf@up@draw@arrows@only%
+        \fi%
+        \ifnum\pgf@tips@mode=4\relax%
+          \pgf@up@draw@arrows@only%
+        \fi%
+      \else%
+        \pgfsyssoftpath@invokecurrentpath%
+        \pgf@up@action%
+      \fi%
+    \else%
+      \pgfgetpath\pgf@arrowpath%
+      \pgf@path@setup@tempswa%
+      \pgfprocesscheckclosed{\pgf@arrowpath}{\pgfutil@tempswafalse}%
+      \pgf@path@check@proper%
+      \ifpgfutil@tempswa%
+        \pgf@check@for@arrow@and@animation%
+        \pgf@prepare@end@of@path%
+        \begingroup%
+          \pgf@prepare@start@of@path%
+      \fi%
+          \pgfsyssoftpath@invokecurrentpath%
+          \pgf@up@action%
+          \ifdim\pgfinnerlinewidth>0pt\relax%
+            \pgf@stroke@inner@line%
+          \fi%
+      \ifpgfutil@tempswa%
+          \ifx\pgf@up@stroke\pgf@up@strokeunstroke@text % don't use hull of arrow tip
+            \let\pgf@arrows@rigid@hull@orig\pgf@arrows@rigid@hull
+            \let\pgf@arrows@rigid@hull\pgfutil@empty
+          \fi
+          \pgf@add@arrow@at@start%
+          \ifx\pgf@up@stroke\pgf@up@strokeunstroke@text
+            \let\pgf@arrows@rigid@hull\pgf@arrows@rigid@hull@orig
+          \fi
+        \endgroup%
+        \ifx\pgf@up@stroke\pgf@up@strokeunstroke@text % don't use hull of arrow tip
+          \let\pgf@arrows@rigid@hull@orig\pgf@arrows@rigid@hull
+          \let\pgf@arrows@rigid@hull\pgfutil@empty
+        \fi
+        \pgf@add@arrow@at@end%
+        \ifx\pgf@up@stroke\pgf@up@strokeunstroke@text
+          \let\pgf@arrows@rigid@hull\pgf@arrows@rigid@hull@orig
+        \fi
+      \fi%
+    \fi%
+  \else%
+    \pgfsyssoftpath@invokecurrentpath%
+    \pgfsys@clipnext%
+    \pgf@up@action%
+    \pgf@relevantforpicturesizefalse%
+  \fi%
+  \pgf@up@bb%
+  \pgfsyssoftpath@setcurrentpath\pgfutil@empty%
+  \pgf@resetpathsizes%
+  \ignorespaces%
+}

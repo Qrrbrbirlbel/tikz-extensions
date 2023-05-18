@@ -1,0 +1,25 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Path Usages}
+\label{pgflibrary:pathusage}
+\begin{purepgflibrary}{ext.pathusage}
+  This library adds two stroke mechanism to \pgfname.
+\end{purepgflibrary}
+
+The stroke mechanisms are
+\begin{itemize}
+\item \declare{|unstroke|}/\declare{|undraw|} will \emph{not} stroke the path
+      but will simulate it. This can be used so that the path's
+      bounding box includes the line width that is added by \pgfname\ 
+      on all four sides.
+\item \declare{|stroke unstroke|}/\declare{|draw undraw|} will stroke the path
+      but will \emph{not} increase the bounding box to include the line width.
+\end{itemize}

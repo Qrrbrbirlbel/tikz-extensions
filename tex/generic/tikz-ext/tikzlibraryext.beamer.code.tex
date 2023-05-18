@@ -1,0 +1,44 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\usetikzlibrary{ext.pathusage}
+\def\tikz@addbeamermode#1{%
+  \tikz@addmode{\expandafter\def\expandafter\tikz@beamermode\expandafter{\tikz@beamermode#1}}}
+\tikzset{
+  phantom node/.code=% can't be reset
+    \tikz@addoption{%
+      \expandafter\let\csname pgf@sh@boxes@\tikz@shape\endcsname\pgfutil@empty
+    }%
+  ,
+  /tikz-ext/beamer/alt/.code n args={3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+  },
+  /tikz-ext/beamer/alt at end/.code n args={3}{%
+    \tikz@addbeamermode{%
+      \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+    }%
+  },
+  beamer invisible/.code={%
+    \tikzset{phantom node}%
+    \tikz@addbeamermode{%
+      \let\tikz@path@picture=\pgfutil@empty%
+      \tikz@mode@fillfalse%
+      \iftikz@mode@draw
+        \tikz@mode@drawfalse
+        \tikz@mode@undrawtrue
+      \fi
+      \tikz@mode@drawundrawfalse
+      \tikz@mode@doublefalse%
+      \tikz@mode@clipfalse%
+      \tikz@mode@boundaryfalse%
+      \tikz@mode@fade@pathfalse%
+      \tikz@mode@fade@scopefalse%
+    }%
+  },
+  visible on/.style args={<#1>}{/tikz-ext/beamer/alt={#1}{}{/tikz/beamer invisible}},
+  alt/.style args={<#1>#2#3}{/tikz-ext/beamer/alt={#1}{#2}{#3}},
+}
