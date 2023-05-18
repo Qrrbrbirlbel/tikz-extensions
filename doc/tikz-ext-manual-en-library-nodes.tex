@@ -124,4 +124,80 @@ As above but suitable for connecting nodes.
               to["2" near start, "3", "4" near end] (4,1)
                                             -- ++(down:1);
 \end{codeexample}
+
+\subsection{Automatic placement of nodes}
+The \referenceKeyandIndexO{auto} key allows automatic placement of
+nodes along a path segment.
+This library extends this in various ways.
+
+\subsubsection{More than left and right}
+Besides |left| and |right| that are provided by \tikzname\ 
+the following placement mechanism are provided:
+\begin{itemize}
+\item |above| will place a node towards the direction of the line,
+\item |below| will place a node against the direction of the line,
+\item |west| will place a node towards the left side of the paper,
+\item |east| will place a node towards the right side of the paper,
+\item |north| will place a node towards the upper side of the paper and
+\item |south| will place a node twoards the lower side of the paper.
+\end{itemize}
+
+Certain cases exist for |west|, |east|, |above| and |below| placements
+where it is not clear how a node should be placed.
+These cases and their behavior can be seen in the following diagram.
+%\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.arrows}]
+\begin{center}
+\newcommand*\tikzauto[3]{%
+  \path[{Centered Circle[black]}-Latex, auto=#1, passive/.style={gray, nodes=gray, behind path}]
+    (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
+          edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
+\tikz\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{%
+  \tikzauto{west}{}{passive}  \& \tikzauto{east}{}{passive}  \\
+  \tikzauto{north}{passive}{} \& \tikzauto{south}{passive}{} \\};
+\end{center}
+%\end{codeexample}
+
+\subsubsection{Offset}
+Nodes are usually placed with their border (including any |outer sep|)
+on the line.
+With the following option, a node will be shifted a certain offset distance.
+
+\begin{key}{/tikz/auto with offset=\opt{\meta{true or false}} (default true)}
+  This key activated the offset function.
+\end{key}
+\begin{key}{/tikz/auto offset (initially 1cm)}
+The offset distance itself.
+\end{key}
+
+For the \referenceDecorationandIndexO{brace} decoration,
+the following keys are provided which needs the
+\referenceLibraryandIndexO{decorations.pathreplacing} loaded before they
+can be used.
+\begin{key}{/tikz-ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
+This key installs the necessary customizations
+for the \referenceKeyandIndexO[/pgf/decoration]{raise} key
+so that the given value is available as an offset.
+
+It also makes available the following keys.
+\begin{stylekey}{/tikz/auto offset for brace decoration}
+This sets \referenceKeyandIndex{auto offset} to
+\texttt{\textbackslash pgfdecorationsegmentamplitude+
+  (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
+\end{stylekey}
+\begin{stylekey}{/tikz/every brace node}
+Using this key on a node along a path that's decorated by the |brace| decoration
+will offset the node so that it will be placed at the tip of the brace.
+\end{stylekey}
+\end{key}
+
+\subsubsection{Precise placement}
+The default behavior of the |auto| placement mechanism is
+to snap to one of the eight compass directions.
+\begin{key}{/tikz/precise auto angle=\opt{\meta{true or false}} (default true)}
+With this option set to |true|, the |auto| placement won't snap
+to one of the eight compass directions.
+
+This key disables the \referenceKeyandIndexO{sloped} option
+which in turn will disable this option.
+\end{key}
 \end{multicols}
