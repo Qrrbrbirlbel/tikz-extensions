@@ -164,6 +164,8 @@
   /utils/temp/.list={
     left=right,
     right=left,
+    Left=Right,
+    Right=Left,
     above=below,
     below=above,
     north=south,
@@ -310,6 +312,74 @@
   \tikzext@auto@offset@B{-90}%
 }
 \def\tikz@auto@anchor@right@precise{%
+  \tikz@auto@pre
+  \edef\tikz@temp{%
+    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
+  \tikz@temp
+  \pgfmathadd@{\pgfmathresult}{90}%
+  \let\tikz@anchor\pgfmathresult
+  \tikzext@auto@offset@A{-90}%
+  \tikz@auto@post
+  \tikzext@auto@offset@B@precise
+}
+
+% direction: Left
+\def\tikz@auto@anchor@Left{% overwriting
+  \tikzext@auto@pre
+  \def\tikzext@autooffset@angle{90}%
+  \iftikzext@allowupsidedownattime
+    \tikz@auto@anchor
+  \else
+    \iftikzext@slopedattime
+      \ifdim\pgf@xa<0pt
+        \def\tikz@anchor{north}%
+        \def\tikzext@autooffset@angle{-90}%
+      \else
+        \def\tikz@anchor{south}%
+      \fi
+    \else
+      \tikz@auto@anchor
+    \fi
+  \fi
+  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
+  \tikzext@auto@post
+  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+}
+\def\tikz@auto@anchor@Left@precise{%
+  \tikz@auto@pre
+  \edef\tikz@temp{%
+    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
+  \tikz@temp
+  \pgfmathadd@{\pgfmathresult}{-90}%
+  \let\tikz@anchor\pgfmathresult
+  \tikzext@auto@offset@A{90}%
+  \tikz@auto@post
+  \tikzext@auto@offset@B@precise
+}
+
+% direction: Right
+\def\tikz@auto@anchor@Right{% overwriting
+  \tikzext@auto@pre
+  \def\tikzext@autooffset@angle{-90}%
+  \iftikzext@allowupsidedownattime
+    \tikz@auto@anchor@prime
+  \else
+    \iftikzext@slopedattime
+      \ifdim\pgf@xa<0pt
+        \def\tikz@anchor{south}%
+        \def\tikzext@autooffset@angle{90}%
+      \else
+        \def\tikz@anchor{north}%
+      \fi
+    \else
+      \tikz@auto@anchor@prime
+    \fi
+  \fi
+  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
+  \tikzext@auto@post
+  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+}
+\def\tikz@auto@anchor@Right@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
