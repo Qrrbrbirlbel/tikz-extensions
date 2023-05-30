@@ -166,12 +166,12 @@
     right=left,
     Left=Right,
     Right=Left,
-    above=below,
-    below=above,
-    north=south,
-    south=north,
-    west=east,
-    east=west%
+    Above=Below,
+    Below=Above,
+    North=South,
+    South=North,
+    West=East,
+    East=West%
   },
   sloped/.default=true,
   sloped/.is choice, % overwriting
@@ -391,8 +391,8 @@
   \tikzext@auto@offset@B@precise
 }
 
-% direction: north (always above the line)
-\def\tikz@auto@anchor@north{%
+% direction: North (always above the line)
+\def\tikz@auto@anchor@North{%
   \tikzext@auto@pre
   \def\tikz@anchor{south}%
   \def\tikzext@autooffset@angle{90}%
@@ -427,7 +427,7 @@
   \tikzext@auto@post
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
-\def\tikz@auto@anchor@north@precise{%
+\def\tikz@auto@anchor@North@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
@@ -445,8 +445,8 @@
   \tikzext@auto@offset@B@precise
 }
 
-% auto: south (always below the line)
-\def\tikz@auto@anchor@south{%
+% auto: South (always below the line)
+\def\tikz@auto@anchor@South{%
   \tikzext@auto@pre
   \def\tikz@anchor{north}%
   \def\tikzext@autooffset@angle{-90}%
@@ -481,7 +481,7 @@
   \tikzext@auto@post
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
-\def\tikz@auto@anchor@south@precise{%
+\def\tikz@auto@anchor@South@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
@@ -499,8 +499,8 @@
   \tikzext@auto@offset@B@precise
 }
 
-% auto: west (always to the left of the line)
-\def\tikz@auto@anchor@west{%
+% auto: West (always to the left of the line)
+\def\tikz@auto@anchor@West{%
   \tikzext@auto@pre
   \def\tikz@anchor{east}%
   \def\tikzext@autooffset@angle{90}%
@@ -562,7 +562,7 @@
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
 
-\def\tikz@auto@anchor@west@precise{%
+\def\tikz@auto@anchor@West@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
@@ -580,8 +580,8 @@
   \tikzext@auto@offset@B@precise
 }
 
-% auto: east (always to the right of the line)
-\def\tikz@auto@anchor@east{%
+% auto: East (always to the right of the line)
+\def\tikz@auto@anchor@East{%
   \tikzext@auto@pre
   \def\tikz@anchor{west}%
   \def\tikzext@autooffset@angle{-90}%
@@ -641,7 +641,7 @@
   \tikzext@auto@post
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
-\def\tikz@auto@anchor@east@precise{%
+\def\tikz@auto@anchor@East@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
@@ -660,7 +660,7 @@
 }
 
 % auto: above (always towards end of line)
-\def\tikz@auto@anchor@above{%
+\def\tikz@auto@anchor@Above{%
   \tikzext@auto@pre
   \def\tikzext@autooffset@angle{0}%
   \ifdim\pgf@y>0.05pt
@@ -699,7 +699,7 @@
   \tikzext@auto@post
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
-\def\tikz@auto@anchor@above@precise{%
+\def\tikz@auto@anchor@Above@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
@@ -712,7 +712,7 @@
 }
 
 % auto: below (always towards the start of the line)
-\def\tikz@auto@anchor@below{%
+\def\tikz@auto@anchor@Below{%
   \tikzext@auto@pre
   \def\tikzext@autooffset@angle{180}%
   \ifdim\pgf@y>0.05pt
@@ -751,7 +751,7 @@
   \tikzext@auto@post
   \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
 }
-\def\tikz@auto@anchor@below@precise{%
+\def\tikz@auto@anchor@Below@precise{%
   \tikz@auto@pre
   \edef\tikz@temp{%
     \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%

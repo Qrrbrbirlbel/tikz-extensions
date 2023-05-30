@@ -134,27 +134,37 @@ This library extends this in various ways.
 Besides |left| and |right| that are provided by \tikzname\ 
 the following placement mechanism are provided:
 \begin{itemize}
-\item |above| will place a node towards the direction of the line,
-\item |below| will place a node against the direction of the line,
-\item |west| will place a node towards the left side of the paper,
-\item |east| will place a node towards the right side of the paper,
-\item |north| will place a node towards the upper side of the paper and
-\item |south| will place a node twoards the lower side of the paper.
+\item |Left| will place a node to the left of the direction of the line,
+\item |Right| will place a node to the right of the direction of the line,
+\item |Above| will place a node towards the direction of the line,
+\item |Below| will place a node against the direction of the line,
+\item |West| will place a node towards the left side of the paper,
+\item |East| will place a node towards the right side of the paper,
+\item |North| will place a node towards the upper side of the paper and
+\item |South| will place a node twoards the lower side of the paper.
 \end{itemize}
+The placement mechanism |Left| and |Right| are like the original
+|left| and |right| mechanism but don't swap sides when \referenceKeyandIndexO{sloped}
+is used.
 
-Certain cases exist for |west|, |east|, |above| and |below| placements
+Certain cases exist for |West|, |East|, |North| and |South| placements
 where it is not clear how a node should be placed.
-These cases and their behavior can be seen in the following diagram.
+These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
 %\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.arrows}]
+\begin{figure*}
 \begin{center}
+\small
 \newcommand*\tikzauto[3]{%
   \path[{Centered Circle[black]}-Latex, auto=#1, passive/.style={gray, nodes=gray, behind path}]
     (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
           edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
-\tikz\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{%
-  \tikzauto{west}{}{passive}  \& \tikzauto{east}{}{passive}  \\
-  \tikzauto{north}{passive}{} \& \tikzauto{south}{passive}{} \\};
+\tikz[x=+.75cm,y=+.75cm]\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{
+  \tikzauto{West}{}{passive}  \& \tikzauto{East}{}{passive}  \\
+  \tikzauto{North}{passive}{} \& \tikzauto{South}{passive}{} \\};
 \end{center}
+\caption{Behavior of \texttt{West}, \texttt{East}, \texttt{North} and \texttt{South} in certain cases}
+\label{fig:autoplacements}
+\end{figure*}
 %\end{codeexample}
 
 \subsubsection{Offset}
