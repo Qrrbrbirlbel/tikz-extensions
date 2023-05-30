@@ -8,10 +8,10 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\newcommand*\tikzextversion{0.5.1}
+\newcommand*\tikzextversion{0.6}
 %\includeonly{
-%%  tikz-ext-manual-en-library-misc,
-%%  tikz-ext-manual-en-library-nodes,
+%  tikz-ext-manual-en-library-misc,
+%  tikz-ext-manual-en-library-nodes,
 %  tikz-ext-manual-en-pgf-arrows,
 %}
 \begin{document}
@@ -182,6 +182,12 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
+Version 0.6
+\begin{itemize}
+\item Added six new |auto| placement mechanism: |above|, |below|, |west|, |east|, |north| and |south|.
+\item Added |auto offset| for |auto| placement.
+\item Added |precise auto angle|.
+\end{itemize}
 Version 0.5.1
 \begin{itemize}
 \item \addPGF{arrows}
