@@ -217,7 +217,8 @@
       \pgf@y=\pgf@pt@ab pt%
       \pgfpointnormalised{}%
     \endgroup
-    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \edef\tikzext@unslopedx{\the\pgf@x}%
+    \edef\tikzext@unslopedy{\the\pgf@y}%
     \pgfresetnontranslationattimefalse
     \ifpgfslopedattime
       \pgfslopedattimefalse%
@@ -331,7 +332,7 @@
     \tikz@auto@anchor
   \else
     \iftikzext@slopedattime
-      \ifdim\pgf@xa<0pt
+      \ifdim\tikzext@unslopedx<0pt
         \def\tikz@anchor{north}%
         \def\tikzext@autooffset@angle{-90}%
       \else
@@ -365,7 +366,7 @@
     \tikz@auto@anchor@prime
   \else
     \iftikzext@slopedattime
-      \ifdim\pgf@xa<0pt
+      \ifdim\tikzext@unslopedx<0pt
         \def\tikz@anchor{south}%
         \def\tikzext@autooffset@angle{90}%
       \else
@@ -397,7 +398,7 @@
   \def\tikz@anchor{south}%
   \def\tikzext@autooffset@angle{90}%
   \iftikzext@allowupsidedownattime
-    \ifdim\pgf@xa<0pt
+    \ifdim\tikzext@unslopedx<0pt
       \def\tikzext@autooffset@angle{-90}%
       \def\tikz@anchor{north}%
     \fi
@@ -451,7 +452,7 @@
   \def\tikz@anchor{north}%
   \def\tikzext@autooffset@angle{-90}%
   \iftikzext@allowupsidedownattime
-    \ifdim\pgf@xa<0pt
+    \ifdim\tikzext@unslopedx<0pt
       \def\tikzext@autooffset@angle{90}%
       \def\tikz@anchor{south}%
     \fi
@@ -507,25 +508,25 @@
   \iftikzext@slopedattime
     \def\tikz@anchor{south}%
     \iftikzext@allowupsidedownattime
-      \ifdim\pgf@ya<-0.05pt
+      \ifdim\tikzext@unslopedy<-0.05pt
         \def\tikz@anchor{north}%
         \def\tikzext@autooffset@angle{-90}%
       \fi
     \else
-      \ifdim\pgf@ya>0.05pt
-        \ifdim\pgf@xa<-0.05pt
+      \ifdim\tikzext@unslopedy>0.05pt
+        \ifdim\tikzext@unslopedx<-0.05pt
           \def\tikz@anchor{north}%
           \def\tikzext@autooffset@angle{-90}%
         \fi
       \else
-        \ifdim\pgf@ya<-0.05pt
-          \ifdim\pgf@xa<-0.05pt
+        \ifdim\tikzext@unslopedy<-0.05pt
+          \ifdim\tikzext@unslopedx<-0.05pt
           \else
             \def\tikz@anchor{north}%
             \def\tikzext@autooffset@angle{-90}%
           \fi
         \else
-          \ifdim\pgf@xa>0pt
+          \ifdim\tikzext@unslopedx>0pt
           \else
             \def\tikz@anchor{north}%
             \def\tikzext@autooffset@angle{-90}%
@@ -588,25 +589,25 @@
   \iftikzext@slopedattime
     \def\tikz@anchor{north}%
     \iftikzext@allowupsidedownattime
-      \ifdim\pgf@ya<-0.05pt
+      \ifdim\tikzext@unslopedy<-0.05pt
         \def\tikz@anchor{south}%
         \def\tikzext@autooffset@angle{90}%
       \fi
     \else
-      \ifdim\pgf@ya>0.05pt
-        \ifdim\pgf@xa<-0.05pt
+      \ifdim\tikzext@unslopedy>0.05pt
+        \ifdim\tikzext@unslopedx<-0.05pt
           \def\tikz@anchor{south}%
           \def\tikzext@autooffset@angle{90}%
         \fi
       \else
-        \ifdim\pgf@ya<-0.05pt
-          \ifdim\pgf@xa<-0.05pt
+        \ifdim\tikzext@unslopedy<-0.05pt
+          \ifdim\tikzext@unslopedx<-0.05pt
           \else
             \def\tikz@anchor{south}%
             \def\tikzext@autooffset@angle{90}%
           \fi
         \else
-          \ifdim\pgf@xa>0pt
+          \ifdim\tikzext@unslopedx>0pt
           \else
             \def\tikz@anchor{south}%
             \def\tikzext@autooffset@angle{90}%
@@ -689,7 +690,7 @@
   \iftikzext@allowupsidedownattime
   \else
     \iftikzext@slopedattime
-      \ifdim\pgf@xa<-0.05pt
+      \ifdim\tikzext@unslopedx<-0.05pt
         \def\tikz@anchor{east}%
         \def\tikzext@autooffset@angle{180}%
       \fi
@@ -741,7 +742,7 @@
   \iftikzext@allowupsidedownattime
   \else
     \iftikzext@slopedattime
-      \ifdim\pgf@xa<-0.05pt
+      \ifdim\tikzext@unslopedx<-0.05pt
         \def\tikz@anchor{west}%
         \def\tikzext@autooffset@angle{0}%
       \fi
