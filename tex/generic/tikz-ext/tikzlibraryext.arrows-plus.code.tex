@@ -103,10 +103,7 @@
 %%%
 \tikzset{
   pos </.initial=0.0,
-  pos >/.code=%
-    \pgfkeyssetvalue{/tikz/pos >}{#1}%
-    \tikzset{pos={#1}},
-  pos >=.5,
+  pos >/.style={/tikz/pos={#1}},
   arrow shift mode/.is choice,
   arrow shift mode/off/.code                  =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{0},
   arrow shift mode/total length/.code         =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{1},
@@ -126,7 +123,7 @@
       \pgfarrowdraw{#1}%
   },
   pics/arc arrow/.default=>,
-  pics/arc arrow/.style={arc arrows=-{#1}},
+  pics/arc arrow/.style={/tikz/pics/arc arrows=-{#1}},
   pics/arc arrows/.default=->,
   pics/arc arrows/.style={
     foreground code=, background code=,
@@ -148,9 +145,128 @@
         {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
              (\pgfkeysvalueof{/tikz/pos <})+\tikz@timer@start@angle}
         {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
-             (\pgfkeysvalueof{/tikz/pos >})+\tikz@timer@start@angle}
+             (\tikz@time)+\tikz@timer@start@angle}
         {\tikz@timer@zero@axis}
         {\tikz@timer@ninety@axis}%
       \pgfusepath{}%
   },
+  pics/softpath arrow/.default=>,
+  pics/softpath arrow/.style={/tikz/pics/softpath arrows=-{#1}},
+  pics/softpath arrows/.default=->,
+  pics/softpath arrows/.style={
+    foreground code=, background code=,
+    setup code={%
+      \tikzext@arrow@doshift#1\pgf@stop
+      \pgfsyssoftpath@getcurrentpath\tikz@temp
+      \pgfprocesssplitsubpath\tikz@temp
+      \show\pgfprocessresultsubpathprefix
+      \show\pgfprocessresultsubpathsuffix
+      \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
+      \pgfutil@switch\pgfutil@ifx\tikz@timer{%
+        {\relax}                  {\tikzext@arrow@softpath@curve}%     let's try a curve anyway
+        {\tikz@timer@line}        {\tikzext@arrow@softpath@curve}%
+        {\tikz@timer@arc}         {\tikzext@arrow@softpath@curve}%     up to four curves
+        {\tikz@timer@hvline}      {\tikzext@arrow@softpath@hvline}%
+        {\tikz@timer@vhline}      {\tikzext@arrow@softpath@vhline}%
+        {\tikz@timer@curve}       {\tikzext@arrow@softpath@curve}%     good
+        {\tikzext@timer@rectangle}{\tikzext@arrow@softpath@rectangle}% bad
+        {\tikzext@timer@parabola} {\tikzext@arrow@softpath@parabola}%  two curves
+        {\tikz@timer@sine}        {\tikzext@arrow@softpath@curve}%     good
+        {\tikz@timer@cosine}      {\tikzext@arrow@softpath@curve}%     good
+      }{}{\tikzext@arrow@softpath@curve}%
+    },
+    code=%
+      \pgfset{tips}%
+      \pgftransformreset
+      \tikzext@arrow@softpath
+      \pgfsetstrokecolor{green}%
+      \pgfusepath{stroke}%
+  }
+}
+\def\tikzext@arrow@softpath@curve{%
+  \ifx\pgfpointthirdlastonpath\relax
+    \let\tikzext@arrow@softpath\tikzext@arrow@linepath
+  \else
+    \let\tikzext@arrow@softpath\tikzext@arrow@curvepath
+  \fi
+}
+\def\tikzext@arrow@softpath@hvline{%
+  \let\tikzext@lastonpath      \pgfpointlastonpath
+  \let\tikzext@secondlastonpath\pgfpointsecondlastonpath
+  \pgfprocesssplitpath\pgfprocessresultsubpathprefix
+  \pgfprocesssplitsubpath\pgfprocessresultpathsuffix
+  \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
+  \let\tikzext@arrow@softpath\tikzext@arrow@hvpath
+}
+\let\tikzext@arrow@softpath@vhline\tikzext@arrow@softpath@hvline
+
+%%% Paths
+% Line
+\def\tikzext@arrow@linepath{%
+  \pgfpathmoveto{%
+    \pgfpointlineattime
+      {\pgfkeysvalueof{/tikz/pos <}}
+      {\pgfpointsecondlastonpath}
+      {\pgfpointlastonpath}%
+  }%
+  \pgfpathlineto{%
+    \pgfpointlineattime
+      {\tikz@time}
+      {\pgfpointsecondlastonpath}
+      {\pgfpointlastonpath}%
+  }%
+}
+% curve
+\def\tikzext@arrow@curvepath{%
+  \pgfpathcurvebetweentime
+    {\pgfkeysvalueof{/tikz/pos <}}
+    {\tikz@time}
+    {\pgfpointfourthlastonpath}
+    {\pgfpointthirdlastonpath}
+    {\pgfpointsecondlastonpath}
+    {\pgfpointlastonpath}%
+}
+% -| and |-
+\def\tikzext@arrow@hvpath{%
+  \pgfmathparse{\pgfkeysvalueof{/tikz/pos <}}%
+  \pgf@xa=\pgfmathresult pt
+  \pgf@xa=2\pgf@xa
+  \edef\tikz@time@{\the\pgf@xa}%
+  \ifdim\pgf@xa>1pt % < on second leg
+    \pgfpathmoveto{%
+      \pgfpointlineattime
+        {\tikz@time@-1}
+        {\tikzext@secondlastonpath}
+        {\tikzext@lastonpath}%
+    }%
+    \pgfpathlineto{% > better be on the second leg as well
+      \pgfpointlineattime
+        {2*\tikz@time-1}
+        {\tikzext@secondlastonpath}
+        {\tikzext@lastonpath}%
+    }%
+  \else % < on first leg
+    \pgfpathmoveto{%
+      \pgfpointlineattime
+        {\tikz@time@}
+        {\pgfpointlastonpath}
+        {\tikzext@secondlastonpath}%
+    }%
+    \ifdim\tikz@time pt>.5pt % > on second leg
+      \pgfpathlineto{\tikzext@secondlastonpath}%
+      \pgfpathlineto{%
+        \pgfpointlineattime
+          {2*\tikz@time-1}
+          {\tikzext@secondlastonpath}
+          {\tikzext@lastonpath}%
+      }%
+    \else
+      \pgfpathlineto{%
+        \pgfpointlineattime
+          {2*\tikz@time}
+          {\pgfpointlastonpath}
+          {\tikzext@secondlastonpath}%
+      }%
+    \fi
+  \fi
 }
