@@ -1,0 +1,141 @@
+% !TeX TS-program = lualatex
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Arrow Pics}
+\label{tikzlibrary:arrows}
+\tikzset{external/export/.try=false}%
+\begin{tikzlibrary}{ext.arrows-plus}
+  This library defines a few pics that can be used to place arrow tips on paths.
+\end{tikzlibrary}
+
+\begin{multicols}{2}
+The \referenceDecorationandIndexO{markings} library already provides the functionality
+to place arrow tips along the path.
+The pics provided by this library serve as an alternative.
+
+Many of the pics share various keys.
+\begin{key}{/tikz/pos <=\meta{value} (initially 0.0)}
+If the pic type supports it and an start arrow tip sequence is provided
+this specifies the position of that sequence.
+\end{key}
+\begin{key}{/tikz/pos >=\meta{value} (initially 0.5)}
+This is basically an alias for \referenceKeyandIndex{pos},
+if an end arrow tip sequence is provided, it is placed at this position.
+\end{key}
+
+\begin{key}{/tikz/arrow shift mode=\meta{shift mode} (default total length)}
+This key is used to set the \meta{shift mode} for the arrow tip.
+It can be one of the following.
+\begin{description}
+\item[|arrow shift mode|=\declare{|off|}]
+
+  This disables the shifting.
+\item[|arrow shift mode|=\declare{|total length|}]
+
+  The total length of the whole arrow tip sequence will be used.
+\item[|arrow shift mode|=\declare{|total|}]
+
+  This is an alias for |total length|.
+\item[|arrow shift mode|=\declare{|length until line end|}]
+
+  The length of the whole arrow tip until the line end will be used --
+  as reported by \pgfname\ which might not always be the expected one.
+\item[|arrow shift mode|=\declare{|line end|}]
+
+  This is an alias for |length until line end|.
+\end{description}
+
+For single arrow tips it might be better to use the Centered arrow tip variants
+of the \referenceLibraryandIndexExt{arrows} library (see sec~\ref{pgflibrary:arrows})
+and disabled |arrow shift mode|.
+\end{key}
+
+When an arrow tip sequence is to be drawn depending on the shift mode
+its total length or its length until the line end will be determined
+and multiplied with the |arrow shift factor|.
+The result if this evaluation is used to shift the arrow tip sequence
+in the tip's direction.
+
+\begin{key}{/tikz/arrow shift factor=\meta{value} (initially 0.5)}
+  This determines the shift factor.
+  
+  The default value is probably good for most cases.
+\end{key}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.arrows-plus}]
+\begin{tikzpicture}[>={Straight Barb[color=red]}, ultra thick]
+\ttfamily
+\foreach[count=\y] \shiftmode in {off, total length, length until line end}
+  \draw[arrow shift mode=\shiftmode] (0, -\y  )
+                -- pic {arrow=>}    ++(right:2)
+                -- pic {arrow=>.>>} ++(right:2) node[below right] {\shiftmode}
+    ++(down:.4) -- pic {arrow=>.>>} ++( left:2)
+                -- pic {arrow=>}    ++( left:2);
+\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{pictype}{arrow}{\opt{|=|\meta{arrow tip specification}}}
+  This pic draws the given \meta{arrow tip specification} (default |>|).
+  
+  This obviously is best use as a pic along a path segment that supports it.
+  It \emph{does not} support bended arrow tips.
+\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
+\ttfamily
+\foreach[count=\y] \shiftmode in {off, total length, length until line end}
+  \draw[arrow shift mode=\shiftmode] (0, -\y  )
+                to[bend  left] pic {arrow=>}    ++(right:2)
+                to[bend  left] pic {arrow=>>.>} ++(right:2)
+                                             node[below right] {\shiftmode}
+    ++(down:.4) to[bend right] pic {arrow=>>.>} ++( left:2)
+                to[bend right] pic {arrow=>}    ++( left:2);
+\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\end{tikzpicture}
+\end{codeexample}
+\end{pictype}
+
+The previous |arrow| pic can be used with arcs but for bended arrow tips,
+the following pic is needed.
+\begin{pictype}{arc arrows}{\opt{|=|\meta{start tip specification}|-|\meta{end tip specification}}}
+  This pic draws the given tips along an arc. It supports the |pos <| key.
+  
+  The shift mode applies to both ends.
+  
+  Since arcs don't have a target coordinate a |pos| or a |pos >| needs to be specified explicitly.
+\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{tikzpicture}[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
+\ttfamily
+\foreach[count=\y] \shiftmode in {off, total length, length until line end}
+  \draw[arrow shift mode=\shiftmode, x radius=2, y radius=3] (0, -\y  )
+                arc[start angle=120, delta angle=-60] pic[midway] {arc arrow=>}
+                arc[start angle=120, delta angle=-60] pic[midway] {arc arrow=>.>>}
+                                             node[below right] {\shiftmode}
+    ++(down:.4) arc[end angle=120, delta angle=60] pic[midway] {arc arrow=>.>>}
+                arc[end angle=120, delta angle=60] pic[midway] {arc arrow=>};
+\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\end{tikzpicture}
+\end{codeexample}
+
+\paragraph{Tip:}
+Use an arc with the full 360${}^\circ$ to place bended arrow tips along a circle or an ellipse.
+\paragraph{Tip:}
+Use an empty option specification |[]| after the first arrow tip in the start specification
+to help it correctly apply the shifting distance.
+\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{tikzpicture}[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
+\draw[start angle=0, end angle=360, radius=1]
+  (0, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<<<->>>}   -- cycle
+  (3, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<[]<<->>>} -- cycle;
+\end{tikzpicture}
+\end{codeexample}
+\end{pictype}
+\end{multicols}
+\endinput

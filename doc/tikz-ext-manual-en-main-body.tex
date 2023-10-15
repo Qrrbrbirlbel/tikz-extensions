@@ -9,11 +9,12 @@
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
 \newcommand*\tikzextversion{0.6}
-%\includeonly{
+\includeonly{
+  tikz-ext-manual-en-library-arrows-plus,
 %  tikz-ext-manual-en-library-misc,
 %  tikz-ext-manual-en-library-nodes,
 %  tikz-ext-manual-en-pgf-arrows,
-%}
+}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
@@ -68,6 +69,7 @@ These libraries only work with \tikzname.
 \end{tikzpicture}
 \end{center}
 
+\tikzsetfigurename{arrows-plus}     \include{tikz-ext-manual-en-library-arrows-plus}
 \tikzsetfigurename{calendar-plus}   \include{tikz-ext-manual-en-library-calendar-plus}
 \tikzsetfigurename{layers}          \include{tikz-ext-manual-en-library-layers}
 \tikzsetfigurename{node-families}   \include{tikz-ext-manual-en-library-node-families}

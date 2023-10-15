@@ -5,14 +5,6 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\tikzset{
-  pics/arrow/.style={
-    /tikz/sloped,
-    /tikz/allow upside down,
-    code=\pgfarrowdraw{#1}%
-  },
-  pics/arrow/.default=>%
-}
 \newcount\tikzext@nodesonpath
 \tikzset{
   pic/.is if=tikz@node@is@pic,

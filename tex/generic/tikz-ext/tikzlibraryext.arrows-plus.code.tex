@@ -1,0 +1,156 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+% \tikzext@arrow@evalshift
+%
+% Stores the shift amount into \tikzext@arrow@shift@
+%
+\def\tikzext@arrow@evalshift#1{%
+  \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
+    \def\tikzext@arrow@shift@{0pt}%
+  \or
+    \pgfarrowtotallength{#1}%
+    \pgfmathsetlengthmacro\tikzext@arrow@shift@{(\pgfkeysvalueof{/tikz/arrow shift factor})*-\pgf@x}%
+  \or
+    \pgfarrowtotallength{#1}%
+    \pgfmathsetlengthmacro\tikzext@arrow@shift@{(\pgfkeysvalueof{/tikz/arrow shift factor})*-\pgf@xa}%
+  \fi
+}
+
+% This redefinition is necessary to save the center of an arc
+% for the arc arrow
+\let\tikzext@arrow@pgfpointarcaxesattime\pgfpointarcaxesattime
+\def\pgfpointarcaxesattime#1#2#3#4#5#6{%
+  \pgfgettransform\tikzext@arrow@transform
+  \pgfextract@process\tikzext@arrow@center{#2}%
+  \tikzext@arrow@pgfpointarcaxesattime{#1}{#2}{#3}{#4}{#5}{#6}%
+}
+
+%%
+% For bended arrows the shifting can't simply be done by a transformation
+% it must be done by the arrow system itself via the sep key.
+% For this to work as expected, the sep will need to be sneaked into
+% the options of the first or last arrow tip.
+\def\tikzext@arrow@doshift#1-#2\pgf@stop{%
+  \pgfutil@ifempty{#1}{\pgfsetarrowsstart{}}{%
+    \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
+      \pgfsetarrowsstart{#1}%
+    \else
+      \tikzext@arrow@evalshift{#1}%
+      \let\tikz@temp\pgfutil@empty
+      \tikzext@arrow@sneakstart{#1}{sep=+\tikzext@arrow@shift@}%
+      \pgfsetarrowsstart{\tikz@temp}%
+    \fi
+  }%
+  \pgfutil@ifempty{#2}{\pgfsetarrowsend{}}{%
+    \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
+      \pgfsetarrowsend{#2}%
+    \else
+      \tikzext@arrow@evalshift{#2}%
+      \let\tikz@temp\pgfutil@empty
+      \tikzext@arrow@sneakend{#2}{sep=+\tikzext@arrow@shift@}%
+      \pgfsetarrowsend{\tikz@temp}%
+    \fi
+  }%
+}
+% \tikzext@arrow@sneakend{<tip>}{<sneak>}
+%
+% Sneaks <sneak> at the end of the <tip> specification in
+% so that it only applies to the last tip
+%
+\def\tikzext@arrow@sneakend#1#2{%
+  \pgfutil@in@{]}{#1}%
+  \ifpgfutil@in@
+    \expandafter\pgfutil@firstoftwo
+  \else
+    \expandafter\pgfutil@secondoftwo
+  \fi{%
+    \tikzext@arrow@sneakend@#1\pgf@stop{#2}%
+  }{%
+    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1[#2]}%
+  }%
+}
+\def\tikzext@arrow@sneakend@#1]#2\pgf@stop#3{%
+  \pgfutil@ifempty{#2}{%
+    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1,#3]}%
+  }{%
+    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1]}%
+    \tikzext@arrow@sneakend{#2}{#3}%
+  }%
+}
+% \tikzext@arrow@sneakstart{<tip>}{<sneak>}
+%
+% Sneaks <sneak> at the start of the <tip> specification in
+% so that it only applies to the first tip
+%
+\def\tikzext@arrow@sneakstart#1#2{%
+  \pgfutil@in@{]}{#1}%
+  \ifpgfutil@in@
+    \tikzext@arrow@sneakstart@#1\pgf@stop{#2}%
+  \else
+    \def\tikz@temp{#1[#2]}%
+  \fi
+}
+\def\tikzext@arrow@sneakstart@#1]#2\pgf@stop#3{%
+  \def\tikz@temp{#1,#3]#2}%
+}
+
+%%%
+\tikzset{
+  pos </.initial=0.0,
+  pos >/.code=%
+    \pgfkeyssetvalue{/tikz/pos >}{#1}%
+    \tikzset{pos={#1}},
+  pos >=.5,
+  arrow shift mode/.is choice,
+  arrow shift mode/off/.code                  =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{0},
+  arrow shift mode/total length/.code         =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{1},
+  arrow shift mode/total/.code                =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{1},
+  arrow shift mode/length until line end/.code=\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{2},
+  arrow shift mode/line end/.code             =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{2},
+  arrow shift mode=total length,
+  arrow shift factor/.initial=.5,
+%%
+  pics/arrow/.default=>,
+  pics/arrow/.style={
+    /tikz/sloped, /tikz/allow upside down,
+    foreground code=, background code=, setup code=,
+    code=%
+      \tikzext@arrow@evalshift{#1}%
+      \pgftransformxshift{+-\tikzext@arrow@shift@}%
+      \pgfarrowdraw{#1}%
+  },
+  pics/arc arrow/.default=>,
+  pics/arc arrow/.style={arc arrows=-{#1}},
+  pics/arc arrows/.default=->,
+  pics/arc arrows/.style={
+    foreground code=, background code=,
+    setup code={\tikzext@arrow@doshift#1\pgf@stop},
+    code=%
+      \pgfset{tips}%
+      \pgftransformreset
+      \pgfsettransform\tikzext@arrow@transform
+      \pgfpathmoveto{%
+        \tikzext@arrow@pgfpointarcaxesattime
+          {\pgfkeysvalueof{/tikz/pos <}}
+          {\tikzext@arrow@center}
+          {\tikz@timer@zero@axis}
+          {\tikz@timer@ninety@axis}
+          {\tikz@timer@start@angle}
+          {\tikz@timer@end@angle}%
+      }%
+      \pgfpatharcaxes
+        {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
+             (\pgfkeysvalueof{/tikz/pos <})+\tikz@timer@start@angle}
+        {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
+             (\pgfkeysvalueof{/tikz/pos >})+\tikz@timer@start@angle}
+        {\tikz@timer@zero@axis}
+        {\tikz@timer@ninety@axis}%
+      \pgfusepath{}%
+  },
+}

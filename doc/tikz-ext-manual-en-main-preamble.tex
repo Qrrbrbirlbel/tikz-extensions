@@ -41,12 +41,13 @@
 \tracinglostchars=3
 
 \input{pgfmanual-en-macros}
-
-\usepackage{unicode-math}
+\usepackage[no-math]{fontspec}
+%\usepackage{unicode-math}
 %\setmathfont[Scale=MatchUppercase]{libertinusmath-regular.otf}
 \usepackage[ttscale=.85]{libertine}
 \setmonofont[Scale=0.8]{Bitstream Vera Sans Mono}
-
+\let\arrowvert\relax
+\usepackage[libertine,liby]{newtxmath}
 \makeatletter
 \renewcommand*\l@section[2]{%
   \ifnum \c@tocdepth >\z@
@@ -92,6 +93,7 @@
 \usepgfkeyslibrary{ext.pgfkeys-plus}
 \usetikzlibrary{
   ext.arrows,
+  ext.arrows-plus,
   ext.calendar-plus,
   ext.misc,
   ext.node-families,
@@ -112,6 +114,7 @@
   ext.topaths.arcthrough,
   ext.transformations.mirror,
   %
+  bending,
   calc,
   cd,
   fit,
