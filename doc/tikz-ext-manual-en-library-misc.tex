@@ -310,6 +310,7 @@ This corresponds to the \referenceKeyandIndexO{even odd rule} and
 \referenceKeyandIndexO{nonzero rule} keys.
 \end{key}
 \end{multicols}
+\begingroup\catcode`\&=\active
 \begin{codeexample}[preamble=\usetikzlibrary{ext.misc},width=6cm]
 \newcommand*\myDiagram[1]{
   \fill[left color=blue, right color=green] (0, 0) rectangle (2, 1);
@@ -329,4 +330,5 @@ This corresponds to the \referenceKeyandIndexO{even odd rule} and
 \\};
 \end{tikzpicture}
 \end{codeexample}
+\endgroup
 \endinput

@@ -27,11 +27,11 @@ If the pic type supports it and an start arrow tip sequence is provided
 this specifies the position of that sequence.
 \end{key}
 \begin{key}{/tikz/pos >=\meta{value} (initially 0.5)}
-This is basically an alias for \referenceKeyandIndex{pos},
+This is an alias for \referenceKeyandIndex{pos},
 if an end arrow tip sequence is provided, it is placed at this position.
 \end{key}
 
-\begin{key}{/tikz/arrow shift mode=\meta{shift mode} (default total length)}
+\begin{key}{/tikz/arrow shift mode=\meta{shift mode} (initially total length)}
 This key is used to set the \meta{shift mode} for the arrow tip.
 It can be one of the following.
 \begin{description}
@@ -61,7 +61,7 @@ and disabled |arrow shift mode|.
 When an arrow tip sequence is to be drawn depending on the shift mode
 its total length or its length until the line end will be determined
 and multiplied with the |arrow shift factor|.
-The result if this evaluation is used to shift the arrow tip sequence
+The result of this evaluation is used to shift the arrow tip sequence
 in the tip's direction.
 
 \begin{key}{/tikz/arrow shift factor=\meta{value} (initially 0.5)}
@@ -82,7 +82,64 @@ in the tip's direction.
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{pictype}{arrow}{\opt{|=|\meta{arrow tip specification}}}
+\subsection{Arrow pic types}
+
+This library provides the following pics:
+\begin{description}
+\item[|arrow|]
+  This is the simplest implementation to place an arrow tip along a path.
+  It uses the current timer that is also used to place nodes.
+  
+  It can be used without any adjustment for every path operation that provides such a timer.
+  These do \emph{not} include
+  \referencePathOperationandIndexO{circle},
+  \referencePathOperationandIndexO{ellipse},
+  \referencePathOperationandIndexO{plot} and
+  \referencePathOperationandIndexO{grid}.
+  For \referencePathOperationandIndexO{rectangle},
+      \referencePathOperationandIndexO{parabola},
+      \referencePathOperationandIndexO{sin} and
+      \referencePathOperationandIndexO{cos},
+  the \referenceLibraryandIndexExt{paths.timer} library is recommended or even necessary
+  (see section \ref{library:timer}).
+  
+  The arrow tips will never be bended. For this the following pic types are necessary.
+
+  Due to \cite{PgfIssueSloped} with an active transformation,
+  the arrow tips won't be placed correctly in many cases.
+  For this \emph{and} bended arrow tips the following pics are necessary.
+  
+\item[|softpath arrows|]
+  This pic type places a possible bended arrow tip on the last segment of the path.
+  
+  For the path operators \referencePathOperationandIndexO{--},
+  {\catcode`\|=12 \referencePathOperationandIndexO{|-}
+              and \referencePathOperationandIndexO{-|}}
+  this works even with an non-identity transformation.If possible, the current timer will be used to take more segments into account so
+  that the arrow tip can be placed along the recent path operation.
+  
+  This won't work for \referencePathOperationandIndexO{arc}s,
+  for this the |arc arrows| pic type will be necessary.
+  
+  This pic type can place two tip specification,
+  one at |pos >| and one at |pos <| in the reversed direction.
+
+\item[|softpath arrow|]
+  This is an alias for |softpath arrows| with an empty start arrow tip specification.
+
+\item[|arc arrows|]
+  Since arcs -- as everything that's not a straight line --
+  are constructed out of up to four Bézier curves,
+  the |softpath arrows| pic type will not work correctly for arcs
+  with a greater angle than 60${}^\circ$.
+  
+  This pic type can place two tip specification,
+  one at |pos >| and one at |pos <| in the reversed direction.
+
+\item[|arc arrow|]
+  This is an alias for |arc arrow| with an empty start arrow tip specification.
+\end{description}
+\begin{pictype}{arrow}{\opt{|=|\meta{\rmfamily arrow tip specification}}}
   This pic draws the given \meta{arrow tip specification} (default |>|).
   
   This obviously is best use as a pic along a path segment that supports it.
@@ -97,15 +154,16 @@ in the tip's direction.
                                              node[below right] {\shiftmode}
     ++(down:.4) to[bend right] pic {arrow=>>.>} ++( left:2)
                 to[bend right] pic {arrow=>}    ++( left:2);
-\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\draw[thin, gray] (1,-.5) -- +(down:3) (3,-.5) -- +(down:3);
 \end{tikzpicture}
 \end{codeexample}
 \end{pictype}
 
 The previous |arrow| pic can be used with arcs but for bended arrow tips,
 the following pic is needed.
-\begin{pictype}{arc arrows}{\opt{|=|\meta{start tip specification}|-|\meta{end tip specification}}}
-  This pic draws the given tips along an arc. It supports the |pos <| key.
+\begin{pictype}{arc arrows}{\opt{|=|\meta{\rmfamily start tip specification}|-|\meta{\rmfamily end tip specification}}}
+  This pic draws the given arrow tip specifications along an arc.
+  It supports the |pos <| key.
   
   The shift mode applies to both ends.
   
@@ -120,7 +178,7 @@ the following pic is needed.
                                              node[below right] {\shiftmode}
     ++(down:.4) arc[end angle=120, delta angle=60] pic[midway] {arc arrow=>.>>}
                 arc[end angle=120, delta angle=60] pic[midway] {arc arrow=>};
-\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\draw[thin, gray] (1,-.5) -- +(down:3) (3,-.5) -- +(down:3);
 \end{tikzpicture}
 \end{codeexample}
 
@@ -130,12 +188,65 @@ Use an arc with the full 360${}^\circ$ to place bended arrow tips along a circle
 Use an empty option specification |[]| after the first arrow tip in the start specification
 to help it correctly apply the shifting distance.
 \begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
-\begin{tikzpicture}[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
-\draw[start angle=0, end angle=360, radius=1]
-  (0, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<<<->>>}   -- cycle
-  (3, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<[]<<->>>} -- cycle;
-\end{tikzpicture}
+\tikz[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
+  \draw[start angle=0, end angle=360, radius=1]
+    (0, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<<<->>>}   -- cycle
+    (3, 0) arc[] pic[pos <=.25, pos >=.75] {arc arrows=<[]<<->>>} -- cycle;
 \end{codeexample}
 \end{pictype}
+
+\begin{pictype}{arc arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
+  This pic type is an alias for |arc arrows = -|\meta{end tip specification}.
+\end{pictype}
+
+\begin{pictype}{softpath arrows}{\opt{|=|\meta{\rmfamily start tip specification}|-|\meta{\rmfamily end tip specification}}}
+  This pic draws the given arrow tip specification along the previous path segment (a curve or a line).
+  It supports the |pos <| key.
+  
+  \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
+    this will not work as expected. Use the |arc arrows| pic type instead.
+  \paragraph{Tip:}
+  Use an empty option specification |[]| after the first arrow tip in the start specification
+  to help it correctly apply the shifting distance.
+\end{pictype}
+\begin{pictype}{softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
+  This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
+\end{pictype}
+
+\subsection{Arrow key}
+The last pic type |softpath arrows| is also available as a key.
+\begin{key}{/tikz/softpath arrows=\opt{\meta{options}} (default ->)}
+This key adds arrow tips to the previous path segment (a curve or a line).
+\end{key}
+
+\subsection{Shifted and bended arrows for the \texttt{decorations.markings} library}
+Many paths are not properly accessible by the previous methods.
+If this library is loaded \emph{after}
+the \referenceLibraryandIndexO{decorations.markings} library,
+both the |\arrow| and the |\arrowreversed| macros are enhanced.
+
+\begin{command}{\arrow\opt{|**|\oarg{options}}\marg{arrow end tip}}
+  This macro works the same as before but the one-starred version
+  applies the shifting as specified
+  by \referenceKeyandIndex{arrow shift mode} and \referenceKeyandIndex{arrow shift factor}
+  where as the two-starred version also bends the arrow tip.
+\end{command}
+\begin{command}{\arrowreversed\opt{|**|\oarg{options}}\marg{arrow end tip}}
+  As above, only the arrow end tip is flipped and points in the other direction.
+\end{command}
+\begin{codeexample}[width=2cm,preamble=\usetikzlibrary{bending, decorations.markings, ext.arrows-plus}]
+\tikzset{
+  arr/.style={
+    postaction=decorate,
+    decoration={
+      name=markings,
+      mark={between positions .25 and 1 step .25 with
+        \arrow#1[red]{> _ < _ >}}}}}
+\tikz[y=1.5cm, >=Stealth, arrows={[round]}, nodes={circle, draw}]
+  \path   node[arr=  ]{Ti\emph kZ} % \arrow
+   (0,-1) node[arr=* ]{Ti\emph kZ} % \arrow*
+   (0,-2) node[arr=**]{Ti\emph kZ} % \arrow**
+  ;
+\end{codeexample}
 \end{multicols}
 \endinput

@@ -93,7 +93,7 @@
 }%
 
 %BEGIN_FOLD Timer
-\def\tikz@timer@hvhline{%
+\def\tikzext@timer@hvhline{%
   \pgf@process{\tikz@timer@start}\pgf@ya\pgf@y
   \pgf@process{\tikz@timer@end}\pgf@yc\pgf@y
   \pgf@process{\tikz@timer@middle}\pgf@xb\tikz@time pt%
@@ -121,7 +121,7 @@
       \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}%
         {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@ya}}{\noexpand\tikz@timer@middle}}%
     \fi\fi\tikz@marshal}
-\def\tikz@timer@vhvline{%
+\def\tikzext@timer@vhvline{%
   \pgf@process{\tikz@timer@start}\pgf@xa\pgf@x
   \pgf@process{\tikz@timer@end}\pgf@xc\pgf@x
   \pgf@process{\tikz@timer@middle}\pgf@xb\tikz@time pt%
@@ -178,7 +178,7 @@
     {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikzext@tikz@rl@lineto@next}
       {\pgfutil@ifnextchar p{\tikz@collect@pic@onpath\tikzext@tikz@rl@lineto@next}{\tikz@scan@one@point\tikzext@tikz@@rl@lineto}}}}%
 
-\def\tikz@do@hvvh#1#2#3#4#5{%
+\def\tikzext@do@hvvh#1#2#3#4#5{%
 % #1 = first kink
 % #2 = second kink
 % #3 = end
@@ -260,11 +260,11 @@
       \edef\pgf@temp{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi%
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\expandafter\noexpand\pgf@tempa}%
         {\expandafter\noexpand\pgf@tempb}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@hvhline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@hvhline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -330,11 +330,11 @@
       \edef\pgf@temp{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi%
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\expandafter\noexpand\pgf@tempa}%
         {\expandafter\noexpand\pgf@tempb}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@vhvline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@vhvline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -381,11 +381,11 @@
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\tikz@lastx}{\the\pgf@yc}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@vhvline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@vhvline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -432,11 +432,11 @@
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\tikz@lastx}{\the\pgf@yc}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@vhvline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@vhvline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -483,11 +483,11 @@
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@hvhline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@hvhline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -534,11 +534,11 @@
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
     \xdef\pgf@marshal{%
-      \noexpand\tikz@do@hvvh
+      \noexpand\tikzext@do@hvvh
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikz@timer@hvhline}{\tikz@shapeborder@name}}%
+        {\noexpand\tikzext@timer@hvhline}{\tikz@shapeborder@name}}%
   \endgroup
   \pgf@marshal}%
 
@@ -547,19 +547,33 @@
   node as new start/.is if=tikzext@ortho@preflush,
   node as new start,
   ortho/install shortcuts/.style={
-    *|/.style={only vertical second={#1}},   *|/.default=,
-    |*/.style={only vertical first={#1}},    |*/.default=,
-    *-/.style={only horizontal second={#1}}, *-/.default=,
-    -*/.style={only horizontal first={#1}},  -*/.default=,
-    |-/.style={to path={|-(\tikztotarget)\tikztonodes}},
-    -|/.style={to path={-|(\tikztotarget)\tikztonodes}},
-    -|-/.style=/tikz/horizontal vertical horizontal,
-    |-|/.style=/tikz/vertical horizontal vertical,
+    *|/.style={/tikz/only vertical   second={##1}}, *|/.default=,
+    |*/.style={/tikz/only vertical   first={##1}},  |*/.default=,
+    *-/.style={/tikz/only horizontal second={##1}}, *-/.default=,
+    -*/.style={/tikz/only horizontal first={##1}},  -*/.default=,
+    |-/.style={/tikz/to path={|-(\tikztotarget)\tikztonodes}},
+    -|/.style={/tikz/to path={-|(\tikztotarget)\tikztonodes}},
+    -|-/.style={/tikz/horizontal vertical horizontal={##1}}, -|-/.default=,
+    |-|/.style={/tikz/vertical   horizontal vertical={##1}}, |-|/.default=,
+    r-du/.style={/tikz/down horizontal up={##1}}, r-du/.default=,
+    r-ud/.style={/tikz/up horizontal down={##1}}, r-ud/.default=,
+    r-rl/.style={/tikz/right vertical left={##1}}, r-rl/.default=,
+    r-lr/.style={/tikz/left vertical right={##1}}, r-lr/.default=%
   },
-  horizontal vertical/.style={to path={-| (\tikztotarget) \tikztonodes}},
-  vertical horizontal/.style={to path={|- (\tikztotarget) \tikztonodes}},
-  horizontal vertical horizontal/.style={to path={-|- (\tikztotarget) \tikztonodes}},
-  vertical horizontal vertical/.style={to path={|-| (\tikztotarget) \tikztonodes}},
+  horizontal vertical/.style={to path={-|(\tikztotarget)\tikztonodes}},
+  vertical horizontal/.style={to path={|-(\tikztotarget)\tikztonodes}},
+  horizontal vertical horizontal/.default=
+  horizontal vertical horizontal/.style={to path={-|-[{#1}](\tikztotarget)\tikztonodes}},
+  vertical horizontal vertical/.default=
+  vertical horizontal vertical/.style={to path={|-|[{#1}](\tikztotarget)\tikztonodes}},
+  right vertical left/.default=,
+  right vertical left/.style={to path={r-rl[{#1}](\tikztotarget)\tikztonodes]}}
+  left vertical right/.default=,
+  left vertical right/.style={to path={r-lr[{#1}](\tikztotarget)\tikztonodes]}}
+  up horizontal down/.default=,
+  up horizontal down/.style={to path={r-ud[{#1}](\tikztotarget)\tikztonodes]}}
+  down horizontal up/.default=,
+  down horizontal up/.style={to path={r-du[{#1}](\tikztotarget)\tikztonodes]}}
   only vertical second/.style={to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty

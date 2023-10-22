@@ -13,20 +13,24 @@
 \documentclass[a4paper,doc2,landscape]{ltxdoc}
 
 \input{tikz-ext-manual-en-main-preamble.tex}
-\usetikzlibrary{external}
-%\newif\iftikzextmanualexternalize
-%\tikzextmanualexternalizetrue
-%\iftikzextmanualexternalize
-  \tikzexternalize[
-    prefix=tikz/,
-%    mode=convert with system call,
-    %mode=list and make,
-    %mode=list only,export=true,% simply skips EVERY picture -> good for debugging the text.
-  ]
-  \tikzexternalenable
-  \tikzifexternalizing{%
-    \pgfkeys{/pdflinks/codeexample links=false}%
-  }{}%
-%\fi
-
+%\usetikzlibrary{external}
+%%\newif\iftikzextmanualexternalize
+%%\tikzextmanualexternalizetrue
+%%\iftikzextmanualexternalize
+%  \tikzexternalize[
+%    prefix=tikz/,
+%%    mode=convert with system call,
+%    %mode=list and make,
+%    %mode=list only,export=true,% simply skips EVERY picture -> good for debugging the text.
+%  ]
+%  \tikzexternalenable
+%  \tikzifexternalizing{%
+%    \pgfkeys{/pdflinks/codeexample links=false}%
+%  }{}%
+%%\fi
+\let\tikzexternaldisable\relax
+\def\tikzsetnextfilename#1{}
+\def\tikzsetfigurename#1{}
+%\usepackage{memoize}
+%\mmzset{memo dir}
 \input{tikz-ext-manual-en-main-body.tex}

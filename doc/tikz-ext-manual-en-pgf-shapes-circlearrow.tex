@@ -59,7 +59,9 @@
   As above but |circle arrow start angle = 190|.
   \end{key}
 
-{\catcode`\|=12
+\begingroup
+\catcode`\|=12
+\catcode`\&=\active
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow,matrix}]
 \begin{tikzpicture}
 \matrix[matrix of nodes, draw=none, row sep=1em, column sep=1em,
@@ -72,7 +74,7 @@
 };
 \end{tikzpicture}
 \end{codeexample}
-}
+\endgroup
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow},width=16cm]
 \begin{tikzpicture}\Huge
 \node[name=s, shape=circle arrow,

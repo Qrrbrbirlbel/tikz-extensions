@@ -144,15 +144,30 @@ The following keys can be used to access vertical and horizontal line path opera
   This installs \verb!to path = |- (\tikztotarget) \tikztonodes!
   that can be used with the path operations |to| or |edge|.
 \end{stylekey}
-\begin{stylekey}{/tikz/horizontal vertical horizontal}
+\begin{stylekey}{/tikz/horizontal vertical horizontal=\opt{\meta{options}}}
   This installs  \verb!to path = -|- (\tikztotarget) \tikztonodes!
   that can be used with the path operations |to| or |edge|.
 \end{stylekey}
-\begin{stylekey}{/tikz/vertical horizontal vertical}
+\begin{stylekey}{/tikz/vertical horizontal vertical=\opt{\meta{options}}}
   This installs  \verb!to path = |-| (\tikztotarget) \tikztonodes!
   that can be used with the path operations |to| or |edge|.
 \end{stylekey}
-
+\begin{stylekey}{/tikz/up horizontal down=\opt{\meta{options}}}
+  This installs  \verb!to path = r-ud (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/down horizontal up=\opt{\meta{options}}}
+  This installs  \verb!to path = r-du (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/left vertical right=\opt{\meta{options}}}
+  This installs  \verb!to path = r-lr (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
+\end{stylekey}
+\begin{stylekey}{/tikz/right vertical left=\opt{\meta{options}}}
+  This installs  \verb!to path = r-rl (\tikztotarget) \tikztonodes!
+  that can be used with the path operations |to| or |edge|.
+\end{stylekey}
 When connecting rectangular nodes, these keys could be useful as well.
 They all need to be given to a |to| or |edge| path operation.
 \begin{stylekey}{/tikz/only vertical second=\opt{\meta{length}} (default 0pt)}
@@ -189,11 +204,15 @@ Installs the following shortcuts:\\
   \pgfmanualbar-              & vertical horizontal            \\
   -\pgfmanualbar              & horizontal vertical            \\
   -\pgfmanualbar-             & horizontal vertical horizontal \\
-  \pgfmanualbar-\pgfmanualbar & vertical horizontal vertical   \\
+  \pgfmanualbar-\pgfmanualbar & vertical horizontal vertical   \\[.5em]
   \pgfmanualbar*              & only vertical first            \\
   *\pgfmanualbar              & only vertical second           \\
   -*                          & only horizontal first          \\
-  *-                          & only horizontal second
+  *-                          & only horizontal second         \\[.5em]
+  r-ud                        & up horizontal down             \\
+  r-du                        & down horizontal up             \\
+  r-lr                        & left vertical right            \\
+  r-rl                        & right vertical left
 \end{tabular}
 }
 \end{stylekey}
