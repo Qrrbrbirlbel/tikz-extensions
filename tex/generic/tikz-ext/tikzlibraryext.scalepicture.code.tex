@@ -150,7 +150,7 @@
     \tikzset{save picture size}%
     \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height<\pgf@ya
+      \ifdim\tikzext@scalepicture@height>\pgf@ya
         \tikzset{scale={\pgf@ya/\tikzext@scalepicture@height}}
       \fi
     }%
@@ -176,7 +176,7 @@
     \tikzset{save picture size}%
     \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height<\pgf@ya
+      \ifdim\tikzext@scalepicture@height>\pgf@ya
         \tikzset{yscale={\pgf@ya/\tikzext@scalepicture@height}}
       \fi
     }%
