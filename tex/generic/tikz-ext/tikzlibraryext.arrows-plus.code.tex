@@ -22,16 +22,6 @@
   \fi
 }
 
-% This redefinition is necessary to save the center of an arc
-% for the arc arrow
-\let\tikzext@arrow@pgfpointarcaxesattime\pgfpointarcaxesattime
-\def\pgfpointarcaxesattime#1#2#3#4#5#6{%
-  \pgfgettransform\tikzext@arrow@transform
-  \pgfextract@process\tikzext@arrow@center{#2}%
-  \tikzext@arrow@pgfpointarcaxesattime{#1}{#2}{#3}{#4}{#5}{#6}%
-}
-
-%%
 % For bended arrows the shifting can't simply be done by a transformation
 % it must be done by the arrow system itself via the sep key.
 % For this to work as expected, the sep will need to be sneaked into
@@ -117,11 +107,13 @@
 % Arrow keys
 %
 \tikzset{%
+  every softpath arrows/.code=,
+  every arc arrows/.code=,
   softpath arrows/.default={/tikz/arrows=->},
   softpath arrows/.code={%
     \begingroup
       \let\tikz@processarrows\tikzext@processarrows
-      \tikzset{#1}%
+      \tikzset{every softpath arrows,#1}%
       \pgfsyssoftpath@getcurrentpath\tikz@temp
       \pgfprocesssplitsubpath\tikz@temp
       \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
@@ -144,6 +136,34 @@
     \expandafter\endgroup%
     \expandafter\setbox\tikz@whichbox=\box\tikz@tempbox%
   },
+  arc arrows/.default={/tikz/arrows=->},
+  arc arrows/.code={%
+    \ifx\tikz@timer\tikz@timer@arc
+      \begingroup
+        \let\tikz@processarrows\tikzext@processarrows
+        \tikzset{every arc arrows,#1}%
+        \setbox\tikz@whichbox=\hbox\bgroup
+          \unhbox\tikz@whichbox
+          \hbox\bgroup\bgroup
+            \pgfinterruptpath
+            \pgfscope
+              \expandafter\tikzext@arrow@doshift\tikzext@current@arrows\pgf@stop
+              \pgfset{tips}%
+              \tikzext@arrow@arcpath
+              \pgfusepath{}%
+            \endpgfscope
+            \endpgfinterruptpath
+          \egroup\egroup
+        \egroup
+      \global\setbox\tikz@tempbox=\box\tikz@whichbox
+      \expandafter\endgroup
+      \expandafter\setbox\tikz@whichbox=\box\tikz@tempbox
+    \else
+      \pgfutil@packagewarning{tikz-ext}
+        {arc arrow used on non-arc path segment, using ``softpath arrows'' instead}%
+      \tikzset{softpath arrows={#1}}%
+    \fi
+  },
   pos </.initial=0.0,
   pos >/.style={/tikz/pos={#1}},
   arrow shift mode/.is choice,
@@ -165,34 +185,6 @@
       \tikzext@arrow@evalshift{#1}%
       \pgftransformxshift{+-\tikzext@arrow@shift@}%
       \pgfarrowdraw{#1}%
-  },
-  pics/arc arrow/.default=>,
-  pics/arc arrow/.style={/tikz/pics/arc arrows=-{#1}},
-  pics/arc arrows/.default=->,
-  pics/arc arrows/.style={
-    foreground code=, background code=,
-    setup code={\tikzext@arrow@doshift#1\pgf@stop},
-    code=%
-      \pgfset{tips}%
-      \pgftransformreset
-      \pgfsettransform\tikzext@arrow@transform
-      \pgfpathmoveto{%
-        \tikzext@arrow@pgfpointarcaxesattime
-          {\pgfkeysvalueof{/tikz/pos <}}
-          {\tikzext@arrow@center}
-          {\tikz@timer@zero@axis}
-          {\tikz@timer@ninety@axis}
-          {\tikz@timer@start@angle}
-          {\tikz@timer@end@angle}%
-      }%
-      \pgfpatharcaxes
-        {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
-             (\pgfkeysvalueof{/tikz/pos <})+\tikz@timer@start@angle}
-        {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
-             (\tikz@time)+\tikz@timer@start@angle}
-        {\tikz@timer@zero@axis}
-        {\tikz@timer@ninety@axis}%
-      \pgfusepath{}%
   },
   pics/softpath arrow/.default=>,
   pics/softpath arrow/.style={/tikz/pics/softpath arrows=-{#1}},
@@ -261,6 +253,30 @@
     {\pgfpointlastonpath}%
 }
 
+\def\tikzext@arrow@arcpath{%
+  \pgfmathcos@{\tikz@timer@start@angle}%
+  \let\tikz@angle@cos\pgfmathresult
+  \pgfmathsin@{\tikz@timer@start@angle}%
+  \let\tikz@angle@sin\pgfmathresult
+  \pgfpathmoveto{%
+    \pgfpointarcaxesattime
+      {\pgfkeysvalueof{/tikz/pos <}}
+      {\pgfpointdiff{%
+          \pgfpointadd{\pgfpointscale{\tikz@angle@cos}{\tikz@timer@zero@axis}}
+                      {\pgfpointscale{\tikz@angle@sin}{\tikz@timer@ninety@axis}}}{\tikz@timer@start}}
+      {\tikz@timer@zero@axis}
+      {\tikz@timer@ninety@axis}
+      {\tikz@timer@start@angle}
+      {\tikz@timer@end@angle}%
+  }%
+  \pgfpatharcaxes
+    {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
+      (\pgfkeysvalueof{/tikz/pos <})+\tikz@timer@start@angle}
+    {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
+      (\tikz@time)+\tikz@timer@start@angle}
+    {\tikz@timer@zero@axis}
+    {\tikz@timer@ninety@axis}%
+}
 %
 % \arrow(reversed)*(*) macro for decoration.markings
 %
