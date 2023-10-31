@@ -6,6 +6,14 @@
 % 2. under the GNU Free Documentation License.
 %
 \tikzset{
+  autobend north/.default=\tikz@to@bend,
+  autobend south/.default=\tikz@to@bend,
+  autobend west/.default=\tikz@to@bend,
+  autobend east/.default=\tikz@to@bend,
+  autobend up/.default=\tikz@to@bend,
+  autobend down/.default=\tikz@to@bend,
+  autobend left/.default=\tikz@to@bend,
+  autobend right/.default=\tikz@to@bend,
   autobend north/.style={
     to path={
       \pgfextra{%
