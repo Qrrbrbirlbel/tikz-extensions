@@ -1,0 +1,109 @@
+% Copyright 2023 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\tikzset{
+  autobend north/.default=\tikz@to@bend,
+  autobend south/.default=\tikz@to@bend,
+  autobend west/.default=\tikz@to@bend,
+  autobend east/.default=\tikz@to@bend,
+  autobend up/.default=\tikz@to@bend,
+  autobend down/.default=\tikz@to@bend,
+  autobend left/.default=\tikz@to@bend,
+  autobend right/.default=\tikz@to@bend,
+  autobend north/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+          \pgf@pos@transform@glob
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@x>0pt right\else left\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend south/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+          \pgf@pos@transform@glob
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@x>0pt left\else right\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend west/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+          \pgf@pos@transform@glob
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@y>0pt right\else left\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend east/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+          \pgf@pos@transform@glob
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@y>0pt left\else right\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend up/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@x>0pt right\else left\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend down/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@x>0pt left\else right\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend left/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@y>0pt right\else left\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  },
+  autobend right/.style={
+    to path={
+      \pgfextra{%
+        \pgf@process{%
+          \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
+                       {\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)}%
+        }%
+        \pgfkeysvalueof{/tikz/bend \ifdim\pgf@y>0pt left\else right\fi/.@cmd}#1\pgfeov}
+      \tikz@to@curve@path
+    }%
+  }%
+}
