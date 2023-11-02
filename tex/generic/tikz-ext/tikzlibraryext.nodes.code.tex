@@ -18,7 +18,7 @@
             every edge quotes/.append style={auto=false},% node *on* the line
             nodes={alias=tikzext-node on line}]
           coordinate(tikzext-node on line)% fallback coordinate
-          \unexpanded\expandafter{\tikz@tonodes}(\tikztotarget)
+          \pgfutil@unexpanded\expandafter{\tikz@tonodes}(\tikztotarget)
         }\expandafter
       }\tikz@temp
       -- (tikzext-node on line#1)
@@ -178,12 +178,12 @@
   % next four keys needs decorations
   /tikz-ext/nodes/install auto offset for brace decoration/.default=0pt,
   /tikz-ext/nodes/install auto offset for brace decoration/.style={%
-    /pgf/decoration/raise/.append code=\pgfkeyssetvalue{/pgf/decoration/raise}{#1},
+    /pgf/decoration/raise/.append code=\pgfkeyssetvalue{/pgf/decoration/raise}{##1},
     /pgf/decoration/raise={#1},
     /tikz/auto offset for brace decoration/.style={
       /tikz/auto offset=\pgfdecorationsegmentamplitude+(\pgfkeysvalueof{/pgf/decoration/raise})%
     },
-    every brace node/.style={
+    /tikz/every brace node/.style={
       /tikz/auto=% Ugh?
         \ifx\tikz@dec@mirror\relax
           \ifpgf@decorate@inputsegmentobjects@reverse right\else left\fi
@@ -317,7 +317,7 @@
 }
 
 % direction: Left
-\def\tikz@auto@anchor@Left{% overwriting
+\def\tikz@auto@anchor@Left{%
   \tikzext@auto@pre
   \def\tikzext@autooffset@angle{90}%
   \iftikzext@allowupsidedownattime
@@ -351,7 +351,7 @@
 }
 
 % direction: Right
-\def\tikz@auto@anchor@Right{% overwriting
+\def\tikz@auto@anchor@Right{%
   \tikzext@auto@pre
   \def\tikzext@autooffset@angle{-90}%
   \iftikzext@allowupsidedownattime

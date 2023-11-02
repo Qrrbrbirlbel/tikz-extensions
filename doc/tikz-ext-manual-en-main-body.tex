@@ -185,19 +185,21 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
-Version 0.6
+Version 0.6 (\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day)
 \begin{itemize}
-\item Added six new |auto| placement mechanism: |above|, |below|, |west|, |east|, |north| and |south|.
+\item Added six new |auto| placement mechanisms:
+      |Above|, |Below|, |West|, |East|, |North| and |South|.
 \item Added |auto offset| for |auto| placement.
 \item Added |precise auto angle|.
 \item \addTikz{arrows-plus}
+\item \addTikz{topaths.autobend}
 \end{itemize}
-Version 0.5.1
+Version 0.5.1 (2023-04-02)
 \begin{itemize}
 \item \addPGF{arrows}
 \item Bugfix to |ext.pgfkeys-plus|. \cite{GH6}
 \end{itemize}
-Version 0.5
+Version 0.5 (2023-03-17)
 \begin{itemize}
 \item \addPackage{pgffor}
 \item \addTikz{nodes}
@@ -205,23 +207,23 @@ Version 0.5
 \item Bugfixes to |ext.calendar-plus|.
 \item Allow the original |rectangle| timer with |ext.paths.timer|.
 \end{itemize}
-Version 0.4.2
+Version 0.4.2 (2022-10-30)
 \begin{itemize}
 \item \addTikz{scalepicture}
 \item Bugfixes to |shapes.uncenteredrectangle|, |paths.ortho|, |positioning-plus| and |pgfcalender-ext|.
 \end{itemize}
-Version 0.4.1
+Version 0.4.1 (2022-10-23)
 \begin{itemize}
 \item Cleaned up directory structure of documentary.
 \item \addPGFkeys{pgfkeys-plus}
 \item \addShape[uncentered rectangle]{uncenteredrectangle}
 \item Fixed |ext.paths.arcto| -- again \cite{GH2}.
 \end{itemize}
-Version 0.4
+Version 0.4 (2022-10-10)
 \begin{itemize}
 \item CTAN version of 0.3.1
 \end{itemize}
-Version 0.3.1
+Version 0.3.1 (2022-10-09)
 \begin{itemize}
 \item Fixed |ext.paths.ortho| keys |only vertical first| and |only horizontal first|.
 \item Moved all (except the |to path|s) to namespace |/tikz/ortho|.
@@ -230,7 +232,7 @@ Version 0.3.1
 \item Added more calendar tests.
 \item Added directory structure.
 \end{itemize}
-Version 0.3
+Version 0.3 (2022-09-24)
 \begin{itemize}
 \item \addShape[circle arrow]{circlearrow}
 \item \addShape[circle cross split]{circlecrosssplit}
@@ -242,12 +244,12 @@ Version 0.3
 \item Renamed internal macros to use custom namespace starting with |\tikzext@|.
 \item Added some references.
 \end{itemize}
-Version 0.2
+Version 0.2 (2022-08-21)
 \begin{itemize}
 \item \addTikz{positioning-plus}
 \item \addTikz{node-families}
 \end{itemize}
-Version 0.1
+Version 0.1 (2022-08-16)
 \begin{itemize}
 \item \addTikz{calendar-plus}
 \item \addTikz{misc}

@@ -562,18 +562,18 @@
   },
   horizontal vertical/.style={to path={-|(\tikztotarget)\tikztonodes}},
   vertical horizontal/.style={to path={|-(\tikztotarget)\tikztonodes}},
-  horizontal vertical horizontal/.default=
+  horizontal vertical horizontal/.default=,
   horizontal vertical horizontal/.style={to path={-|-[{#1}](\tikztotarget)\tikztonodes}},
   vertical horizontal vertical/.default=
   vertical horizontal vertical/.style={to path={|-|[{#1}](\tikztotarget)\tikztonodes}},
   right vertical left/.default=,
-  right vertical left/.style={to path={r-rl[{#1}](\tikztotarget)\tikztonodes]}}
+  right vertical left/.style={to path={r-rl[{#1}](\tikztotarget)\tikztonodes]}},
   left vertical right/.default=,
-  left vertical right/.style={to path={r-lr[{#1}](\tikztotarget)\tikztonodes]}}
+  left vertical right/.style={to path={r-lr[{#1}](\tikztotarget)\tikztonodes]}},
   up horizontal down/.default=,
-  up horizontal down/.style={to path={r-ud[{#1}](\tikztotarget)\tikztonodes]}}
+  up horizontal down/.style={to path={r-ud[{#1}](\tikztotarget)\tikztonodes]}},
   down horizontal up/.default=,
-  down horizontal up/.style={to path={r-du[{#1}](\tikztotarget)\tikztonodes]}}
+  down horizontal up/.style={to path={r-du[{#1}](\tikztotarget)\tikztonodes]}},
   only vertical second/.style={to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty
@@ -595,9 +595,9 @@
         \edef\tikztotarget{[xshift={#1}]\tikztotarget\tikzext@ortho@anchor}%
       \fi
     \endpgfextra
-    [insert path/.expanded={
+    \pgfkeys@expanded{%
       (perpendicular cs: horizontal line through={(\tikztostart)},
-                         vertical line through={(\tikztotarget)}) -- (\tikztotarget)}] \tikztonodes
+                         vertical line through={(\tikztotarget)}) -- (\tikztotarget)}\tikztonodes
       \pgfextra
         \ifx\tikzext@origtotarget\pgfutil@empty\else
           \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
@@ -623,9 +623,9 @@
         \edef\tikztotarget{[yshift={#1}]\tikztotarget\tikzext@ortho@anchor}%
       \fi
     \endpgfextra
-    [insert path/.expanded={
+    \pgfkeys@expanded{%
       (perpendicular cs: vertical line through={(\tikztostart)},
-                         horizontal line through={(\tikztotarget)}) -- (\tikztotarget)}] \tikztonodes
+                         horizontal line through={(\tikztotarget)}) -- (\tikztotarget)}\tikztonodes
     \pgfextra
       \ifx\tikzext@origtotarget\pgfutil@empty\else
         \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
@@ -652,7 +652,7 @@
         \edef\tikztostart{[xshift={#1}]\tikztostart\tikzext@ortho@anchor}%
       \fi
     \endpgfextra
-    [insert path/.expanded={(\tikztostart)}] 
+    expandafter(\tikztostart)
     -- (perpendicular cs: vertical line through/.expanded={(\tikztostart)},
                         horizontal line through={(\tikztotarget)})
     \tikztonodes
@@ -682,7 +682,7 @@
         \edef\tikztostart{[yshift={#1}]\tikztostart\tikzext@ortho@anchor}%
       \fi
     \endpgfextra
-    [insert path/.expanded={(\tikztostart)}]
+    \expandafter(\tikztostart)
       -- (perpendicular cs: horizontal line through/.expanded={(\tikztostart)},
                               vertical line through={(\tikztotarget)})
     \tikztonodes \pgfextra
@@ -690,16 +690,16 @@
         \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
   only horizontal first/.default=,
   only vertical first to center/.style={to path={
-      \pgfextra
-        \let\tikzext@origtotarget\tikztotarget
-      \endpgfextra
+    \pgfextra
+      \let\tikzext@origtotarget\tikztotarget
+    \endpgfextra
     (\tikztostart) -- (perpendicular cs: vertical line through={(\tikztostart)},
                                          horizontal line through={(\tikztotarget)})
     \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}},
   only horizontal first to center/.style={to path={
-      \pgfextra
-        \let\tikzext@origtotarget\tikztotarget
-      \endpgfextra
+    \pgfextra
+      \let\tikzext@origtotarget\tikztotarget
+    \endpgfextra
     (\tikztostart) -- (perpendicular cs: horizontal line through={(\tikztostart)},
                                          vertical line through={(\tikztotarget)})
     \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}}%

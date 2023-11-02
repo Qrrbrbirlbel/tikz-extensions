@@ -73,44 +73,44 @@
     \let\tikz@timer@end\pgf@tempa
   \fi
   \multiply\pgfutil@tempdima2
-  \edef\tikz@time{\strip@pt\pgfutil@tempdima}%
+  \edef\tikz@time{\pgf@sys@tonumber\pgfutil@tempdima}%
   \tikz@timer@hvline}%
 
 \def\tikz@parabola@semifinal#1{%
-    \tikz@flush@moveto
-    % Save original start:
-    \edef\tikz@timer@start{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save start position
-    \pgf@xb=\tikz@lastx
-    \pgf@yb=\tikz@lasty
-    \tikz@make@last@position{#1}%
-    \edef\tikz@timer@end{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save target position
-    \pgf@xc=\tikz@lastx
-    \pgf@yc=\tikz@lasty
-    \begingroup% now calculate bend:
-        \let\tikz@after@path\pgfutil@empty
-        \expandafter\tikzset\expandafter{\tikz@parabola@option}%
-        \tikz@lastxsaved=\tikz@parabola@bend@factor\tikz@lastx
-        \tikz@lastysaved=\tikz@parabola@bend@factor\tikz@lasty
-        \advance\tikz@lastxsaved by\pgf@xb
-        \advance\tikz@lastysaved by\pgf@yb
-        \advance\tikz@lastxsaved by-\tikz@parabola@bend@factor\pgf@xb
-        \advance\tikz@lastysaved by-\tikz@parabola@bend@factor\pgf@yb
-        \expandafter\tikz@make@last@position\expandafter{\tikz@parabola@bend}%
-        \edef\tikz@timer@middle{{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save bend postion
-        % Calculate delta from bend
-        \advance\pgf@xc by-\tikz@lastx
-        \advance\pgf@yc by-\tikz@lasty
-        % Ok, now calculate delta to bend
-        \advance\tikz@lastx by-\pgf@xb
-        \advance\tikz@lasty by-\pgf@yb
-        \edef\tikz@marshall{%
-          \noexpand\let\noexpand\tikz@timer\noexpand\tikz@timer@parabola
-          \noexpand\edef\noexpand\tikz@timer@middle{\noexpand\pgfqpoint\tikz@timer@middle}%
-          \noexpand\pgfpathparabola{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
-        }%
-    \expandafter\endgroup%
-    \tikz@marshall
-    \expandafter\tikz@scan@next@command\tikz@after@path%
+  \tikz@flush@moveto
+  % Save original start:
+  \edef\tikz@timer@start{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save start position
+  \pgf@xb=\tikz@lastx
+  \pgf@yb=\tikz@lasty
+  \tikz@make@last@position{#1}%
+  \edef\tikz@timer@end{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save target position
+  \pgf@xc=\tikz@lastx
+  \pgf@yc=\tikz@lasty
+  \begingroup% now calculate bend:
+    \let\tikz@after@path\pgfutil@empty
+    \expandafter\tikzset\expandafter{\tikz@parabola@option}%
+    \tikz@lastxsaved=\tikz@parabola@bend@factor\tikz@lastx
+    \tikz@lastysaved=\tikz@parabola@bend@factor\tikz@lasty
+    \advance\tikz@lastxsaved by\pgf@xb
+    \advance\tikz@lastysaved by\pgf@yb
+    \advance\tikz@lastxsaved by-\tikz@parabola@bend@factor\pgf@xb
+    \advance\tikz@lastysaved by-\tikz@parabola@bend@factor\pgf@yb
+    \expandafter\tikz@make@last@position\expandafter{\tikz@parabola@bend}%
+    \edef\tikz@timer@middle{{\the\tikz@lastx}{\the\tikz@lasty}}% %% Timer: save bend postion
+    % Calculate delta from bend
+    \advance\pgf@xc by-\tikz@lastx
+    \advance\pgf@yc by-\tikz@lasty
+    % Ok, now calculate delta to bend
+    \advance\tikz@lastx by-\pgf@xb
+    \advance\tikz@lasty by-\pgf@yb
+    \edef\tikz@marshal{%
+      \noexpand\let\noexpand\tikz@timer\noexpand\tikz@timer@parabola
+      \noexpand\edef\noexpand\tikz@timer@middle{\noexpand\pgfqpoint\tikz@timer@middle}%
+      \noexpand\pgfpathparabola{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
+    }%
+  \expandafter\endgroup%
+  \tikz@marshal
+  \expandafter\tikz@scan@next@command\tikz@after@path%
 }%
 
 \def\tikz@timer@parabola{% following calculations, see \def of \pgfpathparabola in pgfcorepathconstruct.code.tex (l. 1261)
@@ -126,7 +126,7 @@
     \advance\pgf@xb\pgf@x\pgf@xb.5\pgf@xb % = .5 (middle_x + start_x) = start_x + .5 (middle_x - start_x)
     \pgf@xa=\tikz@time pt%
     \pgf@xa=2\pgf@xa                      % = 2 * \tikz@time
-    \edef\tikz@marshall{\noexpand\pgftransformcurveattime{\strip@pt\pgf@xa}{\noexpand\tikz@timer@start}%
+    \edef\tikz@marshal{\noexpand\pgftransformcurveattime{\pgf@sys@tonumber\pgf@xa}{\noexpand\tikz@timer@start}%
       {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       {\noexpand\tikz@timer@middle}}%
@@ -144,12 +144,12 @@
     \pgf@xa=\tikz@time pt%
     \advance\pgf@xa-.5pt%
     \pgf@xa=2\pgf@xa                      % = 2 (\tikz@zime - .5)
-    \edef\tikz@marshall{\noexpand\pgftransformcurveattime{\strip@pt\pgf@xa}{\noexpand\tikz@timer@middle}%
+    \edef\tikz@marshal{\noexpand\pgftransformcurveattime{\pgf@sys@tonumber\pgf@xa}{\noexpand\tikz@timer@middle}%
       {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@y}}%
       {\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
       {\noexpand\tikz@timer@end}}%
   \fi
-  \tikz@marshall
+  \tikz@marshal
 }
 
 \def\tikz@timer@sine{% following calculations, see \def of \pgfpathsine in pgfcorepathconstruct.code.tex (l. 1315)
