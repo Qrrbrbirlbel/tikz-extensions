@@ -5,6 +5,17 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+% \ifpgfutil@format@is@latex
+%   \RequirePackage{memoizable}
+% \fi
+% \ifpgfutil@format@is@plain
+%   \input memoizable.tex
+% \fi
+% \ifpgfutil@format@is@context
+%   \pgfutil@usemodule{memoizable}
+% \fi
+
+\pgfutil@IfUndefined{mmzAbort}{\let\tikzext@mmzAbort\relax}{\let\tikzext@mmzAbort\mmzAbort}
 
 \def\tikzext@nf@align@left#1{}
 \def\tikzext@nf@align@center#1{\kern.5#1}
@@ -31,7 +42,14 @@
 
 % #1 = family type + name
 \def\tikzext@nf@save#1{%
-  %\errmessage{#1}%
+  \pgfutil@IfUndefined{tikzext@nf@#1@previous}{%
+    \tikzext@mmzAbort
+  }{%
+    \expandafter\ifx\csname tikzext@nf@#1@previous\expandafter\endcsname
+                    \csname tikzext@nf@#1@next\endcsname
+      \tikzext@mmzAbort
+    \fi
+  }%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
       {\csname tikzext@nf@#1@next\endcsname}%
