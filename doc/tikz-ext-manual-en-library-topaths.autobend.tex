@@ -11,33 +11,53 @@
 \section{Arcs through Three Points}
 \label{library:topaths.autobend}
 \begin{tikzlibrary}{ext.topaths.autobend}
-  This library provides various |to| paths
+  This library provides various bended |to| paths
   that bend in the specified direction.
   
   \inspiration{AutoBend-Q}{AutoBend-A}
 \end{tikzlibrary}
 
+The keys \referenceKeyandIndexO{bend left}
+and \referenceKeyandIndexO{bend left} from \tikzname\ 
+bend the requested curve in relation of the connecting
+coordinates/nodes.
+
+The keys provided by this library bend the curve in the direction relative
+to the paper (north, south, west and east) or relative to the current
+coordinate system (up, down, left and right).
+
 \begin{key}{/tikz/autobend north=\meta{angle} (default \normalfont last value)}
+  Works like the |bend left| and |bend right| options
+  but bends the curve to the top of the page (i.\,e. it ignores the current transformation).
 \end{key}
 \begin{key}{/tikz/autobend south=\meta{angle} (default \normalfont last value)}
+  Works like |autobend north| but bends the curve to the bottom of the page.
 \end{key}
 \begin{key}{/tikz/autobend west=\meta{angle} (default \normalfont last value)}
+  Works like |autobend north| but bends the curve to the left of the page.
 \end{key}
 \begin{key}{/tikz/autobend east=\meta{angle} (default \normalfont last value)}
+  Works like |autobend north| but bends the curve to the right of the page.
 \end{key}
 
 \begin{key}{/tikz/autobend up=\meta{angle} (default \normalfont last value)}
+  Works like the |bend left| and |bend right| options
+  but bends the curve upwards (i.\,e. it observes the current transformation).
 \end{key}
 \begin{key}{/tikz/autobend down=\meta{angle} (default \normalfont last value)}
+  Works like |autobend up| but bends the curve downwards.
 \end{key}
 \begin{key}{/tikz/autobend left=\meta{angle} (default \normalfont last value)}
+  Works like |autobend up| but bends the curve leftwards.
 \end{key}
 \begin{key}{/tikz/autobend right=\meta{angle} (default \normalfont last value)}
+  Works like |autobend up| but bends the curve rightwards.
 \end{key}
 
-\begin{codeexample}[preamble=\usetikzlibrary{ext.topaths.autobend},width=6cm]
-\begin{tikzpicture}[nodes={sloped, fill=white, inner ysep=+.1em,
-                           fill opacity=.8, text opacity=1, scale=.5}]
+\begin{codeexample}[preamble=\usetikzlibrary{arrows.meta, ext.topaths.autobend},width=6cm]
+\begin{tikzpicture}[
+  every path/.append style=-Latex,
+  nodes={sloped, fill=white, inner ysep=+.1em, fill opacity=.8, text opacity=1, scale=.5}]
 \foreach[count=\i] \c/\d in {black/north, red/south,
                              green!50!black/west, yellow!50!black/east}
   \draw[\c] (0,0) to[autobend \d=\i0] node{\d} +(45:3);
@@ -47,8 +67,8 @@
             (0,0) to[autobend \d=\i0] node{\d} +(45:-3);
 
 \tikzset{shift=(down:2.5)}
-\foreach[count=\i] \c/\d in {black/north, red/south,
-                             green!50!black/west, yellow!50!black/east}
+\foreach[count=\i] \c/\d in {black/up, red/down,
+                             green!50!black/left, yellow!50!black/right}
   \draw[\c] (0,0) to[autobend \d=\i0] node{\d} +(45:3);
 \foreach[count=\i] \c/\d in {black/up, red/down,
                              green!50!black/left, yellow!50!black/right}
