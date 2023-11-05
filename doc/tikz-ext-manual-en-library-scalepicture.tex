@@ -39,6 +39,19 @@ and an appropriate scaling for the picture can be installed.
   This key is usually used by the keys provided by this library.
   Normally, this is not needed to be explicitly given.
 \end{stylekey}
+
+\subsection{Externalization}
+As this library usually needs multiple compilations
+to produce stable pictures it is incompatible
+with the \referenceLibraryandIndexO{external} library.
+
+However, the library provides support for the
+\indexPackageExt{memoize} \cite{memoize} package.
+When it is used the arguments to the keys below
+will be saved as the context of the memo.
+This means that the arguments need to be a valid
+\referenceCommandandIndexExt{\dimexpr} expression.
+
 \subsection{Keeping the aspect ratio}
 The following \emph{unstarred} keys do not change the aspect ratio of the picture.
 
