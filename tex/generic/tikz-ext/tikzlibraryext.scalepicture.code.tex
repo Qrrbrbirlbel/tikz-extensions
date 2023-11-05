@@ -5,48 +5,95 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\def\tikzext@scalepicture@savepicturesize{%
-  \pgf@process{%
-    \pgfpointdiff
-      {\pgfpointanchor{current bounding box}{south west}}
-      {\pgfpointanchor{current bounding box}{north east}}}%
+
+\newcommand*\tikzext@sp@write{%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\gdef
-    \noexpand\csname tikzext@scalepicture@\pgfpictureid\endcsname{{\the\pgf@x}{\the\pgf@y}}%
+    \noexpand\csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
+      {{\the\pgf@xa}{\the\pgf@ya}}%
   }%
-  \let\tikzext@scalepicture@savepicturesize\relax
 }
 
-\def\tikzext@scalepicture@width{%
-  \expandafter\expandafter\expandafter\pgfutil@firstoftwo
-  \csname tikzext@scalepicture@\pgfpictureid\endcsname
+\pgfutil@IfUndefined{mmzAbort}{%
+  \let\tikzext@sp@mmzAbort\relax
+  \let\tikzext@sp@mmzSetContext\pgfutil@gobble
+  \let\tikzext@sp@mmzNoAbort\tikzext@sp@write
+}{%
+  \let\tikzext@sp@mmzAbort\mmzAbort
+  \def\tikzext@sp@mmzSetContext#1{\pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov}%
+  \let\tikzext@sp@mmzNoAbort\relax
 }
-\def\tikzext@scalepicture@height{%
+
+\def\tikzext@sp@savepicturesize{% overwrite
+  \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
+                            {\pgfpointanchor{current bounding box}{north east}}}%
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{%
+    \tikzext@sp@write
+    \tikzext@sp@mmzAbort
+  }{%
+    \tikzext@ifapproxequalto{\pgf@x}{\tikzext@sp@width}{%
+      \tikzext@sp@mmzNoAbort
+    }{%
+      \tikzext@ifapproxequalto{\pgf@y}{\tikzext@sp@height}{%
+        \tikzext@sp@mmzNoAbort
+      }{%
+        \tikzext@sp@write
+        \tikzext@sp@mmzAbort
+      }%
+    }%
+  }%
+  \let\tikzext@sp@savepicturesize\relax % only once per picture
+}
+
+%
+% pgfmathapproxequalto checks against 0.0001, too precise for this
+\def\tikzext@ifapproxequalto#1#2{%
+  \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
+  \advance#1by-#2\relax \ifdim#1<0pt #1=-#1\fi
+  \ifdim#1<\pgfutil@tempdima\relax
+    \expandafter\pgfutil@firstoftwo
+  \else
+    \expandafter\pgfutil@secondoftwo
+  \fi
+}
+
+\def\tikzext@sp@width{%
+  \expandafter\expandafter\expandafter\pgfutil@firstoftwo
+  \csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
+}
+\def\tikzext@sp@height{%
   \expandafter\expandafter\expandafter\pgfutil@secondoftwo
-  \csname tikzext@scalepicture@\pgfpictureid\endcsname
+  \csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
 }
 
 \def\tikzextpicturewidth{%
-  \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{0pt}{\tikzext@scalepicture@width}}
+  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{0pt}{\tikzext@sp@width}}
 \def\tikzextpictureheight{%
-  \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{0pt}{\tikzext@scalepicture@height}}
+  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{0pt}{\tikzext@sp@height}}
+
+\def\tikzext@sp@init#1{%
+  \pgfkeysvalueof{/tikz/execute at end picture/.@cmd}\tikzext@sp@savepicturesize\pgfeov
+  \tikzext@sp@mmzSetContext{#1}%
+}
 \tikzset{
-  save picture size/.style={execute at end picture=\tikzext@scalepicture@savepicturesize},
-  save picture size/.value forbidden,
+  scale picture name/.initial=\pgfpictureid,
+  scale picture diff/.initial=+0.05pt,
+  scale picture diff/.value to context/.try,
   %%% keep aspect ratio
   %%  width and height
   minimum picture size/.code 2 args={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{minimum picture size=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \pgfmathsetlength\pgf@ya{#2}%
       \def\tikz@tempa{0}%
       \def\tikz@temp{0}%
-      \ifdim\tikzext@scalepicture@width<\pgf@xa
-        \pgfmathsetmacro\tikz@tempa{\pgf@xa/\tikzext@scalepicture@width}%
+      \ifdim\tikzext@sp@width<\pgf@xa
+        \pgfmathsetmacro\tikz@tempa{\pgf@xa/\tikzext@sp@width}%
       \fi
-      \ifdim\tikzext@scalepicture@height<\pgf@ya
-        \pgfmathsetmacro\tikz@temp{\pgf@ya/\tikzext@scalepicture@height}%
+      \ifdim\tikzext@sp@height<\pgf@ya
+        \pgfmathsetmacro\tikz@temp{\pgf@ya/\tikzext@sp@height}%
       \fi
       \ifdim\tikz@tempa pt>\tikz@temp pt
         \let\tikz@temp\tikz@tempa
@@ -57,17 +104,17 @@
     }%
   },
   maximum picture size/.code 2 args={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{maximum picture size=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \pgfmathsetlength\pgf@ya{#2}%
       \def\tikz@tempa{0}%
       \def\tikz@temp{0}%
-      \ifdim\tikzext@scalepicture@width>\pgf@xa
-        \pgfmathsetmacro\tikz@tempa{\pgf@xa/\tikzext@scalepicture@width}%
+      \ifdim\tikzext@sp@width>\pgf@xa
+        \pgfmathsetmacro\tikz@tempa{\pgf@xa/\tikzext@sp@width}%
       \fi
-      \ifdim\tikzext@scalepicture@height>\pgf@ya
-        \pgfmathsetmacro\tikz@temp{\pgf@ya/\tikzext@scalepicture@height}%
+      \ifdim\tikzext@sp@height>\pgf@ya
+        \pgfmathsetmacro\tikz@temp{\pgf@ya/\tikzext@sp@height}%
       \fi
       \ifdim\tikz@tempa pt<\tikz@temp pt
         \let\tikz@temp\tikz@tempa
@@ -80,114 +127,114 @@
   %%% keep aspect ratio
   %%  width
   picture width/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
-      \tikzset{scale={(#1)/\tikzext@scalepicture@width}}%
+    \tikzext@sp@init{picture width=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+      \tikzset{scale={(#1)/\tikzext@sp@width}}%
     }%
   },
   minimum picture width/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{minimum picture width=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
-      \ifdim\tikzext@scalepicture@width<\pgf@xa
-        \tikzset{scale={\pgf@xa/\tikzext@scalepicture@width}}
+      \ifdim\tikzext@sp@width<\pgf@xa
+        \tikzset{scale={\pgf@xa/\tikzext@sp@width}}
       \fi
     }%
   },
   maximum picture width/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{maximum picture width=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
-      \ifdim\tikzext@scalepicture@width>\pgf@xa
-        \tikzset{scale={\pgf@xa/\tikzext@scalepicture@width}}
+      \ifdim\tikzext@sp@width>\pgf@xa
+        \tikzset{scale={\pgf@xa/\tikzext@sp@width}}
       \fi
     }%
   },
   %%% xscale only
   %%  width
   picture width*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
-      \tikzset{xscale={(#1)/\tikzext@scalepicture@width}}%
+    \tikzext@sp@init{picture width*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+      \tikzset{xscale={(#1)/\tikzext@sp@width}}%
     }%
   },
   minimum picture width*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{minimum picture width*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
-      \ifdim\tikzext@scalepicture@width<\pgf@xa
-        \tikzset{xscale={\pgf@xa/\tikzext@scalepicture@width}}
+      \ifdim\tikzext@sp@width<\pgf@xa
+        \tikzset{xscale={\pgf@xa/\tikzext@sp@width}}
       \fi
     }%
   },
   maximum picture width*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{maximum picture width*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
-      \ifdim\tikzext@scalepicture@width>\pgf@xa
-        \tikzset{xscale={\pgf@xa/\tikzext@scalepicture@width}}
+      \ifdim\tikzext@sp@width>\pgf@xa
+        \tikzset{xscale={\pgf@xa/\tikzext@sp@width}}
       \fi
     }%
   },
   %%% keep aspect ratio
   %%  height
   picture height/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
-      \tikzset{yscale={(#1)/\tikzext@scalepicture@height}}%
+    \tikzext@sp@init{picture height=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+      \tikzset{yscale={(#1)/\tikzext@sp@height}}%
     }%
   },
   minimum picture height/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{minimum picture height=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height<\pgf@ya
-        \tikzset{scale={\pgf@ya/\tikzext@scalepicture@height}}
+      \ifdim\tikzext@sp@height<\pgf@ya
+        \tikzset{scale={\pgf@ya/\tikzext@sp@height}}
       \fi
     }%
   },
   maximum picture height/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{maximum picture height=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height>\pgf@ya
-        \tikzset{scale={\pgf@ya/\tikzext@scalepicture@height}}
+      \ifdim\tikzext@sp@height>\pgf@ya
+        \tikzset{scale={\pgf@ya/\tikzext@sp@height}}
       \fi
     }%
   },
   %%% yscale only
   %%  height
   picture height*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
-      \tikzset{yscale={(#1)/\tikzext@scalepicture@height}}%
+    \tikzext@sp@init{picture height*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+      \tikzset{yscale={(#1)/\tikzext@sp@height}}%
     }%
   },
   minimum picture height*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{minimum picture height*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height<\pgf@ya
-        \tikzset{yscale={\pgf@ya/\tikzext@scalepicture@height}}
+      \ifdim\tikzext@sp@height<\pgf@ya
+        \tikzset{yscale={\pgf@ya/\tikzext@sp@height}}
       \fi
     }%
   },
   maximum picture height*/.code={%
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{maximum picture height*=\the\dimexpr#1\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
-      \ifdim\tikzext@scalepicture@height>\pgf@ya
-        \tikzset{yscale={\pgf@ya/\tikzext@scalepicture@height}}
+      \ifdim\tikzext@sp@height>\pgf@ya
+        \tikzset{yscale={\pgf@ya/\tikzext@sp@height}}
       \fi
     }%
   },
   %%% xscale or yscale
   picture size*/.code 2 args={% #1 = width, #2 = height
-    \tikzset{save picture size}%
-    \pgfutil@IfUndefined{tikzext@scalepicture@\pgfpictureid}{}{%
+    \tikzext@sp@init{picture size*=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
     \tikzset{
-      xscale={(#1)/\tikzext@scalepicture@width},
-      yscale={(#2)/\tikzext@scalepicture@height}}%
+      xscale={(#1)/\tikzext@sp@width},
+      yscale={(#2)/\tikzext@sp@height}}%
     }%
   },
 }

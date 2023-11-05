@@ -14,12 +14,7 @@
   This uses the hook \referenceKeyandIndexO{execute at end picture} to write the nodes'
   measurements to the \filetype{aux} file.
   
-  Unfortunately, this does not work with the |external| library.\indexLibraryO{external}%
-  \footnote{First of all, I can't figure out how to use the \textsc{aux} file during externalization since it gets written to the \textsc{log} instead.
-            And then there's the question about how \texttt{external} would notice the need to export the picture again until it's stable \dots}
-
   \inspiration{NodeFam-Q}{NodeFam-A}
-
 \end{tikzlibrary}
 
 Before we get to the interesting keys, a common prefix can be set for the families' names.
@@ -28,6 +23,13 @@ Initially this is |\pgfpictureid-| so that families of different pictures don't 
 The family names are prefixed with the value of |/tikz/node family/prefix|.
 \end{key}
 
+\subsection{Externalization}
+As this library usually needs multiple compilations
+to produce stable pictures it is incompatible
+with the \referenceLibraryandIndexO{external} library.
+
+However, the library provides support for the
+\indexPackageExt{memoize} \cite{memoize} package.
 \subsection{Text Box}
 \label{ssec:nf-text}
 The following keys~-- when setup, see below~-- work with every shape with one single node part.%

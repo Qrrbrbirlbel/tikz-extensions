@@ -1,3 +1,4 @@
+% !TeX TS-program = lualatex
 % !TeX spellcheck = <none>
 % !TeX root = tikz-ext-manual.tex
 % Copyright 2022 by Qrrbrbirlbel
@@ -412,7 +413,7 @@
 \newcommand*{\referenceShapeandIndex}[1]{\texttt{#1}\indexShape{#1}}
 \newcommand*{\referenceShapeandIndexO}[1]{\texttt{#1}\indexShapeO{#1}}
 \newcommand*{\referenceLibraryandIndexO}[1]{\texttt{#1}\indexLibraryO{#1}}
-\newcommand*{\referenceLibraryandIndexExt}[1]{\texttt{ext.#1}\indexLibraryExt{#1}}
+\newcommand*{\referenceLibraryandIndexExt}[1]{\texttt{#1}\indexLibraryExt{#1}}
 \newcommand*{\referenceLibraryandIndex}[1]{\texttt{#1}\indexLibrary{#1}}
 \newcommand*{\referencePackageandIndex}[1]{\texttt{#1}\indexPackage{#1}}
 \newcommand*{\referencePackageandIndexO}[1]{\texttt{#1}\indexPackageO{#1}}
@@ -421,6 +422,7 @@
 \newcommand*{\referencePathOperationandIndexO}[1]{\texttt{#1}\indexPathOperationO{#1}}
 \newcommand*{\referenceCommandandIndex}[1]{\texttt{\string#1}\indexCommand{#1}}
 \newcommand*{\referenceCommandandIndexO}[1]{\texttt{\string#1}\indexCommandO{#1}}
+\newcommand*{\referenceCommandandIndexExt}[1]{\texttt{\string#1}\indexCommandExt{#1}}
 \colorlet{originalindex}{gray}
 \newcommand*{\original}[1]{\textcolor{originalindex}{#1}}%
 \newcommand*{\originalsuffix}{}%\textsuperscript{\textdagger}}%\normalsize
@@ -429,13 +431,17 @@
 \newcommand*{\indexPackageExt}[1]{%
   \begingroup
 %    \originalExternals
-    \index{#1-ext@\originalExternals{\originalprefix\protect\texttt{\original{#1-ext}} package\originalsuffix}}%
-    \index{Packages and files!#1-ext@\originalExternals{\originalprefix\protect\texttt{\original{#1-ext}}\originalsuffix}}%
+    \index{#1@\originalExternals{\protect\texttt{\original{#1}} package}}%
+    \index{Packages and files!#1@\originalExternals{\protect\texttt{\original{#1}}}}%
   \endgroup
 }
 \newcommand*{\indexLibraryExt}[1]{%
-  \index{#1@\originalExternals{\originalprefix\protect\texttt{\original{ext.#1}} library\originalsuffix}}%
-  \index{Libraries!ext.#1@\originalExternals{\originalprefix\protect\texttt{\original{ext.#1}}\originalsuffix}}%
+  \index{#1@\originalExternals{\protect\texttt{\original{#1}} library}}%
+  \index{Libraries!#1@\originalExternals{\protect\texttt{\original{#1}}}}%
+}
+\newcommand*{\indexCommandExt}[1]{%
+  \removeats{#1}%
+  \index{\strippedat @\originalExternals{\protect\texttt{\original{\protect\string\protect#1}}}}%
 }
 \DeclareRobustCommand*{\originalExternals}[1]{%
   \begingroup
