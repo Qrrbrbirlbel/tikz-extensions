@@ -6,46 +6,48 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\newcommand*\tikzext@sp@write{%
+\def\tikzext@sp@write{%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\gdef
     \noexpand\csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
       {{\the\pgf@xa}{\the\pgf@ya}}%
   }%
 }
-
 \pgfutil@IfUndefined{mmzAbort}{%
-  \let\tikzext@sp@mmzAbort\relax
   \let\tikzext@sp@mmzSetContext\pgfutil@gobble
-  \let\tikzext@sp@mmzNoAbort\tikzext@sp@write
-}{%
-  \let\tikzext@sp@mmzAbort\mmzAbort
-  \def\tikzext@sp@mmzSetContext#1{\pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov}%
-  \let\tikzext@sp@mmzNoAbort\relax
-}
-
-\def\tikzext@sp@savepicturesize{% overwrite
-  \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
-                            {\pgfpointanchor{current bounding box}{north east}}}%
-  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
-  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{%
+  \def\tikzext@sp@savepicturesize{%
+    \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
+                              {\pgfpointanchor{current bounding box}{north east}}}%
+    \pgf@xa=\pgf@x
+    \pgf@ya=\pgf@y
     \tikzext@sp@write
-    \tikzext@sp@mmzAbort
-  }{%
-    \tikzext@ifapproxequalto{\pgf@x}{\tikzext@sp@width}{%
-      \tikzext@sp@mmzNoAbort
+    \let\tikzext@sp@savepicturesize\relax % only once per picture
+  }%
+}{%
+  \def\tikzext@sp@mmzSetContext#1{\pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov}%
+  \def\tikzext@sp@savepicturesize{% overwrite
+    \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
+                              {\pgfpointanchor{current bounding box}{north east}}}%
+    \pgf@xa=\pgf@x
+    \pgf@ya=\pgf@y
+    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{%
+      \mmzAbort
+      \tikzext@sp@write
     }{%
-      \tikzext@ifapproxequalto{\pgf@y}{\tikzext@sp@height}{%
-        \tikzext@sp@mmzNoAbort
+      \tikzext@ifapproxequalto{\pgf@x}{\tikzext@sp@width}{%
+        \ifmemoize\else\tikzext@sp@write\fi
       }{%
-        \tikzext@sp@write
-        \tikzext@sp@mmzAbort
+        \tikzext@ifapproxequalto{\pgf@y}{\tikzext@sp@height}{%
+          \ifmemoize\else\tikzext@sp@write\fi
+        }{%
+          \mmzAbort
+          \tikzext@sp@write
+        }%
       }%
     }%
+    \let\tikzext@sp@savepicturesize\relax % only once per picture
   }%
-  \let\tikzext@sp@savepicturesize\relax % only once per picture
 }
-
 %
 % pgfmathapproxequalto checks against 0.0001, too precise for this
 \def\tikzext@ifapproxequalto#1#2{%

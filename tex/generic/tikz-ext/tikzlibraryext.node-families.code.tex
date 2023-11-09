@@ -6,7 +6,34 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\pgfutil@IfUndefined{mmzAbort}{\let\tikzext@mmzAbort\relax}{\let\tikzext@mmzAbort\mmzAbort}
+\def\tikzext@nf@write#1{%
+  \immediate\write\pgfutil@auxout{%
+    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
+      {\csname tikzext@nf@#1@next\endcsname}%
+  }%
+}
+\pgfutil@IfUndefined{mmzAbort}{%
+  \let\tikzext@nf@save\tikzext@nf@write
+}{%
+  % #1 = family type + name
+  \def\tikzext@nf@save#1{%
+    \pgfutil@IfUndefined{tikzext@nf@#1@previous}{%
+      \mmzAbort
+      \tikzext@nf@write{#1}%
+    }{%
+      \ifdim\csname tikzext@nf@#1@previous\expandafter\endcsname=%
+            \csname tikzext@nf@#1@next\endcsname
+        \ifmemoize
+        \else
+          \tikzext@nf@write{#1}%
+        \fi
+      \else
+        \mmzAbort
+        \tikzext@nf@write{#1}%
+      \fi
+    }%
+  }%
+}
 
 \def\tikzext@nf@align@left#1{}
 \def\tikzext@nf@align@center#1{\kern.5#1}
@@ -30,22 +57,6 @@
   prefix/.initial=\pgfpictureid-,
 }
 \tikzset{node family/.code=\pgfqkeys{/tikz/node family}{#1}}
-
-% #1 = family type + name
-\def\tikzext@nf@save#1{%
-  \pgfutil@IfUndefined{tikzext@nf@#1@previous}{%
-    \tikzext@mmzAbort
-  }{%
-    \expandafter\ifx\csname tikzext@nf@#1@previous\expandafter\endcsname
-                    \csname tikzext@nf@#1@next\endcsname
-      \tikzext@mmzAbort
-    \fi
-  }%
-  \immediate\write\pgfutil@auxout{%
-    \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
-      {\csname tikzext@nf@#1@next\endcsname}%
-  }%
-}
 
 % #1 = value to set
 % #2 = family type
