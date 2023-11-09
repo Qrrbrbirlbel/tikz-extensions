@@ -13,23 +13,34 @@
   }%
 }
 \pgfutil@IfUndefined{mmzAbort}{%
+  \pgfkeyssetvalue{/tikz/node family/prefix}{\pgfpictureid-}%
   \let\tikzext@nf@save\tikzext@nf@write
 }{%
+  \pgfkeyssetvalue{/tikz/node family/prefix}{\ifmemoize\mmz@code@mdfivesum\else\pgfpictureid\fi-}%
   % #1 = family type + name
   \def\tikzext@nf@save#1{%
     \pgfutil@IfUndefined{tikzext@nf@#1@previous}{%
       \mmzAbort
-      \tikzext@nf@write{#1}%
+      \ifmemoize
+        \mmzset{after memoization=\tikzext@nf@write{#1}}%
+      \else
+        \tikzext@nf@write{#1}%
+      \fi
     }{%
       \ifdim\csname tikzext@nf@#1@previous\expandafter\endcsname=%
             \csname tikzext@nf@#1@next\endcsname
         \ifmemoize
+          \mmzset{after memoization=\tikzext@nf@write{#1}}%
         \else
           \tikzext@nf@write{#1}%
         \fi
       \else
         \mmzAbort
-        \tikzext@nf@write{#1}%
+        \ifmemoize
+          \mmzset{after memoization=\tikzext@nf@write{#1}}%
+        \else
+          \tikzext@nf@write{#1}%
+        \fi
       \fi
     }%
   }%
@@ -54,7 +65,6 @@
   text width align=center,
   text width/.initial=,
   text/.code=\pgfqkeys{/tikz/node family}{text depth={#1},text height={#1},text width={#1}},
-  prefix/.initial=\pgfpictureid-,
 }
 \tikzset{node family/.code=\pgfqkeys{/tikz/node family}{#1}}
 

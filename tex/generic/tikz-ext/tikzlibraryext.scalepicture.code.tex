@@ -6,24 +6,25 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikzext@sp@write{%
+\def\tikzext@sp@write#1#2#3{%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\gdef
-    \noexpand\csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
-      {{\the\pgf@xa}{\the\pgf@ya}}%
+    \noexpand\csname tikzext@sp@#3\endcsname{{#1}{#2}}%
   }%
 }
+\def\tikzext@sp@write@nommz{%
+  \tikzext@sp@write{\the\pgf@x}{\the\pgf@y}{\pgfkeysvalueof{/tikz/scale picture name}}}%
 \pgfutil@IfUndefined{mmzAbort}{%
+  \pgfkeyssetvalue{/tikz/scale picture name}{\pgfpictureid}%
   \let\tikzext@sp@mmzSetContext\pgfutil@gobble
   \def\tikzext@sp@savepicturesize{%
     \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
                               {\pgfpointanchor{current bounding box}{north east}}}%
-    \pgf@xa=\pgf@x
-    \pgf@ya=\pgf@y
-    \tikzext@sp@write
+    \tikzext@sp@write@nommz
     \let\tikzext@sp@savepicturesize\relax % only once per picture
   }%
 }{%
+  \pgfkeyssetvalue{/tikz/scale picture name}{\ifmemoize\mmz@code@mdfivesum\else\pgfpictureid\fi}%
   \def\tikzext@sp@mmzSetContext#1{\pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov}%
   \def\tikzext@sp@savepicturesize{% overwrite
     \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
@@ -32,16 +33,32 @@
     \pgf@ya=\pgf@y
     \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{%
       \mmzAbort
-      \tikzext@sp@write
+      \ifmemoize
+        \mmzset{after memoization/.expanded=\expandafter\noexpand\tikzext@sp@write@nommz}%
+      \else
+        \tikzext@sp@write@nommz
+      \fi
     }{%
-      \tikzext@ifapproxequalto{\pgf@x}{\tikzext@sp@width}{%
-        \ifmemoize\else\tikzext@sp@write\fi
+      \tikzext@ifapproxequalto{\pgf@xa}{\tikzext@sp@width}{%
+        \ifmemoize
+          \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
+        \else
+          \tikzext@sp@write@nommz
+        \fi
       }{%
-        \tikzext@ifapproxequalto{\pgf@y}{\tikzext@sp@height}{%
-          \ifmemoize\else\tikzext@sp@write\fi
+        \tikzext@ifapproxequalto{\pgf@ya}{\tikzext@sp@height}{%
+          \ifmemoize
+            \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
+          \else
+            \tikzext@sp@write@nommz
+          \fi
         }{%
           \mmzAbort
-          \tikzext@sp@write
+          \ifmemoize
+            \mmzset{after memoization/.expanded=\expandafter\noexpand\tikzext@sp@write@nommz}%
+          \else
+            \tikzext@sp@write@nommz
+          \fi
         }%
       }%
     }%
@@ -79,7 +96,6 @@
   \tikzext@sp@mmzSetContext{#1}%
 }
 \tikzset{
-  scale picture name/.initial=\pgfpictureid,
   scale picture diff/.initial=+0.05pt,
   scale picture diff/.value to context/.try,
   %%% keep aspect ratio
