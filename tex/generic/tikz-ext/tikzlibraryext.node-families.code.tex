@@ -12,7 +12,7 @@
       {\csname tikzext@nf@#1@next\endcsname}%
   }%
 }
-\pgfutil@IfUndefined{mmzAbort}{%
+\pgfutil@IfUndefined{mmz@mode}{% \mmz@mode is only defined with memoizable, not with memoizable or nomemoize
   \pgfkeyssetvalue{/tikz/node family/prefix}{\pgfpictureid-}%
   \let\tikzext@nf@save\tikzext@nf@write
 }{%

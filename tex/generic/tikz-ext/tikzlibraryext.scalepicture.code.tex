@@ -14,7 +14,7 @@
 }
 \def\tikzext@sp@write@nommz{%
   \tikzext@sp@write{\the\pgf@x}{\the\pgf@y}{\pgfkeysvalueof{/tikz/scale picture name}}}%
-\pgfutil@IfUndefined{mmzAbort}{%
+\pgfutil@IfUndefined{mmz@mode}{% \mmz@mode is only defined with memoizable, not with memoizable or nomemoize
   \pgfkeyssetvalue{/tikz/scale picture name}{\pgfpictureid}%
   \let\tikzext@sp@mmzSetContext\pgfutil@gobble
   \def\tikzext@sp@savepicturesize{%
@@ -39,14 +39,14 @@
         \tikzext@sp@write@nommz
       \fi
     }{%
-      \tikzext@ifapproxequalto{\pgf@xa}{\tikzext@sp@width}{%
+      \tikzext@sp@ifapproxequalto{\pgf@xa}{\tikzext@sp@width}{%
         \ifmemoize
           \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
         \else
           \tikzext@sp@write@nommz
         \fi
       }{%
-        \tikzext@ifapproxequalto{\pgf@ya}{\tikzext@sp@height}{%
+        \tikzext@sp@ifapproxequalto{\pgf@ya}{\tikzext@sp@height}{%
           \ifmemoize
             \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
           \else
@@ -67,7 +67,7 @@
 }
 %
 % pgfmathapproxequalto checks against 0.0001, too precise for this
-\def\tikzext@ifapproxequalto#1#2{%
+\def\tikzext@sp@ifapproxequalto#1#2{%
   \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
   \advance#1by-#2\relax \ifdim#1<0pt #1=-#1\fi
   \ifdim#1<\pgfutil@tempdima\relax
