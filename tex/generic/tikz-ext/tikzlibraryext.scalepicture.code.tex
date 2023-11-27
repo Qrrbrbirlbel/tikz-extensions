@@ -6,71 +6,64 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikzext@sp@write#1#2#3{%
+% If you really don't want to say
+% \input memoizable.code.tex
+\ifcsname ifmemoizing\endcsname
+\else
+  \expandafter\newif\csname ifmemoizing\endcsname
+\fi
+
+\def\tikzextspwrite#1#2#3{%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\gdef
-    \noexpand\csname tikzext@sp@#3\endcsname{{#1}{#2}}%
+    \noexpand\csname tikzext@sp@#1\endcsname{{#2}{#3}}%
   }%
 }
-\def\tikzext@sp@write@nommz{%
-  \tikzext@sp@write{\the\pgf@x}{\the\pgf@y}{\pgfkeysvalueof{/tikz/scale picture name}}}%
-\pgfutil@IfUndefined{mmz@mode}{% \mmz@mode is only defined with memoizable, not with memoizable or nomemoize
-  \pgfkeyssetvalue{/tikz/scale picture name}{\pgfpictureid}%
-  \let\tikzext@sp@mmzSetContext\pgfutil@gobble
-  \def\tikzext@sp@savepicturesize{%
-    \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
-                              {\pgfpointanchor{current bounding box}{north east}}}%
-    \tikzext@sp@write@nommz
-    \let\tikzext@sp@savepicturesize\relax % only once per picture
+\def\tikzext@sp@savepicturesize{%
+  \pgf@process{%
+    \pgfpointdiff
+      {\pgfpointanchor{current bounding box}{south west}}%
+      {\pgfpointanchor{current bounding box}{north east}}}%
+  \pgfutil@tempswafalse % is this the final size adjustment?
+  \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
+    \tikzext@sp@ifapproxequalto{\pgf@x}{\tikzext@sp@width}{%
+      \tikzext@sp@ifapproxequalto{\pgf@y}{\tikzext@sp@height}{%
+        % This freezes the picture size when the target is reached (Memoize or no).
+        \pgf@x=\tikzext@sp@width\relax
+        \pgf@y=\tikzext@sp@height\relax
+        \pgfutil@tempswatrue
+      }{}%
+    }{}%
   }%
-}{%
-  \pgfkeyssetvalue{/tikz/scale picture name}{\ifmemoize\mmz@code@mdfivesum\else\pgfpictureid\fi}%
-  \def\tikzext@sp@mmzSetContext#1{\pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov}%
-  \def\tikzext@sp@savepicturesize{% overwrite
-    \pgf@process{\pgfpointdiff{\pgfpointanchor{current bounding box}{south west}}
-                              {\pgfpointanchor{current bounding box}{north east}}}%
-    \pgf@xa=\pgf@x
-    \pgf@ya=\pgf@y
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{%
-      \mmzAbort
-      \ifmemoize
-        \mmzset{after memoization/.expanded=\expandafter\noexpand\tikzext@sp@write@nommz}%
-      \else
-        \tikzext@sp@write@nommz
-      \fi
-    }{%
-      \tikzext@sp@ifapproxequalto{\pgf@xa}{\tikzext@sp@width}{%
-        \ifmemoize
-          \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
-        \else
-          \tikzext@sp@write@nommz
-        \fi
-      }{%
-        \tikzext@sp@ifapproxequalto{\pgf@ya}{\tikzext@sp@height}{%
-          \ifmemoize
-            \mmzset{after memoization/.expanded=\noexpand\ifmmz@abort\expandafter\noexpand\tikzext@sp@write@nommz\noexpand\fi}%
-          \else
-            \tikzext@sp@write@nommz
-          \fi
-        }{%
-          \mmzAbort
-          \ifmemoize
-            \mmzset{after memoization/.expanded=\expandafter\noexpand\tikzext@sp@write@nommz}%
-          \else
-            \tikzext@sp@write@nommz
-          \fi
-        }%
+  \tikzextspwrite{\pgfpictureid}{\the\pgf@x}{\the\pgf@y}%
+  \ifmemoizing
+    \ifpgfutil@tempswa % the final adjustment, we won't abort
+      % Let Memoize broadcast the picture size to .aux, so that we immediately
+      % get the correct picture size if we don't load it anymore.
+      \xtoksapp\mmzCCMemo{%
+        \noexpand\tikzextspwrite{\pgfpictureid}{\the\pgf@x}{\the\pgf@y}%
       }%
-    }%
-    \let\tikzext@sp@savepicturesize\relax % only once per picture
-  }%
+    \else % we'll adjust the size some more, abort
+      \mmzAbort
+    \fi
+  \fi
 }
 %
 % pgfmathapproxequalto checks against 0.0001, too precise for this
+%
+% SZ: I rewrote this (copying from pgfmathapproxequalto), so that the macro
+% doesn't destroy the given arguments.
 \def\tikzext@sp@ifapproxequalto#1#2{%
+  \begingroup
   \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
-  \advance#1by-#2\relax \ifdim#1<0pt #1=-#1\fi
-  \ifdim#1<\pgfutil@tempdima\relax
+  \pgfmath@x=#1\relax
+  \pgfmath@y=#2\relax
+  \advance\pgfmath@x by-\pgfmath@y
+  \ifdim\pgfmath@x<0pt\relax
+    \multiply\pgfmath@x by-1\relax
+  \fi
+  \expandafter\endgroup
+  \ifdim\pgfmath@x<\pgfutil@tempdima\relax
     \expandafter\pgfutil@firstoftwo
   \else
     \expandafter\pgfutil@secondoftwo
@@ -79,21 +72,23 @@
 
 \def\tikzext@sp@width{%
   \expandafter\expandafter\expandafter\pgfutil@firstoftwo
-  \csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
+  \csname tikzext@sp@\pgfpictureid\endcsname
 }
 \def\tikzext@sp@height{%
   \expandafter\expandafter\expandafter\pgfutil@secondoftwo
-  \csname tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}\endcsname
+  \csname tikzext@sp@\pgfpictureid\endcsname
 }
 
 \def\tikzextpicturewidth{%
-  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{0pt}{\tikzext@sp@width}}
+  \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{0pt}{\tikzext@sp@width}}
 \def\tikzextpictureheight{%
-  \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{0pt}{\tikzext@sp@height}}
+  \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{0pt}{\tikzext@sp@height}}
 
 \def\tikzext@sp@init#1{%
   \pgfkeysvalueof{/tikz/execute at end picture/.@cmd}\tikzext@sp@savepicturesize\pgfeov
-  \tikzext@sp@mmzSetContext{#1}%
+  \ifmemoizing
+    \pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov
+  \fi
 }
 \tikzset{
   scale picture diff/.initial=+0.05pt,
@@ -102,7 +97,7 @@
   %%  width and height
   minimum picture size/.code 2 args={%
     \tikzext@sp@init{minimum picture size=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \pgfmathsetlength\pgf@ya{#2}%
       \def\tikz@tempa{0}%
@@ -123,7 +118,7 @@
   },
   maximum picture size/.code 2 args={%
     \tikzext@sp@init{maximum picture size=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \pgfmathsetlength\pgf@ya{#2}%
       \def\tikz@tempa{0}%
@@ -146,13 +141,13 @@
   %%  width
   picture width/.code={%
     \tikzext@sp@init{picture width=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \tikzset{scale={(#1)/\tikzext@sp@width}}%
     }%
   },
   minimum picture width/.code={%
     \tikzext@sp@init{minimum picture width=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \ifdim\tikzext@sp@width<\pgf@xa
         \tikzset{scale={\pgf@xa/\tikzext@sp@width}}
@@ -161,7 +156,7 @@
   },
   maximum picture width/.code={%
     \tikzext@sp@init{maximum picture width=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \ifdim\tikzext@sp@width>\pgf@xa
         \tikzset{scale={\pgf@xa/\tikzext@sp@width}}
@@ -172,13 +167,13 @@
   %%  width
   picture width*/.code={%
     \tikzext@sp@init{picture width*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \tikzset{xscale={(#1)/\tikzext@sp@width}}%
     }%
   },
   minimum picture width*/.code={%
     \tikzext@sp@init{minimum picture width*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \ifdim\tikzext@sp@width<\pgf@xa
         \tikzset{xscale={\pgf@xa/\tikzext@sp@width}}
@@ -187,7 +182,7 @@
   },
   maximum picture width*/.code={%
     \tikzext@sp@init{maximum picture width*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@xa{#1}%
       \ifdim\tikzext@sp@width>\pgf@xa
         \tikzset{xscale={\pgf@xa/\tikzext@sp@width}}
@@ -198,13 +193,13 @@
   %%  height
   picture height/.code={%
     \tikzext@sp@init{picture height=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \tikzset{scale={(#1)/\tikzext@sp@height}}%
     }%
   },
   minimum picture height/.code={%
     \tikzext@sp@init{minimum picture height=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
       \ifdim\tikzext@sp@height<\pgf@ya
         \tikzset{scale={\pgf@ya/\tikzext@sp@height}}
@@ -213,7 +208,7 @@
   },
   maximum picture height/.code={%
     \tikzext@sp@init{maximum picture height=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
       \ifdim\tikzext@sp@height>\pgf@ya
         \tikzset{scale={\pgf@ya/\tikzext@sp@height}}
@@ -224,13 +219,13 @@
   %%  height
   picture height*/.code={%
     \tikzext@sp@init{picture height*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \tikzset{yscale={(#1)/\tikzext@sp@height}}%
     }%
   },
   minimum picture height*/.code={%
     \tikzext@sp@init{minimum picture height*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
       \ifdim\tikzext@sp@height<\pgf@ya
         \tikzset{yscale={\pgf@ya/\tikzext@sp@height}}
@@ -239,7 +234,7 @@
   },
   maximum picture height*/.code={%
     \tikzext@sp@init{maximum picture height*=\the\dimexpr#1\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
       \pgfmathsetlength\pgf@ya{#1}%
       \ifdim\tikzext@sp@height>\pgf@ya
         \tikzset{yscale={\pgf@ya/\tikzext@sp@height}}
@@ -249,7 +244,7 @@
   %%% xscale or yscale
   picture size*/.code 2 args={% #1 = width, #2 = height
     \tikzext@sp@init{picture size*=\the\dimexpr#1\relax\the\dimexpr#2\relax}%
-    \pgfutil@IfUndefined{tikzext@sp@\pgfkeysvalueof{/tikz/scale picture name}}{}{%
+    \pgfutil@IfUndefined{tikzext@sp@\pgfpictureid}{}{%
     \tikzset{
       xscale={(#1)/\tikzext@sp@width},
       yscale={(#2)/\tikzext@sp@height}}%
