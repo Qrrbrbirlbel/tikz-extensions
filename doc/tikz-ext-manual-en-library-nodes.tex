@@ -185,7 +185,7 @@ the following keys are provided which needs the
 can be used.
 \begin{key}{/tikz-ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
 This key installs the necessary customizations
-for the \referenceKeyandIndexO[/pgf/decoration]{raise} key
+for the \referenceKeyandIndexO[/pgf/decoration/]{raise} key
 so that the given value is available as an offset.
 
 It also makes available the following keys.
@@ -194,6 +194,7 @@ This sets \referenceKeyandIndex{auto offset} to
 \texttt{\textbackslash pgfdecorationsegmentamplitude+
   (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
 \end{stylekey}
+%\columnbreak
 \begin{stylekey}{/tikz/every brace node}
 Using this key on a node along a path that's decorated by the |brace| decoration
 will offset the node so that it will be placed at the tip of the brace.

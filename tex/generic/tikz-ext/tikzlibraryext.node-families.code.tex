@@ -12,11 +12,10 @@
       {\csname tikzext@nf@#1@next\endcsname}%
   }%
 }
+\pgfkeyssetvalue{/tikz/node family/prefix}{\pgfpictureid-}% no md5
 \pgfutil@IfUndefined{mmz@mode}{% \mmz@mode is only defined with memoizable, not with memoizable or nomemoize
-  \pgfkeyssetvalue{/tikz/node family/prefix}{\pgfpictureid-}%
   \let\tikzext@nf@save\tikzext@nf@write
 }{%
-  \pgfkeyssetvalue{/tikz/node family/prefix}{\ifmemoize\mmz@code@mdfivesum\else\pgfpictureid\fi-}%
   % #1 = family type + name
   \def\tikzext@nf@save#1{%
     \pgfutil@IfUndefined{tikzext@nf@#1@previous}{%
@@ -46,9 +45,9 @@
   }%
 }
 
-\def\tikzext@nf@align@left#1{}
-\def\tikzext@nf@align@center#1{\kern.5#1}
-\def\tikzext@nf@align@right#1{\kern#1}
+\def\tikzext@nf@align@left#1{\unhbox#1\hfil}
+\def\tikzext@nf@align@center#1{\hfil\unhbox#1\hfil}
+\def\tikzext@nf@align@right#1{\hfil\unhbox#1}
 
 \pgfqkeys{/tikz/node family}{
   width/.initial=,
@@ -331,9 +330,7 @@
     \expandafter\pgfutil@prefixto@macro\csname pgf@sh@s@#1\endcsname{%
       \tikzext@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
       \ifdim\wd\pgfnodeparttextbox<\pgfutil@tempdima
-        \pgfutil@tempdimb=\pgfutil@tempdima
-        \advance\pgfutil@tempdimb-\wd\pgfnodeparttextbox
-        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikzext@nf@align@action\pgfutil@tempdimb\unhbox\pgfnodeparttextbox}%
+        \setbox\pgfnodeparttextbox=\hbox to \pgfutil@tempdima{\tikzext@nf@align@action\pgfnodeparttextbox}%
       \fi
       \tikzext@nf@getandset{\the\dp\pgfnodeparttextbox}{text depth}{\pgfutil@tempdima}%
       \ifdim\dp\pgfnodeparttextbox<\pgfutil@tempdima

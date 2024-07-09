@@ -55,13 +55,13 @@
 % doesn't destroy the given arguments.
 \def\tikzext@sp@ifapproxequalto#1#2{%
   \begingroup
-  \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
-  \pgfmath@x=#1\relax
-  \pgfmath@y=#2\relax
-  \advance\pgfmath@x by-\pgfmath@y
-  \ifdim\pgfmath@x<0pt\relax
-    \multiply\pgfmath@x by-1\relax
-  \fi
+    \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
+    \pgfmath@x=#1\relax
+    \pgfmath@y=#2\relax
+    \advance\pgfmath@x by-\pgfmath@y
+    \ifdim\pgfmath@x<0pt\relax
+      \multiply\pgfmath@x by-1\relax
+    \fi
   \expandafter\endgroup
   \ifdim\pgfmath@x<\pgfutil@tempdima\relax
     \expandafter\pgfutil@firstoftwo
