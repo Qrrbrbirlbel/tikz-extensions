@@ -53,6 +53,18 @@ It can be one of the following.
 \item[|arrow shift mode|=\declare{|line end|}]
 
   This is an alias for |length until line end|.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.arrows-plus}]
+\begin{tikzpicture}[>={Straight Barb[color=red]}, ultra thick]
+\ttfamily
+\foreach[count=\y] \shiftmode in {off, total length, length until line end}
+  \draw[arrow shift mode=\shiftmode] (0, -\y  )
+                -- pic {arrow=>}    ++(right:2)
+                -- pic {arrow=>.>>} ++(right:2) node[below right] {\shiftmode}
+    ++(down:.4) -- pic {arrow=>.>>} ++( left:2)
+                -- pic {arrow=>}    ++( left:2);
+\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
+\end{tikzpicture}
+\end{codeexample}
 \end{description}
 
 For single arrow tips it might be better to use the Centered arrow tip variants
@@ -71,18 +83,28 @@ in the tip's direction.
   
   The default value is probably good for most cases.
 \end{key}
-\begin{codeexample}[preamble=\usetikzlibrary{ext.arrows-plus}]
-\begin{tikzpicture}[>={Straight Barb[color=red]}, ultra thick]
-\ttfamily
-\foreach[count=\y] \shiftmode in {off, total length, length until line end}
-  \draw[arrow shift mode=\shiftmode] (0, -\y  )
-                -- pic {arrow=>}    ++(right:2)
-                -- pic {arrow=>.>>} ++(right:2) node[below right] {\shiftmode}
-    ++(down:.4) -- pic {arrow=>.>>} ++( left:2)
-                -- pic {arrow=>}    ++( left:2);
-\draw[thin, gray] (1,-.75) -- +(down:3) (3,-.75) -- +(down:3);
-\end{tikzpicture}
+
+The evaluated shift value needs to be inserted into the arrow tip specification
+to properly work on bended tips.
+By default, this is done -- according to \cite[p.~208]{pgfmanual} --
+in a quick manner.
+With this, the first arrow tip in the start tip specification
+needs to have possibly empty options: |<[]<<->>>| instead of |<<<->>>|.
+
+With the next key, this can be simplified at the cost of being a bit slower.
+\begin{key}{/tikz/arrow shift mode simple=\opt{\meta{true or false}} (default true)}
+  This determines how the shift value is applied.
+
+\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\tikz[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
+  \draw[start angle=0, end angle=360, radius=1,
+        every arc arrows/.style={pos <=.25, pos >=.75}]
+    (0, 0) arc[] [arc arrows= <  <<->>>]  -- cycle
+    (3, 0) arc[] [arc arrows={<[]<<->>>}] -- cycle
+    (6, 0) arc[] [arrow shift mode simple,
+                  arc arrows= <  <<->>>]  -- cycle;
 \end{codeexample}
+\end{key}
 
 \subsection{Arrow pic types}
 
@@ -209,9 +231,6 @@ This library provides the following pics:
   
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
     this will not work as expected. Use the |arc arrows| key instead.
-  \paragraph{Tip:}
-  Use an empty option specification |[]| after the first arrow tip in the start specification
-  to help it correctly apply the shifting distance.
 \end{pictype}
 \begin{pictype}{softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
   This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
@@ -237,16 +256,6 @@ This style will be applied for every instance of |arc arrows|.
 
 \paragraph{Tip:}
 Use an arc with the full 360${}^\circ$ to place bended arrow tips along a circle or an ellipse.
-\paragraph{Tip:}
-Use an empty option specification |[]| after the first arrow tip in the start specification
-to help it correctly apply the shifting distance.
-\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
-\tikz[>={Stealth[color=red, round]}, arrows={[bend]}, ultra thick]
-  \draw[start angle=0, end angle=360, radius=1,
-        every arc arrows/.style={pos <=.25, pos >=.75}]
-    (0, 0) arc[] [arc arrows= <  <<->>>]  -- cycle
-    (3, 0) arc[] [arc arrows={<[]<<->>>}] -- cycle;
-\end{codeexample}
 \end{key}
 \subsection{Shifted and bended arrows for the \texttt{decorations.markings} library}
 Many paths are not properly accessible by the previous methods.

@@ -32,9 +32,13 @@
       \pgfsetarrowsstart{#1}%
     \else
       \tikzext@arrow@evalshift{#1}%
-      \let\tikz@temp\pgfutil@empty
-      \tikzext@arrow@sneakstart{#1}{sep=+\tikzext@arrow@shift@}%
-      \pgfsetarrowsstart{\tikz@temp}%
+      \iftikzext@arrow@simple
+        \pgfsetarrowsstart{_[sep=+\tikzext@arrow@shift@]#1}%
+      \else
+        \let\tikz@temp\pgfutil@empty
+        \tikzext@arrow@sneakstart{#1}{sep=+\tikzext@arrow@shift@}%
+        \pgfsetarrowsstart{\tikz@temp}%
+      \fi
     \fi
   }%
   \pgfutil@ifempty{#2}{\pgfsetarrowsend{}}{%
@@ -42,9 +46,13 @@
       \pgfsetarrowsend{#2}%
     \else
       \tikzext@arrow@evalshift{#2}%
-      \let\tikz@temp\pgfutil@empty
-      \tikzext@arrow@sneakend{#2}{sep=+\tikzext@arrow@shift@}%
-      \pgfsetarrowsend{\tikz@temp}%
+      \iftikzext@arrow@simple
+        \pgfsetarrowsend{#2_[sep=+\tikzext@arrow@shift@]}%
+      \else
+        \let\tikz@temp\pgfutil@empty
+        \tikzext@arrow@sneakend{#2}{sep=+\tikzext@arrow@shift@}%
+        \pgfsetarrowsend{\tikz@temp}%
+      \fi
     \fi
   }%
 }
@@ -103,6 +111,7 @@
   }%
 }
 
+\newif\iftikzext@arrow@simple
 %
 % Arrow keys
 %
@@ -174,6 +183,7 @@
   arrow shift mode/line end/.code             =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{2},
   arrow shift mode=total length,
   arrow shift factor/.initial=.5,
+  arrow shift mode simple/.is if=tikzext@arrow@simple,
 %
 % Arrow pics
 %
