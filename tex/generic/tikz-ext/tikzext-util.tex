@@ -12,4 +12,12 @@
 \tikzextset{
   tikz/.code=\tikzset{#1},
   .code=\tikzextset{#1},
+  %
+  compat/.default=pre 0.6,
+  compat/.is choice,
+  compat/pre 0.6/.code=\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}{pre 0.6},
+  compat/0.6/.code    =\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}{0.6},
+  compat/newest/.code =\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}{newest},
+  compat=newest
 }
+\endinput

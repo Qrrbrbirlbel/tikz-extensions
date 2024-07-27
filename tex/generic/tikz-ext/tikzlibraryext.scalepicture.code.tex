@@ -6,8 +6,11 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\ifcsname ifmemoizing\endcsname
-\else
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\unless\ifcsname ifmemoizing\endcsname
   \expandafter\newif\csname ifmemoizing\endcsname
 \fi
 
@@ -53,7 +56,7 @@
 % doesn't destroy the given arguments.
 \def\tikzext@sp@ifapproxequalto#1#2{%
   \begingroup
-    \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/scale picture diff}}%
+    \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/ext/scale picture diff}}%
     \pgfmath@x=#1\relax
     \pgfmath@y=#2\relax
     \advance\pgfmath@x by-\pgfmath@y
@@ -85,10 +88,10 @@
 \def\tikzext@sp@init#1{%
   \pgfkeysvalueof{/tikz/execute at end picture/.@cmd}\tikzext@sp@savepicturesize\pgfeov
   \ifmemoizing
-    \pgfkeysvalueof{/mmz/context/.@cmd}#1\pgfeov
+    \pgfkeysvalueof{/mmz/context/.@cmd}/tikz/ext/#1\pgfeov
   \fi
 }
-\tikzset{
+\tikzextset{
   scale picture diff/.initial=+0.05pt,
   scale picture diff/.value to context/.try,
   %%% keep aspect ratio
@@ -248,5 +251,25 @@
       yscale={(#2)/\tikzext@sp@height}}%
     }%
   },
+  compat/pre 0.6/.append style=/tikz/ext/compat/scalepicture/pre 0.6,
+  compat/scalepicture/pre 0.6/.code=%
+    \pgfkeysdef{/tikz/picture width}          {\pgfkeysvalueof{/tikz/ext/picture width/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/minimum picture width}  {\pgfkeysvalueof{/tikz/ext/minimum picture width/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/maximum picture width}  {\pgfkeysvalueof{/tikz/ext/maximum picture width/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/picture height}         {\pgfkeysvalueof{/tikz/ext/picture height/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/minimum picture height} {\pgfkeysvalueof{/tikz/ext/minimum picture height/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/maximum picture height} {\pgfkeysvalueof{/tikz/ext/maximum picture height/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/picture size}           {\pgfkeysvalueof{/tikz/ext/picture size/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/minimum picture size}   {\pgfkeysvalueof{/tikz/ext/minimum picture size/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/maximum picture size}   {\pgfkeysvalueof{/tikz/ext/maximum picture size/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/picture width*}         {\pgfkeysvalueof{/tikz/ext/picture width*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/minimum picture width*} {\pgfkeysvalueof{/tikz/ext/minimum picture width*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/maximum picture width*} {\pgfkeysvalueof{/tikz/ext/maximum picture width*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/picture height*}        {\pgfkeysvalueof{/tikz/ext/picture height*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/minimum picture height*}{\pgfkeysvalueof{/tikz/ext/minimum picture height*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/maximum picture height*}{\pgfkeysvalueof{/tikz/ext/maximum picture height*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/picture size*}          {\pgfkeysvalueof{/tikz/ext/picture size*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/ext/compat/scalepicture/pre 0.6}{},
+  compat/scalepicture/\pgfkeysvalueof{/tikz/ext/compat/scalepicture}/.try,
 }
 \endinput
