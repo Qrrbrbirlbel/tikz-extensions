@@ -12,6 +12,8 @@ Name: Qrrbrbirlbel
 
 This is not a LaTeX package but a collection of libraries for PGF and TikZ;
 
+ * `ext.arrows` provides “Centered” arrow tips.
+ * `ext.arrows-plus` allows to place bended tips along a path.
  * `ext.calendar-plus` extends the `calendar` library with more tests, week numbers and a few goodies.
  * `ext.layers` allows to put nodes etc on a separate layer without having to use `pgfonlayer`.
  * `ext.nodes` extends the functionalities around nodes.

@@ -160,11 +160,7 @@ on page~\pageref{pkg:pgffor-ext}.
 \subsection{\pgfname keys}
 \begin{pgfkeyslibrary}{ext.pgfkeys-plus}
   This extends \pgfname keys and adds helpful |/utils| keys as well as handlers.
-  This library gets loaded by the |ext.misc| library.%
-  \footnote{\texttt{\string\usepgfkeyslibrary} is an upcoming feature of \pgfname/\tikzname.
-    For now, you need to load \texttt{ext.misc}
-    or manually \texttt{\string\input} the file \texttt{pgfkeyslibraryext.pgfkeys-plus.code.tex}
-    with \texttt{@} being a letter.}
+  This library gets loaded by the |ext.misc| library.
 \end{pgfkeyslibrary}
 
 \begin{multicols}{2}
@@ -238,7 +234,7 @@ not all of them are.
   
   In the example below, one could have used the \referenceKeyandIndexO[/pgf/foreach/]{evaluate}
   key from the |\foreach| loop.
-\begin{codeexample}[width=3.7cm,preamble=\usetikzlibrary{ext.pgfkeys-plus}]
+\begin{codeexample}[width=3.7cm,preamble=\usepgfkeyslibrary{ext.pgfkeys-plus}]
 \tikz\foreach \i in {0,10,...,100}
 \draw[
   line width=+.25cm,

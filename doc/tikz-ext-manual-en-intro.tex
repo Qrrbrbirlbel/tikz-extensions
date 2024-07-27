@@ -33,4 +33,35 @@ experimental.
 
 Don't hesitate to open an issue on GitHub.
 You probably found a bug.
+
+\section{A word on namespaces and the introduction of \texttt{\textbackslash tikzextset}}
+Since some parts of this package exist in some form since 2013,
+the choice for key names and in which \pgfname keys namespace they reside
+is not always optimal.
+They often reside in the main |/tikz| or |/pgf| path.
+Similar applies to macro names.
+
+For future version, it is planned to move libraries in the |/tikz/ext| namespace.
+For keys in the |/pgf| namespace, this will probably not happen
+since it makes it not very intuitive to use them in \tikzname.
+
+Starting from version 0.6,
+\tikzextname\space provides the commands
+\texttt{\textbackslash tikzextversion} and
+\texttt{\textbackslash tikzextversionnumber}
+for compatibility testing.
+The latter simply increments with every release
+so that the former doesn't need to be parsed.
+\begin{command}{\tikzextversion}
+  Returns \enquote{\tikzextversion}.
+\end{command}
+\begin{command}{\tikzextversionnumber}
+  Returns \enquote{\tikzextversionnumber}.
+\end{command}
+
+Also starting from version 0.6, there's \texttt{\textbackslash tikzextset}.
+\begin{command}{\tikzextset\marg{options}}
+  This command will process the \meta{options} using the
+  |\pgfkeys| command with the default path set to |/tikz/ext|.
+\end{command}
 \end{multicols}

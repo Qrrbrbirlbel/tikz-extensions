@@ -1,4 +1,4 @@
-% Copyright 2023 by Qrrbrbirlbel
+% Copyright 2024 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
 %
@@ -6,114 +6,58 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+
 % \tikzext@arrow@evalshift
 %
 % Stores the shift amount into \tikzext@arrow@shift@
 %
 \def\tikzext@arrow@evalshift#1{%
-  \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
+  \pgf@arrow@compute@shortening#1%
+  \ifcase\pgfkeysvalueof{/tikz/ext/arrow/shift mode}\relax
     \def\tikzext@arrow@shift@{0pt}%
   \or
-    \pgfarrowtotallength{#1}%
-    \pgfmathsetlengthmacro\tikzext@arrow@shift@{(\pgfkeysvalueof{/tikz/arrow shift factor})*-\pgf@x}%
+    \pgfmathsetlengthmacro\tikzext@arrow@shift@
+      {(\pgfkeysvalueof{/tikz/ext/arrow shift factor})*-\pgf@xb}%
   \or
-    \pgfarrowtotallength{#1}%
-    \pgfmathsetlengthmacro\tikzext@arrow@shift@{(\pgfkeysvalueof{/tikz/arrow shift factor})*-\pgf@xa}%
+    \pgfmathsetlengthmacro\tikzext@arrow@shift@
+      {(\pgfkeysvalueof{/tikz/ext/arrow shift factor})*-\pgf@xa}%
   \fi
 }
+
 
 % For bended arrows the shifting can't simply be done by a transformation
 % it must be done by the arrow system itself via the sep key.
 % For this to work as expected, the sep will need to be sneaked into
 % the options of the first or last arrow tip.
-\def\tikzext@arrow@doshift#1-#2\pgf@stop{%
-  \pgfutil@ifempty{#1}{\pgfsetarrowsstart{}}{%
-    \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
-      \pgfsetarrowsstart{#1}%
-    \else
-      \tikzext@arrow@evalshift{#1}%
-      \let\tikz@temp\pgfutil@empty
-      \tikzext@arrow@sneakstart{#1}{sep=+\tikzext@arrow@shift@}%
-      \pgfsetarrowsstart{\tikz@temp}%
-    \fi
-  }%
-  \pgfutil@ifempty{#2}{\pgfsetarrowsend{}}{%
-    \ifcase\pgfkeysvalueof{/tikz-ext/arrow/shift mode}\relax
-      \pgfsetarrowsend{#2}%
-    \else
-      \tikzext@arrow@evalshift{#2}%
-      \let\tikz@temp\pgfutil@empty
-      \tikzext@arrow@sneakend{#2}{sep=+\tikzext@arrow@shift@}%
-      \pgfsetarrowsend{\tikz@temp}%
-    \fi
-  }%
-}
-% \tikzext@arrow@sneakend{<tip>}{<sneak>}
-%
-% Sneaks <sneak> at the end of the <tip> specification in
-% so that it only applies to the last tip
-%
-\def\tikzext@arrow@sneakend#1#2{%
-  \pgfutil@in@{]}{#1}%
-  \ifpgfutil@in@
-    \expandafter\pgfutil@firstoftwo
-  \else
-    \expandafter\pgfutil@secondoftwo
-  \fi{%
-    \tikzext@arrow@sneakend@#1\pgf@stop{#2}%
-  }{%
-    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1[#2]}%
-  }%
-}
-\def\tikzext@arrow@sneakend@#1]#2\pgf@stop#3{%
-  \pgfutil@ifempty{#2}{%
-    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1,#3]}%
-  }{%
-    \expandafter\def\expandafter\tikz@temp\expandafter{\tikz@temp#1]}%
-    \tikzext@arrow@sneakend{#2}{#3}%
-  }%
-}
-% \tikzext@arrow@sneakstart{<tip>}{<sneak>}
-%
-% Sneaks <sneak> at the start of the <tip> specification in
-% so that it only applies to the first tip
-%
-\def\tikzext@arrow@sneakstart#1#2{%
-  \pgfutil@in@{]}{#1}%
-  \ifpgfutil@in@
-    \tikzext@arrow@sneakstart@#1\pgf@stop{#2}%
-  \else
-    \def\tikz@temp{#1[#2]}%
+\def\tikzext@arrow@sneakstart#1\pgf@stop{%
+  \unless\ifdim\tikzext@arrow@shift@=0pt
+    \def\pgf@start@tip@sequence{\pgf@arrow@handle{_}{\pgfarrowsep=\tikzext@arrow@shift@\relax}#1}%
   \fi
 }
-\def\tikzext@arrow@sneakstart@#1]#2\pgf@stop#3{%
-  \def\tikz@temp{#1,#3]#2}%
-}
-
-\let\tikzext@processarrows@orig\tikz@processarrows
-\def\tikzext@processarrows#1{%
-  \def\tikz@current@arrows{#1}%
-  \pgfutil@ifempty{#1}{}{%
-    \pgfutil@in@{-}{#1}%
-    \ifpgfutil@in@
-      \def\tikzext@current@arrows{#1}%
-    \else
-      \pgfsetarrows{#1}%
-    \fi
-  }%
+\def\tikzext@arrow@sneakend#1\pgf@stop{%
+  \unless\ifdim\tikzext@arrow@shift@=0pt
+    \def\pgf@end@tip@sequence{#1\pgf@arrow@handle{_}{\pgfarrowsep=\tikzext@arrow@shift@\relax}}%
+  \fi
 }
 
 %
 % Arrow keys
 %
-\tikzset{%
-  every softpath arrows/.code=,
-  every arc arrows/.code=,
-  softpath arrows/.default={/tikz/arrows=->},
+\tikzextset{%
+  every softpath arrows/.code=
+    \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
+  every arc arrows/.code=
+    \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
+  softpath arrows/.default=,
   softpath arrows/.code={%
     \begingroup
-      \let\tikz@processarrows\tikzext@processarrows
-      \tikzset{every softpath arrows,#1}%
+      \tikzset{ext/every softpath arrows,#1}%
       \pgfsyssoftpath@getcurrentpath\tikz@temp
       \pgfprocesssplitsubpath\tikz@temp
       \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
@@ -123,7 +67,14 @@
         \hbox\bgroup\bgroup
           \pgfinterruptpath
           \pgfscope
-            \expandafter\tikzext@arrow@doshift\tikzext@current@arrows\pgf@stop
+            \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
+              \tikzext@arrow@evalshift\pgf@start@tip@sequence
+              \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+            }%
+            \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
+              \tikzext@arrow@evalshift\pgf@end@tip@sequence
+              \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+            }%
             \pgfset{tips}%
             \pgftransformreset
             \tikzext@arrow@softpath
@@ -136,18 +87,24 @@
     \expandafter\endgroup%
     \expandafter\setbox\tikz@whichbox=\box\tikz@tempbox%
   },
-  arc arrows/.default={/tikz/arrows=->},
+  arc arrows/.default=,
   arc arrows/.code={%
     \ifx\tikz@timer\tikz@timer@arc
       \begingroup
-        \let\tikz@processarrows\tikzext@processarrows
-        \tikzset{every arc arrows,#1}%
+        \tikzset{ext/every arc arrows,#1}%
         \setbox\tikz@whichbox=\hbox\bgroup
           \unhbox\tikz@whichbox
           \hbox\bgroup\bgroup
             \pgfinterruptpath
             \pgfscope
-              \expandafter\tikzext@arrow@doshift\tikzext@current@arrows\pgf@stop
+              \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
+                \tikzext@arrow@evalshift\pgf@start@tip@sequence
+                \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+              }%
+              \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
+                \tikzext@arrow@evalshift\pgf@end@tip@sequence
+                \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+              }%
               \pgfset{tips}%
               \tikzext@arrow@arcpath
               \pgfusepath{}%
@@ -167,32 +124,56 @@
   pos </.initial=0.0,
   pos >/.style={/tikz/pos={#1}},
   arrow shift mode/.is choice,
-  arrow shift mode/off/.code                  =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{0},
-  arrow shift mode/total length/.code         =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{1},
-  arrow shift mode/total/.code                =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{1},
-  arrow shift mode/length until line end/.code=\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{2},
-  arrow shift mode/line end/.code             =\pgfkeyssetvalue{/tikz-ext/arrow/shift mode}{2},
+  arrow shift mode/off/.code                  =\pgfkeyssetvalue{/tikz/ext/arrow/shift mode}{0},
+  arrow shift mode/total length/.code         =\pgfkeyssetvalue{/tikz/ext/arrow/shift mode}{1},
+  arrow shift mode/total/.code                =\pgfkeyssetvalue{/tikz/ext/arrow/shift mode}{1},
+  arrow shift mode/length until line end/.code=\pgfkeyssetvalue{/tikz/ext/arrow/shift mode}{2},
+  arrow shift mode/line end/.code             =\pgfkeyssetvalue{/tikz/ext/arrow/shift mode}{2},
   arrow shift mode=total length,
   arrow shift factor/.initial=.5,
+}
 %
 % Arrow pics
 %
-  pics/arrow/.default=>,
-  pics/arrow/.style={
+\tikzset{
+  pics/ext/arrow/.default=,
+  pics/ext/arrow/.style={
     /tikz/sloped, /tikz/allow upside down,
     foreground code=, background code=, setup code=,
     code=%
-      \tikzext@arrow@evalshift{#1}%
+      \edef\tikzext@temp{#1}%
+      \pgfutil@ifxempty\tikzext@temp{}{%
+        \pgfsetarrowsend{#1}%
+      }%
+      \tikzext@arrow@evalshift\pgf@end@tip@sequence
       \pgftransformxshift{+-\tikzext@arrow@shift@}%
-      \pgfarrowdraw{#1}%
+      \pgf@arrow@draw@arrow\pgf@end@tip@sequence\pgf@xb
   },
-  pics/softpath arrow/.default=>,
-  pics/softpath arrow/.style={/tikz/pics/softpath arrows=-{#1}},
-  pics/softpath arrows/.default=->,
-  pics/softpath arrows/.style={
+  pics/ext/softpath arrow/.default=,
+  pics/ext/softpath arrow/.code={%
+    \let\pgf@start@tip@sequence\pgfutil@empty
+    \edef\tikzext@temp{#1}%
+    \pgfutil@ifxempty\tikzext@temp{}{%
+      \pgfsetarrowsend{#1}%
+    }%
+    \pgfqkeys{/tikz/pics}{ext/softpath arrows}%
+  },
+  pics/ext/softpath arrows/.default=,
+  pics/ext/softpath arrows/.style={
     foreground code=, background code=,
     setup code={%
-      \tikzext@arrow@doshift#1\pgf@stop
+      \edef\tikzext@temp{#1}%
+      \pgfutil@ifxempty\tikzext@temp{}{%
+        \pgfsetarrows{#1}%
+      }%
+      \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
+        \tikzext@arrow@evalshift\pgf@start@tip@sequence
+        \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+      }%
+      \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
+        \tikzext@arrow@evalshift\pgf@end@tip@sequence
+        \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+      }%
       \pgfsyssoftpath@getcurrentpath\tikz@temp
       \pgfprocesssplitsubpath\tikz@temp
       \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
@@ -231,7 +212,7 @@
 \def\tikzext@arrow@linepath{%
   \pgfpathmoveto{%
     \pgfpointlineattime
-      {\pgfkeysvalueof{/tikz/pos <}}
+      {\pgfkeysvalueof{/tikz/ext/pos <}}
       {\pgfpointsecondlastonpath}
       {\pgfpointlastonpath}%
   }%
@@ -245,7 +226,7 @@
 % Curve
 \def\tikzext@arrow@curvepath{%
   \pgfpathcurvebetweentime
-    {\pgfkeysvalueof{/tikz/pos <}}
+    {\pgfkeysvalueof{/tikz/ext/pos <}}
     {\tikz@time}
     {\pgfpointfourthlastonpath}
     {\pgfpointthirdlastonpath}
@@ -260,7 +241,7 @@
   \let\tikz@angle@sin\pgfmathresult
   \pgfpathmoveto{%
     \pgfpointarcaxesattime
-      {\pgfkeysvalueof{/tikz/pos <}}
+      {\pgfkeysvalueof{/tikz/ext/pos <}}
       {\pgfpointdiff{%
           \pgfpointadd{\pgfpointscale{\tikz@angle@cos}{\tikz@timer@zero@axis}}
                       {\pgfpointscale{\tikz@angle@sin}{\tikz@timer@ninety@axis}}}{\tikz@timer@start}}
@@ -271,7 +252,7 @@
   }%
   \pgfpatharcaxes
     {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
-      (\pgfkeysvalueof{/tikz/pos <})+\tikz@timer@start@angle}
+      (\pgfkeysvalueof{/tikz/ext/pos <})+\tikz@timer@start@angle}
     {(\tikz@timer@end@angle-\tikz@timer@start@angle)*%
       (\tikz@time)+\tikz@timer@start@angle}
     {\tikz@timer@zero@axis}
@@ -306,9 +287,13 @@
 }
 \def\tikzext@lib@dec@doarrowhead@#1[#2]#3{%
   \scope[{#2}]%
-    \tikzext@arrow@evalshift{#3}%
-    \pgftransformxshift{+\ifnum#1>0 -\fi\tikzext@arrow@shift@}%
-    \pgf@lib@dec@arrowhead{#1}{#3}%
+    \pgfsetarrowsend{#3}%
+    \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
+      \tikzext@arrow@evalshift\pgf@end@tip@sequence
+      \pgftransformxscale{#1}%
+      \pgftransformxshift{+-\tikzext@arrow@shift@}%
+      \pgf@arrow@draw@arrow\pgf@end@tip@sequence\pgf@xb
+    }%
   \endscope
 }
 \def\tikzext@lib@dec@doarrowhead@@#1*{%
@@ -321,22 +306,25 @@
   \ifx\pgfdecorationcurrentinputsegment\pgfdecorationinputsegmentcurveto
     \pgftransformreset
     \pgfset{tips}%
-    % \pgfsetarrows{[bend]}%
     \ifnum#1<0
       \pgfsetarrows{[reversed]}%
     \fi
     \scope[{#2}]%
-      \tikzext@arrow@doshift-#3\pgf@stop
-      \ifdim\pgf@decorate@inputsegmenttime pt=1pt % something weird for 1.0
-        \def\pgf@decorate@inputsegmenttime{1}%
-      \fi
-      \ifdim\pgf@decorate@inputsegmenttime pt<0.05pt % zero is bad
-        \def\pgf@decorate@inputsegmenttime{0.05}%
-      \fi
-      \pgfpathcurvebetweentime{0}{\pgf@decorate@inputsegmenttime}%
-          {\pgf@decorate@inputsegment@first}{\pgf@decorate@inputsegment@supporta}%
-          {\pgf@decorate@inputsegment@supportb}{\pgf@decorate@inputsegment@last}%
-      \pgfusepath{}%
+      \pgfsetarrowsend{#3}%
+      \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
+        \tikzext@arrow@evalshift\pgf@end@tip@sequence
+        \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+        \ifdim\pgf@decorate@inputsegmenttime pt=1pt % something weird for 1.0
+          \def\pgf@decorate@inputsegmenttime{1}%
+        \fi
+        \ifdim\pgf@decorate@inputsegmenttime pt<0.05pt % zero is bad
+          \def\pgf@decorate@inputsegmenttime{0.05}%
+        \fi
+        \pgfpathcurvebetweentime{0}{\pgf@decorate@inputsegmenttime}%
+            {\pgf@decorate@inputsegment@first}{\pgf@decorate@inputsegment@supporta}%
+            {\pgf@decorate@inputsegment@supportb}{\pgf@decorate@inputsegment@last}%
+        \pgfusepath{}%
+      }%
     \endscope
   \else
     \tikzext@lib@dec@doarrowhead@{#1}[{#2}]{#3}%

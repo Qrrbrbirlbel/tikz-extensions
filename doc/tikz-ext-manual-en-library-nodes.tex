@@ -134,20 +134,20 @@ This library extends this in various ways.
 Besides |left| and |right| that are provided by \tikzname\ 
 the following placement mechanism are provided:
 \begin{itemize}
-\item |Left| will place a node to the left of the direction of the line,
-\item |Right| will place a node to the right of the direction of the line,
-\item |Above| will place a node towards the direction of the line,
-\item |Below| will place a node against the direction of the line,
-\item |West| will place a node towards the left side of the paper,
-\item |East| will place a node towards the right side of the paper,
-\item |North| will place a node towards the upper side of the paper and
-\item |South| will place a node twoards the lower side of the paper.
+\item |ext/left| will place a node to the left of the direction of the line,
+\item |ext/right| will place a node to the right of the direction of the line,
+\item |ext/above| will place a node towards the direction of the line,
+\item |ext/below| will place a node against the direction of the line,
+\item |ext/west| will place a node towards the left side of the paper,
+\item |ext/east| will place a node towards the right side of the paper,
+\item |ext/north| will place a node towards the upper side of the paper and
+\item |ext/south| will place a node twoards the lower side of the paper.
 \end{itemize}
-The placement mechanisms |Left| and |Right| are like the original
+The placement mechanisms |ext/left| and |ext/right| are like the original
 |left| and |right| mechanisms but don't swap sides when \referenceKeyandIndexO{sloped}
 is used.
 
-Certain cases exist for |West|, |East|, |North| and |South| placements
+Certain cases exist for |ext/west|, |ext/east|, |ext/north| and |ext/south| placements
 where it is not clear how a node should be placed.
 These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
 %\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.arrows}]
@@ -155,14 +155,14 @@ These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
 \begin{center}
 \small
 \newcommand*\tikzauto[3]{%
-  \path[{Centered Circle[black]}-Latex, auto=#1, passive/.style={gray, nodes=gray, behind path}]
+  \path[{Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
     (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
           edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
 \tikz[x=+.75cm,y=+.75cm]\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{
-  \tikzauto{West}{}{passive}  \& \tikzauto{East}{}{passive}  \\
-  \tikzauto{North}{passive}{} \& \tikzauto{South}{passive}{} \\};
+  \tikzauto{west}{}{passive}  \& \tikzauto{east}{}{passive}  \\
+  \tikzauto{north}{passive}{} \& \tikzauto{south}{passive}{} \\};
 \end{center}
-\caption{Behavior of \texttt{West}, \texttt{East}, \texttt{North} and \texttt{South} in certain cases}
+\caption{Behavior of \texttt{ext/est}, \texttt{ext/east}, \texttt{ext/north} and \texttt{ext/south} in certain cases}
 \label{fig:autoplacements}
 \end{figure*}
 %\end{codeexample}
@@ -172,10 +172,10 @@ Nodes are usually placed with their border (including any |outer sep|)
 on the line.
 With the following option, a node will be shifted a certain offset distance.
 
-\begin{key}{/tikz/auto with offset=\opt{\meta{true or false}} (default true)}
+\begin{key}{/tikz/ext/auto with offset=\opt{\meta{true or false}} (default true)}
   This key activates the offset function.
 \end{key}
-\begin{key}{/tikz/auto offset (initially 1cm)}
+\begin{key}{/tikz/ext/auto offset (initially 1cm)}
 The offset distance itself.
 \end{key}
 
@@ -183,19 +183,19 @@ For the \referenceDecorationandIndexO{brace} decoration,
 the following keys are provided which needs the
 \referenceLibraryandIndexO{decorations.pathreplacing} loaded before they
 can be used.
-\begin{key}{/tikz-ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
+\begin{key}{/tikz/ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
 This key installs the necessary customizations
 for the \referenceKeyandIndexO[/pgf/decoration/]{raise} key
 so that the given value is available as an offset.
 
 It also makes available the following keys.
-\begin{stylekey}{/tikz/auto offset for brace decoration}
-This sets \referenceKeyandIndex{auto offset} to
+\begin{stylekey}{/tikz/ext/auto offset for brace decoration}
+This sets \referenceKeyandIndex[/tikz/ext/]{auto offset} to
 \texttt{\textbackslash pgfdecorationsegmentamplitude+
   (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
 \end{stylekey}
 %\columnbreak
-\begin{stylekey}{/tikz/every brace node}
+\begin{stylekey}{/tikz/ext/every brace node}
 Using this key on a node along a path that's decorated by the |brace| decoration
 will offset the node so that it will be placed at the tip of the brace.
 \end{stylekey}
@@ -204,7 +204,7 @@ will offset the node so that it will be placed at the tip of the brace.
 \subsubsection{Precise placement}
 The default behavior of the |auto| placement mechanism is
 to snap to one of the eight compass directions.
-\begin{key}{/tikz/precise auto angle=\opt{\meta{true or false}} (default true)}
+\begin{key}{/tikz/ext/precise auto angle=\opt{\meta{true or false}} (default true)}
 With this option set to |true|, the |auto| placement won't snap
 to one of the eight compass directions.
 

@@ -1,11 +1,16 @@
-% Copyright 2023 by Qrrbrbirlbel
+% Copyright 2024 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
 %
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\tikzset{
+
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\tikzextset{
   autobend north/.default=\tikz@to@bend,
   autobend south/.default=\tikz@to@bend,
   autobend west/.default=\tikz@to@bend,
@@ -15,7 +20,7 @@
   autobend left/.default=\tikz@to@bend,
   autobend right/.default=\tikz@to@bend,
   autobend north/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -27,7 +32,7 @@
     }%
   },
   autobend south/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -39,7 +44,7 @@
     }%
   },
   autobend west/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -51,7 +56,7 @@
     }%
   },
   autobend east/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -63,7 +68,7 @@
     }%
   },
   autobend up/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -74,7 +79,7 @@
     }%
   },
   autobend down/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -85,7 +90,7 @@
     }%
   },
   autobend left/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
@@ -96,7 +101,7 @@
     }%
   },
   autobend right/.style={
-    to path={
+    /tikz/to path={
       \pgfextra{%
         \pgf@process{%
           \pgfpointdiff{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)}
