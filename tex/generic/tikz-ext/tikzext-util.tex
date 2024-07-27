@@ -15,15 +15,24 @@
   %
   compat/.default=pre 0.6,
   compat/.is choice,
-  compat/pre 0.6/.code=%
-    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{pre 0.6}%
-    \pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {pre 0.6},
-  compat/0.6/.code=%
-    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{0.6}%
-    \pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {0.6},
-  compat/newest/.code=%
-    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{newest}%
-    \pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {newest},
-  compat=newest
+  /tikz-ext/compat/add library/.code 2 args={%
+    \tikzextset{compat/#1/.is choice, compat/#1/.default=#2}%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest\do{%
+      \typeout{/tikz/ext/compat/#1/\tikzext@temp}%
+      \pgfkeys@expanded{%
+        \noexpand\tikzextset{%
+          compat/\tikzext@temp/.append style=%
+            /tikz/ext/compat/#1/\tikzext@temp}}%
+      \pgfkeysedef
+        {/tikz/ext/compat/#1/\tikzext@temp}
+        {\noexpand\pgfkeyssetvalue{/tikz/ext/compat/#1/\tikzext@temp}{\tikzext@temp}}%
+    }%
+  }
 }
+\pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest\do{%
+  \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}}%
+}
+\tikzextset{compat=newest}
 \endinput

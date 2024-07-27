@@ -104,7 +104,9 @@
   \pgftransformrotate{-\pgf@temp}%
 }
 
+%%% Compatibility
 \tikzextset{
+  /tikz-ext/compat/add library={transformations.mirror}{pre 0.6},
   compat/transformations.mirror/pre 0.6/.append code=%
     \let\pgftransformxmirror\pgfexttransformxmirror
     \let\pgftransformymirror\pgfexttransformymirror
@@ -113,8 +115,7 @@
     \let\pgftransformxMirror\pgfexttransformxMirror
     \let\pgftransformyMirror\pgfexttransformyMirror
     \let\pgftransformMirror \pgfexttransformMirror
-    \let\pgfqtransformMirror\pgfextqtransformMirror
-    \pgfkeysdef{/tikz/ext/compat/transformations.mirror/pre 0.6}{},
-  compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}/.try
+    \let\pgfqtransformMirror\pgfextqtransformMirror,
+  compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}%
 }
 \endinput

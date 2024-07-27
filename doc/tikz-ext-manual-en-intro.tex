@@ -34,29 +34,28 @@ experimental.
 Don't hesitate to open an issue on GitHub.
 You probably found a bug.
 
-\section{A word on namespaces and the introduction of \texttt{\textbackslash tikzextset}}
-Since some parts of this package exist in some form since 2013,
+\newcolumn
+\section{Namespaces and \tikzextname\ macros}
+Since some parts of this package have existed in some form since 2013,
 the choice for key names and in which \pgfname keys namespace they reside
 is not always optimal.
 They often reside in the main |/tikz| or |/pgf| path.
 Similar applies to macro names.
 
-For future version, it is planned to move libraries in the |/tikz/ext| namespace.
+For future versions,
+it is planned to move those in the |/tikz/ext| namespace.
 For keys in the |/pgf| namespace, this will probably not happen
 since it makes it not very intuitive to use them in \tikzname.
 
 Starting from version 0.6,
-\tikzextname\space provides the commands
-\texttt{\textbackslash tikzextversion} and
-\texttt{\textbackslash tikzextversionnumber}
-for compatibility testing.
-The latter simply increments with every release
-so that the former doesn't need to be parsed.
+\tikzextname\ provides commands that return the current version for compatibility testing.
+The second simply increments with every release
+so that the first doesn't need to be parsed.
 \begin{command}{\tikzextversion}
-  Returns \enquote{\tikzextversion}.
+  Returns \texttt{\tikzextversion}.
 \end{command}
 \begin{command}{\tikzextversionnumber}
-  Returns \enquote{\tikzextversionnumber}.
+  Returns \texttt{\tikzextversionnumber}.
 \end{command}
 
 Also starting from version 0.6, there's \texttt{\textbackslash tikzextset}.
@@ -64,4 +63,52 @@ Also starting from version 0.6, there's \texttt{\textbackslash tikzextset}.
   This command will process the \meta{options} using the
   |\pgfkeys| command with the default path set to |/tikz/ext|.
 \end{command}
+
+\newcolumn
+\section{Compatibility with older versions}
+As discussed in the previous section,
+keys and commands of extensions that existed before version~0.6
+that do not appear in this manual are considered deprecated.
+
+\begin{key}{/tikz/ext/compat=\mchoice{pre 0.6, 0.6, newest} (default pre 0.6)}
+  This sets the global compatibility setting for every extension of this package
+  (whether already loaded or not).
+
+  The following table shows the compatibility settings for each extension.
+  \newcommand*\X{$\checkmark$}%
+  \newcommand*\Xdef{\X\kern-.65em\X}%
+  A \X\ denotes an available setting where \Xdef\ denotes the default compatibility setting.
+  \newcommand*\tabHeader[1]{\rotatebox{90}{#1}}
+  \begin{center}
+  \begin{tabular}{>{\ttfamily ext.}l ccc}
+    \toprule
+    \multicolumn{1}{l}{Extension} & pre 0.6 & 0.6 & newest \\ \midrule
+    scalepicture                  & \Xdef   & --  &        \\
+    transformations.mirror        & \Xdef   & --  &        \\ \bottomrule
+  \end{tabular}
+  \end{center}
+\end{key}
+
+\newcolumn
+For each available extension the compatibility setting can be adjusted as well
+after the extension is loaded.
+\begin{keylist}[/tikz/ext/compat]{%
+  scalepicture=\meta{version} (default pre 0.6),
+  transformations.mirror=\meta{version} (default pre 0.6)}
+  It should be noted that at this point, a compatibility setting can be reversed
+  since they only forward argument from an old key or command to the new version.
+  
+  The changes are as follows.
+  \begin{description}
+  \item[pre 0.6] This version is different than the newest.
+    \begin{description}
+    \item[|scalepicture|] The keys are in the |/tikz| name space instead of the |/tikz/ext| namespace.
+    \item[|transformations.mirror|]
+      The keys are in the |/tikz| name space instead of the |/tikz/ext| namespace.
+      The commands of the \pgfname\ library start with |\pgf| instead of |\pgfext|.
+    \end{description}
+  \item[0.6] No compatibility changes. Is the same as |newest|.
+  \item[newest] No compatibility changes.
+  \end{description}
+\end{keylist}
 \end{multicols}
