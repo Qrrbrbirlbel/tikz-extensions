@@ -96,7 +96,7 @@ The following \emph{unstarred} keys do not change the aspect ratio of the pictur
   and its height will be at most \meta{height}.
 \end{key}
 
-\subsection{Changing the aspect ratio.}
+\subsection{Changing the aspect ratio}
 The following \emph{starred} keys do change the aspect ratio.
 \begin{key}{/tikz/picture width*=\meta{dimension}}
   Scales the picture so that the width of the picture will be \meta{dimension}.
@@ -116,6 +116,16 @@ The following \emph{starred} keys do change the aspect ratio.
 \begin{key}{/tikz/picture height*=\meta{dimension}}
   Scales the picture so that the height of the picture will be \meta{dimension}.
   This will only scale the $y$ axis.
+\end{key}
+
+\begin{key}{/tikz/minimum picture height*=\meta{dimension}}
+  As above but will not change the size of the picture
+  if its height is greater than \meta{dimension}.
+\end{key}
+
+\begin{key}{/tikz/maximum picture height*=\meta{dimension}}
+  As above but will not change the size of the picture
+  if its height is less than \meta{dimension}.
 \end{key}
 
 \begin{key}{/tikz/picture size*=\marg{width}\marg{height}}
