@@ -5,8 +5,11 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
 \usepgflibrary{ext.transformations.mirror}
-\tikzset{
+\tikzextset{
   mirror/.code={%
     \pgfutil@in@{--}{#1}%
     \ifpgfutil@in@
@@ -20,7 +23,7 @@
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
     \edef\tikz@marshal{%
       \noexpand\tikz@addtransform{%
-        \noexpand\pgftransformmirror
+        \noexpand\pgfexttransformmirror
           {\expandafter\noexpand\tikz@temp}
           {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
                                 {\noexpand\pgfqpointxy{0}{1}}}}}%
@@ -30,7 +33,7 @@
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
     \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformmirror
+      \noexpand\pgfexttransformmirror
         {\expandafter\noexpand\tikz@temp}
         {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
                               {\noexpand\pgfqpointxy{1}{0}}}}}%
@@ -44,15 +47,15 @@
 }
 \def\tikzext@trans@mirror#1--#2\tikz@stop{%
   \tikz@addtransform{%
-    \pgftransformmirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
-                       {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
-\def\tikzext@trans@xmirror@simple#1\tikz@stop{\tikz@addtransform{\pgftransformxmirror{#1}}}
-\def\tikzext@trans@ymirror@simple#1\tikz@stop{\tikz@addtransform{\pgftransformymirror{#1}}}
+    \pgfexttransformmirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
+                          {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
+\def\tikzext@trans@xmirror@simple#1\tikz@stop{\tikz@addtransform{\pgfexttransformxmirror{#1}}}
+\def\tikzext@trans@ymirror@simple#1\tikz@stop{\tikz@addtransform{\pgfexttransformymirror{#1}}}
 \def\tikzext@trans@xmirror@coordinate#1\tikz@stop{%
   \tikz@scan@one@point\pgfutil@firstofone#1\relax
   \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformxmirror{+\the\pgf@x}%
+      \noexpand\pgfexttransformxmirror{+\the\pgf@x}%
     }%
   }%
   \tikz@marshal
@@ -61,13 +64,13 @@
   \tikz@scan@one@point\pgfutil@firstofone#1\relax
   \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformymirror{+\the\pgf@y}%
+      \noexpand\pgfexttransformymirror{+\the\pgf@y}%
     }%
   }%
   \tikz@marshal
 }
 
-\tikzset{
+\tikzextset{
   Mirror/.code={%
     \pgfutil@in@{--}{#1}%
     \ifpgfutil@in@
@@ -81,7 +84,7 @@
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
     \edef\tikz@marshal{%
       \noexpand\tikz@addtransform{%
-        \noexpand\pgftransformMirror
+        \noexpand\pgfexttransformMirror
           {\expandafter\noexpand\tikz@temp}
           {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
                                 {\noexpand\pgfqpointxy{0}{1}}}}}%
@@ -91,7 +94,7 @@
     \pgfextract@process\tikz@temp{\tikz@scan@one@point\pgfutil@firstofone#1\relax}%
     \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformMirror
+      \noexpand\pgfexttransformMirror
         {\expandafter\noexpand\tikz@temp}
         {\noexpand\pgfpointadd{\expandafter\noexpand\tikz@temp}
                               {\noexpand\pgfqpointxy{1}{0}}}}}%
@@ -105,15 +108,15 @@
 }
 \def\tikzext@trans@Mirror#1--#2\tikz@stop{%
   \tikz@addtransform{%
-    \pgftransformMirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
-                       {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
-\def\tikzext@trans@xMirror@simple#1\tikz@stop{\tikz@addtransform{\pgftransformxMirror{#1}}}
-\def\tikzext@trans@yMirror@simple#1\tikz@stop{\tikz@addtransform{\pgftransformyMirror{#1}}}
+    \pgfexttransformMirror{\tikz@scan@one@point\pgfutil@firstofone#1\relax}
+                          {\tikz@scan@one@point\pgfutil@firstofone#2\relax}}}
+\def\tikzext@trans@xMirror@simple#1\tikz@stop{\tikz@addtransform{\pgfexttransformxMirror{#1}}}
+\def\tikzext@trans@yMirror@simple#1\tikz@stop{\tikz@addtransform{\pgfexttransformyMirror{#1}}}
 \def\tikzext@trans@xMirror@coordinate#1\tikz@stop{%
   \tikz@scan@one@point\pgfutil@firstofone#1\relax
   \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformxMirror{+\the\pgf@x}%
+      \noexpand\pgfexttransformxMirror{+\the\pgf@x}%
     }%
   }%
   \tikz@marshal
@@ -122,9 +125,25 @@
   \tikz@scan@one@point\pgfutil@firstofone#1\relax
   \edef\tikz@marshal{%
     \noexpand\tikz@addtransform{%
-      \noexpand\pgftransformyMirror{+\the\pgf@y}%
+      \noexpand\pgfexttransformyMirror{+\the\pgf@y}%
     }%
   }%
   \tikz@marshal
+}
+
+\tikzextset{
+  compat/transformations.mirror/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/xmirror}{\pgfkeysvalueof{/tikz/ext/xmirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/ymirror}{\pgfkeysvalueof{/tikz/ext/ymirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/mirror x}{\pgfkeysvalueof{/tikz/ext/mirror x/.@cmd}##1\pgfeov}%  
+    \pgfkeysdef{/tikz/mirror y}{\pgfkeysvalueof{/tikz/ext/mirror y/.@cmd}##1\pgfeov}%  
+    \pgfkeysdef{/tikz/mirror}{\pgfkeysvalueof{/tikz/ext/mirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/xMirror}{\pgfkeysvalueof{/tikz/ext/xMirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/yMirror}{\pgfkeysvalueof{/tikz/ext/yMirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/Mirror x}{\pgfkeysvalueof{/tikz/ext/Mirror x/.@cmd}##1\pgfeov}%  
+    \pgfkeysdef{/tikz/Mirror y}{\pgfkeysvalueof{/tikz/ext/Mirror y/.@cmd}##1\pgfeov}%  
+    \pgfkeysdef{/tikz/Mirror}{\pgfkeysvalueof{/tikz/ext/Mirror/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/ext/compat/transformations.mirror/pre 0.6}{},
+  compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}/.try
 }
 \endinput
