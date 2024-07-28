@@ -30,7 +30,7 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/ext/xmirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/tikz/ext/xmirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -44,12 +44,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ext/ymirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/tikz/ext/ymirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/ext/mirror x=\meta{coordinate} (default {(0,0)})}
+\begin{key}{/tikz/ext/mirror x=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
   Similar to |xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
@@ -64,12 +64,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ext/mirror y=\meta{coordinate} (default {(0,0)})}
+\begin{key}{/tikz/ext/mirror y=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
   Similar to |ymirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 
 
-\begin{key}{/tikz/ext/mirror=\meta{point A}|--|\meta{point B}}
+\begin{key}{/tikz/ext/mirror=\meta{point A}|--|\meta{point B}}\keycompat{tikz}
   Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
   
   When only \meta{point A} is given that line goes through \meta{point A} and the origin.
@@ -87,7 +87,7 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/ext/xMirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/tikz/ext/xMirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -101,12 +101,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ext/yMirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/tikz/ext/yMirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/ext/Mirror x=\meta{coordinate} (default {(0,0)})}
+\begin{key}{/tikz/ext/Mirror x=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
   Similar to |xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
@@ -121,12 +121,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ext/Mirror y=\meta{coordinate} (default {(0,0)})}
+\begin{key}{/tikz/ext/Mirror y=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
   Similar to |yMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 
 
-\begin{key}{/tikz/ext/Mirror=\meta{point A}\opt{|--|\meta{point B}}}
+\begin{key}{/tikz/ext/Mirror=\meta{point A}\opt{|--|\meta{point B}}}\keycompat{tikz}
   Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
   
   When only \meta{point A} is given that line goes through \meta{point A} and the origin.

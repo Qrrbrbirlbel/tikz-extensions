@@ -10,7 +10,7 @@
 \fi
 
 \newcount\tikzext@nodesonpath
-\tikzset{
+\tikzextset{
   pic/.is if=tikz@node@is@pic,
   /tikz-ext/nodes/node on line/.style 2 args={
     /tikz/to path={
@@ -759,5 +759,24 @@
   \tikzext@auto@offset@A{180}%
   \tikz@auto@post
   \tikzext@auto@offset@B@precise
+}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={nodes}{pre 0.6},
+  /tikz-ext/compat/warn=%
+    {/tikz}
+    {pic,node on line,nodes on line,nodes on curve,nodes on curve'}%
+    {nodes}{pre 0.6},
+  compat/nodes/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/pic}            {\pgfkeysvalueof{/tikz/ext/pic/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node on line}   {\pgfkeysvalueof{/tikz/ext/node on line/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on line}  {\pgfkeysvalueof{/tikz/ext/nodes on line/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on curve} {\pgfkeysvalueof{/tikz/ext/nodes on curve/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on curve'}{\pgfkeysvalueof{/tikz/ext/nodes on curve'/.@cmd}##1\pgfeov}%
+    \pgfkeyssetvalue{/tikz/node on line/.@def}{}%
+    \pgfkeyssetvalue{/tikz/node on curve/.@def}{}%
+    \pgfkeyssetvalue{/tikz/node on curves/.@def}{},
+  compat/nodes/\pgfkeysvalueof{/tikz/ext/compat/nodes}%
 }
 \endinput

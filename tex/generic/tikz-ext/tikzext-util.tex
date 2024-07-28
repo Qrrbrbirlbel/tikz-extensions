@@ -9,16 +9,33 @@
 \def\tikzextversion{0.6}
 \def\tikzextversionnumber{8}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
+
+\def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
 \tikzextset{
   tikz/.code=\tikzset{#1},
   .code=\tikzextset{#1},
   %
   compat/.default=pre 0.6,
   compat/.is choice,
+  /tikz-ext/compat/warn/.code n args={4}{%
+    \let\tikzext@templist\pgfutil@empty  
+    \pgfutil@for\tikzext@temp:=#2\do{%
+      \unless\ifx\tikzext@templist\pgfutil@empty
+        \tikzextutil@addto@macro\tikzext@templist{,}%
+      \fi
+      \edef\tikzext@temp{%
+        #1/\tikzext@temp/.prefix code=%
+          \noexpand\pgfutil@packagewarning{tikz-ext}{%
+            The key '#1/\tikzext@temp' was used. It was previously part of TikZ-Ext.
+            Use \string\tikzextset\string{compat/#3/#4\string} for compatibility.
+          }}
+      \expandafter\tikzextutil@addto@macro\expandafter\tikzext@templist\expandafter{\tikzext@temp}%
+    }%
+    \tikzextset{compat/#3/warn/.append style/.expand once=\tikzext@templist}%
+  },
   /tikz-ext/compat/add library/.code 2 args={%
     \tikzextset{compat/#1/.is choice, compat/#1/.default=#2}%
-    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest\do{%
-      \typeout{/tikz/ext/compat/#1/\tikzext@temp}%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
       \pgfkeys@expanded{%
         \noexpand\tikzextset{%
           compat/\tikzext@temp/.append style=%
@@ -29,10 +46,12 @@
     }%
   }
 }
-\pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest\do{%
+\pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
   \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}}%
+  }%
 }
 \tikzextset{compat=newest}
 \endinput

@@ -250,8 +250,21 @@
       xscale={(#1)/\tikzext@sp@width},
       yscale={(#2)/\tikzext@sp@height}}%
     }%
-  },
+  }
+}
+
+%%% Compatibility
+\tikzextset{
   /tikz-ext/compat/add library={scalepicture}{pre 0.6},
+  /tikz-ext/compat/warn=%
+    {/tikz}
+    {picture width,minimum picture width,maximum picture width,%
+     picture height,minimum picture height,maximum picture height,%
+     picture size,minimum picture size,maximum picture size,%
+     picture width*,minimum picture width*,maximum picture width*,%
+     picture height*,minimum picture height*,maximum picture height*,%
+     picture size*}%
+    {scalepicture}{pre 0.6},
   compat/scalepicture/pre 0.6/.append code=%
     \pgfkeysdef{/tikz/picture width}          {\pgfkeysvalueof{/tikz/ext/picture width/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/minimum picture width}  {\pgfkeysvalueof{/tikz/ext/minimum picture width/.@cmd}##1\pgfeov}%
@@ -268,7 +281,7 @@
     \pgfkeysdef{/tikz/picture height*}        {\pgfkeysvalueof{/tikz/ext/picture height*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/minimum picture height*}{\pgfkeysvalueof{/tikz/ext/minimum picture height*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/maximum picture height*}{\pgfkeysvalueof{/tikz/ext/maximum picture height*/.@cmd}##1\pgfeov}%
-    \pgfkeysdef{/tikz/picture size*}          {\pgfkeysvalueof{/tikz/ext/picture size*/.@cmd}##1\pgfeov}%,
+    \pgfkeysdef{/tikz/picture size*}          {\pgfkeysvalueof{/tikz/ext/picture size*/.@cmd}##1\pgfeov},
   compat/scalepicture/\pgfkeysvalueof{/tikz/ext/compat/scalepicture}%
 }
 \endinput
