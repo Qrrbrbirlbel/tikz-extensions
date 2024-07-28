@@ -18,6 +18,7 @@ This library extends \tikzname's functionalities when it comes to nodes.
 
 \subsection{Pic as a node}
 \begin{key}{/tikz/ext/pic=\opt{\meta{boolean}} (default true, initially false)}
+\keycompat{tikz}
 This key allows one to use a pic where usually only nodes are accepted,
 for example as a label.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.misc}]
@@ -49,6 +50,7 @@ and everything else (including any |to path|).
 \subsubsection{Nodes on Lines}
 
 \begin{stylekey}{/tikz/ext/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
+\keycompat{tikz}
 This installs a \referenceKeyandIndexO{to path} that places \emph{one}
 node along a straight line but connect the line with it.
 
@@ -62,6 +64,7 @@ It allows one or two anchors divided by | and | to be specified.
 \end{stylekey}
 
 \begin{stylekey}{/tikz/ext/nodes on line}
+\keycompat{tikz}
 This is similar to the previous key but allows
 multiple nodes to be placed on a straight line
 \emph{if} they are in the correct order (from start to target),
@@ -96,6 +99,7 @@ If you can, use \texttt{fill=\meta{bg color}}
 instead of these keys, it will be much faster and easier.
 
 \begin{stylekey}{/tikz/ext/nodes on curve=\meta{to path} (default line to)}
+\keycompat{tikz}
 Similar to \referenceKeyandIndex{nodes on line}, this key allows
 to have nodes on arbitrary paths.
 
@@ -103,6 +107,7 @@ This is not suitable for paths connecting nodes.
 \end{stylekey}
 
 \begin{stylekey}{/tikz/ext/nodes on curve'=\meta{to path} (default line to)}
+\keycompat{tikz}
 As above but suitable for connecting nodes.
 \end{stylekey}
 
@@ -125,6 +130,7 @@ As above but suitable for connecting nodes.
                                                 -- ++(down:1);
 \end{codeexample}
 
+\newcolumn
 \subsection{Automatic placement of nodes}
 The \referenceKeyandIndexO{auto} key allows automatic placement of
 nodes along a path segment.
