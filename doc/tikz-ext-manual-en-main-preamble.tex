@@ -543,9 +543,12 @@
   box.north east) -- node [above, overlay] {\texttt{radius}} ++(-#1,0);
 }
 \makeatother
-
 \newcommand*\keycompat[2][pre 0.6]{%
-  \vspace{-3pt}\item{\small #1 {\ttfamily/#2/\myname}}\vspace{-2pt}\par
+  \vspace{-3pt}\item{\small\sffamily #1 {\ttfamily/#2/\myname}}\vspace{-2pt}\par
   \pgfmanualpdflabel{/#2/\myname}{}%
+}
+\newcommand*\cmdcompat[2][pre 0.6]{%
+  \vspace{-3pt}\item{\small\sffamily #1 {\ttfamily\string#2}}\vspace{-2pt}\par
+  \pgfmanualpdflabel{\string#2}{}%
 }
 \usepackage{array}
