@@ -544,9 +544,8 @@
 }
 \makeatother
 
-%\newenvironment*{keycompat}[2][pre 0.6]{%
-%  \small
-%  \begin{pgfmanualentry}
-%}{
-%}
+\newcommand*\keycompat[2][pre 0.6]{%
+  \vspace{-3pt}\item{\small #1 {\ttfamily/#2/\myname}}\vspace{-2pt}\par
+  \pgfmanualpdflabel{/#2/\myname}{}%
+}
 \usepackage{array}
