@@ -83,8 +83,9 @@ that do not appear in this manual are considered deprecated.
   \begin{tabular}{>{\ttfamily ext.}l ccc}
     \toprule
     \multicolumn{1}{l}{Extension} & pre 0.6 & 0.6 & newest \\ \midrule
-    scalepicture                  & \Xdef   & --  &        \\
-    transformations.mirror        & \Xdef   & --  &        \\ \bottomrule
+    nodes                         & \Xdef   & --  &   --   \\
+    scalepicture                  & \Xdef   & --  &   --   \\
+    transformations.mirror        & \Xdef   & --  &   --   \\ \bottomrule
   \end{tabular}
   \end{center}
 \end{key}
@@ -107,7 +108,7 @@ after the extension is loaded.
       The keys are in the |/tikz| name space instead of the |/tikz/ext| namespace.
       The commands of the \pgfname\ library start with |\pgf| instead of |\pgfext|.
     \end{description}
-  \item[0.6] No compatibility changes. Is the same as |newest|.
+  \item[0.6] No compatibility changes. This version is the same as |newest|.
   \item[newest] No compatibility changes.
   \end{description}
 \end{keylist}
