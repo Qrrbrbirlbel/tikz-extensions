@@ -97,6 +97,7 @@
   ext.arrows,
   ext.arrows-plus,
   ext.calendar-plus,
+  ext.layers,
   ext.misc,
   ext.node-families,
   ext.node-families.shapes.geometric,
@@ -128,6 +129,7 @@
   through,
   trees,
 }
+
 \usepackage{pgffor-ext}
 %% needs Lua!
 \usetikzlibrary{graphs,graphdrawing}
@@ -544,11 +546,11 @@
 }
 \makeatother
 \newcommand*\keycompat[2][pre 0.6]{%
-  \vspace{-3pt}\item{\small\sffamily #1 {\ttfamily/#2/\myname}}\vspace{-2pt}\par
+  \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily/#2/\myname}}\vspace{-2pt}\par
   \pgfmanualpdflabel{/#2/\myname}{}%
 }
 \newcommand*\cmdcompat[2][pre 0.6]{%
-  \vspace{-3pt}\item{\small\sffamily #1 {\ttfamily\string#2}}\vspace{-2pt}\par
+  \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily\string#2}}\vspace{-2pt}\par
 %  \pgfmanualpdflabel{\string#2}{}%
 }
 \usepackage{array}

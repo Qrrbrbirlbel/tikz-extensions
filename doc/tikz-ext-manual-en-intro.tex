@@ -57,7 +57,7 @@ so that the first doesn't need to be parsed.
 \begin{command}{\tikzextversionnumber}
   Returns \texttt{\tikzextversionnumber}.
 \end{command}
-
+%
 Also starting from version 0.6, there's \texttt{\textbackslash tikzextset}.
 \begin{command}{\tikzextset\marg{options}}
   This command will process the \meta{options} using the
@@ -70,46 +70,43 @@ As discussed in the previous section,
 keys and commands of extensions that existed before version~0.6
 that do not appear in this manual are considered deprecated.
 
-\begin{key}{/tikz/ext/compat=\mchoice{pre 0.6, 0.6, newest} (default pre 0.6)}
+\begin{key}{/tikz/ext/compat=\mchoice{pre 0.6, 0.6, warn, newest} (default pre 0.6)}
   This sets the global compatibility setting for every extension of this package
   (whether already loaded or not).
 
+  The choice |warn| gives out warning for deprecated keys or commands
+  but still executes them.
+  
   The following table shows the compatibility settings for each extension.
   \newcommand*\X{$\checkmark$}%
   \newcommand*\Xdef{\X\kern-.65em\X}%
   A \X\ denotes an available setting where \Xdef\ denotes the default compatibility setting.
+  A -- denotes that it is not different than the |newest| setting.
   \newcommand*\tabHeader[1]{\rotatebox{90}{#1}}
   \begin{center}
   \begin{tabular}{>{\ttfamily ext.}l ccc}
     \toprule
     \multicolumn{1}{l}{Extension} & pre 0.6 & 0.6 & newest \\ \midrule
-    nodes                         & \Xdef   & --  &   --   \\
-    scalepicture                  & \Xdef   & --  &   --   \\
-    transformations.mirror        & \Xdef   & --  &   --   \\ \bottomrule
+    layers                        & \X      & --  & \Xdef  \\
+    nodes                         & \X      & --  & \Xdef  \\
+    scalepicture                  & \X      & --  & \Xdef  \\
+    transformations.mirror        & \X      & --  & \Xdef  \\ \bottomrule
   \end{tabular}
   \end{center}
 \end{key}
 
-\newcolumn
+\newcolumn\noindent
 For each available extension the compatibility setting can be adjusted as well
 after the extension is loaded.
 \begin{keylist}[/tikz/ext/compat]{%
+  layers=\meta{version} (default pre 0.6),
+  nodes=\meta{version} (default pre 0.6),
   scalepicture=\meta{version} (default pre 0.6),
   transformations.mirror=\meta{version} (default pre 0.6)}
-  It should be noted that at this point, a compatibility setting can be reversed
+  For \meta{version} the same choices are valid as for the main |compat| key.
+  It should be noted that at this point, a compatibility setting can't really be reversed
   since they only forward argument from an old key or command to the new version.
   
-  The changes are as follows.
-  \begin{description}
-  \item[pre 0.6] This version is different than the newest.
-    \begin{description}
-    \item[|scalepicture|] The keys are in the |/tikz| name space instead of the |/tikz/ext| namespace.
-    \item[|transformations.mirror|]
-      The keys are in the |/tikz| name space instead of the |/tikz/ext| namespace.
-      The commands of the \pgfname\ library start with |\pgf| instead of |\pgfext|.
-    \end{description}
-  \item[0.6] No compatibility changes. This version is the same as |newest|.
-  \item[newest] No compatibility changes.
-  \end{description}
+  The old names are given as a subtitle to the new one in the sections that introduce them.
 \end{keylist}
 \end{multicols}

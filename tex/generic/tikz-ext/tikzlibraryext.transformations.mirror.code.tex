@@ -133,11 +133,20 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/warn=%
-    {/tikz}
-    {xmirror,ymirror,mirror x,mirror y,mirror,xMirror,yMirror,Mirror x,Mirror y,Mirror}
-    {transformations.mirror}{pre 0.6},
+  compat/transformations.mirror/warn/.append code=%
+    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{3}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/xmirror} {/tikz/ext/xmirror}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/ymirror} {/tikz/ext/ymirror}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/mirror x}{/tikz/ext/mirror x}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/mirror y}{/tikz/ext/mirror y}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/mirror}  {/tikz/ext/mirror}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/xMirror} {/tikz/ext/xMirror}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/yMirror} {/tikz/ext/yMirror}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/Mirror x}{/tikz/ext/Mirror x}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/Mirror y}{/tikz/ext/Mirror y}%
+    \tikzextutil@compatwarning@key{transformations.mirror}{pre 0.6}{/tikz/Mirror}  {/tikz/ext/Mirror},
   compat/transformations.mirror/pre 0.6/.append code=%
+    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{2}%
     \pgfkeysdef{/tikz/xmirror} {\pgfkeysvalueof{/tikz/ext/xmirror/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/ymirror} {\pgfkeysvalueof{/tikz/ext/ymirror/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/mirror x}{\pgfkeysvalueof{/tikz/ext/mirror x/.@cmd}##1\pgfeov}%  
@@ -148,6 +157,8 @@
     \pgfkeysdef{/tikz/Mirror x}{\pgfkeysvalueof{/tikz/ext/Mirror x/.@cmd}##1\pgfeov}%  
     \pgfkeysdef{/tikz/Mirror y}{\pgfkeysvalueof{/tikz/ext/Mirror y/.@cmd}##1\pgfeov}%  
     \pgfkeysdef{/tikz/Mirror}  {\pgfkeysvalueof{/tikz/ext/Mirror/.@cmd}##1\pgfeov},
-  compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}/.try
+  compat/transformations.mirror/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{1},
+  compat/transformations.mirror/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{0},
+  compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}
 }
 \endinput

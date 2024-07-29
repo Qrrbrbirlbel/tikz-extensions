@@ -107,7 +107,18 @@
 %%% Compatibility
 \tikzextset{
   /tikz-ext/compat/add library={transformations.mirror}{pre 0.6},
+  compat/transformations.mirror/warn/.append code=%
+    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{3}%
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformxmirror\pgfexttransformxmirror\pgfutil@gobble
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformymirror\pgfexttransformymirror\pgfutil@gobble
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformmirror \pgfexttransformmirror\pgfutil@gobbletwo
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgfqtransformmirror\pgfextqtransformmirror\pgfutil@gobble
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformxMirror\pgfexttransformxMirror\pgfutil@gobble
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformyMirror\pgfexttransformyMirror\pgfutil@gobble
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgftransformMirror \pgfexttransformMirror\pgfutil@gobbletwo
+    \tikzextutil@compatwarning@cmd{transformations.mirror}{pre 0.6}\pgfqtransformMirror\pgfextqtransformMirror\pgfutil@gobble,
   compat/transformations.mirror/pre 0.6/.append code=%
+    \pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{2}%
     \let\pgftransformxmirror\pgfexttransformxmirror
     \let\pgftransformymirror\pgfexttransformymirror
     \let\pgftransformmirror \pgfexttransformmirror
@@ -116,6 +127,8 @@
     \let\pgftransformyMirror\pgfexttransformyMirror
     \let\pgftransformMirror \pgfexttransformMirror
     \let\pgfqtransformMirror\pgfextqtransformMirror,
+  compat/transformations.mirror/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{1},
+  compat/transformations.mirror/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror@}{0},
   compat/transformations.mirror/\pgfkeysvalueof{/tikz/ext/compat/transformations.mirror}%
 }
 \endinput
