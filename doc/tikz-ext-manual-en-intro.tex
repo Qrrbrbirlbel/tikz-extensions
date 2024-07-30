@@ -75,7 +75,7 @@ that do not appear in this manual are considered deprecated.
   (whether already loaded or not).
 
   The choice |warn| gives out warning for deprecated keys or commands
-  but still executes them.
+  but still executes them if they were not not in use when an extension was loaded.
   
   The following table shows the compatibility settings for each extension.
   \newcommand*\X{$\checkmark$}%
@@ -87,6 +87,7 @@ that do not appear in this manual are considered deprecated.
   \begin{tabular}{>{\ttfamily ext.}l ccc}
     \toprule
     \multicolumn{1}{l}{Extension} & pre 0.6 & 0.6 & newest \\ \midrule
+    arrows                        & \X      & --  & \Xdef  \\
     layers                        & \X      & --  & \Xdef  \\
     nodes                         & \X      & --  & \Xdef  \\
     scalepicture                  & \X      & --  & \Xdef  \\
@@ -99,13 +100,14 @@ that do not appear in this manual are considered deprecated.
 For each available extension the compatibility setting can be adjusted as well
 after the extension is loaded.
 \begin{keylist}[/tikz/ext/compat]{%
+  arrows=\meta{version} (default pre 0.6),
   layers=\meta{version} (default pre 0.6),
   nodes=\meta{version} (default pre 0.6),
   scalepicture=\meta{version} (default pre 0.6),
   transformations.mirror=\meta{version} (default pre 0.6)}
   For \meta{version} the same choices are valid as for the main |compat| key.
   It should be noted that at this point, a compatibility setting can't really be reversed
-  since they only forward argument from an old key or command to the new version.
+  since they only forward arguments from an old key or command to the new version.
   
   The old names are given as a subtitle to the new one in the sections that introduce them.
 \end{keylist}

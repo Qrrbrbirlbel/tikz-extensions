@@ -10,50 +10,48 @@
 \def\tikzextversionnumber{8}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
 
-% The compat/#1@ value defines what's happening next:
-% 00b = 0: no warning, no action and undefine
-% 01b = 1:    warning, no action
-% 10b = 2: no warning,    action
-% 11b = 3:    warning,    action
 \def\tikzextutil@compatwarning@cmd#1#2#3#4#5{%
-  \def#3{%
-    \ifnum\pgfintmod{\pgfkeysvalueof{/tikz/ext/compat/#1@}}{2}=1
-      \pgfutil@packagewarning{tikz-ext}{
-        The deprecated command \string#3 was used.^^JIt is now \string#4. Please use this instead.^^J%
+  \pgfutil@IfUndefined{#3}{%
+    \pgfutil@namedef{#3}{%
+      \pgfutil@packagewarning{tikz-ext}{%
+        The deprecated command \expandafter\pgfutil@gobble\string\\#3 was used. It is now \string#4. Please use that instead.^^J%
         To remove this warning use \string\tikzextset\string{compat/#1 = #2\string}.^^J%
         This warning will be removed in the next version and the command \string#3 will fail.^^J%
       }%
-    \fi
-    \ifnum\pgfintdivtruncate{\pgfkeysvalueof{/tikz/ext/compat/#1@}}{2}=1
-      \expandafter#4%
-    \else
-      \expandafter#5%
-    \fi
-  }%
+      #4%
+    }%
+  }{}%
 }
 \def\tikzextutil@compatwarning@key#1#2#3{%
   \pgfutil@ifnextchar[%
     {\tikzextutil@compatwarning@key@opt{#1}{#2}{#3}}%
-    {\tikzextutil@compatwarning@key@   {#1}{#2}{#3}}%
+    {\tikzextutil@compatwarning@key@   {#1}{#2}{#3}{}}%
 }
 \def\tikzextutil@compatwarning@key@opt#1#2#3[#4]{%
-  \pgfkeyssetvalue{#3/.@def}{#4}%
-  \tikzextutil@compatwarning@key@{#1}{#2}{#3}%
+  \tikzextutil@compatwarning@key@{#1}{#2}{#3}{\pgfkeyssetvalue{#3/.@def}{#4}}%
 }
-\def\tikzextutil@compatwarning@key@#1#2#3#4{%
+\def\tikzextutil@compatwarning@key@#1#2#3#4#5{%
   \pgfkeys@pathtoks{#3}%
-  \pgfkeysvalueof{/handlers/.add code/.@cmd}{}{%
-    \ifnum\pgfintmod{\pgfkeysvalueof{/tikz/ext/compat/#1@}}{2}=1
-      \pgfutil@packagewarning{tikz-ext}{
-        The deprecated key '#3' was used.^^JIt is now '#4'. Please use this instead.^^J%
-        To remove this warning use \string\tikzextset\string{compat/#1 = #2\string}.^^J%
-        This warning will be removed in the next version and the key '#3' will fail.^^J%
+  \pgfkeysifdefined{#3}{%
+    % The key is a value key. Do not overwrite or adjust.
+    % Old TikZ-Ext key simply will not work.
+  }{%
+    \pgfkeysifdefined{#3/.@cmd}{%
+      % The key is a code key. Do not overwrite or adjust.
+      % Old TikZ-Ext key simply will not work.
+    }{%
+      % The key is currently not used.
+      #4%
+      \pgfkeysdef{#3}{%
+        \pgfutil@packagewarning{tikz-ext}{%
+          The deprecated key '#3' was used. It is now '#5'. Please use that instead.^^J%
+          To remove this warning use \string\tikzextset\string{compat/#1 = #2\string}.^^J%
+          This warning will be removed in the next version and the key '#3' will fail.^^J%
+        }%
+        \pgfkeysvalueof{#5/.@cmd}##1\pgfeov
       }%
-    \fi
-    \ifnum\pgfintdivtruncate{\pgfkeysvalueof{/tikz/ext/compat/#1@}}{2}=1
-      \pgfkeysvalueof{#4/.@cmd}##1\pgfeov
-    \fi
-  }\pgfeov
+    }
+  }
 }
 \tikzextset{
   tikz/.code=\tikzset{#1},
@@ -76,10 +74,11 @@
 }
 \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
   \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
   }%
 }
-\tikzextset{compat=newest}
+\tikzextset{compat=warn}
 \endinput

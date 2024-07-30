@@ -7,9 +7,12 @@
 %
 
 \usepgflibrary{arrows.meta}
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
 
 \pgfqkeys{/pgf/@arrows decl}{
-  clone/.code={%
+  /tikz-ext/@arrows decl/clone/.code={%
     \pgfutil@namelet{pgf@decl@arrow@code}{pgf@ar@code@#1}%
     \pgfutil@namelet{pgf@decl@arrow@defaults}{pgf@ar@defaults@#1}%
     \pgfutil@namelet{pgf@decl@arrow@setup}{pgf@ar@setup@#1}%
@@ -17,13 +20,13 @@
     \pgfutil@namelet{pgf@decl@arrow@par}{pgf@ar@par@#1}%
     \pgfutil@namelet{pgf@decl@arrow@cache}{pgf@ar@do@cache@#1}%
   },
-  append setup code/.code=
+  /tikz-ext/@arrows decl/append setup code/.code=
     \begingroup
       \pgfutil@toks@\expandafter{\pgf@decl@arrow@setup#1}%
     \expandafter\endgroup
     \expandafter\def\expandafter\pgf@decl@arrow@setup\expandafter
       {\the\pgfutil@toks@ },
-  % append parameters/.code=
+  % /tikz-ext/@arrows decl/append parameters/.code=
   %   \begingroup
   %     \show\pgf@decl@arrow@par
   %     \pgfutil@toks@\expandafter{\pgf@decl@arrow@par#1}%
@@ -31,14 +34,14 @@
   %   \expandafter\def\expandafter\pgf@decl@arrow@par\expandafter
   %     {\the\pgfutil@toks@ }
 }
-% \pgfkeyssetvalue{/pgf/arrow keys/weight}{true}
+% \pgfkeyssetvalue{/pgf/arrow keys/ext/weight}{true}
 
 %%% Barbed
 %   Arc Barb, Parenthesis
 \pgfdeclarearrow{
-  clone =          Arc Barb,
-  name  = Centered Arc Barb,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Arc Barb,
+  name                         = ext_Centered Arc Barb,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{0pt}
     \else
@@ -46,9 +49,9 @@
     \fi
 }
 \pgfdeclarearrow{
-  clone =          Arc Barb,
-  name  = Untipped Arc Barb,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Arc Barb,
+  name                         = ext_Untipped Arc Barb,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{\pgfarrowlength}
     \else
@@ -58,9 +61,9 @@
 
 %   Hooks
 \pgfdeclarearrow{
-  clone =          Hooks,
-  name  = Centered Hooks,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Hooks,
+  name                         = ext_Centered Hooks,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{0pt}
     \else
@@ -70,9 +73,9 @@
 
 %   Straight Barb
 \pgfdeclarearrow{
-  clone = Straight Barb,
-  name  = Centered Straight Barb,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Straight Barb,
+  name                         = ext_Centered Straight Barb,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{.5\pgfarrowlength}
     \else
@@ -82,9 +85,9 @@
 
 %   Tee Barb, Bar, Bracket
 \pgfdeclarearrow{
-  clone =          Tee Barb,
-  name  = Centered Tee Barb,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Tee Barb,
+  name                         = ext_Centered Tee Barb,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{0pt}
     \else
@@ -92,9 +95,9 @@
     \fi
 }
 \pgfdeclarearrow{
-  clone =          Tee Barb,
-  name  = Untipped Tee Barb,
-  append setup code = 
+  /tikz-ext/@arrows decl/clone =              Tee Barb,
+  name                         = ext_Untipped Tee Barb,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed\expandafter\pgfarrowssetbackend\else\expandafter\pgfarrowssettipend\fi
     {\pgfutil@tempdima
       \ifpgfutil@tempswa % does it not extend to the right?
@@ -118,9 +121,9 @@
 %%% Geometric
 %   Circle, Ellipse
 \pgfdeclarearrow{
-  clone =          Circle,
-  name  = Centered Circle,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Circle,
+  name                         = ext_Centered Circle,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{.5\pgfarrowlength}
     \else
@@ -128,9 +131,9 @@
     \fi
 }
 \pgfdeclarearrow{
-  clone =          Circle,
-  name  = Untipped Circle,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Circle,
+  name                         = ext_Untipped Circle,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{\pgfarrowlength \advance\pgf@x -.5\pgfarrowlinewidth}
     \else
@@ -140,9 +143,9 @@
 
 %   Kite, Diamond, Turned Square
 \pgfdeclarearrow{
-  clone =          Kite,
-  name  = Centered Kite,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Kite,
+  name                         = ext_Centered Kite,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{\pgfarrowinset}
     \else
@@ -153,9 +156,9 @@
 %   LaTeX
 %   Square, Rectangle
 \pgfdeclarearrow{
-  clone =          Square,
-  name  = Centered Square,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Square,
+  name                         = ext_Centered Square,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{.5\pgfarrowlength}
     \else
@@ -165,9 +168,9 @@
 
 %   Stealth, Triangle
 \pgfdeclarearrow{
-  clone =          Stealth,
-  name  = Centered Stealth,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Stealth,
+  name                         = ext_Centered Stealth,
+  /tikz-ext/@arrows decl/append setup code =
     % \pgfkeysgetvalue{/pgf/arrow keys/weight}\pgf@temp
     % \ifx\pgf@temp\pgf@truetext
       \ifpgfarrowreversed
@@ -199,9 +202,9 @@
 
 %%% Rays
 \pgfdeclarearrow{
-  clone = Rays,
-  name  = Centered Rays,
-  append setup code =
+  /tikz-ext/@arrows decl/clone =              Rays,
+  name                         = ext_Centered Rays,
+  /tikz-ext/@arrows decl/append setup code =
     \ifpgfarrowreversed
       \pgfarrowssetbackend{0pt}
     \else
@@ -211,23 +214,23 @@
 
 %%% Variants
 \pgfkeys{
-  Centered Ellipse /.tip       = {Centered Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
-  Centered Parenthesis /.tip   = {Centered Arc Barb[arc=+120,length=+1.725pt +2.3]},
-  Centered Bar /.tip           = {Centered Tee Barb[length=+0pt]},
-  Centered Bracket /.tip       = {Centered Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
-  Centered Diamond /.tip       = {Centered Kite[inset'=+0pt .5]},
-  Centered Turned Square /.tip = {Centered Kite[length=+3pt 4,width'= +0pt 1,inset'= +0pt 0.5]},
-  Centered Rectangle /.tip     = {Centered Square[length=+3pt +4.5,width'=+0pt +.5]},
-  Centered Triangle /.tip      = {Centered Stealth[inset=+0pt, angle=+60:+2.7pt +3.6]},
-  Untipped Ellipse /.tip       = {Untipped Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
-  Untipped Parenthesis /.tip   = {Untipped Arc Barb[arc=+120,length=+1.725pt +2.3]},
-  Untipped Bar /.tip           = {Untipped Tee Barb[length=+0pt]},
-  Untipped Bracket /.tip       = {Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
+  ext_Centered Ellipse       /.tip = {ext_Centered Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
+  ext_Centered Parenthesis   /.tip = {ext_Centered Arc Barb[arc=+120,length=+1.725pt +2.3]},
+  ext_Centered Bar           /.tip = {ext_Centered Tee Barb[length=+0pt]},
+  ext_Centered Bracket       /.tip = {ext_Centered Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
+  ext_Centered Diamond       /.tip = {ext_Centered Kite[inset'=+0pt .5]},
+  ext_Centered Turned Square /.tip = {ext_Centered Kite[length=+3pt 4,width'= +0pt 1,inset'= +0pt 0.5]},
+  ext_Centered Rectangle     /.tip = {ext_Centered Square[length=+3pt +4.5,width'=+0pt +.5]},
+  ext_Centered Triangle      /.tip = {ext_Centered Stealth[inset=+0pt, angle=+60:+2.7pt +3.6]},
+  ext_Untipped Ellipse       /.tip = {ext_Untipped Circle[length=+3.3pt +4.95, width'=+0pt +0.5]},
+  ext_Untipped Parenthesis   /.tip = {ext_Untipped Arc Barb[arc=+120,length=+1.725pt +2.3]},
+  ext_Untipped Bar           /.tip = {ext_Untipped Tee Barb[length=+0pt]},
+  ext_Untipped Bracket       /.tip = {ext_Untipped Tee Barb[inset'=+0pt +1,length=+0.75pt +1]},
 }
 
 %%% New Arrows
 \pgfdeclarearrow{
-  name = Hug Cap,
+  name = ext_Hug Cap,
   parameters = \the\pgfarrowlength,
   defaults = {
    length = +0pt +1
@@ -258,7 +261,7 @@
 
 \pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}}
 \pgfdeclarearrow{
-  name = Loop,
+  name = ext_Loop,
   parameters = {\the\pgfarrowlength,\the\pgfarrowinset,\ifpgfarrowopen o\fi},
   defaults = {length = +3pt +1 +0, inset = +.75pt +1 +0},
   setup code =
@@ -286,4 +289,57 @@
     \ifpgfarrowopen\pgfusepathqstroke\else\pgfusepathqfillstroke\fi
   }
 }
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={arrows}{pre 0.6},
+  compat/arrows/warn/.append code={%
+    \pgfutil@for\tikzext@temp:=Centered Arc Barb,Untipped Arc Barb,Centered Hooks,%
+      Centered Straight Barb,Centered Tee Barb,Untipped Tee Barb,Centered Circle,%
+      Untipped Circle,Centered Kite,Centered Square,Centered Stealth,Centered Rays\do{%
+        \pgfutil@IfUndefined{pgf@ar@code@\tikzext@temp}{%
+          \pgfutil@IfUndefined{pgf@ar@means@\tikzext@temp}{%
+            \pgfdeclarearrow{%
+              /tikz-ext/@arrows decl/clone/.expanded = ext_\tikzext@temp,
+              name/.expanded = \tikzext@temp,
+              /tikz-ext/@arrows decl/append setup code/.expanded = {%
+                \noexpand\pgfutil@packagewarning{tikz-ext}{
+                  The deprecated arrow tip '\tikzext@temp' was used. It is now 'ext_\tikzext@temp'. Please use that instead.^^J
+                  To remove this warning use \string\tikzextset\string{compat/arrows = pre 0.6\string}.^^J%
+                  This warning will be removed in the next version and the arrow tip '\tikzext@temp' will fail.^^J%
+                }%
+              }%
+            }
+          }{}%
+        }{}%
+      }%
+  },
+  compat/arrows/pre 0.6/.append code=%
+    \pgfdeclarearrow{name = Centered Arc      Barb  , means = ext_Centered Arc      Barb}%
+    \pgfdeclarearrow{name = Untipped Arc      Barb  , means = ext_Untipped Arc      Barb}%
+    \pgfdeclarearrow{name = Centered Hooks          , means = ext_Centered Hooks        }%
+    \pgfdeclarearrow{name = Centered Straight Barb  , means = ext_Centered Straight Barb}%
+    \pgfdeclarearrow{name = Centered Tee      Barb  , means = ext_Centered Tee      Barb}%
+    \pgfdeclarearrow{name = Untipped Tee      Barb  , means = ext_Untipped Tee      Barb}%
+    \pgfdeclarearrow{name = Centered Circle         , means = ext_Centered Circle       }%
+    \pgfdeclarearrow{name = Untipped Circle         , means = ext_Untipped Circle       }%
+    \pgfdeclarearrow{name = Centered Kite           , means = ext_Centered Kite         }%
+    \pgfdeclarearrow{name = Centered Square         , means = ext_Centered Square       }%
+    \pgfdeclarearrow{name = Centered Stealth        , means = ext_Stealth               }%
+    \pgfdeclarearrow{name = Centered Rays           , means = ext_Rays                  }%
+    \pgfdeclarearrow{name = Centered Ellipse        , means = ext_Centered Ellipse      }%
+    \pgfdeclarearrow{name = Centered Parenthesis    , means = ext_Centered Parenthesis  }%
+    \pgfdeclarearrow{name = Centered Bar            , means = ext_Centered Bar          }%
+    \pgfdeclarearrow{name = Centered Bracket        , means = ext_Centered Bracket      }%
+    \pgfdeclarearrow{name = Centered Diamond        , means = ext_Centered Diamond      }%
+    \pgfdeclarearrow{name = Centered Turned Square  , means = ext_Centered Turned Square}%
+    \pgfdeclarearrow{name = Centered Rectangle      , means = ext_Centered Rectangle    }%
+    \pgfdeclarearrow{name = Centered Triangle       , means = ext_Centered Triangle     }%
+    \pgfdeclarearrow{name = Untipped Ellipse        , means = ext_Untipped Ellipse      }%
+    \pgfdeclarearrow{name = Untipped Parenthesis    , means = ext_Untipped Parenthesis  }%
+    \pgfdeclarearrow{name = Untipped Bar            , means = ext_Untipped Bar          }%
+    \pgfdeclarearrow{name = Untipped Bracket        , means = ext_Untipped Bracket      },%
+  compat/arrows/\pgfkeysvalueof{/tikz/ext/compat/arrows}%
+}
 \endinput
+

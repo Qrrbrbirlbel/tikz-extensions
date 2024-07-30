@@ -129,7 +129,7 @@
   through,
   trees,
 }
-
+\tikzextset{compat=0.6}
 \usepackage{pgffor-ext}
 %% needs Lua!
 \usetikzlibrary{graphs,graphdrawing}
@@ -553,4 +553,13 @@
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily\string#2}}\vspace{-2pt}\par
 %  \pgfmanualpdflabel{\string#2}{}%
 }
+\newcommand*\tipcompat[1][pre 0.6]{%
+  \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily\expandafter\tipcompatstrip\currentarrowtype\tipstop}}\vspace{-2pt}\par
+%  \pgfmanualpdflabel{/#2/\myname}{}%
+}
+\newcommand*\tipCompat[2][pre 0.6]{
+  \vspace{-8pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{2pt}\par
+%  \pgfmanualpdflabel{/#2/\myname}{}%
+}
+\def\tipcompatstrip ext#1#2\tipstop{#2}%
 \usepackage{array}
