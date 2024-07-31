@@ -5,22 +5,26 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
 
-\pgfqkeys{/tikz/arc through}{
-  .unknown/.code=\pgfkeyssetevalue{/tikz/arc through/through}{\pgfkeyscurrentname},
-  through/.initial={(0,0)},
-  center suffix/.initial=,
-  clockwise/.code=%
+\tikzextset{
+  arc through/.unknown/.code=\pgfkeyssetevalue{/tikz/ext/arc through/through}{\pgfkeyscurrentname},
+  arc through/through/.initial={(0,0)},
+  arc through/center suffix/.initial=,
+  arc through/clockwise/.code=%
     \def\tikz@arcthrough@clockwise{%
       \pgfmathsubtract@{\pgfkeysvalueof{/tikz/end angle}}{360}%
       \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}},
-  counter clockwise/.code=\let\tikz@arcthrough@clockwise\relax,
-  clockwise/.value forbidden, counter clockwise/.value forbidden, counter clockwise}
-\tikzset{
-  arc through/.code={%
-    \tikzset{every arc through/.try}%
-    \pgfqkeys{/tikz/arc through}{#1}%
-    \pgfkeysgetvalue{/tikz/arc through/through}\tikz@temp
+  arc through/counter clockwise/.code=\let\tikz@arcthrough@clockwise\relax,
+  arc through/clockwise/.value forbidden,
+  arc through/counter clockwise/.value forbidden,
+  arc through/counter clockwise,
+  arc through/.code={% \tikzset{every arc/.try,ext/every arc to/.try,ext/arc to/.expand once=\tikzext@arcto@options@}%
+    \tikzset{ext/every arc through/.try}%
+    \pgfqkeys{/tikz/ext/arc through}{#1}%
+    \pgfkeysgetvalue{/tikz/ext/arc through/through}\tikz@temp
     \pgfextract@process\pgf@tostart{\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax}%
     \expandafter\pgfextract@process\expandafter\pgf@tothrough\expandafter
       {\expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\tikz@temp\relax}%
@@ -31,7 +35,7 @@
       \pgfpointintersectionoflines
         {\pgf@topointMidA}{\pgfmathrotatepointaround{\pgf@tothrough}{\pgf@topointMidA}{90}}%
         {\pgf@topointMidB}{\pgfmathrotatepointaround{\pgf@tothrough}{\pgf@topointMidB}{90}}}%
-    \pgfcoordinate{arc through center\pgfkeysvalueof{/tikz/arc through/center suffix}}{\pgf@tocenter}%
+    \pgfcoordinate{arc through center\pgfkeysvalueof{/tikz/ext/arc through/center suffix}}{\pgf@tocenter}%
     \pgfpointdiff{\pgf@tocenter}{\pgf@tostart}%
     \pgfmathveclen@{\pgfmath@tonumber\pgf@x}{\pgfmath@tonumber\pgf@y}%
     \pgfkeyssetevalue{/tikz/x radius}{+\pgfmathresult pt}%
@@ -48,3 +52,14 @@
     \def\tikz@to@path{arc[]\tikztonodes}%
   }%
 }
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={topaths.arcthrough}{pre 0.6},
+  compat/topaths.arcthrough/warn/.append code=%
+    \tikzextutil@compatwarning@key{topaths.arcthrough}{pre 0.6}{/tikz/arc through}{/tikz/ext/arc through},
+  compat/topaths.arcthrough/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/arc through}{\pgfkeysvalueof{/tikz/ext/arc through/.@cmd}##1\pgfeov},
+  compat/topaths.arcthrough/\pgfkeysvalueof{/tikz/ext/compat/topaths.arcthrough}%
+}
+\endinput

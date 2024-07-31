@@ -31,7 +31,8 @@ For the |rectangle| path operator, the timer starts with |pos = 0| (= |at start|
 the starting coordinate in a counter-clockwise direction along the rectangle.
 The corners will be at positions 0.0, 0.25, 0.5, 0.75 and 1.0.
 
-\begin{key}{/tikz/rectangle timer=|line| or |rectangle| (default |rectangle|)}
+\begin{key}{/\tikzext/rectangle timer=|line| or |rectangle|}
+\keycompat{tikz}
 By default, the library activates the new (correct) timer for |rectangle|.
 With |rectangle timer = line| the original line timer can be reinstated.
 \end{key}
@@ -92,5 +93,4 @@ The |sin| and |cos| path operators also allow placing of nodes along their paths
 \draw[shift=(0:1)](-2,-2) cos (1,0) [mark nodes on line];
 \end{tikzpicture}
 \end{codeexample}
-
 \endinput

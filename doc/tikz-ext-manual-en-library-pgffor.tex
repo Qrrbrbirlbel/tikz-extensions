@@ -47,7 +47,7 @@ Spaces will be ignored.
       evaluate=\i as \colX using {mod(\i,#2)},
       evaluate=\i as \rowY using {int(\i/#2)}
     ] \elem in {#3} {
-        \draw[black, board/\elem/.try, rectangle timer/.try=line]
+        \draw[black, board/\elem/.try, ext/rectangle timer/.try=line]
           (\colX,\rowY) rectangle node {\elem} ++(1, 1);}
   \end{tikzpicture}}
 \board[

@@ -14,7 +14,7 @@
 \begin{tikzlibrary}{ext.paths.arcto}
   This library adds the new path operation |arc to| that specifies an arc \emph{to} a point~--
   without the user having to specify any angles.
-\end{tikzlibrary}
+\end{tikzlibrary}%\currentLibrary{paths.arcto}
 
 \begin{codeexample}[width=.5\linewidth,preamble=\usetikzlibrary{ext.paths.arcto}]
 \begin{tikzpicture}[ultra thick,dot/.style={label={#1}}]
@@ -46,6 +46,7 @@
 \end{codeexample}
 
 \begin{pathoperation}{arc to}{\opt{\oarg{options}}\meta{coordinate or cycle}}
+\begin{multicols}{2}
 When this operation is used, the path gets extended by an arc that goes through
 the current point and \meta{coordinate}.
 
@@ -53,45 +54,45 @@ For two points there exist two circles or four arcs that go through or connect
 these two points. Which one of these is constructed is determined by the following
 options that can be used inside of \meta{options}.
 
-\begin{stylekey}{/tikz/arc to/clockwise}
+\begin{stylekey}{/\tikzext/arc to/clockwise}
   This constructs an arc that goes clockwise.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/arc to/counter clockwise}
+\begin{stylekey}{/\tikzext/arc to/counter clockwise}
   This constructs an arc that goes counter clockwise.
   
   This is the default.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/arc to/large}
+\begin{stylekey}{/\tikzext/arc to/large}
   This constructs an arc whose angle is larger than $180^\circ$.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/arc to/small}
+\begin{stylekey}{/\tikzext/arc to/small}
   This constructs an arc whose angle is smaller than $180^\circ$.
 \end{stylekey}
 
-\begin{key}{/tikz/arc to/rotate=\meta{degree}}
+\begin{key}{/\tikzext/arc to/rotate=\meta{degree}}
   Rotates the arc by \meta{degree}.
   This is only noticeable when |x radius| and |y radius| are different.
 \end{key}
 
-\begin{key}{/tikz/arc to/x radius=\meta{value}}
+\begin{key}{/\tikzext/arc to/x radius=\meta{value}}
   This forwards the \meta{value} to \referenceKeyandIndexO{x radius}.
   Its \meta{value} is used for the radius of the arc.
 \end{key}
 
-\begin{key}{/tikz/arc to/y radius=\meta{value}}
+\begin{key}{/\tikzext/arc to/y radius=\meta{value}}
   This forwards the \meta{value} to \referenceKeyandIndexO{y radius}.
   Its \meta{value} is used for the radius of the arc.
 \end{key}
 
-\begin{key}{/tikz/arc to/radius=\meta{value}}
+\begin{key}{/\tikzext/arc to/radius=\meta{value}}
   This forwards the \meta{value} to both |/tikz/x radius| and |/tikz/y radius|.
   Its \meta{value} is used for radius of the arc.
 \end{key}
 
-\begin{stylekey}{/tikz/every arc to}
+\begin{stylekey}{/\tikzext/every arc to}
   After |/tikz/every arc| this will also be applied before any \meta{options} are set.
 \end{stylekey}
 
@@ -107,4 +108,6 @@ It should be noted that this uses |\pgfpatharcto| for which the \tikzname\space 
 The |arc to| path operation will also work only in the |canvas| coordinate system.
 The lengths of the vectors $(1, 0)$ and $(0, 1)$ will be used for the calculation of the radii
 but no further consideration is done.
+\end{multicols}
 \end{pathoperation}
+%\noLibrary

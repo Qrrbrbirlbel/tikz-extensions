@@ -5,44 +5,49 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\tikzset{
-  arc to/.code=\pgfqkeys{/tikz/arc to}{#1},
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\tikzextset{
+  arc to/.code=\pgfqkeys{/tikz/ext/arc to}{#1},
   arc to={
-    counter clockwise/.code=\pgfkeyssetvalue{/tikz/arc to/ccw flag}{1},
-    clockwise/.code=\pgfkeyssetvalue{/tikz/arc to/ccw flag}{0},
+    counter clockwise/.code=\pgfkeyssetvalue{/tikz/ext/arc to/ccw flag}{1},
+    clockwise/.code=\pgfkeyssetvalue{/tikz/ext/arc to/ccw flag}{0},
     x radius/.code=\pgfkeyssetvalue{/tikz/x radius}{#1},
     y radius/.code=\pgfkeyssetvalue{/tikz/y radius}{#1},
     radius/.code=\pgfkeyssetvalue{/tikz/x radius}{#1}\pgfkeyssetvalue{/tikz/y radius}{#1},
-    large/.code=\pgfkeyssetvalue{/tikz/arc to/large flag}{1},
-    small/.code=\pgfkeyssetvalue{/tikz/arc to/large flag}{0},
+    large/.code=\pgfkeyssetvalue{/tikz/ext/arc to/large flag}{1},
+    small/.code=\pgfkeyssetvalue{/tikz/ext/arc to/large flag}{0},
     % defaults
     rotate/.initial=0, counter clockwise, small,
     counter clockwise/.value forbidden,
     clockwise/.value forbidden,
     large/.value forbidden,
     small/.value forbidden}}
+\let\tikzext@orig@tikz@arcA\tikz@arcA
 \def\tikz@arcA rc{\pgfutil@ifnextchar t%
-  {\tikz@flush@moveto\expandafter\expandafter\expandafter\tikz@arcB@cont\expandafter\pgfutil@gobble\pgfutil@gobble}
-  {\tikz@flush@moveto\tikz@arc@cont}}
-\def\tikz@arcB@cont{%
-  \pgfutil@ifnextchar[\tikz@@do@arcB{
+  {\tikz@flush@moveto\expandafter\tikzext@arcto@cont\pgfutil@gobbletwo}
+  {\tikzext@orig@tikz@arcA rc}}
+\def\tikzext@arcto@cont{%\tikzext@arcto@do
+  \pgfutil@ifnextchar[\tikzext@arcto@options{
     \advance\tikz@expandcount by -10\relax% go down quickly
     \ifnum\tikz@expandcount<0\relax%
-      \def\@next{\tikz@@do@arcB[]}%
+      \def\tikzext@next{\tikzext@arcto@options[]}%
     \else%
-      \def\@next{\expandafter\tikz@arcB@cont}%
+      \def\tikzext@next{\expandafter\tikzext@arcto@cont}%
     \fi%
-    \@next}}%
-\def\tikz@@do@arcB[#1]{%
-  \def\tikz@arcB@options{#1}%
-  \tikz@do@@arcB}
-\def\tikz@do@@arcB{%
-  \pgfutil@ifnextchar n{\tikz@collect@label@onpath\tikz@do@@arcB}
-    {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikz@do@@arcB}
-      {\pgfutil@ifnextchar p{\tikz@collect@pic@onpath\tikz@do@@arcB}
-        {\tikz@scan@one@point\tikz@do@arcB}}}}
+    \tikzext@next}}%
+\def\tikzext@arcto@options[#1]{%
+  \def\tikzext@arcto@options@{#1}%
+  \tikzext@arcto@collect}
+\def\tikzext@arcto@collect{%
+  \pgfutil@ifnextchar n{\tikz@collect@label@onpath\tikzext@arcto@collect}
+    {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikzext@arcto@collect}
+      {\pgfutil@ifnextchar p{\tikz@collect@pic@onpath\tikzext@arcto@collect}
+        {\tikz@scan@one@point\tikzext@arcto@do}}}}
 
-\def\tikz@do@arcB#1{%
+\def\tikzext@arcto@do#1{%
   \edef\tikz@timer@start{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}
   \tikz@make@last@position{#1}%
   \edef\tikz@timer@end{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
@@ -50,14 +55,14 @@
     \edef\tikz@moveto@waiting{\tikz@shapeborder@name}%
   \fi
   \begingroup
-    \tikzset{every arc/.try,every arc to/.try,arc to/.expand once=\tikz@arcB@options}%
+    \tikzset{every arc/.try,ext/every arc to/.try,ext/arc to/.expand once=\tikzext@arcto@options@}%
     \pgfmathsetmacro\tikz@arc@x{\pgfkeysvalueof{/tikz/x radius}}%
     \ifpgfmathunitsdeclared
       \pgfmathsetmacro\tikz@arc@y{\pgfkeysvalueof{/tikz/y radius}}%
       \ifpgfmathunitsdeclared
         \tikzext@pgfpatharcto{\tikz@arc@x pt}{\tikz@arc@y pt}
-                     {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
-                     {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
+                     {\pgfkeysvalueof{/tikz/ext/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
+                     {\pgfkeysvalueof{/tikz/ext/arc to/ccw flag}}{#1}%
       \else
         \tikzerror{You cannot mix dimensions and dimension values in an arc}%
       \fi
@@ -73,35 +78,35 @@
         \pgfmathveclen@{\pgf@sys@tonumber\pgf@x}{\pgf@sys@tonumber\pgf@y}%
         \let\tikz@arc@y\pgfmathresult
         \tikzext@pgfpatharcto{+\tikz@arc@x pt}{+\tikz@arc@y pt}
-                     {\pgfkeysvalueof{/tikz/arc to/rotate}}{\pgfkeysvalueof{/tikz/arc to/large flag}}
-                     {\pgfkeysvalueof{/tikz/arc to/ccw flag}}{#1}%
+                     {\pgfkeysvalueof{/tikz/ext/arc to/rotate}}{\pgfkeysvalueof{/tikz/ext/arc to/large flag}}
+                     {\pgfkeysvalueof{/tikz/ext/arc to/ccw flag}}{#1}%
       \fi
     \fi
   \endgroup
   % check whether \pgf@marshall starts with \pgfpathlineto
   \pgfutil@ifxempty\pgf@marshal{}{%
-    \edef\tikz@temp{\expandafter\expandafter\expandafter\noexpand\expandafter\pgfutil@firstgobblerest\pgf@marshal\relax}%
+    \edef\tikz@temp{\expandafter\expandafter\expandafter\noexpand\expandafter\tikzextutil@firstgobblerest\pgf@marshal\relax}%
     \expandafter\let\expandafter\tikz@temp\tikz@temp
     \pgfutil@ifx\tikz@temp\pgfpathlineto{}{%
       % getting rid of \pgfpatharcaxes inside \pgf@marshal
       \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter\pgf@marshal
       \expandafter\expandafter\expandafter{\expandafter\pgfutil@gobble\pgf@marshal}%
       % extracting the other four values needed for the timer
-      \edef\tikz@timer@start@angle{\expandafter\pgfutil@firstoffour\pgf@marshal}%
-      \edef\tikz@timer@end@angle{\expandafter\pgfutil@secondoffour\pgf@marshal}%
-      \pgfextract@process\tikz@timer@zero@axis{\expandafter\pgfutil@thirdoffour\pgf@marshal}%
-      \pgfextract@process\tikz@timer@ninety@axis{\expandafter\pgfutil@fourthoffour\pgf@marshal}%
+      \edef\tikz@timer@start@angle{\expandafter\tikzextutil@firstoffour\pgf@marshal}%
+      \edef\tikz@timer@end@angle{\expandafter\tikzextutil@secondoffour\pgf@marshal}%
+      \pgfextract@process\tikz@timer@zero@axis{\expandafter\tikzextutil@thirdoffour\pgf@marshal}%
+      \pgfextract@process\tikz@timer@ninety@axis{\expandafter\tikzextutil@fourthoffour\pgf@marshal}%
       %
       \let\tikz@timer=\tikz@timer@arc
     }%
   }%
   \tikz@scan@next@command
 }
-\def\pgfutil@firstoffour#1#2#3#4{#1}
-\def\pgfutil@secondoffour#1#2#3#4{#2}
-\def\pgfutil@thirdoffour#1#2#3#4{#3}
-\def\pgfutil@fourthoffour#1#2#3#4{#4}
-\def\pgfutil@firstgobblerest#1#2\relax{#1}
+\def\tikzextutil@firstoffour#1#2#3#4{#1}
+\def\tikzextutil@secondoffour#1#2#3#4{#2}
+\def\tikzextutil@thirdoffour#1#2#3#4{#3}
+\def\tikzextutil@fourthoffour#1#2#3#4{#4}
+\def\tikzextutil@firstgobblerest#1#2\relax{#1}
 
 % original from pgfcorepathconstruct.code.tex
 \def\tikzext@pgfpatharcto#1#2#3#4#5#6{%
@@ -323,4 +328,28 @@
     \fi\fi\fi
   }%
   \pgf@marshal
+}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={paths.arcto}{pre 0.6},
+  compat/paths.arcto/warn/.append code=%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/clockwise}        {/tikz/ext/arc to/clockwise}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/counter clockwise}{/tikz/ext/arc to/counter clockwise}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/large}            {/tikz/ext/arc to/large}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/small}            {/tikz/ext/arc to/small}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/radius}           {/tikz/ext/arc to/radius}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/x radius}         {/tikz/ext/arc to/x radius}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/y radius}         {/tikz/ext/arc to/y radius}%
+    \tikzextutil@compatwarning@valuekey{paths.arcto}{pre 0.6}{/tikz/arc to/rotate}           {/tikz/ext/arc to/rotate},
+  compat/paths.arcto/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/arc to/clockwise}        {\pgfkeysvalueof{/tikz/ext/arc to/clockwise/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/counter clockwise}{\pgfkeysvalueof{/tikz/ext/arc to/counter clockwise/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/large}            {\pgfkeysvalueof{/tikz/ext/arc to/large/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/small}            {\pgfkeysvalueof{/tikz/ext/arc to/small/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/rotate}           {\pgfkeyssetvalue{/tikz/ext/arc to/rotate}{##1}\pgfkeyssetvalue{/tikz/arc to/rotate}{##1}}%
+    \pgfkeysdef{/tikz/arc to/radius}           {\pgfkeysvalueof{/tikz/ext/arc to/radius/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/x radius}         {\pgfkeysvalueof{/tikz/ext/arc to/x radius/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/arc to/y radius}         {\pgfkeysvalueof{/tikz/ext/arc to/y radius/.@cmd}##1\pgfeov},
+  compat/paths.arcto/\pgfkeysvalueof{/tikz/ext/compat/paths.arcto}%
 }

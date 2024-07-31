@@ -253,17 +253,17 @@ Use the \referenceKeyandIndexO[/pgf/arrow keys/]{length} key to set up the radiu
 \makeatother
 \begin{arrowtip}{\extus Loop}{\tipCompat{Loop}
   This arrow tip attaches a one-sided loop to the end of the line.
-  The |length| refers to the length of the whole tip while the |radius|
+  The |length| refers to the length of the whole tip while the |inset|
   specifies the radius of the three rounded corners.
   The width of the tip is twice the |length| (but can't specified independently).
-}{length=1.5cm,radius=3.5mm}{length=1.5cm,radius=3.5mm}
+}{length=1.5cm,inset=3.5mm}{length=1.5cm,radius=3.5mm/1.5cm}
     \begin{arrowexamples}
         \arrowexample[]
         \arrowexampledup[sep]
         \arrowexampledupdot[sep]
         \arrowexample[open]
         \arrowexample[open, swap]
-        \arrowexample[length=5pt,radius=0pt]
+        \arrowexample[length=5pt,inset=0pt]
         \arrowexample[reversed]
         \arrowexample[slant=.3]
         \arrowexample[red]

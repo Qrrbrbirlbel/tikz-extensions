@@ -24,16 +24,16 @@ The pics and keys provided by this library serve as an alternative.
 
 Many of the pics and keys share various keys that specify
 where and how the arrow tips are placed.
-\begin{key}{/tikz/ext/pos <=\meta{value} (initially 0.0)}
+\begin{key}{/\tikzext/pos <=\meta{value} (initially 0.0)}
 If the pic type supports it and a start arrow tip sequence is provided
 this specifies the position of that sequence.
 \end{key}
-\begin{key}{/tikz/ext/pos >=\meta{value} (initially 0.5)}
+\begin{key}{/\tikzext/pos >=\meta{value} (initially 0.5)}
 This is an alias for \referenceKeyandIndex{pos},
 if an end arrow tip sequence is provided, it is placed at this position.
 \end{key}
 
-\begin{key}{/tikz/ext/arrow shift mode=\meta{shift mode} (initially total length)}
+\begin{key}{/\tikzext/arrow shift mode=\meta{shift mode} (initially total length)}
 This key is used to set the \meta{shift mode} for the arrow tip.
 It can be one of the following.
 \begin{description}
@@ -78,7 +78,7 @@ and multiplied with the |arrow shift factor|.
 The result of this evaluation is used to shift the arrow tip sequence
 in the tip's direction.
 
-\begin{key}{/tikz/ext/arrow shift factor=\meta{value} (initially 0.5)}
+\begin{key}{/\tikzext/arrow shift factor=\meta{value} (initially 0.5)}
   This determines the shift factor.
   
   The default value is probably good for most cases.
@@ -106,7 +106,7 @@ This library provides the following pics:
   (see section~\ref{library:timer}).
   
   The arrow tips will never be bended. For this the following pic types
-  or the \referenceKeyandIndex[/tikz/ext/]{arc arrows} key will be necessary.
+  or the \referenceKeyandIndex[/\tikzext/]{arc arrows} key will be necessary.
 
   Due to \cite{PgfIssueSloped} with an active transformation,
   the arrow tips won't be placed correctly in many cases.
@@ -123,7 +123,7 @@ This library provides the following pics:
   that the arrow tip can be placed along the recent path operation.
   
   This won't work for \referencePathOperationandIndexO{arc}s,
-  for this the \referenceKeyandIndex[/tikz/ext/]{arc arrows} key will be necessary.
+  for this the \referenceKeyandIndex[/\tikzext/]{arc arrows} key will be necessary.
   
   This pic type can place two tip specification,
   one at |pos >| and one at |pos <| in the reversed direction.
@@ -170,18 +170,18 @@ This library provides the following pics:
 \subsection{Arrow keys}
 The last pic type |softpath arrows| is also available as a key
 which is the preferred version.
-\begin{key}{/tikz/ext/softpath arrows=\opt{\meta{options}} (default ->)}
+\begin{key}{/\tikzext/softpath arrows=\opt{\meta{options}} (default ->)}
 This key adds arrow tips to the previous path segment (a curve or a line).
 
-\begin{stylekey}{/tikz/ext/every softpath arrows (initially \{\})}
+\begin{stylekey}{/\tikzext/every softpath arrows (initially \{\})}
 This style will be applied for every instance of |softpath arrows| (key version, not the pic).
 \end{stylekey}
 \end{key}
 
 For |arc|s the following key needs to be used directly after the |arc| path operation.
-\begin{key}{/tikz/ext/arc arrows=\opt{\meta{options}} (default ->)}
+\begin{key}{/\tikzext/arc arrows=\opt{\meta{options}} (default ->)}
 This key adds arrow tips to the previous arc segment.
-\begin{stylekey}{/tikz/ext/every softpath arrows (initially \{\})}
+\begin{stylekey}{/\tikzext/every softpath arrows (initially \{\})}
 This style will be applied for every instance of |arc arrows|.
 \end{stylekey}
 

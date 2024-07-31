@@ -17,7 +17,7 @@ This library extends \tikzname's functionalities when it comes to nodes.
 \begin{multicols}{2}
 
 \subsection{Pic as a node}
-\begin{key}{/tikz/ext/pic=\opt{\meta{boolean}} (default true, initially false)}
+\begin{key}{/\tikzext/pic=\opt{\meta{boolean}} (default true, initially false)}
 \keycompat{tikz}
 This key allows one to use a pic where usually only nodes are accepted,
 for example as a label.
@@ -49,7 +49,7 @@ and everything else (including any |to path|).
 
 \subsubsection{Nodes on Lines}
 
-\begin{stylekey}{/tikz/ext/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
+\begin{stylekey}{/\tikzext/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
 \keycompat{tikz}
 This installs a \referenceKeyandIndexO{to path} that places \emph{one}
 node along a straight line but connect the line with it.
@@ -63,7 +63,7 @@ anchors to which the line should connect.
 It allows one or two anchors divided by | and | to be specified.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/ext/nodes on line}
+\begin{stylekey}{/\tikzext/nodes on line}
 \keycompat{tikz}
 This is similar to the previous key but allows
 multiple nodes to be placed on a straight line
@@ -98,7 +98,7 @@ Any \referenceKeyandIndexO[/pgf/]{outer sep} will be ignored.
 If you can, use \texttt{fill=\meta{bg color}}
 instead of these keys, it will be much faster and easier.
 
-\begin{stylekey}{/tikz/ext/nodes on curve=\meta{to path} (default line to)}
+\begin{stylekey}{/\tikzext/nodes on curve=\meta{to path} (default line to)}
 \keycompat{tikz}
 Similar to |nodes on line|, this key allows
 to have nodes on arbitrary paths.
@@ -106,7 +106,7 @@ to have nodes on arbitrary paths.
 This is not suitable for paths connecting nodes.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/ext/nodes on curve'=\meta{to path} (default line to)}
+\begin{stylekey}{/\tikzext/nodes on curve'=\meta{to path} (default line to)}
 \keycompat{tikz}
 As above but suitable for connecting nodes.
 \end{stylekey}
@@ -178,10 +178,10 @@ Nodes are usually placed with their border (including any |outer sep|)
 on the line.
 With the following option, a node will be shifted a certain offset distance.
 
-\begin{key}{/tikz/ext/auto with offset=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzext/auto with offset=\opt{\meta{true or false}} (default true)}
   This key activates the offset function.
 \end{key}
-\begin{key}{/tikz/ext/auto offset (initially 1cm)}
+\begin{key}{/\tikzext/auto offset (initially 1cm)}
 The offset distance itself.
 \end{key}
 
@@ -189,19 +189,19 @@ For the \referenceDecorationandIndexO{brace} decoration,
 the following keys are provided which needs the
 \referenceLibraryandIndexO{decorations.pathreplacing} loaded before they
 can be used.
-\begin{key}{/tikz/ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
+\begin{key}{/\tikzext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
 This key installs the necessary customizations
 for the \referenceKeyandIndexO[/pgf/decoration/]{raise} key
 so that the given value is available as an offset.
 
 It also makes available the following keys.
-\begin{stylekey}{/tikz/ext/auto offset for brace decoration}
-This sets \referenceKeyandIndex[/tikz/ext/]{auto offset} to
+\begin{stylekey}{/\tikzext/auto offset for brace decoration}
+This sets \referenceKeyandIndex[/\tikzext/]{auto offset} to
 \texttt{\textbackslash pgfdecorationsegmentamplitude+
   (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
 \end{stylekey}
 %\columnbreak
-\begin{stylekey}{/tikz/ext/every brace node}
+\begin{stylekey}{/\tikzext/every brace node}
 Using this key on a node along a path that's decorated by the |brace| decoration
 will offset the node so that it will be placed at the tip of the brace.
 \end{stylekey}
@@ -210,7 +210,7 @@ will offset the node so that it will be placed at the tip of the brace.
 \subsubsection{Precise placement}
 The default behavior of the |auto| placement mechanism is
 to snap to one of the eight compass directions.
-\begin{key}{/tikz/ext/precise auto angle=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzext/precise auto angle=\opt{\meta{true or false}} (default true)}
 With this option set to |true|, the |auto| placement won't snap
 to one of the eight compass directions.
 

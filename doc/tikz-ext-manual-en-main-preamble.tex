@@ -540,9 +540,21 @@
   \tikz [baseline,>={#1[#2]}] \draw [line
   width=1.6pt,->] (0,.5ex) -- (3em,.5ex); \\
 }
+\def\manual@action@length#1/#2/#3\relax{%
+%  \draw[help lines, overlay] (current bounding box.south west) rectangle (current bounding box.north east);
+  \draw [red,|<->|,semithick,xshift=#2]
+    ([yshift=4pt]current bounding box.north -| -#1,0) coordinate (last length)
+    -- node[above=-2pt] {|length|} ++(#1,0);
+}
 \def\manual@action@radius#1/#2/#3\relax{%
-  \draw [red,|<->|,semithick] ([xshift=-#1,yshift=#1]current bounding
-  box.north east) -- node [above, overlay] {\texttt{radius}} ++(-#1,0);
+%  \draw[red] (0,#2)
+%    -- node[above, sloped]{\texttt{radius}}
+%    +(30:#1);
+  \draw [red, ->|, semithick]
+    ([xshift=-#1, yshift=-#1]0,#2) %-- ++(left:#2) -- ++(down:#1);
+      -- node[below, sloped]{\texttt{inset}} +(30:#1);
+%  \draw [red,|<->|,semithick] ([xshift=-#1,yshift=2*#1]current bounding
+%  box.north east) -- node [above, overlay] {\texttt{radius}} ++(-#1,0);
 }
 \makeatother
 \newcommand*\keycompat[2][pre 0.6]{%
@@ -563,3 +575,57 @@
 }
 \def\tipcompatstrip ext#1#2\tipstop{#2}%
 \usepackage{array}
+\newcommand*\tikzext{tikz/ext}
+
+\def\decomposetoodeep#1/#2/\nil{%
+  % avoid too-deep nesting in index
+  \ifx\CurrentLibrary\empty
+    \index{#1/#2@\protect\texttt{#1/#2}}%
+    \index{\mypath#1/#2@\protect\texttt{#1/#2}}%
+  \fi
+    \index{#1/#2@\protect\texttt{#1/#2} (\CurrentLibrary)}%
+    \index{\mypath#1/#2@\protect\texttt{#1/#2} (\CurrentLibrary)}%
+  \fi
+  \decomposefindlast/#1/#2/\nil%
+}
+\def\decompose/#1/#2\nil{%
+  \def\test{#2}%
+  \index{\mypath#1@\protect\texttt{#1}}%
+  \ifx\test\empty%
+    % aha.
+    \ifx\CurrentLibrary\empty
+      \index{#1@\protect\texttt{#1} key}%
+      \index{\mypath#1@\protect\texttt{#1}}%
+    \else
+      \index{#1@\protect\texttt{#1} key (\CurrentLibrary)}%
+      \index{\mypath#1@\protect\texttt{#1} (\CurrentLibrary)}%
+    \fi
+    \gdef\myname{#1}%
+    \pgfmanualpdflabel{#1}{}
+  \else%
+    \advance\pgfmanualdecomposecount by1\relax%
+    \ifnum\pgfmanualdecomposecount>2\relax%
+      \decomposetoodeep#1/#2\nil%
+    \else%
+      \iffirsttime%
+        \begingroup%  
+          % also make a pdf link anchor with full key path.
+          \def\hyperlabelwithoutslash##1/\nil{%
+            \pgfmanualpdflabel{##1}{}%
+          }%
+          \hyperlabelwithoutslash/#1/#2\nil%
+        \endgroup%
+        \def\mypath{#1@\protect\texttt{/#1/}!}%
+        \firsttimefalse%
+      \else%
+        \expandafter\def\expandafter\mypath\expandafter{\mypath#1@\protect\texttt{#1/}!}%
+      \fi%
+      \def\firsttime{}%
+      \decompose/#2\nil%
+    \fi%
+  \fi%
+}
+\def\empty{}
+\newcommand*\noLibrary{\gdef\CurrentLibrary{}}
+\newcommand*\currentLibrary[1]{\gdef\CurrentLibrary{{\small ext.}#1}}
+\noLibrary

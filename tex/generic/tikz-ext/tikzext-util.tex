@@ -9,15 +9,25 @@
 \def\tikzextversion{0.6}
 \def\tikzextversionnumber{8}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
-
+\gdef\tikzextutil@compatwarning@counter{0}
+\def\tikzextutil@compatmaybewarning#1#2#3{%
+  \ifnum\tikzextutil@compatwarning@counter<25
+    \xdef\tikzextutil@compatwarning@counter{\the\numexpr\tikzextutil@compatwarning@counter+1\relax}%
+    \pgfutil@packagewarning{tikz-ext}{%
+      The deprecated #1 was used. It is now #2. Please use that instead.^^J%
+      To remove this warning use \string\tikzextset\string{compat/#3\string}.^^J%
+      This warning will be removed in the next version and the #1 will fail.^^J%
+    }%
+  \else\ifnum\tikzextutil@compatwarning@counter=25
+    \gdef\tikzextutil@compatwarning@counter{26}%
+    \pgfutil@packagewarning{tikz-ext}{Too many warnings generated. Remain silent.}%
+  \fi\fi
+}
 \def\tikzextutil@compatwarning@cmd#1#2#3#4#5{%
   \pgfutil@IfUndefined{#3}{%
     \pgfutil@namedef{#3}{%
-      \pgfutil@packagewarning{tikz-ext}{%
-        The deprecated command \expandafter\pgfutil@gobble\string\\#3 was used. It is now \string#4. Please use that instead.^^J%
-        To remove this warning use \string\tikzextset\string{compat/#1 = #2\string}.^^J%
-        This warning will be removed in the next version and the command \string#3 will fail.^^J%
-      }%
+      \tikzextutil@compatmaybewarning
+        {command \expandafter\pgfutil@gobble\string\\#3}{\string#4}{#1 = #2}%
       #4%
     }%
   }{}%
@@ -43,12 +53,26 @@
       % The key is currently not used.
       #4%
       \pgfkeysdef{#3}{%
-        \pgfutil@packagewarning{tikz-ext}{%
-          The deprecated key '#3' was used. It is now '#5'. Please use that instead.^^J%
-          To remove this warning use \string\tikzextset\string{compat/#1 = #2\string}.^^J%
-          This warning will be removed in the next version and the key '#3' will fail.^^J%
-        }%
+        \tikzextutil@compatmaybewarning{key '#3'}{'#5'}{#1 = #2}%
         \pgfkeysvalueof{#5/.@cmd}##1\pgfeov
+      }%
+    }
+  }
+}
+\def\tikzextutil@compatwarning@valuekey#1#2#3#4{%
+  \pgfkeys@pathtoks{#3}%
+  \pgfkeysifdefined{#3}{%
+    % The key is a value key. Do not overwrite or adjust.
+    % Old TikZ-Ext key simply will not work.
+  }{%
+    \pgfkeysifdefined{#3/.@cmd}{%
+      % The key is a code key. Do not overwrite or adjust.
+      % Old TikZ-Ext key simply will not work.
+    }{%
+      % The key is currently not used.
+      \pgfkeysdef{#3}{%
+        \tikzextutil@compatmaybewarning{value-key '#3'}{'#4'}{#1 = #2}%
+        \pgfkeyssetvalue{#4}{##1}%
       }%
     }
   }
@@ -70,15 +94,33 @@
         {/tikz/ext/compat/#1/\tikzext@temp}
         {\noexpand\pgfkeyssetvalue{/tikz/ext/compat/#1}{\tikzext@temp}}%
     }%
-  }
+  },
+  % /handlers/.ext_compat to warn/.code={%
+  %   \edef\tikz@temp{\expandafter\tikzext@compat@stripext\pgfkeyscurrentpath\tikzext@stop}%
+  %   \tikzextset{compat/#1/warn/.append code/.expanded=\noexpand}
+  % },
 }
+% \def\tikzext@compat@stripext#1/ext/#2\tikzext@stop{#1/#2}
 \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
   \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfcalendar-ext}       {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/topaths.arcthrough}    {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
   }%
 }
 \tikzextset{compat=warn}
+
+\long\def\tikzextutil@gobblethree#1#2#3{}
+\def\tikzextutil@prefixtomacro#1#2{%
+  \def\tikzext@temp{#2}%
+  \expandafter\expandafter\expandafter\def
+  \expandafter\expandafter\expandafter#1%
+  \expandafter\expandafter\expandafter{\expandafter\tikzext@temp#1}%
+}
 \endinput

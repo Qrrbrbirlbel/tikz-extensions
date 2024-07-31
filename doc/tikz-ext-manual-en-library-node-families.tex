@@ -19,8 +19,9 @@
 
 Before we get to the interesting keys, a common prefix can be set for the families' names.
 Initially this is |\pgfpictureid-| so that families of different pictures don't interact.
-\begin{key}{/tikz/node family/prefix=\meta{prefix}(initially \string\pgfpictureid-)}
-The family names are prefixed with the value of |/tikz/node family/prefix|.
+\begin{key}{/\tikzext/node family/prefix=\meta{prefix}(initially \string\pgfpictureid-)}
+\keycompat{tikz/node family}
+The family names are prefixed with the value of |/tikz/ext/node family/prefix|.
 \end{key}
 
 \subsection{Externalization}
@@ -35,22 +36,26 @@ However, the library provides support for the
 The following keys~-- when setup, see below~-- work with every shape with one single node part.%
 \footnote{Technically, it will also work with shapes with multiple node parts but it will only affect the main node part.}
 Initially though, only \referenceShapeandIndexO{circle} and \referenceShapeandIndexO{rectangle} are set up that way.
-\begin{key}{/tikz/node family/text height=\meta{name} (initially \{\})}
+\begin{key}{/\tikzext/node family/text height=\meta{name} (initially \{\})}
+\keycompat{tikz/node family}
 Nodes with the same \meta{name} will have the same text height.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
 
-\begin{key}{/tikz/node family/text depth=\meta{name} (initially \{\})}
+\begin{key}{/\tikzext/node family/text depth=\meta{name} (initially \{\})}
+\keycompat{tikz/node family}
 Nodes with the same \meta{name}  will have the same text depth.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
 
-\begin{key}{/tikz/node family/text width=\meta{name} (initially \{\})}
+\begin{key}{/\tikzext/node family/text width=\meta{name} (initially \{\})}
+\keycompat{tikz/node family}
 Nodes with the same \meta{name} will have the same text width.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
 
-\begin{key}{/tikz/node family/text=\meta{name}}
+\begin{key}{/\tikzext/node family/text=\meta{name}}
+\keycompat{tikz/node family}
 Sets |text height|, |text depth| and |text width|.
 \end{key}
 
@@ -58,19 +63,20 @@ Since the width of the node's content's box is setup much earlier,
 the previous key only extends the width of that box which would make the text
 seem as if it where aligned to the left.
 With |text width family align| this can changed.
-\begin{key}{/tikz/node family/text width align=\meta{alignment}(initially center)}
+\begin{key}{/\tikzext/node family/text width align=\meta{alignment}(initially center)}
 \meta{alignment} is one of |left|, |center| or |right|.
 
 \begin{codeexample}[preamble=\usetikzlibrary{positioning,ext.node-families},/tikz/node distance=.5cm]
 \tikzexternaldisable % ext.node-families does not work with active externalization
-\begin{tikzpicture}[nodes={rectangle, draw, node family={text width=manual, text width align=right}}]
+\begin{tikzpicture}[nodes={rectangle, draw, ext/node family={text width=manual, text width align=right}}]
 \node (a) {Foo};
 \node[below=of a] (b) {Foobar};
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/node family/setup shape=\meta{shape}}
+\begin{key}{/\tikzext/node family/setup shape=\meta{shape}}
+\keycompat{tikz/node family}
 This adds instructions to the \meta{shape}'s definition which
 adjust the text box's dimensions according to the family.
 
@@ -83,31 +89,34 @@ While the keys of the previous subsection work well enough for nodes of the same
 differently for the node's total dimension.
 
 For this, the following keys are necessary.
-When one of the keys are used the values of |minimum width| and/or |minimum height| are set to |nf_width| or |nf_height| respectively.
-\begin{key}{/tikz/node family/width=\meta{name} (initially \{\})}
+When one of the keys are used the values of |minimum width| and/or |minimum height| are set to |ext_nf_width| or |nf_height| respectively.
+\begin{key}{/\tikzext/node family/width=\meta{name} (initially \{\})}
+\keycompat{tikz/node family}
 Nodes with the same \meta{name} will have the same \referenceKeyandIndexO[/pgf/]{minimum width}.
 An empty \meta{name} disables the evaluation by the library.
 \begin{codeexample}[preamble=\usetikzlibrary{positioning,ext.node-families},/tikz/node distance=.5cm]
 \tikzexternaldisable % ext.node-families does not work with active externalization
-\begin{tikzpicture}[nodes={rectangle, draw, node family/width=manual}]
+\begin{tikzpicture}[nodes={rectangle, draw, ext/node family/width=manual}]
 \node (a) {Foo};
 \node[below=of a] (b) {Foobar};
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/tikz/node family/height=\meta{name} (initially \{\})}
+\begin{key}{/\tikzext/node family/height=\meta{name} (initially \{\})}
+\keycompat{tikz/node family}
 Nodes with the same \meta{name} will have the same \referenceKeyandIndexO[/pgf/]{minimum height}.
 An empty \meta{name} disables the evaluation by the library.
 \end{key}
-\begin{key}{/tikz/node family/size=\meta{name}}
+\begin{key}{/\tikzext/node family/size=\meta{name}}
+\keycompat{tikz/node family}
 Sets both |height| and |width|.
 \end{key}
 
 \clearpage
 \subsection{More shapes that support the keys \texttt{width} and \texttt{height}}
 \begin{tikzlibrary}{ext.node-families.shapes.geometric}
-  This library adds support for the keys \referenceKeyandIndex[/tikz/node family/]{width} and
-  \referenceKeyandIndex[/tikz/node family/]{height} for the shapes of
+  This library adds support for the keys \referenceKeyandIndex[/\tikzext/node family/]{width} and
+  \referenceKeyandIndex[/\tikzext/node family/]{height} for the shapes of
   the \pgfname\space library \referenceLibraryandIndexO{shapes.geometric}.
 
   \inspirationQ{NodeFam-Ellipse}
@@ -118,7 +127,7 @@ The shapes are also setup for the keys from subsection~\ref{ssec:nf-text}.
 \tikzexternaldisable % ext.node-families does not work with active externalization
 \begin{tikzpicture}
 \foreach \cnt[count=\Cnt] in {a,...,h}
-  \node[draw, diamond, node family/text=aTOh] (\cnt)
+  \node[draw, diamond, ext/node family/text=aTOh] (\cnt)
     at (right:\Cnt) {\cnt};
 \draw[help lines] (a.south) -- (h.south) (a.north) -- (h.north) (a.base-|a.west) -- (h.base-|h.east);
 \end{tikzpicture}

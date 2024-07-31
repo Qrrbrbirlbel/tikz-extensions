@@ -70,28 +70,35 @@ As discussed in the previous section,
 keys and commands of extensions that existed before version~0.6
 that do not appear in this manual are considered deprecated.
 
-\begin{key}{/tikz/ext/compat=\mchoice{pre 0.6, 0.6, warn, newest} (default pre 0.6)}
+\begin{key}{/\tikzext/compat=\mchoice{pre 0.6, 0.6, warn, newest} (default pre 0.6)}
   This sets the global compatibility setting for every extension of this package
   (whether already loaded or not).
 
   The choice |warn| gives out warning for deprecated keys or commands
   but still executes them if they were not not in use when an extension was loaded.
   
+  For version 0.6 this is actually the default settings so that active documents work
+  -- for now.
+  
   The following table shows the compatibility settings for each extension.
   \newcommand*\X{$\checkmark$}%
   \newcommand*\Xdef{\X\kern-.65em\X}%
   A \X\ denotes an available setting where \Xdef\ denotes the default compatibility setting.
   A -- denotes that it is not different than the |newest| setting.
-  \newcommand*\tabHeader[1]{\rotatebox{90}{#1}}
   \begin{center}
-  \begin{tabular}{>{\ttfamily ext.}l ccc}
+  \begin{tabular}{>{\ttfamily ext.}l cccc}
     \toprule
-    \multicolumn{1}{l}{Extension} & pre 0.6 & 0.6 & newest \\ \midrule
-    arrows                        & \X      & --  & \Xdef  \\
-    layers                        & \X      & --  & \Xdef  \\
-    nodes                         & \X      & --  & \Xdef  \\
-    scalepicture                  & \X      & --  & \Xdef  \\
-    transformations.mirror        & \X      & --  & \Xdef  \\ \bottomrule
+    \multicolumn{1}{l}{Extension} & warn  & pre 0.6 & 0.6 & newest \\ \midrule
+    pgfcalendar-ext               & \Xdef &   \X    & --  &   --   \\ \midrule[.5\lightrulewidth]
+    arrows                        & \Xdef &   \X    & --  &   --   \\
+    layers                        & \Xdef &   \X    & --  &   --   \\
+    node-families                 & \Xdef &   \X    & --  &   --   \\
+    nodes                         & \Xdef &   \X    & --  &   --   \\
+    paths.arcto                   & \Xdef &   \X    & --  &   --   \\ \addlinespace
+    paths.timer                   & \Xdef &   \X    & --  &   --   \\
+    scalepicture                  & \Xdef &   \X    & --  &   --   \\
+    transformations.mirror        & \Xdef &   \X    & --  &   --   \\
+    topaths.arcthrough            & \Xdef &   \X    & --  &   --   \\ \bottomrule
   \end{tabular}
   \end{center}
 \end{key}
@@ -99,12 +106,18 @@ that do not appear in this manual are considered deprecated.
 \newcolumn\noindent
 For each available extension the compatibility setting can be adjusted as well
 after the extension is loaded.
-\begin{keylist}[/tikz/ext/compat]{%
+\begin{keylist}[/\tikzext/compat]{%
+  pgfcalendar-ext=\meta{version} (default pre 0.6),
   arrows=\meta{version} (default pre 0.6),
   layers=\meta{version} (default pre 0.6),
   nodes=\meta{version} (default pre 0.6),
+  node-families=\meta{version} (default pre 0.6),
+  paths.arcto=\meta{version} (default pre 0.6),
+  paths.timer=\meta{version} (default pre 0.6),
   scalepicture=\meta{version} (default pre 0.6),
-  transformations.mirror=\meta{version} (default pre 0.6)}
+  transformations.mirror=\meta{version} (default pre 0.6),
+  topaths.arcthrough=\meta{version} (default pre 0.6)%
+}
   For \meta{version} the same choices are valid as for the main |compat| key.
   It should be noted that at this point, a compatibility setting can't really be reversed
   since they only forward arguments from an old key or command to the new version.

@@ -259,41 +259,58 @@
   }
 }
 
-\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}}
 \pgfdeclarearrow{
   name = ext_Loop,
   parameters = {\the\pgfarrowlength,\the\pgfarrowinset,\ifpgfarrowopen o\fi},
   defaults = {length = +3pt +1 +0, inset = +.75pt +1 +0},
-  setup code =
+  setup code = {%
     \ifdim\pgfarrowlength<\dimexpr2\pgfarrowinset+\pgflinewidth\relax
       \pgfarrowlength\dimexpr2\pgfarrowinset+\pgflinewidth\relax
     \fi
+    \ifdim\pgfarrowinset<.5\pgflinewidth
+      \pgfarrowinset=.5\pgflinewidth
+    \fi
     \pgfarrowssettipend{\pgfarrowlength}%
     \pgfarrowssetlineend{.5\pgflinewidth}%
+    \pgfarrowshullpoint{\pgfarrowlength}{\pgfarrowlength}%
+    \pgfarrowsupperhullpoint{0pt}{\pgfarrowlength}%
+    \pgfarrowshullpoint{\pgflinewidth}{-\pgfarrowlength}%
     \pgfarrowssavethe\pgfarrowlength
-    \pgfarrowssavethe\pgfarrowinset,
+    \pgfarrowssavethe\pgfarrowinset
+  },
   drawing code={%
     \pgfsetroundcap
     \pgfpathmoveto{\pgfqpoint{.5\pgflinewidth}{0pt}}%
-    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}
+    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-\pgfarrowinset}
                              {0pt}}%
-    \pgfpatharc{+-90}{+0}{+\pgfarrowinset}%
+    \pgfpatharc{+-90}{+0}{+\dimexpr\pgfarrowinset-.5\pgflinewidth}%
     \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowlength-.5\pgflinewidth}
-                             {\dimexpr\pgfarrowlength-.5\pgflinewidth-\pgfarrowinset}}%
-    \pgfpatharc{+0}{+90}{+\pgfarrowinset}%
-    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth}
-                             {\dimexpr\pgfarrowlength-.5\pgflinewidth}}%
-    \pgfpatharc{+90}{+180}{+\pgfarrowinset}%
-    \pgfpathlineto{\pgfqpoint{\dimexpr\pgfarrowinset+.5\pgflinewidth-\pgfarrowinset}
+                             {\dimexpr\pgfarrowlength-\pgfarrowinset}}%
+    \pgfpatharc{+0}{+90}{+\dimexpr\pgfarrowinset-.5\pgflinewidth}%
+    \pgfpathlineto{\pgfqpoint{\pgfarrowinset}{\dimexpr\pgfarrowlength-.5\pgflinewidth}}%
+    \pgfpatharc{+90}{+180}{+\dimexpr\pgfarrowinset-.5\pgflinewidth}%
+    \pgfpathlineto{\pgfqpoint{.5\pgflinewidth}
                              {\dimexpr-\pgfarrowlength+.5\pgflinewidth}}%
     \ifpgfarrowopen\pgfusepathqstroke\else\pgfusepathqfillstroke\fi
   }
 }
 
 %%% Compatibility
+\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}} % should be removed after v0.6
 \tikzextset{
   /tikz-ext/compat/add library={arrows}{pre 0.6},
+  /tikz-ext/@arrows decl/new name/.code={% This is not a good idea.
+    \expandafter\let\csname pgf@ar@code@#1\endcsname\@undefined
+    \expandafter\let\csname pgf@ar@defaults@#1\endcsname\@undefined
+    \expandafter\let\csname pgf@ar@setup@#1\endcsname\@undefined
+    \expandafter\let\csname pgf@ar@bending@mode@#1\endcsname\@undefined
+    \expandafter\let\csname pgf@ar@par@#1\endcsname\@undefined
+    \expandafter\let\csname pgf@ar@do@cache@#1\endcsname\@undefined
+    \pgfset{@arrows decl/name={#1}}%
+  },
   compat/arrows/warn/.append code={%
+    \tikzextutil@compatwarning@key{arrows}{pre 0.6}{/pgf/@arrows decl/clone}{/tikz-ext/@arrows decl/clone}%
+    \tikzextutil@compatwarning@key{arrows}{pre 0.6}{/pgf/@arrows decl/append setup code}{/tikz-ext/@arrows decl/append setup code}%
     \pgfutil@for\tikzext@temp:=Centered Arc Barb,Untipped Arc Barb,Centered Hooks,%
       Centered Straight Barb,Centered Tee Barb,Untipped Tee Barb,Centered Circle,%
       Untipped Circle,Centered Kite,Centered Square,Centered Stealth,Centered Rays\do{%
@@ -303,11 +320,8 @@
               /tikz-ext/@arrows decl/clone/.expanded = ext_\tikzext@temp,
               name/.expanded = \tikzext@temp,
               /tikz-ext/@arrows decl/append setup code/.expanded = {%
-                \noexpand\pgfutil@packagewarning{tikz-ext}{
-                  The deprecated arrow tip '\tikzext@temp' was used. It is now 'ext_\tikzext@temp'. Please use that instead.^^J
-                  To remove this warning use \string\tikzextset\string{compat/arrows = pre 0.6\string}.^^J%
-                  This warning will be removed in the next version and the arrow tip '\tikzext@temp' will fail.^^J%
-                }%
+                \noexpand\tikzextutil@compatmaybewarning
+                  {arrow tip '\tikzext@temp'}{'ext_\tikzext@temp'}{arrows = pre 0.6}%
               }%
             }
           }{}%
@@ -315,30 +329,31 @@
       }%
   },
   compat/arrows/pre 0.6/.append code=%
-    \pgfdeclarearrow{name = Centered Arc      Barb  , means = ext_Centered Arc      Barb}%
-    \pgfdeclarearrow{name = Untipped Arc      Barb  , means = ext_Untipped Arc      Barb}%
-    \pgfdeclarearrow{name = Centered Hooks          , means = ext_Centered Hooks        }%
-    \pgfdeclarearrow{name = Centered Straight Barb  , means = ext_Centered Straight Barb}%
-    \pgfdeclarearrow{name = Centered Tee      Barb  , means = ext_Centered Tee      Barb}%
-    \pgfdeclarearrow{name = Untipped Tee      Barb  , means = ext_Untipped Tee      Barb}%
-    \pgfdeclarearrow{name = Centered Circle         , means = ext_Centered Circle       }%
-    \pgfdeclarearrow{name = Untipped Circle         , means = ext_Untipped Circle       }%
-    \pgfdeclarearrow{name = Centered Kite           , means = ext_Centered Kite         }%
-    \pgfdeclarearrow{name = Centered Square         , means = ext_Centered Square       }%
-    \pgfdeclarearrow{name = Centered Stealth        , means = ext_Stealth               }%
-    \pgfdeclarearrow{name = Centered Rays           , means = ext_Rays                  }%
-    \pgfdeclarearrow{name = Centered Ellipse        , means = ext_Centered Ellipse      }%
-    \pgfdeclarearrow{name = Centered Parenthesis    , means = ext_Centered Parenthesis  }%
-    \pgfdeclarearrow{name = Centered Bar            , means = ext_Centered Bar          }%
-    \pgfdeclarearrow{name = Centered Bracket        , means = ext_Centered Bracket      }%
-    \pgfdeclarearrow{name = Centered Diamond        , means = ext_Centered Diamond      }%
-    \pgfdeclarearrow{name = Centered Turned Square  , means = ext_Centered Turned Square}%
-    \pgfdeclarearrow{name = Centered Rectangle      , means = ext_Centered Rectangle    }%
-    \pgfdeclarearrow{name = Centered Triangle       , means = ext_Centered Triangle     }%
-    \pgfdeclarearrow{name = Untipped Ellipse        , means = ext_Untipped Ellipse      }%
-    \pgfdeclarearrow{name = Untipped Parenthesis    , means = ext_Untipped Parenthesis  }%
-    \pgfdeclarearrow{name = Untipped Bar            , means = ext_Untipped Bar          }%
-    \pgfdeclarearrow{name = Untipped Bracket        , means = ext_Untipped Bracket      },%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Arc      Barb  , means = ext_Centered Arc      Barb}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Arc      Barb  , means = ext_Untipped Arc      Barb}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Hooks          , means = ext_Centered Hooks        }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Straight Barb  , means = ext_Centered Straight Barb}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Tee      Barb  , means = ext_Centered Tee      Barb}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Tee      Barb  , means = ext_Untipped Tee      Barb}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Circle         , means = ext_Centered Circle       }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Circle         , means = ext_Untipped Circle       }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Kite           , means = ext_Centered Kite         }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Square         , means = ext_Centered Square       }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Stealth        , means = ext_Centered Stealth      }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Rays           , means = ext_Centered Rays         }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Ellipse        , means = ext_Centered Ellipse      }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Parenthesis    , means = ext_Centered Parenthesis  }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Bar            , means = ext_Centered Bar          }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Bracket        , means = ext_Centered Bracket      }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Diamond        , means = ext_Centered Diamond      }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Turned Square  , means = ext_Centered Turned Square}%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Rectangle      , means = ext_Centered Rectangle    }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Triangle       , means = ext_Centered Triangle     }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Ellipse        , means = ext_Untipped Ellipse      }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Parenthesis    , means = ext_Untipped Parenthesis  }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Bar            , means = ext_Untipped Bar          }%
+    \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Bracket        , means = ext_Untipped Bracket      }%
+    ,%
   compat/arrows/\pgfkeysvalueof{/tikz/ext/compat/arrows}%
 }
 \endinput

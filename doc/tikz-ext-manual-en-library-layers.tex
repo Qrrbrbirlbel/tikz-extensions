@@ -20,8 +20,8 @@ or change the drawing order.
 
 \begin{multicols}{2}
 %\subsection{Internal keys}
-\begin{key}{/tikz/ext/layers/patch=\mchoice{node, matrix, pic, edge, all}}
-\keycompat{tikz-ext}
+\begin{key}{/\tikzext/layers/patch=\mchoice{node, matrix, pic, edge, all}}
+\keycompat{tikz-ext/layers}
 Since this library is experimental, its functionality needs to be activated explicitly.
 Patches exist for
 \begin{itemize}
@@ -40,49 +40,49 @@ Patches exist for
 %
 %These keys only work when a patch is applied.
 %These will be used internally.
-%\begin{key}{/tikz/ext/layers/on layer=\meta{layer}}
+%\begin{key}{/\tikzext/layers/on layer=\meta{layer}}
 %\keycompat{tikz-ext/layers}
 %Places an object on the \pgfname\ layer \meta{layer}.
 %\end{key}
-%\begin{key}{/tikz/ext/layers/in box=\meta{box}}
+%\begin{key}{/\tikzext/layers/in box=\meta{box}}
 %\keycompat{tikz-ext/layers}
 %Places an object in the \TeX\ box \meta{box}.
 %\end{key}
 
 %\subsection{User-level keys}
 \newcolumn
-\begin{key}{/tikz/ext/node on layer=\meta{layer}}
+\begin{key}{/\tikzext/node on layer=\meta{layer}}
 \keycompat{tikz}
 If the |node| patch is applied, this key places a node on layer \meta{layer}.
 \end{key}
-%\begin{key}{/tikz/ext/node in box=\meta{box}}
+%\begin{key}{/\tikzext/node in box=\meta{box}}
 %\keycompat{tikz}
 %If the |node| patch is applied, this key places a node in box \meta{box}.
 %\end{key}
 
-\begin{key}{/tikz/ext/matrix on layer=\meta{layer}}
+\begin{key}{/\tikzext/matrix on layer=\meta{layer}}
 \keycompat{tikz}
 If the |matrix| patch is applied, this key places the matrix on layer \meta{layer}.
 \end{key}
-%\begin{key}{/tikz/ext/matrix in box=\meta{box}}
+%\begin{key}{/\tikzext/matrix in box=\meta{box}}
 %\keycompat{tikz}
 %If the |matrix| patch is applied, this key places the matrix in box \meta{box}.
 %\end{key}
 
-\begin{key}{/tikz/ext/edge on layer=\meta{layer}}
+\begin{key}{/\tikzext/edge on layer=\meta{layer}}
 \keycompat{tikz}
 If the |edge| patch is applied, this key places the edge on layer \meta{layer}.
 \end{key}
-%\begin{key}{/tikz/ext/edge in box=\meta{box}}
+%\begin{key}{/\tikzext/edge in box=\meta{box}}
 %\keycompat{tikz}
 %If the |edge| patch is applied, this key places the edge in box \meta{box}.
 %\end{key}
 
-\begin{key}{/tikz/ext/pic on layer=\meta{layer}}
+\begin{key}{/\tikzext/pic on layer=\meta{layer}}
 \keycompat{tikz}
 If the |pic| patch is applied, this key places the main code of a pic on layer \meta{layer}.
 \end{key}
-%\begin{key}{/tikz/ext/pic in box=\meta{box}}
+%\begin{key}{/\tikzext/pic in box=\meta{box}}
 %\keycompat{tikz}
 %If the |pic| patch is applied, this key places the main code of a pic in box \meta{box}.
 %\end{key}
