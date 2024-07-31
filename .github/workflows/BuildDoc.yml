@@ -26,7 +26,7 @@ jobs:
 #        cat tex/generic/pgf/pgf.revision.tex
     - name: Build the manual
       run: |
-        lualatex doc/tikz-ext-manual -q
+        lualatex tikz-ext-manual -q --output-directory doc/
 #    - name: Analyze manual log
 #      run: |
 #        # set a notice message
