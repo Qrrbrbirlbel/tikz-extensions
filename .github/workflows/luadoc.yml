@@ -9,7 +9,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: doc/tikz-ext-manual.tex
+          root_file: tikz-ext-manual.tex
           working_directory: doc
           latexmk_use_lualatex: true
         env:
