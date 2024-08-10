@@ -172,7 +172,7 @@
       \expandafter\endgroup\pgf@cal@temp}}
 
 \def\pgfextcalendar@ifdate@first#1#2:#3\pgf@stop{%
-    \pgfqkeys{/pgf/calendar}{and={#3, week of month#1={#2}}}}
+    \pgfqkeys{/pgf/calendar/ext}{and={#3, week of month#1={#2}}}}
 \def\pgfextcalendar@getlastYMX#1#2#3{% #1 = year, #2 = month, #3 := last day
     \begingroup
         \ifnum#2=2 % stupid February

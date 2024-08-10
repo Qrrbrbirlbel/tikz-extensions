@@ -51,7 +51,7 @@
   week code/.initial={%
     \node[every week]{\pgfkeysvalueof{/tikz/week text}};},
   week text/.initial={\%n=},
-  every week/.style=,
+  every week/.code=,
   week label left/.style={
     every week/.append style={
       anchor=base east,
@@ -63,31 +63,14 @@
 % Overwriting original \tikz@lib@cal@if@else@code
 %
 \def\tikz@lib@cal@if@else@code#1#2#3{%
-  \tikzextutil@addto@macro\tikz@lib@cal@ifs{\ifdate{#1}{#2}{#3}}%
+  \tikzext@cal@doif\tikz@lib@cal@ifs{\ifdate{#1}{#2}{#3}}%
   \tikz@lib@cal@scanner%
 }
 
-%
-% Overwriting original \tikz@lib@cal@stop
-%
-\def\tikz@lib@cal@stop{%
-    \pgftransformshift{\tikz@node@at}%
-    \expandafter\pgfcalendar\expandafter{\tikz@fig@name}{\tikz@lib@cal@start}{\tikz@lib@cal@end}%
-    {%
-      \tikz@before@day%
-      \scope%
-        \tikz@atbegin@day%
-        \let\tikzextutil@addto@macro\pgfutil@secondoftwo
-        \tikz@lib@cal@ifs%
-        \tikzdaycode%
-        \tikz@atend@day%
-      \endscope%
-      \tikz@after@day%
-    }%
-  \endgroup%
-}
-
 \def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
+\let\tikzext@cal@doif\tikzextutil@addto@macro
+\tikzset{execute at begin day scope=\let\tikzext@cal@doif\pgfutil@secondoftwo}
+
 
 \pgfmathdeclarefunction{weeksinmonthofyear}{3}{% #1 = first weekday, #2 = month, #3 = year
   \begingroup

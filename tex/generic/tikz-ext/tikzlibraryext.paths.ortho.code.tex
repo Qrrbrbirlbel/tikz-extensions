@@ -6,9 +6,13 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
 %% For the operators r-lr, r-rl, r-ud and r-du we need to check after TikZ found r
-\let\tikz@orig@rect\tikz@rect
-\def\tikz@rect{\pgfutil@ifnextchar e\tikz@orig@rect\tikzext@tikz@r}
+\let\tikzextorig@tikz@rect\tikz@rect
+\def\tikz@rect{\pgfutil@ifnextchar e\tikzextorig@tikz@rect\tikzext@tikz@r}
 \def\tikzext@tikz@r -{%
   \pgfutil@ifnextchar l\tikzext@tikz@lr@lineto{%
     \pgfutil@ifnextchar r\tikzext@tikz@rl@lineto{%
@@ -19,16 +23,16 @@
   }%
 }
 %% For the operator |-| we need to check after TikZ found |-
-\let\tikz@orig@vh@lineto@next\tikz@vh@lineto@next
+\let\tikzextorig@tikz@vh@lineto@next\tikz@vh@lineto@next
 \def\tikz@vh@lineto@next{%
   \pgfutil@ifnextchar|{\expandafter\tikzext@tikz@vhv@lineto\pgfutil@gobble}%
     {\pgfutil@ifnextchar\tikz@activebar{\expandafter\tikzext@tikz@vhv@lineto\pgfutil@gobble}%
-      {\tikz@orig@vh@lineto@next}}}
+      {\tikzextorig@tikz@vh@lineto@next}}}
 %% For the operator -|- we need to check after TikZ found -|
-\let\tikz@orig@hv@lineto\tikz@hv@lineto
+\let\tikzextorig@tikz@hv@lineto\tikz@hv@lineto
 \def\tikz@hv@lineto{%
   \pgfutil@ifnextchar-{\expandafter\tikzext@tikz@hvh@lineto\pgfutil@gobble}%
-    {\tikz@orig@hv@lineto}}
+    {\tikzextorig@tikz@hv@lineto}}
 
 %% |-|[<opts>] and -|-[<opts>] are allowed
 \def\tikzext@tikz@vhv@lineto{\pgfutil@ifnextchar[{\tikzext@tikz@collect@hvvh@options\tikzext@tikz@vhv@lineto@next}{\tikzext@tikz@collect@hvvh@options\tikzext@tikz@vhv@lineto@next[]}}
@@ -51,12 +55,12 @@
 \tikzext@ortho@preflushtrue
 
 %%% HVVH/UDLR
-\tikzset{%
-  ortho/.code=\pgfqkeys{/tikz/ortho}{#1},
-  hvvh/.code=\pgfqkeys{/tikz/ortho}{#1},%
-  udlr/.code=\pgfqkeys{/tikz/ortho}{#1},%
+\tikzextset{%
+  ortho/.code=\pgfqkeys{/tikz/ext/ortho}{#1},
+  hvvh/.code=\pgfqkeys{/tikz/ext/ortho}{#1},%
+  udlr/.code=\pgfqkeys{/tikz/ext/ortho}{#1},%
   ortho/.search also=/tikz,
-  ortho/middle 0 to 1/.style={/tikz/ortho/spacing=0},%
+  ortho/middle 0 to 1/.style={/tikz/ext/ortho/spacing=0},%
   ortho/from center/.is if=tikzext@tikz@hvvh@fromcenter,%
   ortho/spacing/.code=% spacing = 0 means that the middle part are the pos-itions 0 to 1,
   %                                           the first part is -1 to 0, the last part is to 2
@@ -80,10 +84,10 @@
   % TODO: not possible to do distance in TikZ coordinate system
   ortho/distance/.code=\pgfmathsetlength\tikzext@tikz@hvvh@distance{#1}\let\tikzext@tikz@hvvh@ratio\pgfutil@empty,%
   ortho/udlr distance/.style={%
-    /tikz/ortho/ud distance={#1},%
-    /tikz/ortho/du distance={#1},%
-    /tikz/ortho/lr distance={#1},%
-    /tikz/ortho/rl distance={#1}},%
+    /tikz/ext/ortho/ud distance={#1},%
+    /tikz/ext/ortho/du distance={#1},%
+    /tikz/ext/ortho/lr distance={#1},%
+    /tikz/ext/ortho/rl distance={#1}},%
   ortho/ud distance/.initial=+.5cm,%
   ortho/du distance/.initial=+.5cm,%
   ortho/lr distance/.initial=+.5cm,%
@@ -152,7 +156,7 @@
 
 %% collect options and nodes, coordinates and pics onpath
 \let\tikz@hvvh@currentoption\pgfutil@empty
-\def\tikzext@tikz@collect@hvvh@options#1[#2]{\edef\tikz@hvvh@currentoption{#2}#1}
+\def\tikzext@tikz@collect@hvvh@options#1[#2]{\def\tikz@hvvh@currentoption{#2}#1}
 \def\tikzext@tikz@hvh@lineto@next{%
   \pgfutil@ifnextchar n{\tikz@collect@label@onpath\tikzext@tikz@hvh@lineto@next}
     {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikzext@tikz@hvh@lineto@next}%
@@ -207,7 +211,7 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\pgf@yc}}\pgf@xc\pgf@yc
   \begingroup
-    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@xb}{\tikz@lasty}}}%
       \iftikzext@tikz@hvvh@fromcenter
@@ -277,7 +281,7 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\pgf@xc}{\tikz@lasty}}\pgf@xc\pgf@yc
   \begingroup
-    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\tikz@lastx}{\pgf@yb}}}%
       \iftikzext@tikz@hvvh@fromcenter
@@ -348,8 +352,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/ud distance}}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/ud distance}}%
     \iftikz@shapeborder
       \advance\pgf@y1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -399,8 +403,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/du distance}}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/du distance}}%
     \iftikz@shapeborder
       \advance\pgf@y-1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -450,8 +454,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/ortho}{/tikz/style/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/lr distance}}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/lr distance}}%
     \iftikz@shapeborder
       \advance\pgf@x-1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -501,8 +505,8 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \pgfqkeys{/tikz/udlr}{/tikz/ortho/.expand once=\tikz@hvvh@currentoption}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ortho/rl distance}}%
+    \tikzextset{ortho/.expand once=\tikz@hvvh@currentoption}%
+    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/rl distance}}%
     \iftikz@shapeborder%
       \advance\pgf@x1pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -543,38 +547,38 @@
   \pgf@marshal}%
 
 %% a few nice to haves, use with to or edge operator
-\tikzset{
+\tikzextset{
   node as new start/.is if=tikzext@ortho@preflush,
   node as new start,
   ortho/install shortcuts/.style={
-    *|/.style={/tikz/only vertical   second={##1}}, *|/.default=,
-    |*/.style={/tikz/only vertical   first={##1}},  |*/.default=,
-    *-/.style={/tikz/only horizontal second={##1}}, *-/.default=,
-    -*/.style={/tikz/only horizontal first={##1}},  -*/.default=,
+    *|/.style={/tikz/ext/only vertical   second={##1}}, *|/.default=,
+    |*/.style={/tikz/ext/only vertical   first={##1}},  |*/.default=,
+    *-/.style={/tikz/ext/only horizontal second={##1}}, *-/.default=,
+    -*/.style={/tikz/ext/only horizontal first={##1}},  -*/.default=,
     |-/.style={/tikz/to path={|-(\tikztotarget)\tikztonodes}},
     -|/.style={/tikz/to path={-|(\tikztotarget)\tikztonodes}},
-    -|-/.style={/tikz/horizontal vertical horizontal={##1}}, -|-/.default=,
-    |-|/.style={/tikz/vertical   horizontal vertical={##1}}, |-|/.default=,
-    r-du/.style={/tikz/down horizontal up={##1}}, r-du/.default=,
-    r-ud/.style={/tikz/up horizontal down={##1}}, r-ud/.default=,
-    r-rl/.style={/tikz/right vertical left={##1}}, r-rl/.default=,
-    r-lr/.style={/tikz/left vertical right={##1}}, r-lr/.default=%
+    -|-/.style={/tikz/ext/horizontal vertical horizontal={##1}}, -|-/.default=,
+    |-|/.style={/tikz/ext/vertical   horizontal vertical={##1}}, |-|/.default=,
+    r-du/.style={/tikz/ext/down horizontal up={##1}}, r-du/.default=,
+    r-ud/.style={/tikz/ext/up horizontal down={##1}}, r-ud/.default=,
+    r-rl/.style={/tikz/ext/right vertical left={##1}}, r-rl/.default=,
+    r-lr/.style={/tikz/ext/left vertical right={##1}}, r-lr/.default=%
   },
-  horizontal vertical/.style={to path={-|(\tikztotarget)\tikztonodes}},
-  vertical horizontal/.style={to path={|-(\tikztotarget)\tikztonodes}},
+  horizontal vertical/.style={/tikz/to path={-|(\tikztotarget)\tikztonodes}},
+  vertical horizontal/.style={/tikz/to path={|-(\tikztotarget)\tikztonodes}},
   horizontal vertical horizontal/.default=,
-  horizontal vertical horizontal/.style={to path={-|-[{#1}](\tikztotarget)\tikztonodes}},
+  horizontal vertical horizontal/.style={/tikz/to path={-|-[{#1}](\tikztotarget)\tikztonodes}},
   vertical horizontal vertical/.default=,
-  vertical horizontal vertical/.style={to path={|-|[{#1}](\tikztotarget)\tikztonodes}},
+  vertical horizontal vertical/.style={/tikz/to path={|-|[{#1}](\tikztotarget)\tikztonodes}},
   right vertical left/.default=,
-  right vertical left/.style={to path={r-rl[{#1}](\tikztotarget)\tikztonodes]}},
+  right vertical left/.style={/tikz/to path={r-rl[{#1}](\tikztotarget)\tikztonodes]}},
   left vertical right/.default=,
-  left vertical right/.style={to path={r-lr[{#1}](\tikztotarget)\tikztonodes]}},
+  left vertical right/.style={/tikz/to path={r-lr[{#1}](\tikztotarget)\tikztonodes]}},
   up horizontal down/.default=,
-  up horizontal down/.style={to path={r-ud[{#1}](\tikztotarget)\tikztonodes]}},
+  up horizontal down/.style={/tikz/to path={r-ud[{#1}](\tikztotarget)\tikztonodes]}},
   down horizontal up/.default=,
-  down horizontal up/.style={to path={r-du[{#1}](\tikztotarget)\tikztonodes]}},
-  only vertical second/.style={to path={
+  down horizontal up/.style={/tikz/to path={r-du[{#1}](\tikztotarget)\tikztonodes]}},
+  only vertical second/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
@@ -602,7 +606,7 @@
         \ifx\tikzext@origtotarget\pgfutil@empty\else
           \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
   only vertical second/.default=,
-  only horizontal second/.style={to path={
+  only horizontal second/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
@@ -630,7 +634,7 @@
       \ifx\tikzext@origtotarget\pgfutil@empty\else
         \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
   only horizontal second/.default=,
-  only vertical first/.style={to path={
+  only vertical first/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
@@ -660,7 +664,7 @@
       \ifx\tikzext@origtotarget\pgfutil@empty\else
         \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
   only vertical first/.default=,
-  only horizontal first/.style={to path={
+  only horizontal first/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@ortho@anchor\pgfutil@empty
       \let\tikzext@origtotarget\pgfutil@empty
@@ -689,19 +693,51 @@
       \ifx\tikzext@origtotarget\pgfutil@empty\else
         \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
   only horizontal first/.default=,
-  only vertical first to center/.style={to path={
+  only vertical first to center/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@origtotarget\tikztotarget
     \endpgfextra
     (\tikztostart) -- (perpendicular cs: vertical line through={(\tikztostart)},
                                          horizontal line through={(\tikztotarget)})
     \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}},
-  only horizontal first to center/.style={to path={
+  only horizontal first to center/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@origtotarget\tikztotarget
     \endpgfextra
     (\tikztostart) -- (perpendicular cs: horizontal line through={(\tikztostart)},
                                          vertical line through={(\tikztotarget)})
     \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}}%
+}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={paths.ortho}{pre 0.6},
+  compat/paths.ortho/warn/.append code={%
+    \pgfutil@for\tikzext@temp:=ratio,distance,from center,spacing,middle 0 to 1,%
+      ud distance,du distance,lr distance,rl distance,udlr distance,%
+      horizontal vertical,vertical horizontal,horizontal vertical horizontal,%
+      vertical horizontal vertical,up horizontal down,down horizontal up,%
+      left vertical right,right vertical left,only vertical second,%
+      only horizontal second,only vertical first,only horizontal first,%
+      install shortcuts\do{%
+      \pgfkeys@expanded{\noexpand\tikzextutil@compatwarning@key
+        {paths.ortho}{pre 0.6}{/tikz/ortho/\tikzext@temp}{/tikz/ext/ortho/\tikzext@temp}%
+      }%
+    }%
+  },
+  compat/paths.ortho/pre 0.6/.append code={%
+    \pgfutil@for\tikzext@temp:=ratio,distance,from center,spacing,middle 0 to 1,%
+        ud distance,du distance,lr distance,rl distance,udlr distance,%
+        horizontal vertical,vertical horizontal,horizontal vertical horizontal,%
+        vertical horizontal vertical,up horizontal down,down horizontal up,%
+        left vertical right,right vertical left,only vertical second,%
+        only horizontal second,only vertical first,only horizontal first,%
+        install shortcuts\do{%
+      \pgfkeysedef{/tikz/ortho/\tikzext@temp}{%
+        \noexpand\pgfkeysvalueof{/tikz/ext/ortho/\tikzext@temp/.@cmd}##1\noexpand\pgfeov
+      }%
+    }%
+  },
+  compat/paths.ortho/\pgfkeysvalueof{/tikz/ext/compat/paths.ortho}%
 }
 \endinput
