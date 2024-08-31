@@ -58,10 +58,14 @@ so that the first doesn't need to be parsed.
   Returns \texttt{\tikzextversionnumber}.
 \end{command}
 %
-Also starting from version 0.6, there's \texttt{\textbackslash tikzextset}.
+Also starting from version 0.6, there's |\tikzextset| and |\pgfextset|.
 \begin{command}{\tikzextset\marg{options}}
   This command will process the \meta{options} using the
   |\pgfkeys| command with the default path set to |/tikz/ext|.
+\end{command}
+\begin{command}{\pgfextset\marg{options}}
+  This command will process the \meta{options} using the
+  |\pgfkeys| command with the default path set to |/pgf/ext|.
 \end{command}
 
 \newcolumn
@@ -99,6 +103,7 @@ that do not appear in this manual are considered deprecated.
     paths.ortho                                          & \Xdef &   \X    & --  &   --   \\
     paths.timer                                          & \Xdef &   \X    & --  &   --   \\
     scalepicture                                         & \Xdef &   \X    & --  &   --   \\
+    shapes                                               & \Xdef &   \X    & --  &   --   \\
     transformations.mirror                               & \Xdef &   \X    & --  &   --   \\
     topaths.arcthrough                                   & \Xdef &   \X    & --  &   --   \\ \bottomrule
   \end{tabular}
@@ -118,6 +123,7 @@ after the extension is loaded.
   paths.ortho=\meta{version} (default pre 0.6),
   paths.timer=\meta{version} (default pre 0.6),
   scalepicture=\meta{version} (default pre 0.6),
+  shapes=\meta{version} (default pre 0.6),
   transformations.mirror=\meta{version} (default pre 0.6),
   topaths.arcthrough=\meta{version} (default pre 0.6)%
 }

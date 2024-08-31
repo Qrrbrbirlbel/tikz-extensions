@@ -50,7 +50,7 @@
 \tableofcontents
 }
 \include{tikz-ext-manual-en-intro}
-
+%
 \part{\tikzname\space Libraries}
 \label{part:tikz}
 
@@ -72,6 +72,7 @@ These libraries only work with \tikzname.
   level 4/.style={sibling angle=45},
   nodes={circle,draw,inner sep=+0pt, minimum size=+5pt},
   ]
+
 \path[rotate=30]
   node {}
   child foreach \cntI in {1,...,3} {
@@ -108,7 +109,7 @@ These libraries only work with \tikzname.
 \include{tikz-ext-manual-en-library-topaths.autobend}
 \tikzsetfigurename{trans}
 \include{tikz-ext-manual-en-library-trans}
-
+%
 \part{\pgfname\space Libraries}
 \label{part:pgf}
 These libraries (should) work with both \pgfname\space and \tikzname.
@@ -196,7 +197,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \tikzsetfigurename{misc.pgffor}\include{tikz-ext-manual-en-library-pgffor}
 \tikzsetfigurename{misc.misc}\include{tikz-ext-manual-en-library-misc}
 
-%%% END
+%% END
 \newcommand*{\addPackage}[1]{Added package \texttt{#1-ext}.}
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}

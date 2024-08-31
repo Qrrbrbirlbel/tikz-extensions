@@ -6,17 +6,21 @@
 % 2. under the GNU Free Documentation License.
 %
 \usepgflibrary{shapes.geometric,intersections}
-\pgfset{
+\unless\ifcsname pgfextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\pgfextset{
   superellipse x exponent/.initial=2.5,
   superellipse y exponent/.initial=2.5,
   superellipse step/.initial=4,
-  superellipse exponent/.style={/pgf/superellipse x exponent={#1},/pgf/superellipse y exponent={#1}}}
+  superellipse exponent/.style={/pgf/ext/superellipse x exponent={#1},/pgf/ext/superellipse y exponent={#1}}}
 
 % Evaluates the x-value of a superellipse around the center
 % #1 = t (0≤t≤90)
 % #2 = 2/m (x-exp)
 % #3 = a (x-rad)
-\pgfmathdeclarefunction{superellipsex}{3}{%
+\pgfmathdeclarefunction{extsuperellipsex}{3}{%
   \pgfmathcos@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
@@ -25,7 +29,7 @@
 % #1 = t (0≤t≤90)
 % #2 = 2/n (y-exp)
 % #3 = a (y-rad)
-\pgfmathdeclarefunction{superellipsey}{3}{%
+\pgfmathdeclarefunction{extsuperellipsey}{3}{%
   \pgfmathsin@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
@@ -36,17 +40,17 @@
 % #3 = 2/n (y-exp)
 % #4 = a (x-rad)
 % #5 = b (y-rad)
-\def\pgfmathsuperellipseXY#1#2#3#4#5{%
+\def\pgfextmathsuperellipseXY#1#2#3#4#5{%
   \begingroup
-    \pgfmathsuperellipsex@{#1}{#2}{#4}%
+    \pgfmathextsuperellipsex@{#1}{#2}{#4}%
     \let\pgfmath@temp\pgfmathresult
-    \pgfmathsuperellipsey@{#1}{#3}{#5}%
+    \pgfmathextsuperellipsey@{#1}{#3}{#5}%
     \edef\pgfmath@temp{\def\noexpand\pgfmathresultX{\pgfmath@temp}%
                        \def\noexpand\pgfmathresultY{\pgfmathresult}}%
     \expandafter
   \endgroup\pgfmath@temp}
 
-\pgfdeclareshape{superellipse}{%
+\pgfdeclareshape{ext_superellipse}{%
   \inheritsavedanchors[from=ellipse]
   \inheritanchor[from=ellipse]{text}\inheritanchor[from=ellipse]{center}
   \inheritanchor[from=ellipse]{mid}\inheritanchor[from=ellipse]{base}
@@ -87,17 +91,17 @@
     \pgfpointadd{}{\centerpoint}%
   }
   \savedmacro\xexponent{%
-    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/superellipse x exponent}}%
+    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/ext/superellipse x exponent}}%
     \pgfmathmultiply@{\pgfmathresult}{2}%
     \let\xexponent\pgfmathresult
   }
   \savedmacro\yexponent{%
-    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/superellipse y exponent}}%
+    \pgfmathreciprocal{\pgfkeysvalueof{/pgf/ext/superellipse y exponent}}%
     \pgfmathmultiply@{\pgfmathresult}{2}%
     \let\yexponent\pgfmathresult
   }
   \savedmacro\step{%
-    \pgfmathtruncatemacro\step{\pgfkeysvalueof{/pgf/superellipse step}}%
+    \pgfmathtruncatemacro\step{\pgfkeysvalueof{/pgf/ext/superellipse step}}%
   }
   \backgroundpath{%
     \pgf@process{\radius}%
@@ -108,15 +112,15 @@
     \c@pgf@counta=\step
     \pgfutil@loop
     \ifnum\c@pgf@counta<90
-      \pgfmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
+      \pgfextmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{\pgfmathresultY pt}}}%
       \pgfutil@append@macrotomacro\pgf@tempa\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{\pgfmathresultY pt}}}%
-      \pgfutil@prefix@macrotomacro\pgf@tempb\pgf@temp
+      \tikzextutil@prefix@macrotomacro\pgf@tempb\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{-\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
       \pgfutil@append@macrotomacro\pgf@tempc\pgf@temp
       \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{-\pgfmathresultY pt}}}%
-      \pgfutil@prefix@macrotomacro\pgf@tempd\pgf@temp
+      \tikzextutil@prefix@macrotomacro\pgf@tempd\pgf@temp
       \advance\c@pgf@counta by\step
     \pgfutil@repeat
     \pgftransformshift{\centerpoint}%
@@ -136,10 +140,18 @@
   \anchorborder{%
     \pgfextract@process\externalpoint{}%
     \ifdim\pgf@x=0pt % catch special case x = 0
-      \ifdim\pgf@y<0pt \pgf@anchor@superellipse@south\else\pgf@anchor@superellipse@north\fi
+      \ifdim\pgf@y<0pt
+        \csname pgf@anchor@ext_superellipse@south\endcsname
+      \else
+        \csname pgf@anchor@ext_superellipse@north\endcsname
+      \fi
     \else
       \ifdim\pgf@y=0pt % catch special case y = 0
-        \ifdim\pgf@x<0pt \pgf@anchor@superellipse@west\else\pgf@anchor@superellipse@east\fi
+        \ifdim\pgf@x<0pt
+          \csname pgf@anchor@ext_superellipse@west\endcsname
+        \else
+          \csname pgf@anchor@ext_superellipse@east\endcsname
+        \fi
       \else % both are not zero
         % save original direction
         \pgf@xa=\pgf@x
@@ -166,7 +178,7 @@
           \c@pgf@counta=\step
           \pgfutil@loop
           \ifnum\c@pgf@counta<90
-            \pgfmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
+            \pgfextmathsuperellipseXY{\the\c@pgf@counta}{\xexponent}{\yexponent}{\xradius}{\yradius}%
             \edef\pgf@temp{\noexpand\pgfplotstreampoint{\noexpand\pgfqpoint{\pgfmathresultX pt}{\pgfmathresultY pt}}}%
             \pgfutil@append@macrotomacro\pgf@tempa\pgf@temp
             \advance\c@pgf@counta by\step
@@ -192,7 +204,30 @@
     \fi
   }
 }
-\def\pgfutil@prefix@macrotomacro#1#2{%
-    \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter%
-        #1\expandafter\expandafter\expandafter{\expandafter#2#1}}
+%%% Compatibility
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\tikzextset{
+  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.superellipse/warn,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.superellipse/pre 0.6,
+  compat/shapes.superellipse/warn/.code={%
+    \tikzextutil@compatwarning@key     {shapes}{pre 0.6}{/pgf/superellipse exponent}  {/pgf/ext/superellipse exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse x exponent}{/pgf/ext/superellipse x exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse y exponent}{/pgf/ext/superellipse y exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse step}      {/pgf/ext/superellipse step}%
+    \tikzextutil@compat@cloneshape{superellipse}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'superellipse'}{'ext_superellipse'}{shapes = pre 0.6}}%
+    \tikzextutil@prefix@macrotomacro\pgf@sh@s@superellipse\tikzext@temp
+  },
+  compat/shapes.superellipse/pre 0.6/.code={%
+    \pgfkeysdef{/pgf/superellipse exponent}{\pgfkeysvalueof{/pgf/ext/superellipse exponent/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/pgf/superellipse x exponent}{\pgfkeyssetvalue{/pgf/ext/superellipse x exponent}{##1}}%
+    \pgfkeysdef{/pgf/superellipse y exponent}{\pgfkeyssetvalue{/pgf/ext/superellipse y exponent}{##1}}%
+    \pgfkeysdef{/pgf/superellipse steps}{\pgfkeyssetvalue{/pgf/ext/superellipse steps}{##1}}%
+    \pgfkeyssetvalue{/pgf/superellipse x exponent}{\pgfkeysvalueof{/pgf/ext/superellipse x exponent}}%
+    \pgfkeyssetvalue{/pgf/superellipse y exponent}{\pgfkeysvalueof{/pgf/ext/superellipse y exponent}}%
+    \pgfkeyssetvalue{/pgf/superellipse step}      {\pgfkeysvalueof{/pgf/ext/superellipse step}}%
+    \tikzextutil@compat@cloneshape{superellipse}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
+  },
+  compat/shapes.superellipse/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+}
 \endinput

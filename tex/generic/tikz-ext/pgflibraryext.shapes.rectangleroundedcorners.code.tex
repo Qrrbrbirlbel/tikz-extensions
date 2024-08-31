@@ -1,15 +1,26 @@
-\pgfset{
+% Copyright 2022 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+\unless\ifcsname pgfextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\pgfextset{
   rectangle with rounded corners north west radius/.initial=.5\pgflinewidth,
   rectangle with rounded corners north east radius/.initial=.5\pgflinewidth,
   rectangle with rounded corners south west radius/.initial=.5\pgflinewidth,
   rectangle with rounded corners south east radius/.initial=.5\pgflinewidth,
   rectangle with rounded corners radius/.style={
-    /pgf/rectangle with rounded corners north west radius={#1},
-    /pgf/rectangle with rounded corners north east radius={#1},
-    /pgf/rectangle with rounded corners south west radius={#1},
-    /pgf/rectangle with rounded corners south east radius={#1}}
+    /pgf/ext/rectangle with rounded corners north west radius={#1},
+    /pgf/ext/rectangle with rounded corners north east radius={#1},
+    /pgf/ext/rectangle with rounded corners south west radius={#1},
+    /pgf/ext/rectangle with rounded corners south east radius={#1}}
 }%
-\pgfdeclareshape{rectangle with rounded corners}{%
+\pgfdeclareshape{ext_rectangle with rounded corners}{%
   \savedmacro\rectanglewithroundedcornersparameter{%
     %
     % width = max(text width + 2 * inner xseps, minimum width) + 2 * outer xseps
@@ -54,10 +65,10 @@
     \pgfextract@process\centerpoint{}%
     \addtosavedmacro\centerpoint
     %
-    \pgfmathsetlengthmacro\northwestradius{\pgfkeysvalueof{/pgf/rectangle with rounded corners north west radius}}
-    \pgfmathsetlengthmacro\northeastradius{\pgfkeysvalueof{/pgf/rectangle with rounded corners north east radius}}
-    \pgfmathsetlengthmacro\southwestradius{\pgfkeysvalueof{/pgf/rectangle with rounded corners south west radius}}
-    \pgfmathsetlengthmacro\southeastradius{\pgfkeysvalueof{/pgf/rectangle with rounded corners south east radius}}
+    \pgfmathsetlengthmacro\northwestradius{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners north west radius}}
+    \pgfmathsetlengthmacro\northeastradius{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners north east radius}}
+    \pgfmathsetlengthmacro\southwestradius{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners south west radius}}
+    \pgfmathsetlengthmacro\southeastradius{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners south east radius}}
     \addtosavedmacro\northwestradius
     \addtosavedmacro\northeastradius
     \addtosavedmacro\southwestradius
@@ -93,11 +104,11 @@
     \pgfmathsetlength\pgf@y{+.5ex}%
   }
   \anchor{mid west}{%
-    \csname pgf@anchor@rectangle with rounded corners@west\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@west\endcsname
     \pgfmathsetlength\pgf@y{+.5ex}%
   }
   \anchor{mid east}{%
-    \csname pgf@anchor@rectangle with rounded corners@east\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@east\endcsname
     \pgfmathsetlength\pgf@y{+.5ex}%
   }
   \anchor{base}{%
@@ -106,15 +117,15 @@
     \pgf@y=0pt
   }
   \anchor{base west}{%
-    \csname pgf@anchor@rectangle with rounded corners@west\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@west\endcsname
     \pgf@y=0pt
   }
   \anchor{base east}{%
-    \csname pgf@anchor@rectangle with rounded corners@east\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@east\endcsname
     \pgf@y=0pt
   }
   \anchor{north west}{%
-    \csname pgf@anchor@rectangle with rounded corners@north west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north west center\endcsname
     \ifdim\northwestradius=0pt
     \else
       \pgf@process{\pgfpointadd{}{\pgfpointpolar{135}{\northwestradius+\outerxsep and \northwestradius+\outerysep}}}%
@@ -134,7 +145,7 @@
     \pgf@process{\pgfpointadd{}{\centerpoint}}%
   }
   \anchor{north east}{%
-    \csname pgf@anchor@rectangle with rounded corners@north east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north east center\endcsname
     \ifdim\northeastradius=0pt
     \else
       \pgf@process{\pgfpointadd{}{\pgfpointpolar{45}{\northeastradius+\outerxsep and \northeastradius+\outerysep}}}%
@@ -154,7 +165,7 @@
     \pgf@process{\pgfpointadd{}{\centerpoint}}%
   }
   \anchor{south west}{%
-    \csname pgf@anchor@rectangle with rounded corners@south west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south west center\endcsname
     \ifdim\southwestradius=0pt
     \else
       \pgf@process{\pgfpointadd{}{\pgfpointpolar{225}{\southwestradius+\outerxsep and \southwestradius+\outerysep}}}%
@@ -174,7 +185,7 @@
     \pgf@process{\pgfpointadd{}{\centerpoint}}%
   }
   \anchor{south east}{%
-    \csname pgf@anchor@rectangle with rounded corners@south east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south east center\endcsname
     \ifdim\southeastradius=0pt
     \else
       \pgf@process{\pgfpointadd{}{\pgfpointpolar{315}{\southeastradius+\outerxsep and \southeastradius+\outerysep}}}%
@@ -194,42 +205,42 @@
     \pgf@process{\pgfpointadd{}{\centerpoint}}%
   }
   \anchor{below north west}{%
-    \csname pgf@anchor@rectangle with rounded corners@north west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north west center\endcsname
     \advance\pgf@x by -\northwestradius
     \advance\pgf@x by -\outerxsep
   }
   \anchor{above south west}{%
-    \csname pgf@anchor@rectangle with rounded corners@south west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south west center\endcsname
     \advance\pgf@x by -\southwestradius
     \advance\pgf@x by -\outerxsep
   }
   \anchor{below north east}{%
-    \csname pgf@anchor@rectangle with rounded corners@north east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north east center\endcsname
     \advance\pgf@x by \northeastradius
     \advance\pgf@x by \outerxsep
   }
   \anchor{above south east}{%
-    \csname pgf@anchor@rectangle with rounded corners@south east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south east center\endcsname
     \advance\pgf@x by \southeastradius
     \advance\pgf@x by \outerxsep
   }
   \anchor{right north west}{%
-    \csname pgf@anchor@rectangle with rounded corners@north west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north west center\endcsname
     \advance\pgf@y by \northwestradius
     \advance\pgf@y by \outerysep
   }
   \anchor{right south west}{%
-    \csname pgf@anchor@rectangle with rounded corners@south west center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south west center\endcsname
     \advance\pgf@y by -\southwestradius
     \advance\pgf@y by -\outerysep
   }
   \anchor{left north east}{%
-    \csname pgf@anchor@rectangle with rounded corners@north east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@north east center\endcsname
     \advance\pgf@y by \northeastradius
     \advance\pgf@y by \outerysep
   }
   \anchor{left south east}{%
-    \csname pgf@anchor@rectangle with rounded corners@south east center\endcsname
+    \csname pgf@anchor@ext_rectangle with rounded corners@south east center\endcsname
     \advance\pgf@y by -\southeastradius
     \advance\pgf@y by -\outerysep
   }
@@ -262,16 +273,16 @@
     \pgfextract@process\externalpoint{}%
     \ifdim\pgf@x=0pt
       \ifdim\pgf@y<0pt
-        \csname pgf@anchor@rectangle with rounded corners@south\endcsname
+        \csname pgf@anchor@ext_rectangle with rounded corners@south\endcsname
       \else
-        \csname pgf@anchor@rectangle with rounded corners@north\endcsname
+        \csname pgf@anchor@ext_rectangle with rounded corners@north\endcsname
       \fi
     \else
       \ifdim\pgf@y=0pt
         \ifdim\pgf@x<0pt
-          \csname pgf@anchor@rectangle with rounded corners@west\endcsname
+          \csname pgf@anchor@ext_rectangle with rounded corners@west\endcsname
         \else
-          \csname pgf@anchor@rectangle with rounded corners@east\endcsname
+          \csname pgf@anchor@ext_rectangle with rounded corners@east\endcsname
         \fi
       \else
         \rectanglewithroundedcornersparameter
@@ -283,36 +294,64 @@
         \ifdim\pgf@xa<0pt
           \ifdim\pgf@ya<0pt
             % south west
-            \pgf@sh@rwrc@anchorborder{above south west}{right south west}{south west}{180}{270}{\southwestradius}%
+            \pgfext@sh@rwrc@anchorborder{above south west}{right south west}{south west}{180}{270}{\southwestradius}%
           \else
             % north west
-            \pgf@sh@rwrc@anchorborder{right north west}{below north west}{north west}{90}{180}{\northwestradius}%
+            \pgfext@sh@rwrc@anchorborder{right north west}{below north west}{north west}{90}{180}{\northwestradius}%
           \fi
         \else
           \ifdim\pgf@ya<0pt
             % south east
-            \pgf@sh@rwrc@anchorborder{left south east}{above south east}{south east}{270}{360}{\southeastradius}%
+            \pgfext@sh@rwrc@anchorborder{left south east}{above south east}{south east}{270}{360}{\southeastradius}%
           \else
             % north east
-            \pgf@sh@rwrc@anchorborder{below north east}{left north east}{north east}{0}{90}{\northeastradius}%
+            \pgfext@sh@rwrc@anchorborder{below north east}{left north east}{north east}{0}{90}{\northeastradius}%
           \fi
         \fi
       \fi
     \fi
   }
 }
-\def\pgf@sh@rwrc@anchorborder#1#2#3#4#5#6{%
-  \pgfmathanglebetweenpoints{\centerpoint}{\csname pgf@anchor@rectangle with rounded corners@#1\endcsname}%
+\def\pgfext@sh@rwrc@anchorborder#1#2#3#4#5#6{%
+  \pgfmathanglebetweenpoints{\centerpoint}{\csname pgf@anchor@ext_rectangle with rounded corners@#1\endcsname}%
   \let\angleA\pgfmathresult
-  \pgfmathanglebetweenpoints{\centerpoint}{\csname pgf@anchor@rectangle with rounded corners@#2\endcsname}%
+  \pgfmathanglebetweenpoints{\centerpoint}{\csname pgf@anchor@ext_rectangle with rounded corners@#2\endcsname}%
   \let\angleB\pgfmathresult
   \if\ifdim\angle pt>\angleA pt 0\else1\fi\ifdim\angle pt<\angleB pt 0\else 2\fi
     \pgfmathpointintersectionoflineandarc{\externalPoint}{\centerpoint}
-      {\csname pgf@anchor@rectangle with rounded corners@#3 center\endcsname}
+      {\csname pgf@anchor@ext_rectangle with rounded corners@#3 center\endcsname}
       {#4}{#5}{#6+\outerxsep and #6+\outerysep}%
   \else
     \pgf@process{\pgfpointadd{\pgfpointborderrectangle{\externalpoint}{\pgfqpoint{\halfwidth}{\halfheight}}}{\centerpoint}}%
   \fi
 }
-
+%%% Compatibility
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\tikzextset{
+  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.rectangleroundedcorners/warn,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.rectangleroundedcorners/pre 0.6,
+  compat/shapes.rectangleroundedcorners/warn/.code={%
+    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/rectangle with rounded corners radius}{/pgf/ext/rectangle with rounded corners radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners north west radius}{/pgf/ext/rectangle with rounded corners north west radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners north east radius}{/pgf/ext/rectangle with rounded corners north east radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners south west radius}{/pgf/ext/rectangle with rounded corners south west radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners south east radius}{/pgf/ext/rectangle with rounded corners south east radius}%
+    \tikzextutil@compat@cloneshape{rectangle with rounded corners}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,below north west,right north west,left north east,below north east,above south east,left south east,right south west,above south west,north west center,north east center,south east center,south west center}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'rectangle with rounded corners'}{'ext_rectangle with rounded corners'}{shapes = pre 0.6}}%
+    \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@rectangle with rounded corners\endcsname\tikzext@temp
+  },
+  compat/shapes.rectangleroundedcorners/pre 0.6/.code={%
+    \pgfkeysdef{/pgf/rectangle with rounded corners radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners radius/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/pgf/rectangle with rounded corners north west radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners north west radius}{##1}}%
+    \pgfkeysdef{/pgf/rectangle with rounded corners north east radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners north east radius}{##1}}%
+    \pgfkeysdef{/pgf/rectangle with rounded corners south west radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners south west radius}{##1}}%
+    \pgfkeysdef{/pgf/rectangle with rounded corners south east radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners south east radius}{##1}}%
+    \pgfkeyssetvalue{/pgf/rectangle with rounded corners north west radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners north west radius}}%
+    \pgfkeyssetvalue{/pgf/rectangle with rounded corners north east radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners north east radius}}%
+    \pgfkeyssetvalue{/pgf/rectangle with rounded corners south west radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners south west radius}}%
+    \pgfkeyssetvalue{/pgf/rectangle with rounded corners south east radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners south east radius}}%
+    \tikzextutil@compat@cloneshape{rectangle with rounded corners}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,below north west,right north west,left north east,below north east,above south east,left south east,right south west,above south west,north west center,north east center,south east center,south west center}%
+  },
+  compat/shapes.rectangleroundedcorners/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+}
 \endinput

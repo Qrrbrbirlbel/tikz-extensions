@@ -9,6 +9,7 @@
 \def\tikzextversion{0.6}
 \def\tikzextversionnumber{8}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
+\def\pgfextset{\pgfqkeys{/pgf/ext}}
 \gdef\tikzextutil@compatwarning@counter{0}
 \def\tikzextutil@compatmaybewarning#1#2#3{%
   \ifnum\tikzextutil@compatwarning@counter<25
@@ -70,6 +71,7 @@
       % Old TikZ-Ext key simply will not work.
     }{%
       % The key is currently not used.
+      \pgfkeyssetvalue{#3}{\pgfkeysvalueof{#4}}%
       \pgfkeysdef{#3}{%
         \tikzextutil@compatmaybewarning{value-key '#3'}{'#4'}{#1 = #2}%
         \pgfkeyssetvalue{#4}{##1}%
@@ -77,10 +79,24 @@
     }
   }
 }
+\def\tikzextutil@compat@cloneshape#1#2{%
+  \pgfutil@namelet{pgf@sh@s@#1}{pgf@sh@s@ext_#1}%
+  \def\tikzext@temp{\edef\pgf@sm@shape@name{ext_#1}}%
+  \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@#1\endcsname\tikzext@temp
+  \pgfutil@namelet{pgf@anchor@#1@border}{pgf@anchor@ext_#1@border}%
+  \pgfutil@namelet{pgf@sh@boxes@#1}{pgf@sh@boxes@ext_#1}%
+  \pgfutil@for\tikzext@temp:=#2\do{%
+    \pgfutil@namelet{pgf@anchor@#1@\tikzext@temp}{pgf@anchor@ext_#1@\tikzext@temp}}%
+  \pgfutil@for\tikzext@temp:=bbg,bg,fbg,fg,ffg\do{%
+    \pgfutil@namelet{pgf@sh@\tikzext@temp @#1}{pgf@sh@\tikzext@temp @ext_#1}}}
+\pgfextset{
+  pgf/.code=\pgfset{#1},
+  .code=\pgfextset{#1}%
+}
 \tikzextset{
   tikz/.code=\tikzset{#1},
-  pgf/.code=\pgfset{#1},
   .code=\tikzextset{#1},
+  .search also={/pgf/ext,/pgf},
   %
   compat/.is choice, compat/.default=warn,
   /tikz-ext/compat/add library/.code 2 args={%
@@ -111,6 +127,7 @@
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfcalendar-ext}       {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/shapes}                {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/topaths.arcthrough}    {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
   }%
@@ -124,4 +141,7 @@
   \expandafter\expandafter\expandafter#1%
   \expandafter\expandafter\expandafter{\expandafter\tikzext@temp#1}%
 }
+\def\tikzextutil@prefix@macrotomacro#1#2{%
+  \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter%
+    #1\expandafter\expandafter\expandafter{\expandafter#2#1}}
 \endinput

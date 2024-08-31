@@ -12,50 +12,50 @@
   A circular shape named |circle arrow| that has an arc as its background path that can have an arrow tip.
   \inspiration{ShapeCircleArrow-Q}{ShapeCircleArrow-A}
 \end{pgflibrary}
-\begin{shape}{circle arrow}
+\begin{ext_shape}{circle arrow}
   This shape is an arrow whose path is an arc -- defined very similar to the |arc|%
   \indexPathOperationO{arc} path operation -- that can possibly be customized with
   arrow tips.
   
-  \begin{key}{/pgf/circle arrow start angle=\meta{start angle} (initially \{\})}
+  \begin{key}{/\pgfext/circle arrow start angle=\meta{start angle} (initially \{\})}\keycompat{pgf}
   Sets the start angle.
   \end{key}
-  \begin{key}{/pgf/circle arrow end angle=\meta{end angle} (initially \{\})}
+  \begin{key}{/\pgfext/circle arrow end angle=\meta{end angle} (initially \{\})}\keycompat{pgf}
   Sets the end angle.
   \end{key}
-  \begin{key}{/pgf/circle arrow delta angle=\meta{delta angle} (initially \{\})}
+  \begin{key}{/\pgfext/circle arrow delta angle=\meta{delta angle} (initially \{\})}\keycompat{pgf}
   Sets the delta angle.
   \end{key}
-  \begin{key}{/pgf/circle arrow arrows=%
-    \meta{start arrow tip specification}-\meta{end arrow tip specification} (initially -)}
+  \begin{key}{/\pgfext/circle arrow arrows=%
+    \meta{start arrow tip specification}-\meta{end arrow tip specification} (initially -)}\keycompat{pgf}
   The specification will be forwarded to |\pgfsetarrows|\indexCommandO{\pgfsetarrows}.
   \end{key}
   
   A few handful styles are pre-defined.
-  \begin{key}{/pgf/circle arrow turn left north}
+  \begin{key}{/\pgfext/circle arrow turn left north}\keycompat{pgf}
   Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
   and |circle arrow arrows = ->|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn left east}
+  \begin{key}{/\pgfext/circle arrow turn left east}\keycompat{pgf}
   As above but |circle arrow start angle = 10|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn left west}
+  \begin{key}{/\pgfext/circle arrow turn left west}\keycompat{pgf}
   As above but |circle arrow start angle = 280|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn left south}
+  \begin{key}{/\pgfext/circle arrow turn left south}\keycompat{pgf}
   As above but |circle arrow start angle = 190|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn right north}
+  \begin{key}{/\pgfext/circle arrow turn right north}\keycompat{pgf}
   Sets |circle arrow start angle = 100|, |circle arrow delta angle = 340|
   and |circle arrow arrows = <-|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn right east}
+  \begin{key}{/\pgfext/circle arrow turn right east}\keycompat{pgf}
   As above but |circle arrow start angle = 10|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn right west}
+  \begin{key}{/\pgfext/circle arrow turn right west}\keycompat{pgf}
   As above but |circle arrow start angle = 280|.
   \end{key}
-  \begin{key}{/pgf/circle arrow turn right south}
+  \begin{key}{/\pgfext/circle arrow turn right south}\keycompat{pgf}
   As above but |circle arrow start angle = 190|.
   \end{key}
 
@@ -65,20 +65,20 @@
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow,matrix}]
 \begin{tikzpicture}
 \matrix[matrix of nodes, draw=none, row sep=1em, column sep=1em,
-  every node/.style={draw=gray, shape=circle arrow, ultra thick, inner sep=1em}
+  every node/.style={draw=gray, shape=ext_circle arrow, ultra thick, inner sep=1em}
 ] (m) {
-  |[circle arrow turn left north]|  & |[circle arrow turn left east]|   \\
-  |[circle arrow turn left west]|   & |[circle arrow turn left south]|  \\
-  |[circle arrow turn right north]| & |[circle arrow turn right east]|  \\
-  |[circle arrow turn right west]|  & |[circle arrow turn right south]| \\
+  |[ext/circle arrow turn left north]|  & |[ext/circle arrow turn left east]|   \\
+  |[ext/circle arrow turn left west]|   & |[ext/circle arrow turn left south]|  \\
+  |[ext/circle arrow turn right north]| & |[ext/circle arrow turn right east]|  \\
+  |[ext/circle arrow turn right west]|  & |[ext/circle arrow turn right south]| \\
 };
 \end{tikzpicture}
 \end{codeexample}
 \endgroup
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.circlearrow},width=16cm]
 \begin{tikzpicture}\Huge
-\node[name=s, shape=circle arrow,
-  circle arrow turn left west, shape example]
+\node[name=s, shape=ext_circle arrow,
+  ext/circle arrow turn left west, shape example]
   {Circle Arrow\vrule width 1pt height 2cm};
 \foreach \anchor/\placement in
   {north west/above left, north/above,
@@ -93,5 +93,5 @@
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
-\end{shape}
+\end{ext_shape}
 \endinput

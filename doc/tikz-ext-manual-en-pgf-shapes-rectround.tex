@@ -13,32 +13,32 @@
   A rectangle with rounded corners.
 \end{pgflibrary}
 
-\begin{shape}{rectangle with rounded corners}
+\begin{ext_shape}{rectangle with rounded corners}
 This library provides a |rectangle with rounded corners| where every corner can have a different radius.
 
-\begin{key}{/pgf/rectangle with rounded corners north west radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+\begin{key}{/\pgfext/rectangle with rounded corners north west radius=\meta{dimen} (initially .5\string\pgflinewidth)}\keycompat{pgf}
   Sets the north west radius to \meta{dimen}.
 \end{key}
-\begin{key}{/pgf/rectangle with rounded corners north east radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+\begin{key}{/\pgfext/rectangle with rounded corners north east radius=\meta{dimen} (initially .5\string\pgflinewidth)}\keycompat{pgf}
   Sets the north east radius to \meta{dimen}.
 \end{key}
-\begin{key}{/pgf/rectangle with rounded corners south west radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+\begin{key}{/\pgfext/rectangle with rounded corners south west radius=\meta{dimen} (initially .5\string\pgflinewidth)}\keycompat{pgf}
   Sets the south west radius to \meta{dimen}.
 \end{key}
-\begin{key}{/pgf/rectangle with rounded corners south east radius=\meta{dimen} (initially .5\string\pgflinewidth)}
+\begin{key}{/\pgfext/rectangle with rounded corners south east radius=\meta{dimen} (initially .5\string\pgflinewidth)}\keycompat{pgf}
   Sets the south east radius to \meta{dimen}.
 \end{key}
-\begin{key}{/pgf/rectangle with rounded corners radius=\meta{dimen}}
+\begin{key}{/\pgfext/rectangle with rounded corners radius=\meta{dimen}}\keycompat{pgf}
   Sets all radii to \meta{dimen}.
 \end{key}
 
 \begin{codeexample}[preamble=\usepgflibrary{ext.shapes.rectangleroundedcorners}]
 \begin{tikzpicture}\Huge
-\node[name=s, shape=rectangle with rounded corners, shape example,
-  rectangle with rounded corners north west radius=10pt,
-  rectangle with rounded corners north east radius=20pt,
-  rectangle with rounded corners south west radius=30pt,
-  rectangle with rounded corners south east radius=40pt] {Rectangle with rounded corners\vrule width 1pt height 2cm};
+\node[name=s, shape=ext_rectangle with rounded corners, shape example,
+  ext/rectangle with rounded corners north west radius=10pt,
+  ext/rectangle with rounded corners north east radius=20pt,
+  ext/rectangle with rounded corners south west radius=30pt,
+  ext/rectangle with rounded corners south east radius=40pt] {Rectangle with rounded corners\vrule width 1pt height 2cm};
 \foreach \anchor/\placement in
   {north west/above left, north/above, north east/above right,
          west/left,      center/above,       east/right,
@@ -54,5 +54,5 @@ This library provides a |rectangle with rounded corners| where every corner can 
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
-\end{shape}
+\end{ext_shape}
 \endinput

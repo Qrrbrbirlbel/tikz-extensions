@@ -7,15 +7,15 @@
 %
 \usepgflibrary{ext.shapes.uncenteredrectangle}
 \newif\iftikzext@uncrec@mathmode
-\pgfqkeys{/tikz-ext}{
+\tikzextset{
   tikz-cd fix/.code={% #1
     \tikzcdset{
-    /tikz-ext/tikz-cd fix/.code=,
-      urc/.style={/pgf/uncentered rectangle center={##1}},
+      /tikz/ext/tikz-cd fix/.code=,
+      urc/.style={/pgf/ext/uncentered rectangle center={##1}},
       every diagram/.append style={% ##1
-        /pgf/uncentered rectangle center yshift=axis_height,
+        /pgf/ext/uncentered rectangle center yshift=axis_height,
         /tikz/uncentered rectangle/.style={
-          /tikz/shape=uncentered rectangle,
+          /tikz/shape=ext_uncentered rectangle,
           /tikz/commutative diagrams/math mode=false,
         },
         /tikz/matrix of math nodes/.style={
@@ -35,7 +35,7 @@
         /tikz/uncrec math mode=true,
         /tikz/uncrec/.style={% ####1
           /tikz/uncentered rectangle,
-          /pgf/uncentered rectangle center={####1}
+          /pgf/ext/uncentered rectangle center={####1}
         },
         install uncentered rectangle in column/.style={
           /tikz/column ####1/.append style={/tikz/uncentered rectangle}

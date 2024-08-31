@@ -576,6 +576,7 @@
 \def\tipcompatstrip ext#1#2\tipstop{#2}%
 \usepackage{array}
 \newcommand*\tikzext{tikz/ext}
+\newcommand*\pgfext{pgf/ext}
 
 \def\decomposetoodeep#1/#2/\nil{%
   % avoid too-deep nesting in index
@@ -628,3 +629,17 @@
 \newcommand*\noLibrary{\gdef\CurrentLibrary{}}
 \newcommand*\currentLibrary[1]{\gdef\CurrentLibrary{{\small ext.}#1}}
 \noLibrary
+
+\newenvironment{ext_shape}[1]{
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{%
+      \pgfmanualpdflabel{ext_#1}{}%
+      \textbf{Shape} {\ttfamily\declare{ext\textunderscore#1}}%
+    }%
+    \index{ext\textunderscore#1@\protect\texttt{ext\textunderscore#1} shape}%
+    \index{Shapes!ext\textunderscore#1@\protect\texttt{ext\textunderscore#1}}
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}

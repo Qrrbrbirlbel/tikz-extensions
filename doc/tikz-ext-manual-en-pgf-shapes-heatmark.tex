@@ -13,26 +13,26 @@
   \inspiration{ShapeHeat-Q}{ShapeHeat-A}
 \end{pgflibrary}
 
-\begin{shape}{heatmark}
-  \begin{key}{/pgf/heatmark arcs=\meta{arcs num} (initially 3)}
+\begin{ext_shape}{heatmark}
+  \begin{key}{/\pgfext/heatmark arcs=\meta{arcs num} (initially 3)}\keycompat{pgf}
   Sets the number of arc around the circle to \meta{arcs num}.
   \end{key}
-  \begin{key}{/pgf/heatmark arc width=\meta{arc width} (initially 4pt)}
+  \begin{key}{/\pgfext/heatmark arc width=\meta{arc width} (initially 4pt)}\keycompat{pgf}
   Sets the width of the rings around the circle to \meta{arc width}.
   \end{key}
-  \begin{key}{/pgf/heatmark arc sep=\meta{sep length} (initially 1pt)}
+  \begin{key}{/\pgfext/heatmark arc sep=\meta{sep length} (initially 1pt)}\keycompat{pgf}
   Sets the whitespace between the rings to \meta{sep length}.
   \end{key}
-  \begin{key}{/pgf/heatmark arc rings=\meta{rings num} (initially 3)}
+  \begin{key}{/\pgfext/heatmark arc rings=\meta{rings num} (initially 3)}\keycompat{pgf}
   Sets the number of rings around the circle to \meta{rings num}
   \end{key}
-  \begin{key}{/pgf/heatmark arc sep angle=\meta{sep angle} (initially 20)}
+  \begin{key}{/\pgfext/heatmark arc sep angle=\meta{sep angle} (initially 20)}\keycompat{pgf}
   Sets the whitespace angle between the arcs in one ring to \meta{sep angle}.
   \end{key}
-  \begin{key}{/pgf/heatmark inner opacity=\meta{inner opacity} (initially 0.8)}
+  \begin{key}{/\pgfext/heatmark inner opacity=\meta{inner opacity} (initially 0.8)}\keycompat{pgf}
   Sets the opacity of the inner ring to \meta{inner opacity}.
   \end{key}
-  \begin{key}{/pgf/heatmark outer opacity=\meta{low opacity} (initially 0.2)}
+  \begin{key}{/\pgfext/heatmark outer opacity=\meta{low opacity} (initially 0.2)}\keycompat{pgf}
   Sets the opacity of the outer ring to \meta{outer opacity}.
   
   The opacity of the rings between the outer and the inner ring will be interpolated by these two opacities.
@@ -42,11 +42,11 @@ This shape takes the value of |/pgf/shape border rotate|%
 \indexKeyO[/pgf/]{shape border rotate} into consideration.
 
 For every ring and for every arc the following styke keys are tried.
-\begin{stylekey}{/pgf/heatmark ring \meta{ring number}}
+\begin{stylekey}{/\pgfext/heatmark ring \meta{ring number}}
 \end{stylekey}
-\begin{stylekey}{/pgf/heatmark arc \meta{arc number}}
+\begin{stylekey}{/\pgfext/heatmark arc \meta{arc number}}
 \end{stylekey}
-\begin{stylekey}{/pgf/heatmark ring \meta{ring number} arc \meta{arc number}}
+\begin{stylekey}{/\pgfext/heatmark ring \meta{ring number} arc \meta{arc number}}
 \end{stylekey}
 
 The \pgfname shape is setup in a way that even \tikzname\space
@@ -54,16 +54,16 @@ styles can be used with a little bit work:
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.heatmark}]
 \tikz[
   shape border rotate=90,
-  /pgf/heatmark ring 1/.append style={/tikz/fill=green},
-  /pgf/heatmark arc 1/.append style={/tikz/fill=blue},
-  /pgf/heatmark ring 2 arc 2/.append style={/tikz/fill=yellow!70!black}
-] \node[heatmark, fill=red] (n) {100};
+  /pgf/ext/heatmark ring 1/.append style={/tikz/fill=green},
+  /pgf/ext/heatmark arc 1/.append style={/tikz/fill=blue},
+  /pgf/ext/heatmark ring 2 arc 2/.append style={/tikz/fill=yellow!70!black}
+] \node[ext_heatmark, fill=red] (n) {100};
 \end{codeexample}
 
 It is best to use this shape with no actual border (|draw = none|) and the |outer sep| set to zero.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.heatmark},width=16cm]
 \begin{tikzpicture}\Huge
-\node[name=s, shape=heatmark, shape example,
+\node[name=s, shape=ext_heatmark, shape example,
   fill=blue!25, draw=none, outer sep=0pt]
   {Heatmark\vrule width 1pt height 2cm};
 \foreach \anchor/\placement in
@@ -79,5 +79,5 @@ It is best to use this shape with no actual border (|draw = none|) and the |oute
      node[\placement] {\scriptsize\texttt{(s.\anchor)}};
 \end{tikzpicture}
 \end{codeexample}
-\end{shape}
+\end{ext_shape}
 \endinput

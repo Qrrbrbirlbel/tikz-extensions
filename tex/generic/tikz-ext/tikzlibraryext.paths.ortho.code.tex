@@ -713,28 +713,28 @@
 \tikzextset{
   /tikz-ext/compat/add library={paths.ortho}{pre 0.6},
   compat/paths.ortho/warn/.append code={%
-    \pgfutil@for\tikzext@temp:=ratio,distance,from center,spacing,middle 0 to 1,%
-      ud distance,du distance,lr distance,rl distance,udlr distance,%
+    \pgfutil@for\tikzext@temp:=ortho/ratio,ortho/distance,ortho/from center,ortho/spacing,ortho/middle 0 to 1,%
+      ortho/ud distance,ortho/du distance,ortho/lr distance,ortho/rl distance,ortho/udlr distance,%
       horizontal vertical,vertical horizontal,horizontal vertical horizontal,%
       vertical horizontal vertical,up horizontal down,down horizontal up,%
       left vertical right,right vertical left,only vertical second,%
       only horizontal second,only vertical first,only horizontal first,%
-      install shortcuts\do{%
+      ortho/install shortcuts\do{%
       \pgfkeys@expanded{\noexpand\tikzextutil@compatwarning@key
-        {paths.ortho}{pre 0.6}{/tikz/ortho/\tikzext@temp}{/tikz/ext/ortho/\tikzext@temp}%
+        {paths.ortho}{pre 0.6}{/tikz/\tikzext@temp}{/tikz/ext/\tikzext@temp}%
       }%
     }%
   },
   compat/paths.ortho/pre 0.6/.append code={%
-    \pgfutil@for\tikzext@temp:=ratio,distance,from center,spacing,middle 0 to 1,%
-        ud distance,du distance,lr distance,rl distance,udlr distance,%
+    \pgfutil@for\tikzext@temp:=ortho/ratio,ortho/distance,ortho/from center,ortho/spacing,ortho/middle 0 to 1,%
+        ortho/ud distance,ortho/du distance,ortho/lr distance,ortho/rl distance,ortho/udlr distance,%
         horizontal vertical,vertical horizontal,horizontal vertical horizontal,%
         vertical horizontal vertical,up horizontal down,down horizontal up,%
         left vertical right,right vertical left,only vertical second,%
         only horizontal second,only vertical first,only horizontal first,%
-        install shortcuts\do{%
-      \pgfkeysedef{/tikz/ortho/\tikzext@temp}{%
-        \noexpand\pgfkeysvalueof{/tikz/ext/ortho/\tikzext@temp/.@cmd}##1\noexpand\pgfeov
+        ortho/install shortcuts\do{%
+      \pgfkeysedef{/tikz/\tikzext@temp}{%
+        \noexpand\pgfkeysvalueof{/tikz/ext/\tikzext@temp/.@cmd}##1\noexpand\pgfeov
       }%
     }%
   },

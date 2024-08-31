@@ -6,18 +6,22 @@
 % 2. under the GNU Free Documentation License.
 %
 \usepgflibrary{shapes.multipart}
+\unless\ifcsname pgfextset\endcsname
+  \input tikzext-util.tex
+\fi
+
 \let\pgfnodeparttrbox\pgfnodeparttwobox
 \let\pgfnodepartblbox\pgfnodepartthreebox
 \let\pgfnodepartbrbox\pgfnodepartfourbox
-\newif\ifpgfcirclecrosssplitcustomfill
-\pgfset{%
+\newif\ifpgfextcirclecrosssplitcustomfill
+\pgfextset{
   circle cross split part fill/.code=%
     \def\pgf@lib@sh@ccs@list@fill{#1}%
-    \pgfcirclecrosssplitcustomfilltrue,%
-  circle cross split uses custom fill/.is if=pgfcirclecrosssplitcustomfill
+    \pgfextcirclecrosssplitcustomfilltrue,%
+  circle cross split uses custom fill/.is if=pgfextcirclecrosssplitcustomfill
 }
 \def\pgf@lib@sh@ccs@list@fill{none}%
-\pgfdeclareshape{circle cross split}{%
+\pgfdeclareshape{ext_circle cross split}{%
   \nodeparts{text,two,three,four}%
   \savedanchor\centerpoint{%
     \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
@@ -174,7 +178,7 @@
   \inheritanchor[from=circle]{south east}%
   \anchor{two}{\twoanchor}%
   \anchor{three}{\threeanchor}%
-  \anchor{four}{
+  \anchor{four}{%
     \threeanchor
     \pgf@ya=\pgf@y
     \twoanchor
@@ -260,7 +264,7 @@
       \advance\pgfutil@tempdima by-\pgf@xb
     \fi
     \advance\pgfutil@tempdima by-.5\pgflinewidth%
-    \ifpgfcirclecrosssplitcustomfill%
+    \ifpgfextcirclecrosssplitcustomfill%
       \pgf@lib@sh@rs@process@list{\pgf@lib@sh@ccs@list@fill}{4}%
       {%
         \pgfmathloop
@@ -289,4 +293,24 @@
       }%
     \fi
   }%
+}
+%%% Compatibility
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\tikzextset{
+  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.circlecrosssplit/warn,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.circlecrosssplit/pre 0.6,
+  compat/shapes.circlecrosssplit/warn/.code={%
+    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part fill}{/pgf/ext/circle cross split part fill}%
+    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part custom fill}[true]{/pgf/ext/circle cross split part fill}%
+    \tikzextutil@compat@cloneshape{circle cross split}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,two,three,four,lower mid,lower base,lower mid east,lower base east,lower mid west,lower base west}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'circle cross split'}{'ext_circle cross split'}{shapes = pre 0.6}}%
+    \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@circle cross split\endcsname\tikzext@temp
+  },
+  compat/shapes.circlecrosssplit/pre 0.6/.code={%
+    \pgfkeysdef{/pgf/circle cross split part fill}{\pgfkeysvalueof{/pgf/ext/circle cross split part fill/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/pgf/circle cross split part custom fill}{\pgfkeysvalueof{/pgf/circle cross split custom part fill/.@cmd}##1\pgfeov}%
+    \pgfkeyssetvalue{/pgf/circle cross split part custom flll/.@def}{true}%
+    \tikzextutil@compat@cloneshape{circle cross split}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,two,three,four,lower mid,lower base,lower mid east,lower base east,lower mid west,lower base west}%
+  },
+  compat/shapes.circlecrosssplit/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
 }
