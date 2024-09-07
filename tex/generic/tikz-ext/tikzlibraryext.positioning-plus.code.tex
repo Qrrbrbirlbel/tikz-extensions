@@ -20,118 +20,165 @@
 % as a factor of 'node distance'
 % Inspired by http://tex.stackexchange.com/a/117610/16595
 
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
 
-\pgfdeclaregenericanchor{corner south east}{%
+\pgfdeclaregenericanchor{ext_corner south east}{%
   \pgf@sh@reanchor{#1}{south}%
   \pgf@ya\pgf@y
   \pgf@process{\pgf@sh@reanchor{#1}{east}}%
   \pgf@y\pgf@ya
 }
-\pgfdeclaregenericanchor{corner north east}{%
+\pgfdeclaregenericanchor{ext_corner north east}{%
   \pgf@sh@reanchor{#1}{north}%
   \pgf@ya\pgf@y
   \pgf@process{\pgf@sh@reanchor{#1}{east}}%
   \pgf@y\pgf@ya
 }
-\pgfdeclaregenericanchor{corner south west}{%
+\pgfdeclaregenericanchor{ext_corner south west}{%
   \pgf@sh@reanchor{#1}{south}%
   \pgf@ya\pgf@y
   \pgf@process{\pgf@sh@reanchor{#1}{west}}%
   \pgf@y\pgf@ya
 }
-\pgfdeclaregenericanchor{corner north west}{%
+\pgfdeclaregenericanchor{ext_corner north west}{%
   \pgf@sh@reanchor{#1}{north}%
   \pgf@ya\pgf@y
   \pgf@process{\pgf@sh@reanchor{#1}{west}}%
   \pgf@y\pgf@ya
 }
-
-\tikzset{corner above left/.code=\tikz@lib@place@handle@{#1}{corner south east}{-1}{1}{corner north west}{0.707106781}}
-\tikzset{corner above right/.code=\tikz@lib@place@handle@{#1}{corner south west}{1}{1}{corner north east}{0.707106781}}
-\tikzset{corner below left/.code=\tikz@lib@place@handle@{#1}{corner north east}{-1}{-1}{corner south west}{0.707106781}}
-\tikzset{corner below right/.code=\tikz@lib@place@handle@{#1}{corner north west}{1}{-1}{corner south east}{0.707106781}}
-
-\tikzset{corner north left/.code =\tikz@lib@place@handle@{#1}{corner north east}{-1}{0}{corner north west}{1}}
-\tikzset{corner north right/.code=\tikz@lib@place@handle@{#1}{corner north west}{1}{0}{corner north east}{1}}
-\tikzset{corner south left/.code =\tikz@lib@place@handle@{#1}{corner south east}{-1}{0}{corner south west}{1}}
-\tikzset{corner south right/.code=\tikz@lib@place@handle@{#1}{corner south west}{1}{0}{corner south east}{1}}
-
-\tikzset{corner west above/.code =\tikz@lib@place@handle@{#1}{corner south west}{0}{1}{corner north west}{1}}
-\tikzset{corner west below/.code=\tikz@lib@place@handle@{#1}{corner north west}{0}{-1}{corner south west}{1}}
-\tikzset{corner east above/.code =\tikz@lib@place@handle@{#1}{corner south east}{0}{1}{corner north east}{1}}
-\tikzset{corner east below/.code=\tikz@lib@place@handle@{#1}{corner north east}{0}{-1}{corner south east}{1}}
-
-\tikzset{north left/.code =\tikz@lib@place@handle@{#1}{north east}{-1}{0}{north west}{1}}
-\tikzset{north right/.code=\tikz@lib@place@handle@{#1}{north west}{1}{0}{north east}{1}}
-\tikzset{south left/.code =\tikz@lib@place@handle@{#1}{south east}{-1}{0}{south west}{1}}
-\tikzset{south right/.code=\tikz@lib@place@handle@{#1}{south west}{1}{0}{south east}{1}}
-
-\tikzset{west above/.code =\tikz@lib@place@handle@{#1}{south west}{0}{1}{north west}{1}}
-\tikzset{west below/.code=\tikz@lib@place@handle@{#1}{north west}{0}{-1}{south west}{1}}
-\tikzset{east above/.code =\tikz@lib@place@handle@{#1}{south east}{0}{1}{north east}{1}}
-\tikzset{east below/.code=\tikz@lib@place@handle@{#1}{north east}{0}{-1}{south east}{1}}
-
+\pgfdeclaregenericanchor{ext_text right}{%
+  \pgf@sh@reanchor{#1}{base}%
+  \multiply\pgf@x by 2
+}
 \newif\iftikzext@tikz@lib@place@postransform
-\tikzset{node distance transformation/.is if=tikzext@tikz@lib@place@postransform}
-\def\tikz@lib@place@handle@@#1#2#3#4{%
+\tikzextset{
+  corner above  left/.code=\tikzext@posp@handle{#1}{ext_corner south east}{-1}{1}{ext_corner north west}{0.707106781},
+  corner above right/.code=\tikzext@posp@handle{#1}{ext_corner south west}{1}{1}{ext_corner north east}{0.707106781},
+  corner below  left/.code=\tikzext@posp@handle{#1}{ext_corner north east}{-1}{-1}{ext_corner south west}{0.707106781},
+  corner below right/.code=\tikzext@posp@handle{#1}{ext_corner north west}{1}{-1}{ext_corner south east}{0.707106781},
+  corner north  left/.code=\tikzext@posp@handle{#1}{ext_corner north east}{-1}{0}{ext_corner north west}{1},
+  corner north right/.code=\tikzext@posp@handle{#1}{ext_corner north west}{1}{0}{ext_corner north east}{1},
+  corner south  left/.code=\tikzext@posp@handle{#1}{ext_corner south east}{-1}{0}{ext_corner south west}{1},
+  corner south right/.code=\tikzext@posp@handle{#1}{ext_corner south west}{1}{0}{ext_corner south east}{1},
+  corner west  above/.code=\tikzext@posp@handle{#1}{ext_corner south west}{0}{1}{ext_corner north west}{1},
+  corner west  below/.code=\tikzext@posp@handle{#1}{ext_corner north west}{0}{-1}{ext_corner south west}{1},
+  corner east  above/.code=\tikzext@posp@handle{#1}{ext_corner south east}{0}{1}{ext_corner north east}{1},
+  corner east  below/.code=\tikzext@posp@handle{#1}{ext_corner north east}{0}{-1}{ext_corner south east}{1},
+         north  left/.code=\tikzext@posp@handle{#1}{north east}{-1}{0}{north west}{1},
+         north right/.code=\tikzext@posp@handle{#1}{north west}{1}{0}{north east}{1},
+         south  left/.code=\tikzext@posp@handle{#1}{south east}{-1}{0}{south west}{1},
+         south right/.code=\tikzext@posp@handle{#1}{south west}{1}{0}{south east}{1},
+         west  above/.code=\tikzext@posp@handle{#1}{south west}{0}{1}{north west}{1},
+         west  below/.code=\tikzext@posp@handle{#1}{north west}{0}{-1}{south west}{1},
+         east  above/.code=\tikzext@posp@handle{#1}{south east}{0}{1}{north east}{1},
+         east  below/.code=\tikzext@posp@handle{#1}{north east}{0}{-1}{south east}{1},
+         above  left/.code=\tikzext@posp@handle{#1}{south east}{-1}{1}{north west}{0.707106781},
+         above right/.code=\tikzext@posp@handle{#1}{south west}{1}{1}{north east}{0.707106781},
+         base   left/.code=\tikzext@posp@handle{#1}{base east}{-1}{0}{base west}{1},
+         base  right/.code=\tikzext@posp@handle{#1}{base west}{1}{0}{base east}{1},
+         below  left/.code=\tikzext@posp@handle{#1}{north east}{-1}{-1}{south west}{0.707106781},
+         below right/.code=\tikzext@posp@handle{#1}{north west}{1}{-1}{south east}{0.707106781},
+         mid    left/.code=\tikzext@posp@handle{#1}{mid east}{-1}{0}{mid west}{1},
+         mid   right/.code=\tikzext@posp@handle{#1}{mid west}{1}{0}{mid east}{1},
+               above/.code=\tikzext@posp@handle{#1}{south}{0}{1}{north}{1},
+               below/.code=\tikzext@posp@handle{#1}{north}{0}{-1}{south}{1},
+                left/.code=\tikzext@posp@handle{#1}{east}{-1}{0}{west}{1},
+               right/.code=\tikzext@posp@handle{#1}{west}{1}{0}{east}{1},
+  node distance transformation/.is if=tikzext@tikz@lib@place@postransform%
+}
+\def\tikzext@posp@handle#1#2#3#4#5#6{%
+  \def\tikz@anchor{#2}%
+  \let\tikz@do@auto@anchor\relax
+  \edef\tikz@temp{#1}%
+  \def\tikz@lib@place@single@factor{#6}%
   \pgfutil@in@{of }{#1}%
   \ifpgfutil@in@
-    \tikz@lib@place@of#1\tikz@stop{#4}%
+    \tikzext@posp@of#1\tikz@stop{#3}{#4}{#5}%
   \else
+    \def\tikzext@posp@xfactor{#3}%
+    \def\tikzext@posp@yfactor{#4}%
     \edef\tikz@lib@place@nums{#1}%
   \fi
-  \ifx\tikz@lib@place@nums\pgfutil@empty
-    % Ok, nothing to do, we have set the anchor and we are happy...
-  \else
+  %
+  \unless\ifx\tikz@lib@place@nums\pgfutil@empty
     \expandafter\tikz@lib@place@parse@nums\expandafter{\tikz@lib@place@nums}%
-    \pgf@x=#2\pgf@x
-    \pgf@y=#3\pgf@y
+    \pgf@x=\tikzext@posp@xfactor\pgf@x
+    \pgf@y=\tikzext@posp@yfactor\pgf@y
     \iftikzext@tikz@lib@place@postransform
       \pgf@pos@transform{\pgf@x}{\pgf@y}% change from original
     \fi
     \edef\tikz@lib@pos@call{\noexpand\pgftransformshift{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
   \fi
 }
-
-\def\tikz@lib@place@handle@#1#2#3#4#5#6{%
+\def\tikzext@posp@of#1of #2\tikz@stop#3#4#5{%
   \pgfutil@in@{:}{#1}%
   \ifpgfutil@in@
-    \tikzext@lib@place@handle@#1\tikz@stop
-    \ifx\pgf@temp\pgfutil@empty
-      \let\pgf@temp\tikz@node@distance
-    \fi
-    \pgfmathsetmacro\pgf@tempa{(\pgf@tempa)*#4}%
-    \pgfmathsetmacro\pgf@tempb{(\pgf@tempb)*#3}%
-    \edef\pgf@marshal{\noexpand\tikz@lib@place@handle@{\pgf@temp}{#2}{\pgf@tempb}{\pgf@tempa}{#5}{#6}}%
-    \pgf@marshal
+    \tikzext@posp@colon#1\tikz@stop{#3}{#4}%
   \else
-    \def\tikz@anchor{#2}%
-    \let\tikz@do@auto@anchor=\relax
-    \edef\tikz@temp{#1}%
-    \def\tikz@lib@place@single@factor{#6}%
-    \expandafter\tikz@lib@place@handle@@\expandafter{\tikz@temp}{#3}{#4}{#5}%
+    \tikzext@posp@colon1and1:#1\tikz@stop{#3}{#4}
   \fi
+  \tikzext@posp@of@{#2}{#5}%
 }
-\def\tikzext@lib@place@handle@#1:#2\tikz@stop{%
+\def\tikzext@posp@colon#1:#2\tikz@stop#3#4{%
   \pgfutil@in@{and}{#1}%
   \ifpgfutil@in@
-    \tikzext@lib@place@handle@@#1\tikz@stop
+    \tikzext@posp@colon@#1\tikz@stop{#3}{#4}%
   \else
-    \tikzext@lib@place@handle@@#1and#1\tikz@stop
+    \tikzext@posp@colon@#1and#1\tikz@stop{#3}{#4}%
   \fi
-  \def\pgf@temp{#2}%
+  \def\tikz@lib@place@nums{#2}%
+  \ifx\tikz@lib@place@nums\pgfutil@empty
+    \let\tikz@lib@place@nums\tikz@node@distance
+  \fi
 }
-\def\tikzext@lib@place@handle@@#1and#2\tikz@stop{%
-  \def\pgf@tempa{#1}%
-  \def\pgf@tempb{#2}%
+\def\tikzext@posp@colon@#1and#2\tikz@stop#3#4{%
+  \pgfmathmultiply{#1}{#3}\let\tikzext@posp@xfactor\pgfmathresult
+  \pgfmathmultiply{#2}{#4}\let\tikzext@posp@yfactor\pgfmathresult
 }
-\def\tikzext@xyshift@starred#1#2#3{%
+\def\tikzext@posp@of@#1#2{%
+  % #1: of part
+  % #2: other anchor
+  \def\tikzext@posp@scan{ext_fit bounding box}%
+  \edef\tikzext@temp{\expandafter\tikzextutil@firstofmany#1\pgf@stop}%
+  \if\tikzext@temp(%
+    \tikzext@posp@fit{#1}{0}%
+  \else\if\tikzext@temp|%
+      \expandafter\tikzext@posp@fit\expandafter{\tikzextutil@secondofmany#1\pgf@stop}{1}%
+    \else\ifx\tikzext@temp\tikz@activebar
+        \expandafter\tikzext@posp@fit\expandafter{\tikzextutil@secondofmany#1\pgf@stop}{1}%
+      \else\if\tikzext@temp-%
+          \expandafter\tikzext@posp@fit\expandafter{\tikzextutil@secondofmany#1\pgf@stop}{2}%
+        \else\if\tikzext@temp+%
+            \expandafter\tikzext@posp@fit\expandafter{\tikzextutil@secondofmany#1\pgf@stop}{3}%
+          \else
+            \def\tikzext@posp@scan{#1}%
+          \fi
+        \fi
+      \fi
+    \fi
+  \fi
+  \expandafter\tikz@scan@one@point\expandafter\tikz@lib@place@remember\expandafter(\tikzext@posp@scan)% TODO: expandafters
+  \iftikz@shapeborder%
+    % Ok, this is relative to a border.
+    \iftikz@lib@ignore@size%
+      \edef\tikz@node@at{\noexpand\pgfpointanchor{\tikz@shapeborder@name}{center}}%
+      \def\tikz@anchor{center}%
+    \else%
+      \edef\tikz@node@at{\noexpand\pgfpointanchor{\tikz@shapeborder@name}{#2}}%
+    \fi%
+  \fi%
+}
+
+\def\tikzext@posp@xyshift#1#2#3{%
   \edef\tikz@marshal{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
   \tikz@marshal
   \ifpgfutil@in@
-    \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
+    \expandafter\tikzext@posp@handle@\tikz@node@distance\tikz@stop
   \else
     \let#3\tikz@node@distance
   \fi
@@ -149,52 +196,22 @@
       \pgf@process{\pgfqpointxy{0}{\pgfmathresult}}%
     \fi
     \pgftransformshift{\pgfqpoint{\pgf@x}{\pgf@y}}%
-  \fi}
-\tikzset{
-  xshift*/.code=\tikzext@xyshift@starred{#1}x\pgf@tempb,
-  yshift*/.code=\tikzext@xyshift@starred{#1}y\pgf@tempa
-}
-
-\def\pgfutil@firstofmany#1#2\pgf@stop{#1}
-\def\pgfutil@secondofmany#1#2\pgf@stop{#2}
-\def\tikz@lib@place@of@#1#2#3{%
-  \def\pgf@tempa{fit bounding box}%
-  \edef\pgf@temp{\expandafter\pgfutil@firstofmany#2\pgf@stop}
-  \if\pgf@temp(%
-    \tikz@lib@place@fit@scan{#2}{0}%
-  \else\if\pgf@temp|%
-      \expandafter\tikz@lib@place@fit@scan\expandafter{\pgfutil@secondofmany#2\pgf@stop}{1}%
-    \else\ifx\pgf@temp\tikz@activebar
-        \expandafter\tikz@lib@place@fit@scan\expandafter{\pgfutil@secondofmany#2\pgf@stop}{1}%
-      \else\if\pgf@temp-%
-          \expandafter\tikz@lib@place@fit@scan\expandafter{\pgfutil@secondofmany#2\pgf@stop}{2}%
-        \else\if\pgf@temp+%
-            \expandafter\tikz@lib@place@fit@scan\expandafter{\pgfutil@secondofmany#2\pgf@stop}{3}%
-          \else
-            \def\pgf@tempa{#2}%
-          \fi
-        \fi
-      \fi
-    \fi
   \fi
-  \expandafter\tikz@scan@one@point\expandafter\tikz@lib@place@remember\expandafter(\pgf@tempa)%
-  \iftikz@shapeborder%
-    % Ok, this is relative to a border.
-    \iftikz@lib@ignore@size%
-      \edef\tikz@node@at{\noexpand\pgfpointanchor{\tikz@shapeborder@name}{center}}%
-      \def\tikz@anchor{center}%
-    \else%
-      \edef\tikz@node@at{\noexpand\pgfpointanchor{\tikz@shapeborder@name}{#3}}%
-    \fi%
-  \fi%
-  \edef\tikz@lib@place@nums{#1}%
 }
-\def\tikz@lib@place@fit@scan#1#2{%
+\def\tikzext@posp@xyshift@#1and#2\tikz@stop{%
+  \def\pgf@tempb{#1}%
+  \def\pgf@tempa{#2}%
+}
+\tikzextset{
+  xshift*/.code=\tikzext@posp@xyshift{#1}x\pgf@tempb,
+  yshift*/.code=\tikzext@posp@xyshift{#1}y\pgf@tempa
+}
+\def\tikzext@posp@fit#1#2{%
   \pgf@xb=-16000pt\relax%
   \pgf@xa=16000pt\relax%
   \pgf@yb=-16000pt\relax%
   \pgf@ya=16000pt\relax%
-  \if\pgfutil@firstofmany#1\pgf@stop(%
+  \if\tikzextutil@firstofmany#1\pgf@stop(%
     \tikz@lib@fit@scan#1\pgf@stop%
   \else
     \tikz@lib@fit@scan(#1)\pgf@stop
@@ -202,13 +219,13 @@
   \ifdim\pgf@xa>\pgf@xa
     % shouldn't happen
   \else
-     \expandafter\def\csname pgf@sh@ns@fit bounding box\endcsname{rectangle}%
-     \expandafter\edef\csname pgf@sh@np@fit bounding box\endcsname{%
+     \expandafter\gdef\csname pgf@sh@ns@ext_fit bounding box\endcsname{rectangle}%
+     \expandafter\xdef\csname pgf@sh@np@ext_fit bounding box\endcsname{%
        \def\noexpand\southwest{\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}%
        \def\noexpand\northeast{\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}%
      }%
-     \expandafter\def\csname pgf@sh@nt@fit bounding box\endcsname{{1}{0}{0}{1}{0pt}{0pt}}%
-     \expandafter\def\csname pgf@sh@pi@fit bounding box\expandafter\endcsname\expandafter{\pgfpictureid}%
+     \expandafter\gdef\csname pgf@sh@nt@ext_fit bounding box\endcsname{{1}{0}{0}{1}{0pt}{0pt}}%
+     \expandafter\xdef\csname pgf@sh@pi@ext_fit bounding box\expandafter\endcsname\expandafter{\pgfpictureid}%
      \ifcase#2\relax
      \or % 1 = vertical
        \pgf@y=\pgf@yb%
@@ -230,17 +247,17 @@
      \fi
   \fi
 }
-\tikzset{
-  fit bounding box/.code={\tikz@lib@place@fit@scan{#1}{0}},
-  span vertical/.code={\tikz@lib@place@fit@scan{#1}{1}},
-  span horizontal/.code={\tikz@lib@place@fit@scan{#1}{2}},
-  span/.code={\tikz@lib@place@fit@scan{#1}{3}}}
+\tikzextset{
+  fit bounding box/.code=\tikz@lib@place@fit@scan{#1}{0},
+  span vertical/.code=\tikz@lib@place@fit@scan{#1}{1},
+  span horizontal/.code=\tikz@lib@place@fit@scan{#1}{2},
+  span/.code=\tikz@lib@place@fit@scan{#1}{3}}
 
-\pgfmathdeclarefunction{x_node_dist}{0}{%
+\pgfmathdeclarefunction{ext_x_node_dist}{0}{%
   \begingroup
     \edef\pgfmath@temp{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
     \pgfmath@temp\ifpgfutil@in@
-      \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
+      \expandafter\tikzext@posp@xyshift@\tikz@node@distance\tikz@stop
     \else
       \let\pgf@tempb\tikz@node@distance
     \fi
@@ -248,11 +265,11 @@
     \pgfmath@smuggleone\pgfmathresult
   \endgroup
 }
-\pgfmathdeclarefunction{y_node_dist}{0}{%
+\pgfmathdeclarefunction{ext_y_node_dist}{0}{%
   \begingroup
     \edef\pgfmath@temp{\noexpand\pgfutil@in@{and}{\tikz@node@distance}}%
     \pgfmath@temp\ifpgfutil@in@
-      \expandafter\tikzext@lib@place@handle@@\tikz@node@distance\tikz@stop
+      \expandafter\tikzext@posp@xyshift@\tikz@node@distance\tikz@stop
     \else
       \let\pgf@tempa\tikz@node@distance
     \fi
@@ -260,10 +277,99 @@
     \pgfmath@smuggleone\pgfmathresult
   \endgroup
 }
-%\tikzdeclarecoordinatesystem{node distance}{%
-%  \tikz@cs@nd#1\tikz@stop}
-%\def\tikz@cs@nd#1,#2\tikz@stop{%
-%  \def\tikzext@xyshift@starred@action##1{\pgftransformshift{##1}}%
-%  \tikzext@xyshift@starred{#1}x\pgf@tempb
-%  \tikzext@xyshift@starred{#2}y\pgf@tempa}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={positioning-plus}{pre 0.6},
+  compat/positioning-plus/warn/.append code=%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/xshift*}{/tikz/ext/xshift*}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/yshift*}{/tikz/ext/yshift*}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner above  left}{/tikz/ext/corner above  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner below  left}{/tikz/ext/corner below  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner above right}{/tikz/ext/corner above right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner below right}{/tikz/ext/corner below right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/north  left}{/tikz/ext/north  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/south  left}{/tikz/ext/south  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/north right}{/tikz/ext/north right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/south right}{/tikz/ext/south right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/west above}{/tikz/ext/west above}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/west below}{/tikz/ext/west below}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/east above}{/tikz/ext/east above}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/east below}{/tikz/ext/east below}%
+    \pgfkeysdef{/tikz/above}{\pgfkeysvalueof{/tikz/ext/above/.@cmd}##1\pgfeov}% no compat warning possible
+    \pgfkeysdef{/tikz/below}{\pgfkeysvalueof{/tikz/ext/below/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/left}{\pgfkeysvalueof{/tikz/ext/left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/right}{\pgfkeysvalueof{/tikz/ext/right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/above left}{\pgfkeysvalueof{/tikz/ext/above left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/below left}{\pgfkeysvalueof{/tikz/ext/below left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/above right}{\pgfkeysvalueof{/tikz/ext/above right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/below right}{\pgfkeysvalueof{/tikz/ext/below right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/base left}{\pgfkeysvalueof{/tikz/ext/base left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/base right}{\pgfkeysvalueof{/tikz/ext/base right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/mid left}{\pgfkeysvalueof{/tikz/ext/mid left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/mid right}{\pgfkeysvalueof{/tikz/ext/mid right/.@cmd}##1\pgfeov}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span}{/tikz/ext/span}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span horizontal}{/tikz/ext/span horizontal}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span vertical}{/tikz/ext/span vertical}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/fit bounding box}{/tikz/ext/fit bounding box}%
+    \pgfdeclaregenericanchor{corner south east}{\tikzextutil@compatmaybewarning{anchor 'corner south east'}{'ext_corner south east'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner south east\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner south west}{\tikzextutil@compatmaybewarning{anchor 'corner south west'}{'ext_corner south west'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner south west\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner north east}{\tikzextutil@compatmaybewarning{anchor 'corner north east'}{'ext_corner north east'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner north east\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner north west}{\tikzextutil@compatmaybewarning{anchor 'corner north west'}{'ext_corner north west'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner north west\endcsname{##1}}%
+    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 0.6}{x_node_dist}{ext_x_node_dist}%
+    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 0.6}{y_node_dist}{ext_y_node_dist}%
+  ,%
+  compat/positioning-plus/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/xshift*}{\pgfkeysvalueof{/tikz/ext/xshift*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/yshift*}{\pgfkeysvalueof{/tikz/ext/yshift*/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/corner above  left}{\pgfkeysvalueof{/tikz/ext/corner above  left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/corner below  left}{\pgfkeysvalueof{/tikz/ext/corner below  left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/corner above right}{\pgfkeysvalueof{/tikz/ext/corner above right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/corner below right}{\pgfkeysvalueof{/tikz/ext/corner below right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/north  left}{\pgfkeysvalueof{/tikz/ext/north  left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/south  left}{\pgfkeysvalueof{/tikz/ext/south  left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/north right}{\pgfkeysvalueof{/tikz/ext/north right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/south right}{\pgfkeysvalueof{/tikz/ext/south right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/west above}{\pgfkeysvalueof{/tikz/ext/west above/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/west below}{\pgfkeysvalueof{/tikz/ext/west below/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/east above}{\pgfkeysvalueof{/tikz/ext/east above/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/east below}{\pgfkeysvalueof{/tikz/ext/east below/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/above}{\pgfkeysvalueof{/tikz/ext/above/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/below}{\pgfkeysvalueof{/tikz/ext/below/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/left}{\pgfkeysvalueof{/tikz/ext/left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/right}{\pgfkeysvalueof{/tikz/ext/right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/above left}{\pgfkeysvalueof{/tikz/ext/above left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/below left}{\pgfkeysvalueof{/tikz/ext/below left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/above right}{\pgfkeysvalueof{/tikz/ext/above right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/below right}{\pgfkeysvalueof{/tikz/ext/below right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/base left}{\pgfkeysvalueof{/tikz/ext/base left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/base right}{\pgfkeysvalueof{/tikz/ext/base right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/mid left}{\pgfkeysvalueof{/tikz/ext/mid left/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/mid right}{\pgfkeysvalueof{/tikz/ext/mid right/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/span}{\pgfkeysvalueof{/tikz/ext/span/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/span vertical}{\pgfkeysvalueof{/tikz/ext/span vertical/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/span horizontal}{\pgfkeysvalueof{/tikz/ext/span horizontal/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/fit bounding box}{\pgfkeysvalueof{/tikz/ext/fit bounding box/.@cmd}##1\pgfeov}%
+    \pgfdeclaregenericanchor{corner south east}{\csname pgf@anchor@generic@ext_corner south east\endcsname}%
+    \pgfdeclaregenericanchor{corner south west}{\csname pgf@anchor@generic@ext_corner south west\endcsname}%
+    \pgfdeclaregenericanchor{corner north east}{\csname pgf@anchor@generic@ext_corner north east\endcsname}%
+    \pgfdeclaregenericanchor{corner north west}{\csname pgf@anchor@generic@ext_corner north west\endcsname}%
+    ,
+  compat/positioning-plus/0.6/.append code=
+    \pgfkeysdef{above}{\tikz@lib@place@handle@{#1}{south}{0}{1}{north}{1}}%
+    \pgfkeysdef{above left}{\tikz@lib@place@handle@{#1}{south east}{-1}{1}{north west}{0.707106781}}%
+    \pgfkeysdef{above right}{\tikz@lib@place@handle@{#1}{south west}{1}{1}{north east}{0.707106781}}%
+    \pgfkeysdef{base left}{\tikz@lib@place@handle@{#1}{base east}{-1}{0}{base west}{1}}%
+    \pgfkeysdef{base right}{\tikz@lib@place@handle@{#1}{base west}{1}{0}{base east}{1}}%
+    \pgfkeysdef{below}{\tikz@lib@place@handle@{#1}{north}{0}{-1}{south}{1}}%
+    \pgfkeysdef{below left}{\tikz@lib@place@handle@{#1}{north east}{-1}{-1}{south west}{0.707106781}}%
+    \pgfkeysdef{below right}{\tikz@lib@place@handle@{#1}{north west}{1}{-1}{south east}{0.707106781}}%
+    \pgfkeysdef{left}{\tikz@lib@place@handle@{#1}{east}{-1}{0}{west}{1}}%
+    \pgfkeysdef{mid left/}{\tikz@lib@place@handle@{#1}{mid east}{-1}{0}{mid west}{1}}%
+    \pgfkeysdef{mid right}{\tikz@lib@place@handle@{#1}{mid west}{1}{0}{mid east}{1}}%
+    \pgfkeysdef{right}{\tikz@lib@place@handle@{#1}{west}{1}{0}{east}{1}}%
+    ,
+  compat/positioning-plus/newest/.append style=/tikz/ext/compat/positioning-plus/0.6,
+  compat/positioning-plus/\pgfkeysvalueof{/tikz/ext/compat/positioning-plus}%
+}
 \endinput

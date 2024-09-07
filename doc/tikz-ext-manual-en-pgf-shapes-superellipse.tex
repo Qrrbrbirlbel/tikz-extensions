@@ -45,16 +45,16 @@ Sensible values for \meta{step} are integer dividers of 90, i.\,e.
 
 \paragraph{Notes on Implementation}
 For implementing this shape, additional mathematical functions were declared.
-\begin{math-function}{extsuperellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})}
-\mathcommand
+\begin{math-function}{ext\textunderscore superellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})}
+\mathcommand[extsuperellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})]
 Returns the $x$ value on a point of the superellipse with its center on the origin following
 \begin{equation*}
    x = r_x\cos^{2/m} t
 \end{equation*}
 for values of $0 \leq t \leq 90$.
 \end{math-function}
-\begin{math-function}{extsuperellipsey(\mvar{t}, \mvar{2/n}, \mvar{$r_y$})}
-\mathcommand
+\begin{math-function}{ext\textunderscore superellipsey(\mvar{t}, \mvar{2/n}, \mvar{$r_y$})}
+\mathcommand[extsuperellipsey(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})]
 Returns the $y$ value on a point of the superellipse with its center on the origin following
 \begin{equation*}
    y = r_y\cos^{2/n} t

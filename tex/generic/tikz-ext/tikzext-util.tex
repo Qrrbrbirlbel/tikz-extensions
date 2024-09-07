@@ -79,6 +79,14 @@
     }
   }
 }
+\def\tikzextutil@compatwarning@mathcmdZ#1#2#3#4{%
+  \pgfutil@IfUndefined{pgfmath#3}{%
+    \pgfmathdeclarefunction{#3}{0}{%
+      \tikzextutil@compatmaybewarning{PGFMath function '#3'}{'#4'}{#1 = #2}%
+      \csname pgfmath#4@\endcsname
+    }%
+  }{}%
+}
 \def\tikzextutil@compat@cloneshape#1#2{%
   \pgfutil@namelet{pgf@sh@s@#1}{pgf@sh@s@ext_#1}%
   \def\tikzext@temp{\edef\pgf@sm@shape@name{ext_#1}}%
@@ -125,6 +133,7 @@
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.ortho}           {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/positioning-plus}      {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfcalendar-ext}       {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/shapes}                {\tikzext@temp}%
@@ -135,13 +144,16 @@
 \tikzextset{compat=warn}
 
 \long\def\tikzextutil@gobblethree#1#2#3{}
+\def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}} % calendar: if
 \def\tikzextutil@prefixtomacro#1#2{%
   \def\tikzext@temp{#2}%
-  \expandafter\expandafter\expandafter\def
-  \expandafter\expandafter\expandafter#1%
-  \expandafter\expandafter\expandafter{\expandafter\tikzext@temp#1}%
+  \tikzextutil@prefix@macrotomacro#1\tikzext@temp
 }
 \def\tikzextutil@prefix@macrotomacro#1#2{%
-  \expandafter\expandafter\expandafter\def\expandafter\expandafter\expandafter%
-    #1\expandafter\expandafter\expandafter{\expandafter#2#1}}
+  \expandafter\expandafter\expandafter\def
+  \expandafter\expandafter\expandafter#1%
+  \expandafter\expandafter\expandafter{\expandafter#2#1}}
+
+\def\tikzextutil@firstofmany#1#2\pgf@stop{#1}
+\def\tikzextutil@secondofmany#1#2\pgf@stop{#2}
 \endinput

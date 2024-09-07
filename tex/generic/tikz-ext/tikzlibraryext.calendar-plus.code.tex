@@ -67,12 +67,11 @@
   \tikz@lib@cal@scanner%
 }
 
-\def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
 \let\tikzext@cal@doif\tikzextutil@addto@macro
 \tikzset{execute at begin day scope=\let\tikzext@cal@doif\pgfutil@secondoftwo}
 
 
-\pgfmathdeclarefunction{weeksinmonthofyear}{3}{% #1 = first weekday, #2 = month, #3 = year
+\pgfmathdeclarefunction{ext_weeksinmonthofyear}{3}{% #1 = first weekday, #2 = month, #3 = year
   \begingroup
     \pgfmathlastdayinmonthofyear@{#2}{#3}%
     \pgfmathadd@{#1}{\pgfmathresult}%
@@ -82,10 +81,52 @@
     \pgfmathsmuggle\pgfmathresult
   \endgroup
 }
-\pgfmathdeclarefunction{lastdayinmonthofyear}{2}{% #1 = month, #2 = year
+\pgfmathdeclarefunction{ext_lastdayinmonthofyear}{2}{% #1 = month, #2 = year
   \begingroup
     \pgfextcalendar@getlastYMX{#2}{#1}{\pgfutil@tempcnta}%
     \edef\pgfmathresult{\the\pgfutil@tempcnta}%
     \pgfmathsmuggle\pgfmathresult
   \endgroup
 }
+\expandafter\let\expandafter\pgfmathextweeksinmonthofyear\csname pgfmathext_weeksinmonthofyear\endcsname
+\expandafter\let\expandafter\pgfmathextweeksinmonthofyear@\csname pgfmathext_weeksinmonthofyear@\endcsname
+\expandafter\let\expandafter\pgfmathextlastdayinmonthofyear\csname pgfmathext_lastdayinmonthofyear\endcsname
+\expandafter\let\expandafter\pgfmathextlastdayinmonthofyear@\csname pgfmathext_lastdayinmonthofyear@\endcsname
+
+%%% Compatibility
+\tikzextset{
+  compat/pgfcalendar-ext/warn/.append code={%
+    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 0.6}{pgfmathlastdayinmonthofyear}\pgfmathextlastdayinmonthofyear\tikzextutil@gobblethree
+    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 0.6}{pgfmathweeksinmonthofyear}\pgfmathextweeksinmonthofyear\pgfutil@gobbletwo
+    \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
+      leap year,and,not,week of month,week of month',calendar week of month,%
+      calendar week of month',yesterday,week\do{%
+      \pgfkeys@expanded{\noexpand\tikzextutil@compatwarning@key
+        {pgfcalendar-ext}{pre 0.6}{/pgf/calendar/\tikzext@temp}{/pgf/calendar/ext/\tikzext@temp}%
+      }%
+    }%
+    \pgfkeyssetvalue{/pgf/calendar/leap year/.@def}{\pgfcalendarifdateyear}%
+    \pgfkeyssetvalue{/pgf/calendar/calendar week of month/.@def}{1}%
+    \pgfkeyssetvalue{/pgf/calendar/calendar week of month'/.@def}{1}%
+    \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 0.6}
+      {pgfcalendarjulianyeartoweek}\pgfextcalendarjulianyeartoweek\tikzextutil@gobblethree
+  },
+  compat/pgfcalendar-ext/pre 0.6/.append code={%
+    \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
+      leap year,and,not,week of month,week of month',calendar week of month,%
+      calendar week of month',yesterday,week\do{%
+      \pgfkeysedef{/pgf/calendar/\tikzext@temp}{%
+        \noexpand\pgfkeysvalueof{/pgf/calendar/ext/\tikzext@temp/.@cmd}##1\noexpand\pgfeov
+      }%
+      \let\pgfcalendarjulianyeartoweek\pgfextcalendarjulianyeartoweek
+      \let\pgfmathweeksinmonthofyear\pgfmathextweeksinmonthofyear
+      \let\pgfmathweeksinmonthofyear@\pgfmathextweeksinmonthofyear@
+      \let\pgfmathlastdayinmonthofyear\pgfmathextlastdayinmonthofyear
+      \let\pgfmathlastdayinmonthofyear@\pgfmathextlastdayinmonthofyear@
+      \def\pgfcalendarcurrentweek{\pgfextcalendarcurrentweek}%
+      \def\pgfcalendarifdateweek{\pgfextcalendarifdateweek}%
+    }%
+  },
+  compat/pgfcalendar-ext/\pgfkeysvalueof{/tikz/ext/compat/pgfcalendar-ext}%
+}
+\endinput

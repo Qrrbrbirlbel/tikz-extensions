@@ -17,32 +17,28 @@
 \begin{multicols}{2}
 
 \subsection{Value-keys and nestable \texttt{if} key}
-
-The values of following keys are originally stored in some macros that are not
+\begin{keylist}[/tikz]{%
+  day xshift (initially 3ex),
+  day yshift (initially 3.5ex),
+  month xshift (initially 9ex),
+  month yshift (initially 9ex)}
+The values of these keys are originally stored in some macros that are not
 accessible by the user. These are now simple value-keys.
 The |@|-protected macros are still available, of course.
+\end{keylist}
 
-\begin{key}{/tikz/day xshift (initially 3ex)}
-\end{key}
-\begin{key}{/tikz/day yshift (initially 3.5ex)}
-\end{key}
-\begin{key}{/tikz/month xshift (initially 9ex)}
-\end{key}
-\begin{key}{/tikz/month yshift (initially 9ex)}
-\end{key}
-
-It is now also possible to nest |/tikz/if| occurrences.
 \begin{key}{/tikz/if=|(|\meta{conditions}|)|\meta{code or options}\opt{|else|\meta{else code or options}}}
+  It is now also possible to nest |/tikz/if| occurrences.
 \end{key}
 
 \subsection{\pgfname math functions}
-\begin{math-function}{weeksinmonthofyear(\mvar{first weekday}, \mvar{month}, \mvar{year})}
-\mathcommand
+\begin{math-function}{ext\textunderscore weeksinmonthofyear(\mvar{first weekday}, \mvar{month}, \mvar{year})}
+\mathcommand[extweeksinmonthofyear(\mvar{first weekday}, \mvar{month}, \mvar{year})]
   Returns the number of (partial) weeks in the month \mvar{month} of year \mvar{year}
   when this month begins on a \mvar{first weekday}.
 \end{math-function}
-\begin{math-function}{lastdayinmonthofyear(\mvar{month}, \mvar{year})}
-\mathcommand
+\begin{math-function}{ext\textunderscore lastdayinmonthofyear(\mvar{month}, \mvar{year})}
+\mathcommand[extlastdayinmonthofyear(\mvar{month}, \mvar{year})]
   Returns the last day (28, 29, 30 or 31) of month \mvar{month} of year \mvar{year}.
 \end{math-function}
 

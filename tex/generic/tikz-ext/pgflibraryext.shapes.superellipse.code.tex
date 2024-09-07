@@ -20,7 +20,7 @@
 % #1 = t (0≤t≤90)
 % #2 = 2/m (x-exp)
 % #3 = a (x-rad)
-\pgfmathdeclarefunction{extsuperellipsex}{3}{%
+\pgfmathdeclarefunction{ext_superellipsex}{3}{%
   \pgfmathcos@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
@@ -29,10 +29,15 @@
 % #1 = t (0≤t≤90)
 % #2 = 2/n (y-exp)
 % #3 = a (y-rad)
-\pgfmathdeclarefunction{extsuperellipsey}{3}{%
+\pgfmathdeclarefunction{ext_superellipsey}{3}{%
   \pgfmathsin@{#1}%
   \pgfmathpow@{\pgfmathresult}{#2}%
   \pgfmathmultiply@{\pgfmathresult}{#3}}
+
+\expandafter\let\expandafter\pgfmathextsuperellipsex\csname pgfmathext_superellipsex\endcsname
+\expandafter\let\expandafter\pgfmathextsuperellipsex@\csname pgfmathext_superellipsex@\endcsname
+\expandafter\let\expandafter\pgfmathextsuperellipsey\csname pgfmathext_superellipsey\endcsname
+\expandafter\let\expandafter\pgfmathextsuperellipsey@\csname pgfmathext_superellipsey@\endcsname
 
 % Evaluates the x- and y- value of superellipse around the center
 % #1 = t (0≤t≤90)
