@@ -87,6 +87,24 @@
     }%
   }{}%
 }
+\def\tikzextutil@compatwarning@handler#1#2#3#4{%
+  \pgfkeys@pathtoks{/handlers/#3}%
+  \pgfkeysifdefined{/handlers/#3}{%
+    % The key is a value key. Do not overwrite or adjust.
+    % Old TikZ-Ext key simply will not work.
+  }{%
+    \pgfkeysifdefined{/handlers/#3/.@cmd}{%
+      % The key is a code key. Do not overwrite or adjust.
+      % Old TikZ-Ext key simply will not work.
+    }{%
+      % The key is currently not used.
+      \pgfkeysdef{/handlers/#3/.@cmd}{%
+        \tikzextutil@compatmaybewarning{handler '#3'}{'#4'}{#1 = #2}%
+        \pgfkeysvalueof{/handlers/#4/.@cmd}##1\pgfeov
+      }%
+    }
+  }
+}
 \def\tikzextutil@compat@cloneshape#1#2{%
   \pgfutil@namelet{pgf@sh@s@#1}{pgf@sh@s@ext_#1}%
   \def\tikzext@temp{\edef\pgf@sm@shape@name{ext_#1}}%
@@ -128,6 +146,7 @@
 \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
   \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {\tikzext@temp}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgffor}                {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {\tikzext@temp}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {\tikzext@temp}%

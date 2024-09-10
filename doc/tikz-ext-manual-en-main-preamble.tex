@@ -574,9 +574,14 @@
 %  \pgfmanualpdflabel{/#2/\myname}{}%
 }
 \def\tipcompatstrip ext#1#2\tipstop{#2}%
+\newcommand*\handlercompat[2][pre 0.6]{%
+  \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{-2pt}\par
+  \pgfmanualpdflabel{#2}{}%
+}
 \usepackage{array}
 \newcommand*\tikzext{tikz/ext}
 \newcommand*\pgfext{pgf/ext}
+\newcommand*\pgfforeachext{pgf/foreach/ext}
 
 \def\decomposetoodeep#1/#2/\nil{%
   % avoid too-deep nesting in index

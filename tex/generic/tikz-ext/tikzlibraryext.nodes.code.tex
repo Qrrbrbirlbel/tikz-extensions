@@ -147,14 +147,14 @@
 \pgfkeysdef{/tikz/auto/}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on}
 \tikzset{
   swap/.style={% overwriting
-    /tikz-ext/nodes/swap auto=\tikz@auto@anchor@direction
+    /tikz/ext/nodes/swap auto=\tikz@auto@anchor@direction
   },
   auto/.is choice, % overwriting
   auto/.default=,
   auto/false/.code=\let\tikz@do@auto@anchor\relax,
-  /tikz-ext/nodes/swap auto/.is choice,
+  /tikz/ext/nodes/swap auto/.is choice,
   /utils/temp/.style args={#1=#2}{
-    /tikz-ext/nodes/swap auto/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
+    /tikz/ext/nodes/swap auto/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
     /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}%
   },
   /utils/temp/.list={
