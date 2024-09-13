@@ -8,34 +8,34 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-\includeonly{
-  tikz-ext-manual-en-intro,
-%  tikz-ext-manual-en-library-arrows-plus,
-%  tikz-ext-manual-en-library-calendar-plus,
-%  tikz-ext-manual-en-library-layers,
-%  tikz-ext-manual-en-library-node-families,
-%  tikz-ext-manual-en-library-nodes,
-%  tikz-ext-manual-en-library-paths.arcto,
-%  tikz-ext-manual-en-library-paths.ortho,
-%  tikz-ext-manual-en-library-paths.timer,
-%  tikz-ext-manual-en-library-patterns.images,
-%  tikz-ext-manual-en-library-positioning-plus,
-%  tikz-ext-manual-en-library-scalepicture,
-%  tikz-ext-manual-en-library-topaths.arcthrough,
-%  tikz-ext-manual-en-library-topaths.autobend,
-%  tikz-ext-manual-en-library-trans,
+%\includeonly{
+%  tikz-ext-manual-en-intro,
+%%  tikz-ext-manual-en-library-arrows-plus,
+%%  tikz-ext-manual-en-library-calendar-plus,
+%%  tikz-ext-manual-en-library-layers,
+%%  tikz-ext-manual-en-library-node-families,
+%%  tikz-ext-manual-en-library-nodes,
+%%  tikz-ext-manual-en-library-paths.arcto,
+%%  tikz-ext-manual-en-library-paths.ortho,
+%%  tikz-ext-manual-en-library-paths.timer,
+%%  tikz-ext-manual-en-library-patterns.images,
+%%  tikz-ext-manual-en-library-positioning-plus,
+%%  tikz-ext-manual-en-library-scalepicture,
+%%  tikz-ext-manual-en-library-topaths.arcthrough,
+%%  tikz-ext-manual-en-library-topaths.autobend,
+%%  tikz-ext-manual-en-library-trans,
 %  tikz-ext-manual-en-pgf-arrows,
-%  tikz-ext-manual-en-pgf-trans,
-%  tikz-ext-manual-en-pgf-shapes-circlearrow,
-%  tikz-ext-manual-en-pgf-shapes-circlecrosssplit,
-%  tikz-ext-manual-en-pgf-shapes-heatmark,
-%  tikz-ext-manual-en-pgf-shapes-rectround,
-%  tikz-ext-manual-en-pgf-shapes-superellipse,
-%  tikz-ext-manual-en-pgf-shapes-uncentered,
-%  tikz-ext-manual-en-calendar,
-  tikz-ext-manual-en-library-pgffor,
-  tikz-ext-manual-en-library-misc,
-}
+%%  tikz-ext-manual-en-pgf-trans,
+%%  tikz-ext-manual-en-pgf-shapes-circlearrow,
+%%  tikz-ext-manual-en-pgf-shapes-circlecrosssplit,
+%%  tikz-ext-manual-en-pgf-shapes-heatmark,
+%%  tikz-ext-manual-en-pgf-shapes-rectround,
+%%  tikz-ext-manual-en-pgf-shapes-superellipse,
+%%  tikz-ext-manual-en-pgf-shapes-uncentered,
+%%  tikz-ext-manual-en-calendar,
+%  tikz-ext-manual-en-library-pgffor,
+%  tikz-ext-manual-en-library-misc,
+%}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
@@ -122,9 +122,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
     circle, minimum size=10mm, draw, densely dashdotted, thick,
     decide color/.expand once=#1},
   decide color/.style 2 args={
-    /utils/TeX/if=c#1
-      {/utils/TeX/ifnum={#2<5}{bluelight}{bluedark}}
-      {/utils/TeX/ifnum={#2<8}{light}{dark}}},
+    /utils/ext/if=c#1
+      {/utils/ext/ifnum={#2<5}{bluelight}{bluedark}}
+      {/utils/ext/ifnum={#2<8}{light}{dark}}},
   light/.style={fill=gray!20},  bluelight/.style={fill=blue!10},
   dark/.style ={fill=gray!60},  bluedark/.style ={fill=blue!30}}
 \tikz\graph[

@@ -166,7 +166,7 @@ on page~\pageref{pkg:pgffor-ext}.
 \begin{multicols}{2}
 \subsubsection{Conditionals}
 
-\begin{key}{/utils/if=\marg{cond}\marg{true}\opt{\marg{false}}}
+\begin{key}{/\utilsext/pgfmath if=\marg{cond}\marg{true}\opt{\marg{false}}}{\def\myname{if}\keycompat{utils}}
   This key checks the conditional \meta{cond} and applies the styles \meta{true}
   if \meta{cond} is true, otherwise \meta{false}.
   \meta{cond} can be anything that \pgfname math understands.
@@ -178,7 +178,7 @@ on page~\pageref{pkg:pgffor-ext}.
 The following keys use \TeX' macros |\if|, |\ifx|, |\ifnum| and |\ifdim| for faster
 executions.
 
-\begin{key}{/utils/TeX/if=\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}
+\begin{key}{/\utilsext/if=\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}\keycompat{utils/TeX}
   This key checks via |\if| if \meta{token A} matches \meta{token B}
   and applies the styles \meta{true} if it does, otherwise \meta{false}.
   
@@ -186,11 +186,11 @@ executions.
   actually optional.
 \end{key}
 
-\begin{key}{/utils/TeX/ifx=\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}
+\begin{key}{/\utilsext/ifx=\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}\keycompat{utils/TeX}
   As above but via |\ifx|.
 \end{key}
 
-\begin{key}{/utils/TeX/ifnum=\marg{num cond}\marg{true}\opt{\marg{false}}}
+\begin{key}{/\utilsext/ifnum=\marg{num cond}\marg{true}\opt{\marg{false}}}\keycompat{utils/TeX}
   This key checks |\ifnum|\meta{num cond}
   and applies the styles \meta{true} if true, otherwise \meta{false}.
   A delimiting |\relax| will be inserted after \meta{num cond}.
@@ -199,15 +199,15 @@ executions.
   actually optional.
 \end{key}
 
-\begin{key}{/utils/TeX/ifdim=\meta{dim cond}\meta{true}\opt{\meta{false}}}
+\begin{key}{/\utilsext/ifdim=\meta{dim cond}\meta{true}\opt{\meta{false}}}\keycompat{utils/TeX}
   As above but with |\ifdim|.
 \end{key}
 
-\begin{key}{/utils/TeX/ifempty=\meta{Text}\meta{true}\opt{\meta{false}}}
+\begin{key}{/\utilsext/ifempty=\meta{Text}\meta{true}\opt{\meta{false}}}\keycompat{utils/TeX}
   This checks whether \meta{Text} is empty and applies styles \meta{true} if true,
   otherwise \meta{false}.
 \end{key}
-\begin{key}{/utils/TeX/ifxempty=\meta{Text}\meta{true}\opt{\meta{false}}}
+\begin{key}{/\utilsext/ifxempty=\meta{Text}\meta{true}\opt{\meta{false}}}\keycompat{utils/TeX}
   This checks whether fully expanded \meta{Text} is empty and applies styles \meta{true} if true,
   otherwise \meta{false}.
 \end{key}
@@ -217,19 +217,19 @@ executions.
 While already a lot of values given to keys are evaluated by \pgfname math at some point,
 not all of them are.
 
-\begin{handler}{{.pgfmath}|=|\meta{eval}}
+\begin{ext_handler}{{pgfmath}|=|\meta{eval}}\handlercompat{.pgfmath}
   This handler evaluates \meta{eval} before it is handed to the key.
   
   This handler works almost the same as the |.evaluated|\indexHandlerO{.evaluated}
   handler but it does its evaluation in a group so that the result will 
   not overwrite any other results.
-\end{handler}
+\end{ext_handler}
 
-\begin{handler}{{.pgfmath int}|=|\meta{eval}}
+\begin{ext_handler}{{pgfmath int}|=|\meta{eval}}\handlercompat{.pgfmath int}
   As above but truncates the result.
-\end{handler}
+\end{ext_handler}
 
-\begin{handler}{{.pgfmath wrap}|=|\marg{wrapper}\marg{eval}}
+\begin{ext_handler}{{pgfmath wrap}|=|\marg{wrapper}\marg{eval}}\handlercompat{.pgfmath wrap}
   This feeds the result of \meta{eval} as |#1| to \meta{wrapper}.
   
   In the example below, one could have used the \referenceKeyandIndexO[/pgf/foreach/]{evaluate}
@@ -239,49 +239,49 @@ not all of them are.
 \draw[
   line width=+.25cm,
   % needs ## because its inside the \foreach body
-  color/.pgfmath wrap={red!##1!blue}{sqrt(\i)*10}
+  color/.ext_pgfmath wrap={red!##1!blue}{sqrt(\i)*10}
 ]
   (0,\i/40) -- +(right:3);
 \end{codeexample}
-\end{handler}
+\end{ext_handler}
 
-\begin{handler}{{.pgfmath if}|=|\marg{cond}\marg{true}\opt{\marg{false}}}
+\begin{ext_handler}{{pgfmath if}|=|\marg{cond}\marg{true}\opt{\marg{false}}}\handlercompat{.pgfmath if}
   Evaluates \meta{cond} with \pgfname Math and returns \meta{true} or \meta{false} to the used key respectively.
-\end{handler}
-\begin{handler}{{.if}|=|\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{if}|=|\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}\handlercompat{.if}
   Checks via |\if| if \meta{token A} matches \meta{token B}
   and applies the value \meta{true} if it does, otherwise \meta{false}.
-\end{handler}
-\begin{handler}{{.ifx}|=|\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{ifx}|=|\meta{token A}\meta{token B}\marg{true}\opt{\marg{false}}}\handlercompat{.ifx}
   As above but via |\ifx|.
-\end{handler}
-\begin{handler}{{.ifnum}|=|\marg{ifnum cond}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{ifnum}|=|\marg{ifnum cond}\marg{true}\opt{\marg{false}}}\handlercompat{.ifnum}
   Checks via |\ifnum| if \meta{ifnum cond}
   and applies the value \meta{true} if it does, otherwise \meta{false}.
-\end{handler}
-\begin{handler}{{.ifdim}|=|\marg{ifdim cond}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{ifdim}|=|\marg{ifdim cond}\marg{true}\opt{\marg{false}}}\handlercompat{.ifdim}
   As above but via |\ifdim|.
-\end{handler}
-\begin{handler}{{.ifxempty}|=|\marg{Text}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{ifxempty}|=|\marg{Text}\marg{true}\opt{\marg{false}}}\handlercompat{.ifxempty}
   Checks whether a fully expanded \meta{Text} is empty
   and applies the value \meta{true} if it does, otherwise \meta{false}.
-\end{handler}
-\begin{handler}{{.ifempty}|=|\marg{Text}\marg{true}\opt{\marg{false}}}
+\end{ext_handler}
+\begin{ext_handler}{{ifempty}|=|\marg{Text}\marg{true}\opt{\marg{false}}}
   Checks whether \meta{Text} is empty
   and applies the value \meta{true} if it does, otherwise \meta{false}.
-\end{handler}
-\begin{handler}{{.List}|=|\marg{\meta{e1}, \meta{e2}, \dots, \meta{en}}}
+\end{ext_handler}
+\begin{ext_handler}{{List}|=|\marg{\meta{e1}, \meta{e2}, \dots, \meta{en}}}\handlercompat{.List}
   This handler evaluates the given list with |\foreach| and concatenates the element and
   the result is then given to the used key.
-\end{handler}
+\end{ext_handler}
 \end{multicols}
 \begin{codeexample}[width=6cm,preamble=\usetikzlibrary{fit,ext.misc}]
 \begin{tikzpicture}[nodes={draw, dashed, inner sep=+10pt}]
   \foreach \point [count=\cnt] in {(0,0), (0,2), (2,0), (2,2), (3,3), (-1,-1)}
     \node[circle, fill, inner sep=1pt, text=white] (point-\cnt) at \point {\cnt};
-  \node[gray, fit/.List={(point-1),(point-...),(point-4)}] {}; 
-  \node[red,  fit/.List={(point-1),(point-...),(point-5)}] {}; 
-  \node[blue, fit/.List={(point-1),(point-...),(point-6)}] {};
+  \node[gray, fit/.ext_List={(point-1),(point-...),(point-4)}] {}; 
+  \node[red,  fit/.ext_List={(point-1),(point-...),(point-5)}] {}; 
+  \node[blue, fit/.ext_List={(point-1),(point-...),(point-6)}] {};
 \end{tikzpicture}
 \end{codeexample}
 

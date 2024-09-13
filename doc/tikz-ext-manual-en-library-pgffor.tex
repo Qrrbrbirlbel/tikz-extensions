@@ -86,10 +86,10 @@ two |\foreach| variables, say |\Options/\Text|.
 The \opt{default} value is the default value if the optional argument is missing.
 \end{key}
 
-\begin{handler}{{.ext list xparse}|=|\marg{argument specification}\marg{comma-separated list of values}}%
+\begin{ext_handler}{{list xparse}|=|\marg{argument specification}\marg{comma-separated list of values}}%
 \handlercompat{.list xparse}
   This handler causes the key to be used repeatedly, namely
   once for every element of the list of values.
   The \meta{comma-separated list of values} is processed using |\foreach|
   and the given |xparse| \meta{argument specification} with the aforementioned |xparser| key.
-\end{handler}
+\end{ext_handler}

@@ -98,7 +98,7 @@
       % Old TikZ-Ext key simply will not work.
     }{%
       % The key is currently not used.
-      \pgfkeysdef{/handlers/#3/.@cmd}{%
+      \pgfkeysdef{/handlers/#3}{%
         \tikzextutil@compatmaybewarning{handler '#3'}{'#4'}{#1 = #2}%
         \pgfkeysvalueof{/handlers/#4/.@cmd}##1\pgfeov
       }%
@@ -143,23 +143,28 @@
   % },
 }
 % \def\tikzext@compat@stripext#1/ext/#2\tikzext@stop{#1/#2}
-\pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
-  \pgfkeysedef{/tikz/ext/compat/\tikzext@temp}{%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgffor}                {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.ortho}           {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/positioning-plus}      {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfcalendar-ext}       {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/shapes}                {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/topaths.arcthrough}    {\tikzext@temp}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{\tikzext@temp}%
-  }%
-}
+\def\tikzext@temp#1{%
+  \pgfkeysedef{/tikz/ext/compat/#1}{%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgffor}                {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.ortho}           {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgffor-ext}            {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfkeys-plus}          {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/positioning-plus}      {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgfcalendar-ext}       {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/scalepicture}          {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/shapes}                {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/topaths.arcthrough}    {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{#1}%
+  }}
+\tikzext@temp{pre 0.6}
+\tikzext@temp{0.6}
+\tikzext@temp{newest}
+\tikzext@temp{warn}
 \tikzextset{compat=warn}
 
 \long\def\tikzextutil@gobblethree#1#2#3{}

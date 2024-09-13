@@ -582,6 +582,7 @@
 \newcommand*\tikzext{tikz/ext}
 \newcommand*\pgfext{pgf/ext}
 \newcommand*\pgfforeachext{pgf/foreach/ext}
+\newcommand*\utilsext{utils/ext}
 
 \def\decomposetoodeep#1/#2/\nil{%
   % avoid too-deep nesting in index
@@ -662,3 +663,22 @@
 %{
 %  \end{pgfmanualentry}
 %}
+
+\makeatletter
+\newenvironment{ext_handler}[1]{
+  \begin{pgfmanualentry}
+    \extextracthandler#1\@nil%
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
+
+\def\extextracthandler#1#2\@nil{%
+  \pgfmanualentryheadline{%
+    \pgfmanualpdflabel{/handlers/.ext_#1}{}%
+    \textbf{Key handler} \meta{key}{\ttfamily/\declare{.ext\textunderscore#1}}#2}%
+  \index{ext\textunderscore#1@\protect\texttt{.ext\textunderscore#1} handler}%
+  \index{Key handlers!.ext\textunderscore#1@\protect\texttt{.ext\textunderscore#1}}
+}
+\makeatother
