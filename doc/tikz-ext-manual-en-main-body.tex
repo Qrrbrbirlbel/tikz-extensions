@@ -10,29 +10,29 @@
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
 %\includeonly{
 %  tikz-ext-manual-en-intro,
-%%  tikz-ext-manual-en-library-arrows-plus,
-%%  tikz-ext-manual-en-library-calendar-plus,
-%%  tikz-ext-manual-en-library-layers,
-%%  tikz-ext-manual-en-library-node-families,
-%%  tikz-ext-manual-en-library-nodes,
-%%  tikz-ext-manual-en-library-paths.arcto,
-%%  tikz-ext-manual-en-library-paths.ortho,
-%%  tikz-ext-manual-en-library-paths.timer,
-%%  tikz-ext-manual-en-library-patterns.images,
-%%  tikz-ext-manual-en-library-positioning-plus,
-%%  tikz-ext-manual-en-library-scalepicture,
-%%  tikz-ext-manual-en-library-topaths.arcthrough,
-%%  tikz-ext-manual-en-library-topaths.autobend,
-%%  tikz-ext-manual-en-library-trans,
+%  tikz-ext-manual-en-library-arrows-plus,
+%  tikz-ext-manual-en-library-calendar-plus,
+%  tikz-ext-manual-en-library-layers,
+%  tikz-ext-manual-en-library-node-families,
+%  tikz-ext-manual-en-library-nodes,
+%  tikz-ext-manual-en-library-paths.arcto,
+%  tikz-ext-manual-en-library-paths.ortho,
+%  tikz-ext-manual-en-library-paths.timer,
+%  tikz-ext-manual-en-library-patterns.images,
+%  tikz-ext-manual-en-library-positioning-plus,
+%  tikz-ext-manual-en-library-scalepicture,
+%  tikz-ext-manual-en-library-topaths.arcthrough,
+%  tikz-ext-manual-en-library-topaths.autobend,
+%  tikz-ext-manual-en-library-trans,
 %  tikz-ext-manual-en-pgf-arrows,
-%%  tikz-ext-manual-en-pgf-trans,
-%%  tikz-ext-manual-en-pgf-shapes-circlearrow,
-%%  tikz-ext-manual-en-pgf-shapes-circlecrosssplit,
-%%  tikz-ext-manual-en-pgf-shapes-heatmark,
-%%  tikz-ext-manual-en-pgf-shapes-rectround,
-%%  tikz-ext-manual-en-pgf-shapes-superellipse,
-%%  tikz-ext-manual-en-pgf-shapes-uncentered,
-%%  tikz-ext-manual-en-calendar,
+%  tikz-ext-manual-en-pgf-trans,
+%  tikz-ext-manual-en-pgf-shapes-circlearrow,
+%  tikz-ext-manual-en-pgf-shapes-circlecrosssplit,
+%  tikz-ext-manual-en-pgf-shapes-heatmark,
+%  tikz-ext-manual-en-pgf-shapes-rectround,
+%  tikz-ext-manual-en-pgf-shapes-superellipse,
+%  tikz-ext-manual-en-pgf-shapes-uncentered,
+%  tikz-ext-manual-en-calendar,
 %  tikz-ext-manual-en-library-pgffor,
 %  tikz-ext-manual-en-library-misc,
 %}
@@ -169,8 +169,8 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \begin{codeexample}[width=6cm, preamble=\usetikzlibrary{ext.misc}]
 \begin{tikzpicture}[
   declare function={bigR(\n)=smallR+.05*\n;},
-  declare constant={smallR=1; segments=20;},
-  full arc=segments]
+  ext/declare constant={smallR=1; segments=20;},
+  ext/full arc=segments]
 \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, ext/use int=0 to segments-1]
   \filldraw[fill=gray!50] (\iN R:\endRadius)
     arc [radius=\endRadius, start angle=\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
@@ -180,7 +180,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
 \node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
 
-\tikzset{yshift=-5cm, declare constant={segments=25;}, full arc=segments}
+\tikzset{yshift=-5cm, ext/declare constant={segments=25;}, ext/full arc=segments}
 \filldraw[fill=gray!50] (right:smallR)
   \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, ext/use int=0 to segments-1] {
     -- (\iN R:\endRadius) arc[radius=\endRadius, start angle=\iN R, delta angle=1R]}

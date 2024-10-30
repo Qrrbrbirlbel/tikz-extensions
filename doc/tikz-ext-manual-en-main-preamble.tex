@@ -578,6 +578,10 @@
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{-2pt}\par
   \pgfmanualpdflabel{#2}{}%
 }
+\newcommand*\mathcompat[2][pre 0.6]{%
+  \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{-2pt}\par
+%  \pgfmanualpdflabel{/#2/\myname}{}%
+}
 \usepackage{array}
 \newcommand*\tikzext{tikz/ext}
 \newcommand*\pgfext{pgf/ext}

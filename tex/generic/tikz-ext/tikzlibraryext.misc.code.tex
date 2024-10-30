@@ -18,22 +18,28 @@
 %%  10R = 360°
 %% Calling the full arc key with an empty value 
 %% makes 1R = 1°
-\pgfset{full arc/.code=%
-  \def\pgf@temp{#1}%
-  \ifx\pgfutil@empty\pgf@temp
-    \let\pgfmath@fullarc@factor\pgfutil@empty
-  \else
-    \pgfmathsetmacro\pgfmath@fullarc@factor{360/(#1)}%
-  \fi,full arc=}
-\pgfmathdeclareoperator{R}{full arc}{1}{postfix}{950}
-\pgfmathdeclarefunction{full arc}{1}{%
+\pgfkeyslet{/pgf/ext/full arc}\pgfutil@empty
+\pgfextset{
+  full arc/.code=%
+    \edef\pgf@temp{#1}%
+    \ifx\pgfutil@empty\pgf@temp
+      \pgfkeyslet{/pgf/ext/full arc}\pgfutil@empty
+    \else
+      \pgfmathdivide{360}{#1}%
+      \pgfkeyslet{/pgf/ext/full arc}\pgfmathresult
+    \fi
+}
+\pgfmathdeclareoperator{R}{extfullarc}{1}{postfix}{950}
+\pgfmathdeclarefunction{extfullarc}{1}{%
   \begingroup
     \pgfmath@x=#1pt\relax
-    \ifx\pgfmath@fullarc@factor\pgfutil@empty\else
-      \pgfmath@x\pgfmath@fullarc@factor\pgfmath@x
+    \expandafter\ifx\csname pgfk@/pgf/ext/full arc\endcsname\pgfutil@empty
+    \else
+      \pgfmath@x\csname pgfk@/pgf/ext/full arc\endcsname\pgfmath@x
     \fi
     \pgfmath@returnone\pgfmath@x
-  \endgroup}
+  \endgroup
+}
 
 \pgfutil@IfUndefined{tikzext@pgf@foreach@no@list@parse@to}{% stupid test
   \input pgffor-ext.code.tex
@@ -41,62 +47,40 @@
 
 %% PGFmath
 %% strrepeat("x", 5) = "xxxxx"
-\pgfmathdeclarefunction{strrepeat}{2}{%
+\pgfmathdeclarefunction{extstrrepeat}{2}{%
   \begingroup\pgfmathint{#2}\pgfmath@count\pgfmathresult
     \let\pgfmathresult\pgfutil@empty
     \pgfutil@loop\ifnum\pgfmath@count>0\relax
       \expandafter\def\expandafter\pgfmathresult\expandafter{\pgfmathresult#1}%
       \advance\pgfmath@count-1\relax
     \pgfutil@repeat\pgfmath@smuggleone\pgfmathresult\endgroup}
-
 %% isInString("foo", "foobar") = true (= 1)
 %% isInString("boo", "foobar") = false (= 0)
-\pgfmathdeclarefunction{isInString}{2}{%
+\pgfmathdeclarefunction{extisInString}{2}{%
   \pgfutil@in@{#1}{#2}%
   \ifpgfutil@in@\def\pgfmathresult{1}\else\def\pgfmathresult{0}\fi}
 
 %% strcat("foo", "bar") = "foobar" (can have more than two parameters)
-\pgfutil@IfUndefined{pgfmathstrcat@}{
-  \pgfmathdeclarefunction{strcat}{...}{%
-    \begingroup
-      \let\pgfmathresult\pgfutil@empty
-      \pgfmathstrcat@@#1\pgfmath@stop}
-  \def\pgfmathstrcat@@#1{%
-    \ifx\pgfmath@stop#1%
-      \def\pgfmath@next{\pgfmath@smuggleone\pgfmathresult\endgroup}
-    \else
-      \expandafter\def\expandafter\pgfmathresult\expandafter{\pgfmathresult#1}%
-      \let\pgfmath@next\pgfmathstrcat@@
-    \fi
-    \pgfmath@next}
-}{}
+\pgfmathdeclarefunction{extstrcat}{...}{%
+  \begingroup
+    \let\pgfmathresult\pgfutil@empty
+    \pgfextmathstrcat@@#1\pgfmath@stop
+}
+\def\pgfextmathstrcat@@#1{%
+  \ifx\pgfmath@stop#1%
+    \def\pgfmath@next{\pgfmath@smuggleone\pgfmathresult\endgroup}%
+  \else
+    \expandafter\def\expandafter\pgfmathresult\expandafter{\pgfmathresult#1}%
+    \let\pgfmath@next\pgfextmathstrcat@@
+  \fi
+  \pgfmath@next
+}
 
 % http://tex.stackexchange.com/questions/244569/bounding-lines-around-tax-nodes/244619#244619
-\pgfmathdeclarefunction{atanXY}{2}{\pgfmathatantwo@{#2}{#1}}
-\pgfmathdeclarefunction{atanYX}{2}{\pgfmathatantwo@{#1}{#2}}
+\pgfmathdeclarefunction{extatanXY}{2}{\pgfmathatantwo@{#2}{#1}}
+\pgfmathdeclarefunction{extatanYX}{2}{\pgfmathatantwo@{#1}{#2}}
 
-%% http://tex.stackexchange.com/a/132939/16595
-\tikzset{
-  @edges through/.code={{{% three braces to protect \pgfeov
-    \pgfutil@ifnextchar[{\pgfkeysvalueof{/tikz/@@edges through/.@cmd}}
-                        {\pgfkeysvalueof{/tikz/@@edges through/.@cmd}[]}#1\pgfeov}}},
-  @@edges through/.style args={[#1]#2}{/tikz/insert path={edge[#1] (#2) (#2)}},
-  edges through/.style={/tikz/@edges through/.list={#1}}}
-\tikzset{
-  @edges to/.code={{{% three braces to protect \pgfeov
-    \pgfutil@ifnextchar[{\pgfkeysvalueof{/tikz/@@edges to/.@cmd}}
-                        {\pgfkeysvalueof{/tikz/@@edges to/.@cmd}[]}#1\pgfeov}}},
-  @@edges to/.style args={[#1]#2}{/tikz/insert path={edge[#1] (#2)}},
-  edges to/.style={/tikz/@edges to/.list={#1}}}
-\tikzset{
-  @tos to/.code={{{% three braces to protect \pgfeov
-    \pgfutil@ifnextchar[{\pgfkeysvalueof{/tikz/@@tos to/.@cmd}}
-                        {\pgfkeysvalueof{/tikz/@@tos to/.@cmd}[]}#1\pgfeov}}},
-  @@tos to/.style args={[#1]#2}{/tikz/insert path={to[#1] (#2)}},
-  tos to/.style={/tikz/@tos to/.list={#1}}}
-
-
-\pgfmathdeclarefunction{distancebetween}{2}{% only coordinates/nodes
+\pgfmathdeclarefunction{extdistancebetween}{2}{% only coordinates/nodes
   \begingroup
     \nullfont
     \pgfpointdiff{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}%
@@ -104,7 +88,7 @@
     \expandafter\pgfmathveclen@\pgfmath@temp
     \pgfmath@smuggleone\pgfmathresult
   \endgroup}
-\pgfmathdeclarefunction{qdistancebetween}{1}{% only coordinates/nodes
+\pgfmathdeclarefunction{extqdistancebetween}{1}{% only coordinates/nodes
   \begingroup
     \nullfont
     \pgfpointdiff{\pgfpointorigin}{\pgfpointanchor{#1}{center}}%
@@ -113,7 +97,7 @@
     \pgfmath@smuggleone\pgfmathresult
   \endgroup}
 
-\pgfmathdeclarefunction{qanglebetween}{1}{%
+\pgfmathdeclarefunction{extqanglebetween}{1}{%
   \begingroup
     \nullfont
     \pgfmathanglebetweenpoints{\pgfpointorigin}{\pgfpointanchor{#1}{center}}%
@@ -121,7 +105,7 @@
   \endgroup
 }
 
-\pgfmathdeclarefunction{anglebetween}{2}{%
+\pgfmathdeclarefunction{extanglebetween}{2}{%
   \begingroup
     \nullfont  
     \pgfmathanglebetweenpoints{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}%
@@ -129,14 +113,16 @@
   \endgroup
 }
 
-\pgfmathdeclarefunction{isEmpty}{1}{%
+\pgfmathdeclarefunction{extisEmpty}{1}{%
   \begingroup
     \def\pgfmath@temp{#1}%
     \pgfutil@ifxempty\pgfmath@temp{\def\pgfmathresult{1}}{\def\pgfmathresult{0}}%                           
     \pgfmath@smuggleone\pgfmathresult
-  \endgroup}
+  \endgroup
+}
 
-\pgfset{
+
+\pgfextset{
   declare constant/.code={%
     \let\pgfmathdeclareconstant@@@\pgfutil@empty
     \pgfkeysvalueof{/pgf/declare function/execute at begin function}%
@@ -157,7 +143,7 @@
 
 %%% Some shape
 
-\tikzset{% quick versions of reverse clips
+\tikzextset{% quick versions of reverse clips
   reverse clip/.is choice,
   reverse clip/clockwise/.code={%
     \begingroup
@@ -183,27 +169,45 @@
   clip rule/even odd/.code=\pgfseteorule,
   clip rule/nonzero/.code=\pgfsetnonzerorule,
   reverse clip/.default=counter clockwise,
-  remember path/.code={%
-    \tikz@addmode{%
-      \expandafter\pgfsyssoftpath@getcurrentpath\csname tikz@intersect@path@name@remember path-#1\endcsname
-      \immediate\write\pgfutil@auxout{%
-        \noexpand\expandafter\gdef\noexpand\csname tikz@intersect@path@name@remember path-#1\endcsname{%
-          \expandafter\expandafter\expandafter\unexpanded
-          \expandafter\expandafter\expandafter{%
-            \csname tikz@intersect@path@name@remember path-#1\endcsname
-          }%
-        }%
-      }%
-    }%
+}
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={misc}{pre 0.6},
+  compat/misc/warn/.append code={%
+    \tikzextutil@compatwarning@key{misc}{pre 0.6}{/pgf/full arc}{/pgf/ext/full arc}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{strrepeat}{extstrrepeat}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{isInString}{extisInString}%
+    \ifcsname pgfmathstrcat@\endcsname\else
+      \let\pgfmathextstrcat@noforest\relax
+      \tikzextutil@compatwarning@mathcmdX{misc}{pre 0.6}{strcat}{extstrcat}%
+    \fi
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{isEmpty}{extisEmpty}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{atanXY}{extatanXY}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{atanYX}{extatanYX}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{anglebetween}{extanglebetween}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{distancebetween}{extdistancebetween}%
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{qanglebetween}{extqanglebetween}%
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{qdistancebetween}{extqdistancebetween}%
   },
-  remembered path/.code={%
-    \pgfutil@IfUndefined{tikz@intersect@path@name@remember path-#1}{}{%
-      \tikz@addmode{%
-        \expandafter\pgfsyssoftpath@setcurrentpath
-        \expandafter{%
-          \csname tikz@intersect@path@name@remember path-#1\endcsname
-        }%
-      }%
-    }%
-  },%
-}       
+  compat/misc/pre 0.6/.append code={%
+    \pgfkeysdef{/pgf/full arc}{\pgfkeysvalueof{/pgf/ext/full arc}##1\pgfeov}%
+    \pgfmathdeclarefunction*{strrepeat}{2}{\pgfmathextstrrepeat@{##1}{##2}}%
+    \pgfmathdeclarefunction*{isInString}{2}{\pgfmathextisInString@{##1}{##2}}%
+    \pgfmathdeclarefunction*{isEmpty}{1}{\pgfmathextisEmpty@{##1}}%
+    \pgfmathdeclarefunction*{anglebetween}{2}{\pgfmathextanglebetween@{##1}{##2}}%
+    \pgfmathdeclarefunction*{qanglebetween}{1}{\pgfmathextqanglebetween@{##1}}%
+    \pgfmathdeclarefunction*{distancebetween}{2}{\pgfmathextdistancebetween@{##1}{##2}}%
+    \pgfmathdeclarefunction*{qdistancebetween}{1}{\pgfmathextqdistancebetween@{##1}}%
+    \pgfmathdeclarefunction*{atanXY}{2}{\pgfmathextatantwo@{##2}{##1}}%
+    \pgfmathdeclarefunction*{atanYX}{2}{\pgfmathextatantwo@{##2}{##1}}%
+    \ifcsname pgfmathstrcat@\endcsname
+      \ifcsname pgfmathextstrcat@noforest\endcsname
+        \pgfmathdeclarefunction*{strcat}{...}{\pgfmathextstrcat##1}%
+      \fi
+    \else
+      \let\pgfmathextstrcat@noforest\relax
+      \pgfmathdeclarefunction{strcat}{...}{\pgfmathextstrcat##1}%
+    \fi
+  },
+  compat/misc/\pgfkeysvalueof{/tikz/ext/compat/misc}%
+}

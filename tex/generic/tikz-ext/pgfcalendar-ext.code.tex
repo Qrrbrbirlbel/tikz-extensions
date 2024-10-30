@@ -349,6 +349,8 @@
     \pgfkeyssetvalue{/pgf/calendar/calendar week of month'/.@def}{1}%
     \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 0.6}
       {pgfcalendarjulianyeartoweek}\pgfextcalendarjulianyeartoweek\tikzextutil@gobblethree
+      \def\pgfcalendarcurrentweek{\pgfextcalendarcurrentweek}% no warning possible
+      \def\pgfcalendarifdateweek{\pgfextcalendarifdateweek}% no warning possible
   },
   compat/pgfcalendar-ext/pre 0.6/.append code={%
     \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%

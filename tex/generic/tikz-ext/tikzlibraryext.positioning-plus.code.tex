@@ -354,6 +354,8 @@
     \pgfdeclaregenericanchor{corner south west}{\csname pgf@anchor@generic@ext_corner south west\endcsname}%
     \pgfdeclaregenericanchor{corner north east}{\csname pgf@anchor@generic@ext_corner north east\endcsname}%
     \pgfdeclaregenericanchor{corner north west}{\csname pgf@anchor@generic@ext_corner north west\endcsname}%
+    \pgfmathdeclarefunction*{x_node_dist}{0}{\csname pgfmathext_x_node_dist\encsname}%
+    \pgfmathdeclarefunction*{y_node_dist}{0}{\csname pgfmathext_y_node_dist\encsname}%
     ,
   compat/positioning-plus/0.6/.append code=
     \pgfkeysdef{above}{\tikz@lib@place@handle@{#1}{south}{0}{1}{north}{1}}%

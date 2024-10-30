@@ -23,7 +23,7 @@
 Similar to |\segments[<num>]| in PSTricks, the postfix operator |R| allows the user
 to use an arbitrary number of segments of a circle to be used instead of an angle.
 
-\begin{key}{/pgf/full arc=\meta{num} (default |\{\}|)}
+\begin{key}{/\pgfext/full arc=\meta{num} (default |\{\}|)}\keycompat{pgf}
   The number \meta{num} of segments will be set up.
   Using |full arc| with an empty value disables the segmentation and |1R| equals $1^\circ$.
   
@@ -31,73 +31,73 @@ to use an arbitrary number of segments of a circle to be used instead of an angl
   \meta{num} contains variables that change.
 \end{key}
 The |R| operator can then be used.
-\begin{math-operator}{R}{postfix}{fullarc}
+\begin{math-operator}{R}{postfix}{extfullarc}
   Multiplies \mvar{x} with $\frac{360}{\meta{num}}$.
 \end{math-operator}
 
 \subsubsection{Functions}
 
-\begin{math-function}{strrepeat("\mvar{Text}", \mvar{x})}
+\begin{math-function}{extstrrepeat("\mvar{Text}", \mvar{x})}\mathcompat{strrepeat}
 \mathcommand
   Returns a string with \mvar{Text} repeated \mvar{x} times.
 
 \begin{codeexample}[]
-\pgfmathparse{strrepeat("foo", 5)}
+\pgfmathparse{extstrrepeat("foo", 5)}
 \pgfmathresult
 \end{codeexample}
 \end{math-function}
 
-\begin{math-function}{isInString("\mvar{String}", "\mvar{Text}")}
+\begin{math-function}{extisInString("\mvar{String}", "\mvar{Text}")}\mathcompat{isInString}
 \mathcommand
   Returns |1| (true) if \mvar{Text} contains \mvar{String},
   otherwise |0| (false).
 
 \begin{codeexample}[]
-\pgfmathparse{isInString("foo", "bar")}
+\pgfmathparse{extisInString("foo", "bar")}
 \pgfmathresult \ and\ 
-\pgfmathparse{isInString("foo", "foobar")}
+\pgfmathparse{extisInString("foo", "foobar")}
 \pgfmathresult
 \end{codeexample}
 \end{math-function}
 
-\begin{math-function}{strcat("\mvar{Text A}", "\mvar{Text B}", …)}
+\begin{math-function}{extstrcat("\mvar{Text A}", "\mvar{Text B}", …)}\mathcompat{strcat}
 \mathcommand
   Returns the concatenation of all given parameters.
 
 \begin{codeexample}[]
-\pgfmathparse{strcat("blue!", int(7*3), "!green")}
+\pgfmathparse{extstrcat("blue!", int(7*3), "!green")}
 \pgfmathresult
 \end{codeexample}
 \end{math-function}
 
 
-\begin{math-function}{isEmpty("\mvar{Text}")}
+\begin{math-function}{extisEmpty("\mvar{Text}")}\mathcompat{isEmpty}
 \mathcommand
   Returns |1| (true) if \mvar{Text} is empty, otherwise |0| (false).
   %
 \begin{codeexample}[]
-\pgfmathparse{isEmpty("foo")} \pgfmathresult\ and\ 
-\pgfmathparse{isEmpty("")}    \pgfmathresult\ and\ 
+\pgfmathparse{extisEmpty("foo")} \pgfmathresult\ and\ 
+\pgfmathparse{extisEmpty("")}    \pgfmathresult\ and\ 
 \def\emptyText{}
-\pgfmathparse{isEmpty("\emptyText")} \pgfmathresult
+\pgfmathparse{extisEmpty("\emptyText")} \pgfmathresult
 \end{codeexample}
 \end{math-function}
 
-\begin{math-function}{atanXY(\mvar{x},\mvar{y})}
+\begin{math-function}{extatanXY(\mvar{x},\mvar{y})}\mathcompat{atanXY}
 \mathcommand
   Arctangent of $\mvar y\div \mvar x$ in degrees. This also takes into account the quadrant.
   This is just a argument-swapped version of |atan2|\indexMathFunctionO{atan2} which makes it easier to use
   the |\p| commands of the |calc|\indexLibraryO{calc} library.
   %
 \begin{codeexample}[]
-\pgfmathparse{atanXY(3,4)} \pgfmathresult
+\pgfmathparse{extatanXY(3,4)} \pgfmathresult
 \end{codeexample}
 \end{math-function}
-\begin{math-function}{atanYX(\mvar{y},\mvar{x})}
+\begin{math-function}{extatanYX(\mvar{y},\mvar{x})}\mathcompat{atanYX}
 \mathcommand
    Arctangent of $y\div x$ in degrees. This also takes into account the quadrant.
 \begin{codeexample}[]
-\pgfmathparse{atanYX(4,3)} \pgfmathresult
+\pgfmathparse{extatanYX(4,3)} \pgfmathresult
 \end{codeexample}
 \end{math-function}
 
@@ -105,16 +105,16 @@ The |R| operator can then be used.
 The following functions can only be used with \pgfname\space and/or \tikzname.
 Since the arguments are usually plain text (and not numbers) one has to wrap
 them in |"|.
-\begin{math-function}{anglebetween("\mvar{p1}", "\mvar{p2}")}\mathcommand
+\begin{math-function}{extanglebetween("\mvar{p1}", "\mvar{p2}")}\mathcompat{anglebetween}\mathcommand
   Return the angle between the centers of the nodes \mvar{p1} and \mvar{p2}.
 \end{math-function}
-\begin{math-function}{qanglebetween("\mvar{p}")}\mathcommand
+\begin{math-function}{extqanglebetween("\mvar{p}")}\mathcompat{qanglebetween}\mathcommand
   Return the angle between the origin and the center of the node \mvar{p}.
 \end{math-function}
-\begin{math-function}{distancebetween("\mvar{p1}", "\mvar{p2}")}\mathcommand
+\begin{math-function}{extdistancebetween("\mvar{p1}", "\mvar{p2}")}\mathcompat{distancebetween}\mathcommand
   Return the distance (in pt) between the centers of the nodes \mvar{p1} and \mvar{p2}.
 \end{math-function}
-\begin{math-function}{qdistancebetween("\mvar{p}")}\mathcommand
+\begin{math-function}{extqdistancebetween("\mvar{p}")}\mathcompat{qdistancebetween}\mathcommand
   Return the distance (in pt) between the origin and the center of the node \mvar{p}.
 \end{math-function}
 
@@ -125,9 +125,9 @@ them in |"|.
 \path (0,0) coordinate (A) + (0:4) coordinate (B) +(75:4) coordinate (C);
 \draw (A) -- (B) -- (C) -- cycle;
 \foreach \cnt in {1,...,4}{
-  \pgfmathsetmacro\triA{distancebetween("B","C")}
-  \pgfmathsetmacro\triB{distancebetween("C","A")}
-  \pgfmathsetmacro\triC{distancebetween("A","B")}
+  \pgfmathsetmacro\triA{extdistancebetween("B","C")}
+  \pgfmathsetmacro\triB{extdistancebetween("C","A")}
+  \pgfmathsetmacro\triC{extdistancebetween("A","B")}
   \path (barycentric cs:A=\triA,B=\triB,C=\triC) coordinate (M)
        node [draw, circle through=($(A)!(M)!(C)$)] (M) {};
   \draw ($(C)-(A)$) coordinate (vecB)
@@ -142,20 +142,6 @@ them in |"|.
 This library loads also most of the functions of the
 \referencePackageandIndex{pgffor-ext} of section~\ref{pkg:pgffor-ext}
 on page~\pageref{pkg:pgffor-ext}.
-%Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
-%|\foreach \var[use int=start to end step delta]|.
-%
-%\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
-%The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
-%The part |step |\meta{delta} is optional (\meta{delta} = 1).
-%\end{key}
-%
-%\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
-%Same as above, however the results are not truncated.
-%\end{key}
-
-%TODO: edges to and edges through
-%\pagebreak
 
 \subsection{\pgfname keys}
 \begin{pgfkeyslibrary}{ext.pgfkeys-plus}
@@ -288,12 +274,12 @@ not all of them are.
 \pagebreak
 \subsection{\tikzname}
 \begin{multicols}{2}
-\begin{key}{/tikz/reverse clip=\meta{direction} (default counter clockwise)}
+\begin{key}{/\tikzext/reverse clip=\meta{direction} (default counter clockwise)}\keycompat{tikz}
 This key installs a very big rectangle which is either constructed
 \texttt{counter clockwise} (like the \referencePathOperationandIndexO{circle}
 path operation) or |clockwise|.
 \end{key}
-\begin{key}{/tikz/clip rule=\meta{direction} (default even odd)}
+\begin{key}{/\tikzext/clip rule=\meta{direction} (default even odd)}\keycompat{tikz}
 This key switches directly\footnote{%
   Meaning, it directly executes
   \referenceCommandandIndexO{\pgfseteorule}/%
@@ -310,13 +296,13 @@ This corresponds to the \referenceKeyandIndexO{even odd rule} and
 \begin{codeexample}[preamble=\usetikzlibrary{ext.misc},width=6cm]
 \newcommand*\myDiagram[1]{
   \fill[left color=blue, right color=green] (0, 0) rectangle (2, 1);
-  \clip (1, .5) #1 [reverse clip];
+  \clip (1, .5) #1 [ext/reverse clip];
   \fill[left color=green, right color=blue] (0, 0) rectangle (2, 1);
 }
 \begin{tikzpicture}[radius=.4, row sep=5mm, column sep=5mm]
 \matrix[
-  row 2/.append style={clip rule=even odd},
-  column 1/.append style={reverse clip/.default=clockwise}
+  row 2/.append style={ext/clip rule=even odd},
+  column 1/.append style={ext/reverse clip/.default=clockwise}
 ]{
   \myDiagram{circle[]} &
   \myDiagram{+(0:.4) arc[start angle=0, delta angle=-360] -- cycle}

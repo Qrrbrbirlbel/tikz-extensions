@@ -81,9 +81,33 @@
 }
 \def\tikzextutil@compatwarning@mathcmdZ#1#2#3#4{%
   \pgfutil@IfUndefined{pgfmath#3}{%
-    \pgfmathdeclarefunction{#3}{0}{%
+    \pgfmathdeclarefunction*{#3}{0}{%
       \tikzextutil@compatmaybewarning{PGFMath function '#3'}{'#4'}{#1 = #2}%
       \csname pgfmath#4@\endcsname
+    }%
+  }{}%
+}
+\def\tikzextutil@compatwarning@mathcmdI#1#2#3#4{%
+  \pgfutil@IfUndefined{pgfmath#3}{%
+    \pgfmathdeclarefunction*{#3}{1}{%
+      \tikzextutil@compatmaybewarning{PGFMath function '#3'}{'#4'}{#1 = #2}%
+      \csname pgfmath#4@\endcsname{##1}%
+    }%
+  }{}%
+}
+\def\tikzextutil@compatwarning@mathcmdII#1#2#3#4{%
+  \pgfutil@IfUndefined{pgfmath#3}{%
+    \pgfmathdeclarefunction*{#3}{2}{%
+      \tikzextutil@compatmaybewarning{PGFMath function '#3'}{'#4'}{#1 = #2}%
+      \csname pgfmath#4@\endcsname{##1}{##2}%
+    }%
+  }{}%
+}
+\def\tikzextutil@compatwarning@mathcmdX#1#2#3#4{%
+  \pgfutil@IfUndefined{pgfmath#3}{%
+    \pgfmathdeclarefunction*{#3}{...}{%
+      \tikzextutil@compatmaybewarning{PGFMath function '#3'}{'#4'}{#1 = #2}%
+      \csname pgfmath#4@\endcsname##1%
     }%
   }{}%
 }
@@ -147,6 +171,7 @@
   \pgfkeysedef{/tikz/ext/compat/#1}{%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/pgffor}                {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/misc}                  {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {#1}%
