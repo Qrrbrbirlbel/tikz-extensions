@@ -44,20 +44,20 @@
 
 % Weeks
 
-\def\tikzweekcode{\pgfkeysvalueof{/tikz/week code}}
-\def\tikzweektext{\pgfkeysvalueof{/tikz/week text}}
+\def\tikzextweekcode{\pgfkeysvalueof{/tikz/ext/week code}}
+\def\tikzextweektext{\pgfkeysvalueof{/tikz/ext/week text}}
 
-\tikzset{
+\tikzextset{
   week code/.initial={%
-    \node[every week]{\pgfkeysvalueof{/tikz/week text}};},
+    \node[ext/every week]{\pgfkeysvalueof{/tikz/ext/week text}};},
   week text/.initial={\%n=},
   every week/.code=,
   week label left/.style={
-    every week/.append style={
+    ext/every week/.append style={
       anchor=base east,
       xshift=-1.25*\pgfkeysvalueof{/tikz/day xshift}},
     execute before day scope=%
-      \ifdate{Monday, equals=\pgfcalendarbeginiso}{\tikzweekcode}{}}}
+      \ifdate{Monday, equals=\pgfcalendarbeginiso}{\tikzextweekcode}{}}}
 
 %
 % Overwriting original \tikz@lib@cal@if@else@code
@@ -96,22 +96,22 @@
 %%% Compatibility
 \tikzextset{
   compat/pgfcalendar-ext/warn/.append code={%
-    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 0.6}{pgfmathlastdayinmonthofyear}\pgfmathextlastdayinmonthofyear\tikzextutil@gobblethree
-    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 0.6}{pgfmathweeksinmonthofyear}\pgfmathextweeksinmonthofyear\pgfutil@gobbletwo
+    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 1.0}{pgfmathlastdayinmonthofyear}\pgfmathextlastdayinmonthofyear\tikzextutil@gobblethree
+    \tikzextutil@compatwarning@cmd{calendar-plus}{pre 1.0}{pgfmathweeksinmonthofyear}\pgfmathextweeksinmonthofyear\pgfutil@gobbletwo
     \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
       leap year,and,not,week of month,week of month',calendar week of month,%
       calendar week of month',yesterday,week\do{%
       \pgfkeys@expanded{\noexpand\tikzextutil@compatwarning@key
-        {pgfcalendar-ext}{pre 0.6}{/pgf/calendar/\tikzext@temp}{/pgf/calendar/ext/\tikzext@temp}%
+        {pgfcalendar-ext}{pre 1.0}{/pgf/calendar/\tikzext@temp}{/pgf/calendar/ext/\tikzext@temp}%
       }%
     }%
     \pgfkeyssetvalue{/pgf/calendar/leap year/.@def}{\pgfcalendarifdateyear}%
     \pgfkeyssetvalue{/pgf/calendar/calendar week of month/.@def}{1}%
     \pgfkeyssetvalue{/pgf/calendar/calendar week of month'/.@def}{1}%
-    \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 0.6}
+    \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 1.0}
       {pgfcalendarjulianyeartoweek}\pgfextcalendarjulianyeartoweek\tikzextutil@gobblethree
   },
-  compat/pgfcalendar-ext/pre 0.6/.append code={%
+  compat/pgfcalendar-ext/pre 1.0/.append code={%
     \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
       leap year,and,not,week of month,week of month',calendar week of month,%
       calendar week of month',yesterday,week\do{%

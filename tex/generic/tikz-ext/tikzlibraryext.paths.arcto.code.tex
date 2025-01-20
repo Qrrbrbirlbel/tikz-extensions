@@ -332,17 +332,17 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={paths.arcto}{pre 0.6},
+  /tikz-ext/compat/add library={paths.arcto}{pre 1.0},
   compat/paths.arcto/warn/.append code=%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/clockwise}        {/tikz/ext/arc to/clockwise}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/counter clockwise}{/tikz/ext/arc to/counter clockwise}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/large}            {/tikz/ext/arc to/large}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/small}            {/tikz/ext/arc to/small}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/radius}           {/tikz/ext/arc to/radius}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/x radius}         {/tikz/ext/arc to/x radius}%
-    \tikzextutil@compatwarning@key     {paths.arcto}{pre 0.6}{/tikz/arc to/y radius}         {/tikz/ext/arc to/y radius}%
-    \tikzextutil@compatwarning@valuekey{paths.arcto}{pre 0.6}{/tikz/arc to/rotate}           {/tikz/ext/arc to/rotate},
-  compat/paths.arcto/pre 0.6/.append code=%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/clockwise}        {/tikz/ext/arc to/clockwise}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/counter clockwise}{/tikz/ext/arc to/counter clockwise}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/large}            {/tikz/ext/arc to/large}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/small}            {/tikz/ext/arc to/small}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/radius}           {/tikz/ext/arc to/radius}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/x radius}         {/tikz/ext/arc to/x radius}%
+    \tikzextutil@compatwarning@key     {paths.arcto}{pre 1.0}{/tikz/arc to/y radius}         {/tikz/ext/arc to/y radius}%
+    \tikzextutil@compatwarning@valuekey{paths.arcto}{pre 1.0}{/tikz/arc to/rotate}           {/tikz/ext/arc to/rotate},
+  compat/paths.arcto/pre 1.0/.append code=%
     \pgfkeysdef{/tikz/arc to/clockwise}        {\pgfkeysvalueof{/tikz/ext/arc to/clockwise/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/arc to/counter clockwise}{\pgfkeysvalueof{/tikz/ext/arc to/counter clockwise/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/arc to/large}            {\pgfkeysvalueof{/tikz/ext/arc to/large/.@cmd}##1\pgfeov}%

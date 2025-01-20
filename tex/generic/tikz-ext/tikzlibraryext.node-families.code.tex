@@ -384,19 +384,19 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={node-families}{pre 0.6},
+  /tikz-ext/compat/add library={node-families}{pre 1.0},
   compat/node-families/warn/.append code=%
-    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/prefix}          {/tikz/ext/node family/prefix}%
-    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text height}     {/tikz/ext/node family/text height}%
-    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text depth}      {/tikz/ext/node family/text depth}%
-    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text width}      {/tikz/ext/node family/text width}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/text}            {/tikz/ext/node family/text}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/text width align}{/tikz/ext/node family/text width align}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/setup shape}     {/tikz/ext/node family/setup shape}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/width}           {/tikz/ext/node family/width}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/height}          {/tikz/ext/node family/height}%
-    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/size}            {/tikz/ext/node family/size},
-  compat/node-families/pre 0.6/.append code=%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 1.0}{/tikz/node family/prefix}          {/tikz/ext/node family/prefix}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 1.0}{/tikz/node family/text height}     {/tikz/ext/node family/text height}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 1.0}{/tikz/node family/text depth}      {/tikz/ext/node family/text depth}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 1.0}{/tikz/node family/text width}      {/tikz/ext/node family/text width}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/text}            {/tikz/ext/node family/text}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/text width align}{/tikz/ext/node family/text width align}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/setup shape}     {/tikz/ext/node family/setup shape}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/width}           {/tikz/ext/node family/width}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/height}          {/tikz/ext/node family/height}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 1.0}{/tikz/node family/size}            {/tikz/ext/node family/size},
+  compat/node-families/pre 1.0/.append code=%
     \pgfkeysdef{/tikz/node family/prefix}          {\pgfkeyssetvalue{/tikz/ext/node family/prefix}{##1}}%
     \pgfkeysdef{/tikz/node family/text height}     {\pgfkeyssetvalue{/tikz/ext/node family/text height}{##1}}%
     \pgfkeysdef{/tikz/node family/text depth}      {\pgfkeyssetvalue{/tikz/ext/node family/text depth}{##1}}%

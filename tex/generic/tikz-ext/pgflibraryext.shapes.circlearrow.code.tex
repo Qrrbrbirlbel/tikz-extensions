@@ -69,28 +69,28 @@
 }
 
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 1.0}}}
 \tikzextset{
   compat/shapes/warn/.append style=/tikz/ext/compat/shapes.circlearrow/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.circlearrow/pre 0.6,
+  compat/shapes/pre 1.0/.append style=/tikz/ext/compat/shapes.circlearrow/pre 1.0,
   compat/shapes.circlearrow/warn/.code={%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn left  north}{/pgf/ext/circle arrow turn left  north}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn left   east}{/pgf/ext/circle arrow turn left   east}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn left   west}{/pgf/ext/circle arrow turn left   west}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn left  south}{/pgf/ext/circle arrow turn left  south}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn right north}{/pgf/ext/circle arrow turn right north}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn right  east}{/pgf/ext/circle arrow turn right  east}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn right  west}{/pgf/ext/circle arrow turn right  west}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle arrow turn right south}{/pgf/ext/circle arrow turn right south}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/circle arrow start angle}{/pgf/ext/circle arrow start angle}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/circle arrow delta angle}{/pgf/ext/circle arrow delta angle}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/circle arrow end   angle}{/pgf/ext/circle arrow end   angle}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/circle arrow arrows}     {/pgf/ext/circle arrow arrows}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn left  north}{/pgf/ext/circle arrow turn left  north}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn left   east}{/pgf/ext/circle arrow turn left   east}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn left   west}{/pgf/ext/circle arrow turn left   west}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn left  south}{/pgf/ext/circle arrow turn left  south}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn right north}{/pgf/ext/circle arrow turn right north}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn right  east}{/pgf/ext/circle arrow turn right  east}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn right  west}{/pgf/ext/circle arrow turn right  west}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle arrow turn right south}{/pgf/ext/circle arrow turn right south}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/circle arrow start angle}{/pgf/ext/circle arrow start angle}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/circle arrow delta angle}{/pgf/ext/circle arrow delta angle}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/circle arrow end   angle}{/pgf/ext/circle arrow end   angle}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/circle arrow arrows}     {/pgf/ext/circle arrow arrows}%
     \tikzextutil@compat@cloneshape{circle arrow}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
-    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'circle arrow'}{'ext_circle arrow'}{shapes = pre 0.6}}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'circle arrow'}{'ext_circle arrow'}{shapes = pre 1.0}}%
     \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@circle arrow\endcsname\tikzext@temp
   },
-  compat/shapes.circlearrow/pre 0.6/.code={%
+  compat/shapes.circlearrow/pre 1.0/.code={%
     \pgfkeysdef{/pgf/circle arrow turn left  north}{\pgfkeysvalueof{/pgf/ext/circle arrow turn left  north/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/circle arrow turn left   east}{\pgfkeysvalueof{/pgf/ext/circle arrow turn left   east/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/circle arrow turn left   west}{\pgfkeysvalueof{/pgf/ext/circle arrow turn left   west/.@cmd}##1\pgfeov}%

@@ -152,30 +152,30 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={pgfkeys-plus}{pre 0.6},
+  /tikz-ext/compat/add library={pgfkeys-plus}{pre 1.0},
   compat/pgfkeys-plus/warn/.append code={%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/if}{/utils/ext/pgfmath if}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/if}{/utils/ext/if}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifx}{/utils/ext/ifx}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifnum}{/utils/ext/ifnum}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifdim}{/utils/ext/ifdim}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifempty}{/utils/ext/ifempty}%
-    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifxempty}{/utils/ext/ifxempty}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath}{.ext_pgfmath}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath int}{.ext_pgfmath int}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath wrap}{.ext_pgfmath wrap}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath if}{.ext_pgfmath if}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.if}{.ext_if}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifx}{.ext_ifx}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifdim}{.ext_ifdim}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifxempty}{.ext_ifxempty}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifempty}{.ext_ifempty}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.List}{.ext_List}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.--}{.ext_--}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.++}{.ext_++}%
-    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.value}{.ext_value}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/if}{/utils/ext/pgfmath if}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/if}{/utils/ext/if}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/ifx}{/utils/ext/ifx}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/ifnum}{/utils/ext/ifnum}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/ifdim}{/utils/ext/ifdim}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/ifempty}{/utils/ext/ifempty}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 1.0}{/utils/TeX/ifxempty}{/utils/ext/ifxempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.pgfmath}{.ext_pgfmath}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.pgfmath int}{.ext_pgfmath int}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.pgfmath wrap}{.ext_pgfmath wrap}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.pgfmath if}{.ext_pgfmath if}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.if}{.ext_if}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.ifx}{.ext_ifx}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.ifdim}{.ext_ifdim}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.ifxempty}{.ext_ifxempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.ifempty}{.ext_ifempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.List}{.ext_List}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.--}{.ext_--}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.++}{.ext_++}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 1.0}{.value}{.ext_value}%
   },
-  compat/pgfkeys-plus/pre 0.6/.append code={%
+  compat/pgfkeys-plus/pre 1.0/.append code={%
     \pgfkeysdef{/utils/if}{\pgfkeysvalueof{/utils/ext/pgfmath if/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/utils/TeX/if}{\pgfkeysvalueof{/utils/ext/if/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/utils/TeX/ifx}{\pgfkeysvalueof{/utils/ext/ifx/.@cmd}##1\pgfeov}%

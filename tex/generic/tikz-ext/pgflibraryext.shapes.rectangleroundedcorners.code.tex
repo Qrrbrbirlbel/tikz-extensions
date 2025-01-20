@@ -326,21 +326,21 @@
   \fi
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 1.0}}}
 \tikzextset{
   compat/shapes/warn/.append style=/tikz/ext/compat/shapes.rectangleroundedcorners/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.rectangleroundedcorners/pre 0.6,
+  compat/shapes/pre 1.0/.append style=/tikz/ext/compat/shapes.rectangleroundedcorners/pre 1.0,
   compat/shapes.rectangleroundedcorners/warn/.code={%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/rectangle with rounded corners radius}{/pgf/ext/rectangle with rounded corners radius}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners north west radius}{/pgf/ext/rectangle with rounded corners north west radius}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners north east radius}{/pgf/ext/rectangle with rounded corners north east radius}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners south west radius}{/pgf/ext/rectangle with rounded corners south west radius}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/rectangle with rounded corners south east radius}{/pgf/ext/rectangle with rounded corners south east radius}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/rectangle with rounded corners radius}{/pgf/ext/rectangle with rounded corners radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/rectangle with rounded corners north west radius}{/pgf/ext/rectangle with rounded corners north west radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/rectangle with rounded corners north east radius}{/pgf/ext/rectangle with rounded corners north east radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/rectangle with rounded corners south west radius}{/pgf/ext/rectangle with rounded corners south west radius}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/rectangle with rounded corners south east radius}{/pgf/ext/rectangle with rounded corners south east radius}%
     \tikzextutil@compat@cloneshape{rectangle with rounded corners}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,below north west,right north west,left north east,below north east,above south east,left south east,right south west,above south west,north west center,north east center,south east center,south west center}%
-    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'rectangle with rounded corners'}{'ext_rectangle with rounded corners'}{shapes = pre 0.6}}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'rectangle with rounded corners'}{'ext_rectangle with rounded corners'}{shapes = pre 1.0}}%
     \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@rectangle with rounded corners\endcsname\tikzext@temp
   },
-  compat/shapes.rectangleroundedcorners/pre 0.6/.code={%
+  compat/shapes.rectangleroundedcorners/pre 1.0/.code={%
     \pgfkeysdef{/pgf/rectangle with rounded corners radius}{\pgfkeysvalueof{/pgf/ext/rectangle with rounded corners radius/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/rectangle with rounded corners north west radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners north west radius}{##1}}%
     \pgfkeysdef{/pgf/rectangle with rounded corners north east radius}{\pgfkeyssetvalue{/pgf/ext/rectangle with rounded corners north east radius}{##1}}%

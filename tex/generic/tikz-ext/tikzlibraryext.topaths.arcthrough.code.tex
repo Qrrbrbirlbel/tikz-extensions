@@ -55,10 +55,10 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={topaths.arcthrough}{pre 0.6},
+  /tikz-ext/compat/add library={topaths.arcthrough}{pre 1.0},
   compat/topaths.arcthrough/warn/.append code=%
-    \tikzextutil@compatwarning@key{topaths.arcthrough}{pre 0.6}{/tikz/arc through}{/tikz/ext/arc through},
-  compat/topaths.arcthrough/pre 0.6/.append code=%
+    \tikzextutil@compatwarning@key{topaths.arcthrough}{pre 1.0}{/tikz/arc through}{/tikz/ext/arc through},
+  compat/topaths.arcthrough/pre 1.0/.append code=%
     \pgfkeysdef{/tikz/arc through}{\pgfkeysvalueof{/tikz/ext/arc through/.@cmd}##1\pgfeov},
   compat/topaths.arcthrough/\pgfkeysvalueof{/tikz/ext/compat/topaths.arcthrough}%
 }

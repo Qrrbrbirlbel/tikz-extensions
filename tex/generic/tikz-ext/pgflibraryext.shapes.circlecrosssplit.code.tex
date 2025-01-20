@@ -295,18 +295,18 @@
   }%
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 1.0}}}
 \tikzextset{
   compat/shapes/warn/.append style=/tikz/ext/compat/shapes.circlecrosssplit/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.circlecrosssplit/pre 0.6,
+  compat/shapes/pre 1.0/.append style=/tikz/ext/compat/shapes.circlecrosssplit/pre 1.0,
   compat/shapes.circlecrosssplit/warn/.code={%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part fill}{/pgf/ext/circle cross split part fill}%
-    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part custom fill}[true]{/pgf/ext/circle cross split part fill}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle cross split part fill}{/pgf/ext/circle cross split part fill}%
+    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/circle cross split part custom fill}[true]{/pgf/ext/circle cross split part fill}%
     \tikzextutil@compat@cloneshape{circle cross split}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,two,three,four,lower mid,lower base,lower mid east,lower base east,lower mid west,lower base west}%
-    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'circle cross split'}{'ext_circle cross split'}{shapes = pre 0.6}}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'circle cross split'}{'ext_circle cross split'}{shapes = pre 1.0}}%
     \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@circle cross split\endcsname\tikzext@temp
   },
-  compat/shapes.circlecrosssplit/pre 0.6/.code={%
+  compat/shapes.circlecrosssplit/pre 1.0/.code={%
     \pgfkeysdef{/pgf/circle cross split part fill}{\pgfkeysvalueof{/pgf/ext/circle cross split part fill/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/circle cross split part custom fill}{\pgfkeysvalueof{/pgf/circle cross split custom part fill/.@cmd}##1\pgfeov}%
     \pgfkeyssetvalue{/pgf/circle cross split part custom flll/.@def}{true}%

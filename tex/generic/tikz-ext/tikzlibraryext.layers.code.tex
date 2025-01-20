@@ -234,22 +234,22 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={layers}{pre 0.6},
+  /tikz-ext/compat/add library={layers}{pre 1.0},
   compat/layers/warn/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/layers@}{3}%
-    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz-ext/patch}      {/tikz/ext/layers/patch}%
-    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/node on layer}  {/tikz/ext/node on layer}%
-    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/matrix on layer}{/tikz/ext/matrix on layer}%
-    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/edge on layer}  {/tikz/ext/edge on layer}%
-    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/pic on layer}   {/tikz/ext/pic on layer},
-  compat/layers/pre 0.6/.append code=%
+    \tikzextutil@compatwarning@key{layers}{pre 1.0}{/tikz-ext/patch}      {/tikz/ext/layers/patch}%
+    \tikzextutil@compatwarning@key{layers}{pre 1.0}{/tikz/node on layer}  {/tikz/ext/node on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 1.0}{/tikz/matrix on layer}{/tikz/ext/matrix on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 1.0}{/tikz/edge on layer}  {/tikz/ext/edge on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 1.0}{/tikz/pic on layer}   {/tikz/ext/pic on layer},
+  compat/layers/pre 1.0/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/layers@}{2}%
     \pgfkeysdef{/tikz-ext/patch}      {\pgfkeysvalueof{/tikz/ext/layers/patch/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/node on layer}  {\pgfkeysvalueof{/tikz/ext/node on layer/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/matrix on layer}{\pgfkeysvalueof{/tikz/ext/matrix on layer/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/edge on layer}  {\pgfkeysvalueof{/tikz/ext/edge on layer/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pic on layer}   {\pgfkeysvalueof{/tikz/ext/pic on layer/.@cmd}##1\pgfeov},
-  % compat/layers/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/layers@}{1},
+  % compat/layers/1.0/.append code=\pgfkeyssetvalue{/tikz/ext/compat/layers@}{1},
   % compat/layers/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/layers@}{0},
   compat/layers/\pgfkeysvalueof{/tikz/ext/compat/layers}%
 }

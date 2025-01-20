@@ -196,10 +196,10 @@
   rectangle timer/line/.code=\let\tikz@timer@rectangle\tikz@timer@line,
   rectangle timer/rectangle/.code=\let\tikz@timer@rectangle\tikzext@timer@rectangle,
   rectangle timer=rectangle,
-  /tikz-ext/compat/add library={paths.timer}{pre 0.6},
+  /tikz-ext/compat/add library={paths.timer}{pre 1.0},
   compat/paths.timer/warn/.append code=%
-    \tikzextutil@compatwarning@key{paths.timer}{pre 0.6}{/tikz/rectangle timer}{/tikz/ext/rectangle timer},
-  compat/paths.timer/pre 0.6/.append code=%
+    \tikzextutil@compatwarning@key{paths.timer}{pre 1.0}{/tikz/rectangle timer}{/tikz/ext/rectangle timer},
+  compat/paths.timer/pre 1.0/.append code=%
     \pgfkeysdef{/tikz/rectangle timer}{\pgfkeysvalueof{/tikz/ext/rectangle timer/.@cmd}##1\pgfeov},
   compat/paths.timer/\pgfkeysvalueof{/tikz/ext/compat/paths.timer}%
 }

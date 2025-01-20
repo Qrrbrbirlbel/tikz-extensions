@@ -172,24 +172,24 @@
 }
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={misc}{pre 0.6},
+  /tikz-ext/compat/add library={misc}{pre 1.0},
   compat/misc/warn/.append code={%
-    \tikzextutil@compatwarning@key{misc}{pre 0.6}{/pgf/full arc}{/pgf/ext/full arc}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{strrepeat}{extstrrepeat}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{isInString}{extisInString}%
+    \tikzextutil@compatwarning@key{misc}{pre 1.0}{/pgf/full arc}{/pgf/ext/full arc}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{strrepeat}{extstrrepeat}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{isInString}{extisInString}%
     \ifcsname pgfmathstrcat@\endcsname\else
       \let\pgfmathextstrcat@noforest\relax
-      \tikzextutil@compatwarning@mathcmdX{misc}{pre 0.6}{strcat}{extstrcat}%
+      \tikzextutil@compatwarning@mathcmdX{misc}{pre 1.0}{strcat}{extstrcat}%
     \fi
-    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{isEmpty}{extisEmpty}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{atanXY}{extatanXY}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{atanYX}{extatanYX}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{anglebetween}{extanglebetween}%
-    \tikzextutil@compatwarning@mathcmdII{misc}{pre 0.6}{distancebetween}{extdistancebetween}%
-    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{qanglebetween}{extqanglebetween}%
-    \tikzextutil@compatwarning@mathcmdI{misc}{pre 0.6}{qdistancebetween}{extqdistancebetween}%
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 1.0}{isEmpty}{extisEmpty}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{atanXY}{extatanXY}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{atanYX}{extatanYX}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{anglebetween}{extanglebetween}%
+    \tikzextutil@compatwarning@mathcmdII{misc}{pre 1.0}{distancebetween}{extdistancebetween}%
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 1.0}{qanglebetween}{extqanglebetween}%
+    \tikzextutil@compatwarning@mathcmdI{misc}{pre 1.0}{qdistancebetween}{extqdistancebetween}%
   },
-  compat/misc/pre 0.6/.append code={%
+  compat/misc/pre 1.0/.append code={%
     \pgfkeysdef{/pgf/full arc}{\pgfkeysvalueof{/pgf/ext/full arc}##1\pgfeov}%
     \pgfmathdeclarefunction*{strrepeat}{2}{\pgfmathextstrrepeat@{##1}{##2}}%
     \pgfmathdeclarefunction*{isInString}{2}{\pgfmathextisInString@{##1}{##2}}%
