@@ -190,7 +190,7 @@
     \tikzextutil@compatwarning@mathcmdI{misc}{pre 1.0}{qdistancebetween}{extqdistancebetween}%
   },
   compat/misc/pre 1.0/.append code={%
-    \pgfkeysdef{/pgf/full arc}{\pgfkeysvalueof{/pgf/ext/full arc}##1\pgfeov}%
+    \pgfkeysdef{/pgf/full arc}{\pgfkeysvalueof{/pgf/ext/full arc/.@cmd}##1\pgfeov}%
     \pgfmathdeclarefunction*{strrepeat}{2}{\pgfmathextstrrepeat@{##1}{##2}}%
     \pgfmathdeclarefunction*{isInString}{2}{\pgfmathextisInString@{##1}{##2}}%
     \pgfmathdeclarefunction*{isEmpty}{1}{\pgfmathextisEmpty@{##1}}%

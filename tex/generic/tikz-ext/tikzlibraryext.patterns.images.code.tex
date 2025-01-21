@@ -6,31 +6,36 @@
 % 2. under the GNU Free Documentation License.
 %
 % This is the TikZ library patterns.images
-% Load with \usetikzlibrary{patterns.images}
+% Load with \usetikzlibrary{ext.patterns.images}
 %
 % Macro:
-%  - \pgfSetupImageAsPattern[<opt arguments for \pgfdeclareimage>]{<name>}{<path/file>}
+%  - \pgfextsetupimageaspattern[<opt arguments for \pgfdeclareimage>]{<name>}{<path/file>}
 %
 % Keys are:
 %  - use image as pattern=<name>
 %  - image as pattern=<opt arguments for \pgftext>
 
-\def\pgfsetupimageaspattern{\pgfutil@ifnextchar[\tikzext@pgfsetupimageaspattern{\tikzext@pgfsetupimageaspattern[]}}
-\def\tikzext@pgfsetupimageaspattern[#1]#2#3{% #1 = options
-                                        % #2 = image name
-                                        % #3 = file name
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\def\pgfextsetupimageaspattern{\pgfutil@ifnextchar[\pgfext@pgfsetupimageaspattern{\pgfext@pgfsetupimageaspattern[]}}
+\def\pgfext@pgfsetupimageaspattern[#1]#2#3{% #1 = options
+                                           % #2 = image name
+                                           % #3 = file name
   \pgfdeclareimage[#1]{tikzext@pgf@iap@#2}{#3}%
-  \sbox\pgfutil@tempboxa{\pgfuseimage{tikzext@pgf@iap@#2}}%
+  \setbox\pgfutil@tempboxa\hbox{\pgfuseimage{tikzext@pgf@iap@#2}}%
   \expandafter\edef\csname tikzext@pgf@iap@#2@\endcsname{{\the\wd\pgfutil@tempboxa}{\the\ht\pgfutil@tempboxa}}%
+  \typeout{\csname tikzext@pgf@iap@#2@\endcsname}%
 }
-\tikzset{
+\tikzextset{
   image as pattern/name/.initial=,
   image as pattern/option/.style=,
-  image as pattern/options/.style={/tikz/image as pattern/option/.append style={#1}},
+  image as pattern/options/.style={/tikz/ext/image as pattern/option/.append style={#1}},
   image as pattern/.default=,
   image as pattern/.code={
-    \pgfqkeys{/tikz/image as pattern}{#1}%
-    \pgfkeysgetvalue{/tikz/image as pattern/name}\tikz@temp
+    \pgfqkeys{/tikz/ext/image as pattern}{#1}%
+    \pgfkeysgetvalue{/tikz/ext/image as pattern/name}\tikz@temp
     \pgfutil@ifxempty\tikz@temp{%
       \tikzerror{You need to specify a name for the ``image-pattern'' to be used.}%
     }{%
@@ -44,7 +49,7 @@
         \pgfutil@loop
           {%
           \pgfutil@loop
-            \expandafter\pgftext\expandafter[/tikz/image as pattern/option,at=\pgfqpoint{\pgf@xb}{\pgf@yb}]{\pgfuseimage{tikzext@pgf@iap@\tikz@temp}}%
+            \pgftext[/tikz/ext/image as pattern/option,at=\pgfqpoint{\pgf@xb}{\pgf@yb}]{\pgfuseimage{tikzext@pgf@iap@\tikz@temp}}%
             \ifdim\pgf@yb<\pgf@ya
             \advance\pgf@yb\tikz@tempb
           \pgfutil@repeat
@@ -56,5 +61,25 @@
       }}%
     }
   }
+}
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={patterns.images}{pre 1.0},
+  compat/patterns.images/warn/.append code={%
+    \tikzextutil@compatwarning@key{patterns.images}{pre 1.0}{/tikz/image as pattern}{/pgf/ext/image as pattern}%
+    \tikzextutil@compatwarning@key{patterns.images}{pre 1.0}{/tikz/image as pattern/options}{/pgf/ext/image as pattern/options}%
+    \tikzextutil@compatwarning@valuekey{patterns.images}{pre 1.0}{/tikz/image as pattern/name}{/tikz/ext/image as pattern/name}%
+    \tikzextutil@compatwarning@cmd{patterns.images}{pre 1.0}{pgfsetupimageaspattern}{\pgfextsetupimageaspattern}{}%
+    \pgfkeysaddvalue{/tikz/ext/image as pattern/option}{\pgfkeysalso{/tikz/image as pattern/option}}{}%
+  },
+  compat/patterns.images/pre 1.0/.append code={%
+    \pgfkeysdef{/tikz/image as pattern}{\pgfkeysvalueof{/tikz/ext/image as pattern/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/image as pattern/options}{\pgfkeysvalueof{/tikz/ext/image as pattern/options/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/image as pattern/name}{\pgfkeyssetvalue{/tikz/ext/image as pattern/name/.@cmd}##1\pgfeov}%
+    \pgfkeyssetvalue{/tikz/image as pattern/name}{\pgfkeysvalueof{/tikz/ext/image as pattern/name}}%
+    \pgfkeysaddvalue{/tikz/ext/image as pattern/option}{\pgfkeysalso{/tikz/image as pattern/option}}{}%
+    \let\pgfsetupimageaspattern\pgfextsetupimageaspattern
+  },
+  compat/patterns.images/\pgfkeysvalueof{/tikz/ext/compat/patterns.images}%
 }
 \endinput
