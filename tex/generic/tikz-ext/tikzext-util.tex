@@ -6,7 +6,7 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikzextversion{1.0}
+\def\tikzextversion{0.6}
 \def\tikzextversionnumber{8}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
 \def\pgfextset{\pgfqkeys{/pgf/ext}}
@@ -151,7 +151,7 @@
   compat/.is choice, compat/.default=warn,
   /tikz-ext/compat/add library/.code 2 args={%
     \tikzextset{compat/#1/.is choice, compat/#1/.default=#2}%
-    \pgfutil@for\tikzext@temp:=pre 1.0,1.0,newest,warn\do{%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
       \pgfkeys@expanded{%
         \noexpand\tikzextset{%
           compat/\tikzext@temp/.append style=%
@@ -187,8 +187,8 @@
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/topaths.arcthrough}    {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/transformations.mirror}{#1}%
   }}
-\tikzext@temp{pre 1.0}
-\tikzext@temp{1.0}
+\tikzext@temp{pre 0.6}
+\tikzext@temp{0.6}
 \tikzext@temp{newest}
 \tikzext@temp{warn}
 \tikzextset{compat=warn}

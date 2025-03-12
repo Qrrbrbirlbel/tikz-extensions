@@ -342,19 +342,19 @@
   }%
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 1.0}}}
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
   compat/shapes/warn/.append style=/tikz/ext/compat/shapes.uncenteredrectangle/warn,
-  compat/shapes/pre 1.0/.append style=/tikz/ext/compat/shapes.uncenteredrectangle/pre 1.0,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.uncenteredrectangle/pre 0.6,
   compat/shapes.uncenteredrectangle/warn/.code={%
-    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/uncentered rectangle use saved center}[true]{/pgf/ext/uncentered rectangle use saved center}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/uncentered rectangle center yshift}{/pgf/ext/uncentered rectangle center yshift}
-    \tikzextutil@compatwarning@key{shapes}{pre 1.0}{/pgf/uncentered rectangle center}{/pgf/ext/uncentered rectangle center}
+    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/uncentered rectangle use saved center}[true]{/pgf/ext/uncentered rectangle use saved center}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/uncentered rectangle center yshift}{/pgf/ext/uncentered rectangle center yshift}
+    \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/uncentered rectangle center}{/pgf/ext/uncentered rectangle center}
     \tikzextutil@compat@cloneshape{uncentered rectangle}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,real center,real mid,real base,real south,left,left north,left center,left mid,left base,left south,text north,text center,text mid,text base,text south,right north,right center,right mid,right base,right south}%
-    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'uncentered rectangle'}{'ext_uncentered rectangle'}{shapes = pre 1.0}}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'uncentered rectangle'}{'ext_uncentered rectangle'}{shapes = pre 0.6}}%
     \expandafter\tikzextutil@prefix@macrotomacro\csname pgf@sh@s@uncentered rectangle\endcsname\tikzext@temp
   },
-  compat/shapes.uncenteredrectangle/pre 1.0/.code={%
+  compat/shapes.uncenteredrectangle/pre 0.6/.code={%
     \pgfkeysdef{/pgf/uncentered rectangle use saved center}{\pgfkeysvalueof{/pgf/ext/uncentered rectangle use saved center/.@cmd}##1\pgfeov}%
     \pgfkeyssetvalue{/pgf/uncentered rectangle use saved center/.@def}{true}%
     \pgfkeysdef{/pgf/uncentered rectangle center}{\pgfkeysvalueof{/pgf/ext/uncentered rectangle center/.@cmd}##1\pgfeov}%

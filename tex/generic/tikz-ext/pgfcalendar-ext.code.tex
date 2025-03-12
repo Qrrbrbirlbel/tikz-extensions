@@ -335,24 +335,24 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={pgfcalendar-ext}{pre 1.0},
+  /tikz-ext/compat/add library={pgfcalendar-ext}{pre 0.6},
   compat/pgfcalendar-ext/warn/.append code={%
     \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
       leap year,and,not,week of month,week of month',calendar week of month,%
       calendar week of month',yesterday,week\do{%
       \pgfkeys@expanded{\noexpand\tikzextutil@compatwarning@key
-        {pgfcalendar-ext}{pre 1.0}{/pgf/calendar/\tikzext@temp}{/pgf/calendar/ext/\tikzext@temp}%
+        {pgfcalendar-ext}{pre 0.6}{/pgf/calendar/\tikzext@temp}{/pgf/calendar/ext/\tikzext@temp}%
       }%
     }%
     \pgfkeyssetvalue{/pgf/calendar/leap year/.@def}{\pgfcalendarifdateyear}%
     \pgfkeyssetvalue{/pgf/calendar/calendar week of month/.@def}{1}%
     \pgfkeyssetvalue{/pgf/calendar/calendar week of month'/.@def}{1}%
-    \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 1.0}
+    \tikzextutil@compatwarning@cmd{pgfcalendar-ext}{pre 0.6}
       {pgfcalendarjulianyeartoweek}\pgfextcalendarjulianyeartoweek\tikzextutil@gobblethree
       \def\pgfcalendarcurrentweek{\pgfextcalendarcurrentweek}% no warning possible
       \def\pgfcalendarifdateweek{\pgfextcalendarifdateweek}% no warning possible
   },
-  compat/pgfcalendar-ext/pre 1.0/.append code={%
+  compat/pgfcalendar-ext/pre 0.6/.append code={%
     \pgfutil@for\tikzext@temp:=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,%
       leap year,and,not,week of month,week of month',calendar week of month,%
       calendar week of month',yesterday,week\do{%

@@ -45,11 +45,11 @@
 %%% Compatibility
 \tikzextset{
   compat/pgffor-ext/warn/.append code={%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/xparser}{/pgf/foreach/ext/xparser}%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/xparser Om}[]{/pgf/foreach/ext/xparser Om}%
-    \tikzextutil@compatwarning@handler{pgffor-ext}{pre 1.0}{.list xparse}{.ext list xparse}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/xparser}{/pgf/foreach/ext/xparser}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/xparser Om}[]{/pgf/foreach/ext/xparser Om}%
+    \tikzextutil@compatwarning@handler{pgffor-ext}{pre 0.6}{.list xparse}{.ext list xparse}%
   },
-  compat/pgffor-ext/pre 1.0/.append code={%
+  compat/pgffor-ext/pre 0.6/.append code={%
     \pgfkeysdef{/pgf/foreach/xparser}{\pgfkeysvalueof{/pgf/foreach/ext/normal list/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/foreach/xparser Om}{\pgfkeysvalueof{/pgf/foreach/ext/xparser Om/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/foreach/xparser Om/.@def}{}%

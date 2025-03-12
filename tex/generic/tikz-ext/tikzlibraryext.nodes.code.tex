@@ -763,15 +763,15 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={nodes}{pre 1.0},
+  /tikz-ext/compat/add library={nodes}{pre 0.6},
   compat/nodes/warn/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/nodes@}{3}%
-    \tikzextutil@compatwarning@key{nodes}{pre 1.0}{/tikz/pic}            [true]{/tikz/ext/pic}%
-    \tikzextutil@compatwarning@key{nodes}{pre 1.0}{/tikz/node on line}   []    {/tikz/ext/node on line}%
-    \tikzextutil@compatwarning@key{nodes}{pre 1.0}{/tikz/nodes on line}        {/tikz/ext/nodes on line}%
-    \tikzextutil@compatwarning@key{nodes}{pre 1.0}{/tikz/nodes on curve} []    {/tikz/ext/nodes on curve}%
-    \tikzextutil@compatwarning@key{nodes}{pre 1.0}{/tikz/nodes on curve'}[]    {/tikz/ext/nodes on curve'},
-  compat/nodes/pre 1.0/.append code=%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/pic}            [true]{/tikz/ext/pic}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/node on line}   []    {/tikz/ext/node on line}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on line}        {/tikz/ext/nodes on line}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on curve} []    {/tikz/ext/nodes on curve}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on curve'}[]    {/tikz/ext/nodes on curve'},
+  compat/nodes/pre 0.6/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/nodes@}{2}%
     \pgfkeysdef{/tikz/pic}            {\pgfkeysvalueof{/tikz/ext/pic/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/node on line}   {\pgfkeysvalueof{/tikz/ext/node on line/.@cmd}##1\pgfeov}%
@@ -782,7 +782,7 @@
     \pgfkeyssetvalue{/tikz/node on line/.@def}{}%
     \pgfkeyssetvalue{/tikz/nodes on curve/.@def}{}%
     \pgfkeyssetvalue{/tikz/nodes on curve'/.@def}{},
-  % compat/nodes/1.0/.append code=\pgfkeyssetvalue{/tikz/ext/compat/nodes@}{1},
+  % compat/nodes/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/nodes@}{1},
   % compat/nodes/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/nodes@}{0},
   compat/nodes/\pgfkeysvalueof{/tikz/ext/compat/nodes}%
 }

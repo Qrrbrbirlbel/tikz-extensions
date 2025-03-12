@@ -64,15 +64,15 @@
 }
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={patterns.images}{pre 1.0},
+  /tikz-ext/compat/add library={patterns.images}{pre 0.6},
   compat/patterns.images/warn/.append code={%
-    \tikzextutil@compatwarning@key{patterns.images}{pre 1.0}{/tikz/image as pattern}{/pgf/ext/image as pattern}%
-    \tikzextutil@compatwarning@key{patterns.images}{pre 1.0}{/tikz/image as pattern/options}{/pgf/ext/image as pattern/options}%
-    \tikzextutil@compatwarning@valuekey{patterns.images}{pre 1.0}{/tikz/image as pattern/name}{/tikz/ext/image as pattern/name}%
-    \tikzextutil@compatwarning@cmd{patterns.images}{pre 1.0}{pgfsetupimageaspattern}{\pgfextsetupimageaspattern}{}%
+    \tikzextutil@compatwarning@key{patterns.images}{pre 0.6}{/tikz/image as pattern}{/pgf/ext/image as pattern}%
+    \tikzextutil@compatwarning@key{patterns.images}{pre 0.6}{/tikz/image as pattern/options}{/pgf/ext/image as pattern/options}%
+    \tikzextutil@compatwarning@valuekey{patterns.images}{pre 0.6}{/tikz/image as pattern/name}{/tikz/ext/image as pattern/name}%
+    \tikzextutil@compatwarning@cmd{patterns.images}{pre 0.6}{pgfsetupimageaspattern}{\pgfextsetupimageaspattern}{}%
     \pgfkeysaddvalue{/tikz/ext/image as pattern/option}{\pgfkeysalso{/tikz/image as pattern/option}}{}%
   },
-  compat/patterns.images/pre 1.0/.append code={%
+  compat/patterns.images/pre 0.6/.append code={%
     \pgfkeysdef{/tikz/image as pattern}{\pgfkeysvalueof{/tikz/ext/image as pattern/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/image as pattern/options}{\pgfkeysvalueof{/tikz/ext/image as pattern/options/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/image as pattern/name}{\pgfkeyssetvalue{/tikz/ext/image as pattern/name/.@cmd}##1\pgfeov}%

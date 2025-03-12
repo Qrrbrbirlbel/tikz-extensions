@@ -296,9 +296,9 @@
 }
 
 %%% Compatibility
-\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}} % should be removed after v1.0
+\pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}} % should be removed after v0.6
 \tikzextset{
-  /tikz-ext/compat/add library={arrows}{pre 1.0},
+  /tikz-ext/compat/add library={arrows}{pre 0.6},
   /tikz-ext/@arrows decl/new name/.code={% This is not a good idea.
     \expandafter\let\csname pgf@ar@code@#1\endcsname\@undefined
     \expandafter\let\csname pgf@ar@defaults@#1\endcsname\@undefined
@@ -309,8 +309,8 @@
     \pgfset{@arrows decl/name={#1}}%
   },
   compat/arrows/warn/.append code={%
-    \tikzextutil@compatwarning@key{arrows}{pre 1.0}{/pgf/@arrows decl/clone}{/tikz-ext/@arrows decl/clone}%
-    \tikzextutil@compatwarning@key{arrows}{pre 1.0}{/pgf/@arrows decl/append setup code}{/tikz-ext/@arrows decl/append setup code}%
+    \tikzextutil@compatwarning@key{arrows}{pre 0.6}{/pgf/@arrows decl/clone}{/tikz-ext/@arrows decl/clone}%
+    \tikzextutil@compatwarning@key{arrows}{pre 0.6}{/pgf/@arrows decl/append setup code}{/tikz-ext/@arrows decl/append setup code}%
     \pgfutil@for\tikzext@temp:=Centered Arc Barb,Untipped Arc Barb,Centered Hooks,%
       Centered Straight Barb,Centered Tee Barb,Untipped Tee Barb,Centered Circle,%
       Untipped Circle,Centered Kite,Centered Square,Centered Stealth,Centered Rays\do{%
@@ -321,14 +321,14 @@
               name/.expanded = \tikzext@temp,
               /tikz-ext/@arrows decl/append setup code/.expanded = {%
                 \noexpand\tikzextutil@compatmaybewarning
-                  {arrow tip '\tikzext@temp'}{'ext_\tikzext@temp'}{arrows = pre 1.0}%
+                  {arrow tip '\tikzext@temp'}{'ext_\tikzext@temp'}{arrows = pre 0.6}%
               }%
             }
           }{}%
         }{}%
       }%
   },
-  compat/arrows/pre 1.0/.append code=%
+  compat/arrows/pre 0.6/.append code=%
     \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Arc      Barb  , means = ext_Centered Arc      Barb}%
     \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Untipped Arc      Barb  , means = ext_Untipped Arc      Barb}%
     \pgfdeclarearrow{/tikz-ext/@arrows decl/new name = Centered Hooks          , means = ext_Centered Hooks        }%

@@ -280,22 +280,22 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={positioning-plus}{pre 1.0},
+  /tikz-ext/compat/add library={positioning-plus}{pre 0.6},
   compat/positioning-plus/warn/.append code=%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/xshift*}{/tikz/ext/xshift*}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/yshift*}{/tikz/ext/yshift*}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/corner above  left}{/tikz/ext/corner above  left}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/corner below  left}{/tikz/ext/corner below  left}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/corner above right}{/tikz/ext/corner above right}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/corner below right}{/tikz/ext/corner below right}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/north  left}{/tikz/ext/north  left}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/south  left}{/tikz/ext/south  left}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/north right}{/tikz/ext/north right}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/south right}{/tikz/ext/south right}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/west above}{/tikz/ext/west above}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/west below}{/tikz/ext/west below}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/east above}{/tikz/ext/east above}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/east below}{/tikz/ext/east below}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/xshift*}{/tikz/ext/xshift*}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/yshift*}{/tikz/ext/yshift*}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner above  left}{/tikz/ext/corner above  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner below  left}{/tikz/ext/corner below  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner above right}{/tikz/ext/corner above right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/corner below right}{/tikz/ext/corner below right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/north  left}{/tikz/ext/north  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/south  left}{/tikz/ext/south  left}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/north right}{/tikz/ext/north right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/south right}{/tikz/ext/south right}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/west above}{/tikz/ext/west above}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/west below}{/tikz/ext/west below}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/east above}{/tikz/ext/east above}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/east below}{/tikz/ext/east below}%
     \pgfkeysdef{/tikz/above}{\pgfkeysvalueof{/tikz/ext/above/.@cmd}##1\pgfeov}% no compat warning possible
     \pgfkeysdef{/tikz/below}{\pgfkeysvalueof{/tikz/ext/below/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/left}{\pgfkeysvalueof{/tikz/ext/left/.@cmd}##1\pgfeov}%
@@ -308,18 +308,18 @@
     \pgfkeysdef{/tikz/base right}{\pgfkeysvalueof{/tikz/ext/base right/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/mid left}{\pgfkeysvalueof{/tikz/ext/mid left/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/mid right}{\pgfkeysvalueof{/tikz/ext/mid right/.@cmd}##1\pgfeov}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/span}{/tikz/ext/span}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/span horizontal}{/tikz/ext/span horizontal}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/span vertical}{/tikz/ext/span vertical}%
-    \tikzextutil@compatwarning@key{positioning-plus}{pre 1.0}{/tikz/fit bounding box}{/tikz/ext/fit bounding box}%
-    \pgfdeclaregenericanchor{corner south east}{\tikzextutil@compatmaybewarning{anchor 'corner south east'}{'ext_corner south east'}{positioning-plus = pre 1.0}\csname pgf@anchor@generic@ext_corner south east\endcsname{##1}}%
-    \pgfdeclaregenericanchor{corner south west}{\tikzextutil@compatmaybewarning{anchor 'corner south west'}{'ext_corner south west'}{positioning-plus = pre 1.0}\csname pgf@anchor@generic@ext_corner south west\endcsname{##1}}%
-    \pgfdeclaregenericanchor{corner north east}{\tikzextutil@compatmaybewarning{anchor 'corner north east'}{'ext_corner north east'}{positioning-plus = pre 1.0}\csname pgf@anchor@generic@ext_corner north east\endcsname{##1}}%
-    \pgfdeclaregenericanchor{corner north west}{\tikzextutil@compatmaybewarning{anchor 'corner north west'}{'ext_corner north west'}{positioning-plus = pre 1.0}\csname pgf@anchor@generic@ext_corner north west\endcsname{##1}}%
-    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 1.0}{x_node_dist}{ext_x_node_dist}%
-    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 1.0}{y_node_dist}{ext_y_node_dist}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span}{/tikz/ext/span}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span horizontal}{/tikz/ext/span horizontal}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/span vertical}{/tikz/ext/span vertical}%
+    \tikzextutil@compatwarning@key{positioning-plus}{pre 0.6}{/tikz/fit bounding box}{/tikz/ext/fit bounding box}%
+    \pgfdeclaregenericanchor{corner south east}{\tikzextutil@compatmaybewarning{anchor 'corner south east'}{'ext_corner south east'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner south east\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner south west}{\tikzextutil@compatmaybewarning{anchor 'corner south west'}{'ext_corner south west'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner south west\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner north east}{\tikzextutil@compatmaybewarning{anchor 'corner north east'}{'ext_corner north east'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner north east\endcsname{##1}}%
+    \pgfdeclaregenericanchor{corner north west}{\tikzextutil@compatmaybewarning{anchor 'corner north west'}{'ext_corner north west'}{positioning-plus = pre 0.6}\csname pgf@anchor@generic@ext_corner north west\endcsname{##1}}%
+    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 0.6}{x_node_dist}{ext_x_node_dist}%
+    \tikzextutil@compatwarning@mathcmdZ{positioning-plus}{pre 0.6}{y_node_dist}{ext_y_node_dist}%
   ,%
-  compat/positioning-plus/pre 1.0/.append code=%
+  compat/positioning-plus/pre 0.6/.append code=%
     \pgfkeysdef{/tikz/xshift*}{\pgfkeysvalueof{/tikz/ext/xshift*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/yshift*}{\pgfkeysvalueof{/tikz/ext/yshift*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/corner above  left}{\pgfkeysvalueof{/tikz/ext/corner above  left/.@cmd}##1\pgfeov}%
@@ -357,7 +357,7 @@
     \pgfmathdeclarefunction*{x_node_dist}{0}{\csname pgfmathext_x_node_dist\encsname}%
     \pgfmathdeclarefunction*{y_node_dist}{0}{\csname pgfmathext_y_node_dist\encsname}%
     ,
-  compat/positioning-plus/1.0/.append code=
+  compat/positioning-plus/0.6/.append code=
     \pgfkeysdef{above}{\tikz@lib@place@handle@{#1}{south}{0}{1}{north}{1}}%
     \pgfkeysdef{above left}{\tikz@lib@place@handle@{#1}{south east}{-1}{1}{north west}{0.707106781}}%
     \pgfkeysdef{above right}{\tikz@lib@place@handle@{#1}{south west}{1}{1}{north east}{0.707106781}}%
@@ -371,7 +371,7 @@
     \pgfkeysdef{mid right}{\tikz@lib@place@handle@{#1}{mid west}{1}{0}{mid east}{1}}%
     \pgfkeysdef{right}{\tikz@lib@place@handle@{#1}{west}{1}{0}{east}{1}}%
     ,
-  compat/positioning-plus/newest/.append style=/tikz/ext/compat/positioning-plus/1.0,
+  compat/positioning-plus/newest/.append style=/tikz/ext/compat/positioning-plus/0.6,
   compat/positioning-plus/\pgfkeysvalueof{/tikz/ext/compat/positioning-plus}%
 }
 \endinput

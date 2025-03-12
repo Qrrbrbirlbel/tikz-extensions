@@ -210,20 +210,20 @@
   }
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 1.0}}}
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
   compat/shapes/warn/.append style=/tikz/ext/compat/shapes.superellipse/warn,
-  compat/shapes/pre 1.0/.append style=/tikz/ext/compat/shapes.superellipse/pre 1.0,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.superellipse/pre 0.6,
   compat/shapes.superellipse/warn/.code={%
-    \tikzextutil@compatwarning@key     {shapes}{pre 1.0}{/pgf/superellipse exponent}  {/pgf/ext/superellipse exponent}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/superellipse x exponent}{/pgf/ext/superellipse x exponent}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/superellipse y exponent}{/pgf/ext/superellipse y exponent}%
-    \tikzextutil@compatwarning@valuekey{shapes}{pre 1.0}{/pgf/superellipse step}      {/pgf/ext/superellipse step}%
+    \tikzextutil@compatwarning@key     {shapes}{pre 0.6}{/pgf/superellipse exponent}  {/pgf/ext/superellipse exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse x exponent}{/pgf/ext/superellipse x exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse y exponent}{/pgf/ext/superellipse y exponent}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse step}      {/pgf/ext/superellipse step}%
     \tikzextutil@compat@cloneshape{superellipse}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
-    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'superellipse'}{'ext_superellipse'}{shapes = pre 1.0}}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'superellipse'}{'ext_superellipse'}{shapes = pre 0.6}}%
     \tikzextutil@prefix@macrotomacro\pgf@sh@s@superellipse\tikzext@temp
   },
-  compat/shapes.superellipse/pre 1.0/.code={%
+  compat/shapes.superellipse/pre 0.6/.code={%
     \pgfkeysdef{/pgf/superellipse exponent}{\pgfkeysvalueof{/pgf/ext/superellipse exponent/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/superellipse x exponent}{\pgfkeyssetvalue{/pgf/ext/superellipse x exponent}{##1}}%
     \pgfkeysdef{/pgf/superellipse y exponent}{\pgfkeyssetvalue{/pgf/ext/superellipse y exponent}{##1}}%

@@ -77,14 +77,14 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={pgffor-ext}{pre 1.0},
+  /tikz-ext/compat/add library={pgffor-ext}{pre 0.6},
   compat/pgffor-ext/warn/.append code={%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/normal list}{/pgf/foreach/ext/normal list}%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/no separator}{/pgf/foreach/ext/no separator}%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/use int}{/pgf/foreach/ext/use int}%
-    \tikzextutil@compatwarning@key{pgffor-ext}{pre 1.0}{/pgf/foreach/use float}{/pgf/foreach/ext/use float}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/normal list}{/pgf/foreach/ext/normal list}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/no separator}{/pgf/foreach/ext/no separator}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/use int}{/pgf/foreach/ext/use int}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/use float}{/pgf/foreach/ext/use float}%
   },
-  compat/pgffor-ext/pre 1.0/.append code={%
+  compat/pgffor-ext/pre 0.6/.append code={%
     \pgfkeysdef{/pgf/foreach/normal list}{\pgfkeysvalueof{/pgf/foreach/ext/normal list/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/foreach/no separator}{\pgfkeysvalueof{/pgf/foreach/ext/no separator/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/pgf/foreach/use int}{\pgfkeysvalueof{/pgf/foreach/ext/use int/.@cmd}##1\pgfeov}%

@@ -255,26 +255,26 @@
 
 %%% Compatibility
 \tikzextset{
-  /tikz-ext/compat/add library={scalepicture}{pre 1.0},
+  /tikz-ext/compat/add library={scalepicture}{pre 0.6},
   compat/scalepicture/warn/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/scalepicture@}{3}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture width}          {/tikz/ext/picture width}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/minimum picture width}  {/tikz/ext/minimum picture width}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/maximum picture width}  {/tikz/ext/maximum picture width}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture height}         {/tikz/ext/picture height}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/minimum picture height} {/tikz/ext/minimum picture height}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/maximum picture height} {/tikz/ext/maximum picture height}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture size}           {/tikz/ext/picture size}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/minimum picture size}   {/tikz/ext/minimum picture size}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/maximum picture size}   {/tikz/ext/maximum picture size}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture width*}         {/tikz/ext/picture width*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/minimum picture width*} {/tikz/ext/minimum picture width*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/maximum picture width*} {/tikz/ext/maximum picture width*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture height*}        {/tikz/ext/picture height*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/minimum picture height*}{/tikz/ext/minimum picture height*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/maximum picture height*}{/tikz/ext/maximum picture height*}%
-    \tikzextutil@compatwarning@key{scalepicture}{pre 1.0}{/tikz/picture size*}          {/tikz/ext/picture size*},%
-  compat/scalepicture/pre 1.0/.append code=%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture width}          {/tikz/ext/picture width}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/minimum picture width}  {/tikz/ext/minimum picture width}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/maximum picture width}  {/tikz/ext/maximum picture width}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture height}         {/tikz/ext/picture height}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/minimum picture height} {/tikz/ext/minimum picture height}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/maximum picture height} {/tikz/ext/maximum picture height}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture size}           {/tikz/ext/picture size}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/minimum picture size}   {/tikz/ext/minimum picture size}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/maximum picture size}   {/tikz/ext/maximum picture size}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture width*}         {/tikz/ext/picture width*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/minimum picture width*} {/tikz/ext/minimum picture width*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/maximum picture width*} {/tikz/ext/maximum picture width*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture height*}        {/tikz/ext/picture height*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/minimum picture height*}{/tikz/ext/minimum picture height*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/maximum picture height*}{/tikz/ext/maximum picture height*}%
+    \tikzextutil@compatwarning@key{scalepicture}{pre 0.6}{/tikz/picture size*}          {/tikz/ext/picture size*},%
+  compat/scalepicture/pre 0.6/.append code=%
     % \pgfkeyssetvalue{/tikz/ext/compat/scalepicture@}{2}%
     \pgfkeysdef{/tikz/picture width}          {\pgfkeysvalueof{/tikz/ext/picture width/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/minimum picture width}  {\pgfkeysvalueof{/tikz/ext/minimum picture width/.@cmd}##1\pgfeov}%
@@ -292,7 +292,7 @@
     \pgfkeysdef{/tikz/minimum picture height*}{\pgfkeysvalueof{/tikz/ext/minimum picture height*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/maximum picture height*}{\pgfkeysvalueof{/tikz/ext/maximum picture height*/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/picture size*}          {\pgfkeysvalueof{/tikz/ext/picture size*/.@cmd}##1\pgfeov},
-  % compat/scalepicture/1.0/.append code=\pgfkeyssetvalue{/tikz/ext/compat/scalepicture@}{1},
+  % compat/scalepicture/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/scalepicture@}{1},
   % compat/scalepicture/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/scalepicture@}{0},
   compat/scalepicture/\pgfkeysvalueof{/tikz/ext/compat/scalepicture}%
 }

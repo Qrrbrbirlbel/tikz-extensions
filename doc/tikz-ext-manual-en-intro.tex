@@ -47,7 +47,7 @@ it is planned to move those in the |/tikz/ext| namespace.
 For keys in the |/pgf| namespace, this will probably not happen
 since it makes it not very intuitive to use them in \tikzname.
 
-Starting from version 1.0,
+Starting from version 0.6,
 \tikzextname\ provides commands that return the current version for compatibility testing.
 The second simply increments with every release
 so that the first doesn't need to be parsed.
@@ -58,7 +58,7 @@ so that the first doesn't need to be parsed.
   Returns \texttt{\tikzextversionnumber}.
 \end{command}
 %
-Also starting from version 1.0, there's |\tikzextset| and |\pgfextset|.
+Also starting from version 0.6, there's |\tikzextset| and |\pgfextset|.
 \begin{command}{\tikzextset\marg{options}}
   This command will process the \meta{options} using the
   |\pgfkeys| command with the default path set to |/tikz/ext|.
@@ -71,17 +71,17 @@ Also starting from version 1.0, there's |\tikzextset| and |\pgfextset|.
 \newcolumn
 \section{Compatibility with older versions}
 As discussed in the previous section,
-keys and commands of extensions that existed before version~1.0
+keys and commands of extensions that existed before version~0.6
 that do not appear in this manual are considered deprecated.
 
-\begin{key}{/\tikzext/compat=\mchoice{pre 1.0, 1.0, warn, newest} (default pre 1.0)}
+\begin{key}{/\tikzext/compat=\mchoice{pre 0.6, 0.6, warn, newest} (default pre 0.6)}
   This sets the global compatibility setting for every extension of this package
   (whether already loaded or not).
 
   The choice |warn| gives out warning for deprecated keys or commands
   but still executes them if they were not not in use when an extension was loaded.
   
-  For version 1.0 this is actually the default settings so that active documents
+  For version 0.6 this is actually the default settings so that active documents
   keep working -- for now.
   
   The following table shows the compatibility settings for each extension.
@@ -92,7 +92,7 @@ that do not appear in this manual are considered deprecated.
   \begin{center}
   \begin{tabular}{>{\ttfamily ext.}l ccc}
     \toprule
-    \multicolumn{1}{l}{Extension}                        & warn  & pre 1.0 & 1.0 \\ \midrule
+    \multicolumn{1}{l}{Extension}                        & warn  & pre 0.6 & 0.6 \\ \midrule
     \multicolumn{1}{l}{\ttfamily pgfcalendar-ext}        & \Xdef &   \X    & --  \\
     \multicolumn{1}{l}{\quad\ttfamily ext.calendar-plus} &       &         &     \\ \midrule[.5\lightrulewidth]
     arrows                                               & \Xdef &   \X    & --  \\
@@ -117,21 +117,21 @@ that do not appear in this manual are considered deprecated.
 For each available extension the compatibility setting can be adjusted as well
 after the extension is loaded.
 \begin{keylist}[/\tikzext/compat]{%
-  pgfcalendar-ext=\meta{version} (default pre 1.0),
-  arrows=\meta{version} (default pre 1.0),
-  layers=\meta{version} (default pre 1.0),
-  nodes=\meta{version} (default pre 1.0),
-  node-families=\meta{version} (default pre 1.0),
-  paths.arcto=\meta{version} (default pre 1.0),
-  paths.ortho=\meta{version} (default pre 1.0),
-  paths.timer=\meta{version} (default pre 1.0),
-  pgffor-ext=\meta{version} (default pre 1.0),
-  pgfkeys-plus=\meta{version} (default pre 1.0),
-  positioning-plus=\meta{version} (default pre 1.0),
-  scalepicture=\meta{version} (default pre 1.0),
-  shapes=\meta{version} (default pre 1.0),
-  transformations.mirror=\meta{version} (default pre 1.0),
-  topaths.arcthrough=\meta{version} (default pre 1.0)%
+  pgfcalendar-ext=\meta{version} (default pre 0.6),
+  arrows=\meta{version} (default pre 0.6),
+  layers=\meta{version} (default pre 0.6),
+  nodes=\meta{version} (default pre 0.6),
+  node-families=\meta{version} (default pre 0.6),
+  paths.arcto=\meta{version} (default pre 0.6),
+  paths.ortho=\meta{version} (default pre 0.6),
+  paths.timer=\meta{version} (default pre 0.6),
+  pgffor-ext=\meta{version} (default pre 0.6),
+  pgfkeys-plus=\meta{version} (default pre 0.6),
+  positioning-plus=\meta{version} (default pre 0.6),
+  scalepicture=\meta{version} (default pre 0.6),
+  shapes=\meta{version} (default pre 0.6),
+  transformations.mirror=\meta{version} (default pre 0.6),
+  topaths.arcthrough=\meta{version} (default pre 0.6)%
 }
   For \meta{version} the same choices are valid as for the main |compat| key.
   It should be noted that at this point, a compatibility setting can't really be reversed
