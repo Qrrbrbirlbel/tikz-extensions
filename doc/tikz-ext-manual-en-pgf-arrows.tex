@@ -39,7 +39,7 @@ these can be organized in the following categories.
 \begin{center}
 \newcommand*\tip[2][]{%
   \tikzset{external/export/.try=false}%
-  \tikz[arrows={#2 \arrowtiprow[reversed] - \arrowtiprow[sep] . #2 \arrowtiprow[]}, baseline=+-.5ex,
+  \tikz[arrows={ext_#2 \arrowtiprow[reversed] - \arrowtiprow[sep] . ext_#2 \arrowtiprow[]}, baseline=+-.5ex,
     trim left=+-3mm, trim right=+13mm]
     \draw[line width=+.5mm, postaction={draw, gray, thin,-}] (0,0) -- + (right:1);%
 }%
@@ -82,147 +82,148 @@ these can be organized in the following categories.
 
 \subsection{Centered}
 \subsubsection{Barbed Arrow Tips}
-\begin{arrowtipsimple}{Centered Arc Barb}
+\begin{arrowtipsimple}{ext\textunderscore Centered Arc Barb}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Arc Barb} tip.
     The center of the arc lies on the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Bar}
+\begin{arrowtipsimple}{ext\textunderscore Centered Bar}\tipcompat
     A variant of the simple \referenceArrowtipandIndexO{Bar} tip.
-    This is a simple instance of |Centered Tee Barb| for length zero.
+    This is a simple instance of |ext_Centered Tee Barb| for length zero.
     
     The middle of the line will lie on original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Bracket}
+\begin{arrowtipsimple}{ext\textunderscore Centered Bracket}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Bracket} tip and
-    therefore an instance of the |Centered Tee Barb| arrow tip that results in something
+    therefore an instance of the |ext_Centered Tee Barb| arrow tip that results in something
     resembling a bracket.
     
     The middle of the vertical part will lie on the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Hooks}
+\begin{arrowtipsimple}{ext\textunderscore Centered Hooks}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Hooks} tip.
     The starting point of the hooks will lie on the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Parenthesis}
+\begin{arrowtipsimple}{ext\textunderscore Centered Parenthesis}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Parenthesis} tip and
-    thus an instance of the |Centered Arc Barb| arrow tip.
+    thus an instance of the |ext_Centered Arc Barb| arrow tip.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Straight Barb}
+\begin{arrowtipsimple}{ext\textunderscore Centered Straight Barb}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Straight Barb} tip.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Tee Barb}
+\begin{arrowtipsimple}{ext\textunderscore Centered Tee Barb}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Tee Barb} tip.
     
     The middle of the vertical part will lie on the original end of the path.
 \end{arrowtipsimple}
 
 \subsubsection{Geometric Arrow Tips}
-\begin{arrowtipsimple}{Centered Circle}
+\begin{arrowtipsimple}{ext\textunderscore Centered Circle}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Circle} tip.
     The center of the circle will lie on the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Diamond}
+\begin{arrowtipsimple}{ext\textunderscore Centered Diamond}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Diamond} tip and
-    thus an instance of |Centered Kite| where the length is larger than the width.
+    thus an instance of |ext_Centered Kite| where the length is larger than the width.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Ellipse}
+\begin{arrowtipsimple}{ext\textunderscore Centered Ellipse}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Ellipse} tip
-    and thus another name for the |Centered Circle| tip
+    and thus another name for the |ext_Centered Circle| tip
     that is twice as wide as high.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Kite}
+\begin{arrowtipsimple}{ext\textunderscore Centered Kite}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Kite} tip.
     
     The widest part will lie on the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Rectangle}
+\begin{arrowtipsimple}{ext\textunderscore Centered Rectangle}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Rectangle} tip.
     By default, it is twice as long as high.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Square}
+\begin{arrowtipsimple}{ext\textunderscore Centered Square}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Square} tip.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Stealth}
+\begin{arrowtipsimple}{ext\textunderscore Centered Stealth}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Stealth} tip.
     
     The weighted center will lie at the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Triangle}
+\begin{arrowtipsimple}{ext\textunderscore Centered Triangle}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Triangle} tip and
-    thus an instance of the |Centered Kite| tip with zero inset.
+    thus an instance of the |ext_Centered Kite| tip with zero inset.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Centered Turned Square}
+\begin{arrowtipsimple}{ext\textunderscore Centered Turned Square}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Turned Square} tip and
-    thus an instance of the |Centered Kite| tip with identical width and height and mid-inset.
+    thus an instance of the |ext_Centered Kite| tip with identical width and height and mid-inset.
 \end{arrowtipsimple}
 
 \subsubsection{Special Arrow Tips}
-\begin{arrowtipsimple}{Centered Rays}
+\begin{arrowtipsimple}{ext\textunderscore Centered Rays}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Rays} tip.
     The origin of the rays will lie on the original end of the path.
 \end{arrowtipsimple}
 
 \subsection{Untipped}
 \subsubsection{Barbed Arrow Tips}
-\begin{arrowtipsimple}{Centered Arc Barb}
+\begin{arrowtipsimple}{ext\textunderscore Centered Arc Barb}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Arc Barb} tip.
     The arrow tip will protrude half its line width over the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Untipped Bar}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Bar}\tipcompat
     A variant of the simple \referenceArrowtipandIndexO{Bar} tip.
-    This is a simple instance of |Untipped Tee Barb| for length zero.
+    This is a simple instance of |ext_Untipped Tee Barb| for length zero.
     
     The middle of the line will lie on original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Untipped Bracket}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Bracket}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Bracket} tip and
-    therefore an instance of the |Untipped Tee Barb| arrow tip that results in something
+    therefore an instance of the |ext_Untipped Tee Barb| arrow tip that results in something
     resembling a bracket.
     
     The arrow tip will protrude half its line width over the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Untipped Parenthesis}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Parenthesis}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Parenthesis} tip and
-    thus an instance of the |Untipped Arc Barb| arrow tip.
+    thus an instance of the |ext_Untipped Arc Barb| arrow tip.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Untipped Tee Barb}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Tee Barb}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Tee Barb} tip.
     
     The middle of the vertical part will lie on the original end of the path.
 \end{arrowtipsimple}
 
 \subsubsection{Geometric Arrow Tips}
-\begin{arrowtipsimple}{Untipped Circle}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Circle}\tipcompat
     A variant of the \referenceArrowtipandIndexO{Circle} tip.
     This tip will protrude half its line width over the original end of the path.
 \end{arrowtipsimple}
 
-\begin{arrowtipsimple}{Untipped Ellipse}
+\begin{arrowtipsimple}{ext\textunderscore Untipped Ellipse}\tipcompat
     This is a variant of the \referenceArrowtipandIndexO{Ellipse} tip
-    and thus another name for the |Untipped Circle| tip
+    and thus another name for the |ext_Untipped Circle| tip
     that is twice as wide as high.
 \end{arrowtipsimple}
 
+\newcolumn
 \subsection{Original Arrow Tips}
-\begin{arrowtipsimple}{Hug Cap}
+\begin{arrowtipsimple}{ext\textunderscore Hug Cap}\tipcompat
 This arrow tips will hug a circle that would touch the end of the path.
 
 Use the \referenceKeyandIndexO[/pgf/arrow keys/]{length} key to set up the radius of that circle.
@@ -235,25 +236,34 @@ Use the \referenceKeyandIndexO[/pgf/arrow keys/]{length} key to set up the radiu
 \node[dot={blue}{3cm}] (B) at (6,0) {};
 \draw[
   line width=1.5cm,
-  arrows={Hug Cap[length=1cm]-Hug Cap[length=1.5cm]}
+  arrows={ext_Hug Cap[length=1cm]-ext_Hug Cap[length=1.5cm]}
 ] (A) to[out=45, in=180] (B);
 \end{tikzpicture}
 \end{codeexample}
 \end{arrowtipsimple}
 
-\begin{arrowtip}{Loop}{
+\makeatletter
+\newcommand*\extus{%
+  \ifx\path\tikz@command@path
+    ext_%
+  \else
+    ext\textunderscore
+  \fi
+}
+\makeatother
+\begin{arrowtip}{\extus Loop}{\tipCompat{Loop}
   This arrow tip attaches a one-sided loop to the end of the line.
-  The |length| refers to the length of the whole tip while the |radius|
+  The |length| refers to the length of the whole tip while the |inset|
   specifies the radius of the three rounded corners.
   The width of the tip is twice the |length| (but can't specified independently).
-}{length=1.5cm,radius=3.5mm}{length=1.5cm,radius=3.5mm}
+}{length=1.5cm,inset=3.5mm}{length=1.5cm,radius=3.5mm/1.5cm}
     \begin{arrowexamples}
         \arrowexample[]
         \arrowexampledup[sep]
         \arrowexampledupdot[sep]
         \arrowexample[open]
         \arrowexample[open, swap]
-        \arrowexample[length=5pt,radius=0pt]
+        \arrowexample[length=5pt,inset=0pt]
         \arrowexample[reversed]
         \arrowexample[slant=.3]
         \arrowexample[red]

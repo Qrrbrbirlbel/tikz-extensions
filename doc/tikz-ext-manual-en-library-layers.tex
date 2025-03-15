@@ -19,10 +19,11 @@ or change the drawing order.
 \end{tikzlibrary}
 
 \begin{multicols}{2}
-\subsection{Internal keys}
-\begin{key}{/tikz-ext/patch=\meta{specification}}
+%\subsection{Internal keys}
+\begin{key}{/\tikzext/layers/patch=\mchoice{node, matrix, pic, edge, all}}
+\keycompat{tikz-ext/layers}
 Since this library is experimental, its functionality needs to be activated explicitly.
-The \meta{specification} is one of
+Patches exist for
 \begin{itemize}
 \item |node|,
 \item |matrix|,
@@ -36,33 +37,64 @@ The \meta{specification} is one of
 \item |all| which applies all the patches at once.
 \end{itemize}
 \end{key}
+%
+%These keys only work when a patch is applied.
+%These will be used internally.
+%\begin{key}{/\tikzext/layers/on layer=\meta{layer}}
+%\keycompat{tikz-ext/layers}
+%Places an object on the \pgfname\ layer \meta{layer}.
+%\end{key}
+%\begin{key}{/\tikzext/layers/in box=\meta{box}}
+%\keycompat{tikz-ext/layers}
+%Places an object in the \TeX\ box \meta{box}.
+%\end{key}
 
-These keys only work when a patch is applied but don't need to be used
-since the patching activated specific
-\begin{key}{/tikz-ext/layers/in box=\meta{box}}
+%\subsection{User-level keys}
+\newcolumn
+\begin{key}{/\tikzext/node on layer=\meta{layer}}
+\keycompat{tikz}
+If the |node| patch is applied, this key places a node on layer \meta{layer}.
 \end{key}
+%\begin{key}{/\tikzext/node in box=\meta{box}}
+%\keycompat{tikz}
+%If the |node| patch is applied, this key places a node in box \meta{box}.
+%\end{key}
 
-\begin{key}{/tikz-ext/layers/on layer=\meta{layer}}
+\begin{key}{/\tikzext/matrix on layer=\meta{layer}}
+\keycompat{tikz}
+If the |matrix| patch is applied, this key places the matrix on layer \meta{layer}.
 \end{key}
+%\begin{key}{/\tikzext/matrix in box=\meta{box}}
+%\keycompat{tikz}
+%If the |matrix| patch is applied, this key places the matrix in box \meta{box}.
+%\end{key}
 
-\subsection{User-level keys}
-\begin{key}{/tikz/node on layer=\meta{layer}}
+\begin{key}{/\tikzext/edge on layer=\meta{layer}}
+\keycompat{tikz}
+If the |edge| patch is applied, this key places the edge on layer \meta{layer}.
 \end{key}
-\begin{key}{/tikz/node in box=\meta{box}}
-\end{key}
+%\begin{key}{/\tikzext/edge in box=\meta{box}}
+%\keycompat{tikz}
+%If the |edge| patch is applied, this key places the edge in box \meta{box}.
+%\end{key}
 
-\begin{key}{/tikz/matrix on layer=\meta{layer}}
+\begin{key}{/\tikzext/pic on layer=\meta{layer}}
+\keycompat{tikz}
+If the |pic| patch is applied, this key places the main code of a pic on layer \meta{layer}.
 \end{key}
-\begin{key}{/tikz/matrix in box=\meta{box}}
-\end{key}
-
-\begin{key}{/tikz/edge on layer=\meta{layer}}
-\end{key}
-\begin{key}{/tikz/edge in box=\meta{box}}
-\end{key}
-
-\begin{key}{/tikz/pic on layer=\meta{layer}}
-\end{key}
-\begin{key}{/tikz/pic in box=\meta{box}}
-\end{key}
+%\begin{key}{/\tikzext/pic in box=\meta{box}}
+%\keycompat{tikz}
+%If the |pic| patch is applied, this key places the main code of a pic in box \meta{box}.
+%\end{key}
 \end{multicols}
+\begin{codeexample}[width=.5\linewidth,preamble=\usetikzlibrary{ext.layers}]
+\pgfdeclarelayer{front}
+\begin{tikzpicture}[ext/layers/patch=node]
+\pgfsetlayers{main,front}
+\draw (0, -1) -- node[
+                   ext/node on layer=front,
+                   draw, fill=white, sloped
+                 ] {On Top} (2,1);
+\draw[red] (0, 1) -- (2, -1);
+\end{tikzpicture}
+\end{codeexample}

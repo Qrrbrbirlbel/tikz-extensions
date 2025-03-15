@@ -24,16 +24,16 @@ The pics and keys provided by this library serve as an alternative.
 
 Many of the pics and keys share various keys that specify
 where and how the arrow tips are placed.
-\begin{key}{/tikz/ext/pos <=\meta{value} (initially 0.0)}
+\begin{key}{/\tikzext/pos <=\meta{value} (initially 0.0)}
 If the pic type supports it and a start arrow tip sequence is provided
 this specifies the position of that sequence.
 \end{key}
-\begin{key}{/tikz/ext/pos >=\meta{value} (initially 0.5)}
+\begin{key}{/\tikzext/pos >=\meta{value} (initially 0.5)}
 This is an alias for \referenceKeyandIndex{pos},
 if an end arrow tip sequence is provided, it is placed at this position.
 \end{key}
 
-\begin{key}{/tikz/ext/arrow shift mode=\meta{shift mode} (initially total length)}
+\begin{key}{/\tikzext/arrow shift mode=\meta{shift mode} (initially total length)}
 This key is used to set the \meta{shift mode} for the arrow tip.
 It can be one of the following.
 \begin{description}
@@ -78,7 +78,7 @@ and multiplied with the |arrow shift factor|.
 The result of this evaluation is used to shift the arrow tip sequence
 in the tip's direction.
 
-\begin{key}{/tikz/ext/arrow shift factor=\meta{value} (initially 0.5)}
+\begin{key}{/\tikzext/arrow shift factor=\meta{value} (initially 0.5)}
   This determines the shift factor.
   
   The default value is probably good for most cases.
@@ -106,7 +106,7 @@ This library provides the following pics:
   (see section~\ref{library:timer}).
   
   The arrow tips will never be bended. For this the following pic types
-  or the \referenceKeyandIndex[/tikz/ext/]{arc arrows} key will be necessary.
+  or the \referenceKeyandIndex[/\tikzext/]{arc arrows} key will be necessary.
 
   Due to \cite{PgfIssueSloped} with an active transformation,
   the arrow tips won't be placed correctly in many cases.
@@ -115,15 +115,15 @@ This library provides the following pics:
 \item[|ext/softpath arrows|]
   This pic type places a possible bended arrow tip on the last segment of the path.
   
-  For the path operators \referencePathOperationandIndexO{--},
-  {\catcode`\|=12 \referencePathOperationandIndexO{|-}
-              and \referencePathOperationandIndexO{-|}}
-  this works even with a non-identity transformation.
-  If possible, the current timer will be used to take more segments into account so
-  that the arrow tip can be placed along the recent path operation.
+%  For the path operators \referencePathOperationandIndexO{--},
+%  {\catcode`\|=12 \referencePathOperationandIndexO{|-}
+%              and \referencePathOperationandIndexO{-|}}
+%  this works even with a non-identity transformation.
+%  If possible, the current timer will be used to take more segments into account so
+%  that the arrow tip can be placed along the recent path operation.
   
   This won't work for \referencePathOperationandIndexO{arc}s,
-  for this the \referenceKeyandIndex[/tikz/ext/]{arc arrows} key will be necessary.
+  for this the \referenceKeyandIndex[/\tikzext/]{arc arrows} key will be necessary.
   
   This pic type can place two tip specification,
   one at |pos >| and one at |pos <| in the reversed direction.
@@ -137,7 +137,7 @@ This library provides the following pics:
   (defaults to the end tip specification of the path).
   
   
-  This obviously is best use as a pic along a path segment that supports it.
+  This obviously is best used as a pic along a path segment that supports it.
   It \emph{does not} support bended arrow tips.
 \begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
 \begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
@@ -163,25 +163,25 @@ This library provides the following pics:
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
     this will not work as expected. Use the |arc arrows| key instead.
 \end{pictype}
-\begin{pictype}{softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
+\begin{pictype}{ext/softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
   This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
 \end{pictype}
 
 \subsection{Arrow keys}
 The last pic type |softpath arrows| is also available as a key
 which is the preferred version.
-\begin{key}{/tikz/ext/softpath arrows=\opt{\meta{options}} (default ->)}
+\begin{key}{/\tikzext/softpath arrows=\opt{\meta{options}} (default ->)}
 This key adds arrow tips to the previous path segment (a curve or a line).
 
-\begin{stylekey}{/tikz/ext/every softpath arrows (initially \{\})}
+\begin{stylekey}{/\tikzext/every softpath arrows (initially \{\})}
 This style will be applied for every instance of |softpath arrows| (key version, not the pic).
 \end{stylekey}
 \end{key}
 
 For |arc|s the following key needs to be used directly after the |arc| path operation.
-\begin{key}{/tikz/ext/arc arrows=\opt{\meta{options}} (default ->)}
+\begin{key}{/\tikzext/arc arrows=\opt{\meta{options}} (default ->)}
 This key adds arrow tips to the previous arc segment.
-\begin{stylekey}{/tikz/ext/every softpath arrows (initially \{\})}
+\begin{stylekey}{/\tikzext/every arc arrows (initially \{\})}
 This style will be applied for every instance of |arc arrows|.
 \end{stylekey}
 
@@ -192,12 +192,13 @@ Use an arc with the full 360${}^\circ$ to place bended arrow tips along a circle
 Many paths are not properly accessible by the previous methods.
 If this library is loaded \emph{after}
 the \referenceLibraryandIndexO{decorations.markings} library,
-both the |\arrow| and the |\arrowreversed| macros are enhanced.
+both the |\arrow| and
+the |\arrowreversed| macros are enhanced.
 
 \begin{command}{\arrow\opt{|**|\oarg{options}}\marg{arrow end tip}}
   This macro works the same as before but the one-starred version
   applies the shifting as specified
-  by \referenceKeyandIndex{arrow shift mode} and \referenceKeyandIndex{arrow shift factor}
+  by |arrow shift mode| and |arrow shift factor|
   where as the two-starred version also bends the arrow tip.
 \end{command}
 \begin{command}{\arrowreversed\opt{|**|\oarg{options}}\marg{arrow end tip}}

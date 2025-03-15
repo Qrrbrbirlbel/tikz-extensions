@@ -14,7 +14,7 @@
   \inspiration{ShapeSuperEllipse-Q}{ShapeSuperEllipse-A}
 \end{pgflibrary}
 
-\begin{shape}{superellipse}
+\begin{ext_shape}{superellipse}
 This shape is defined by formula
 \begin{equation*}
   \biggl|\frac x{r_x}\biggr|^m + \biggl|\frac y{r_y}\biggr|^n = 1
@@ -26,35 +26,35 @@ and will be plotted by
 \end{align*}
 where $r_x$ is half the node's width and $r_y$ is half the node's height.
 
-\begin{key}{/pgf/superellipse x exponent=\meta{x exponent}(initially 2.5)}
+\begin{key}{/\pgfext/superellipse x exponent=\meta{x exponent}(initially 2.5)}\keycompat{pgf}
 This sets $m$.
 \end{key}
-\begin{key}{/pgf/superellipse y exponent=\meta{y exponent}(initially 2.5)}
+\begin{key}{/\pgfext/superellipse y exponent=\meta{y exponent}(initially 2.5)}\keycompat{pgf}
 This sets $n$.
 \end{key}
-\begin{key}{/pgf/superellipse step=\meta{step}(initially 5)}
+\begin{key}{/\pgfext/superellipse step=\meta{step}(initially 5)}
 This specifies the step of the underlying plot handler.
 The smaller \meta{step} is, the slower computation will be.
 
 Sensible values for \meta{step} are integer dividers of 90, i.\,e.
 2, 3, 5, 6, 9, 10, 15, 18, 30 and 45.
 \end{key}
-\begin{key}{/pgf/superellipse exponent=\meta{exponent}}
+\begin{key}{/\pgfext/superellipse exponent=\meta{exponent}}\keycompat{pgf}
   Sets both |superellipse x exponent| and |superellipse y exponent| to \meta{exponent}.
 \end{key}
 
 \paragraph{Notes on Implementation}
 For implementing this shape, additional mathematical functions were declared.
-\begin{math-function}{superellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})}
-\mathcommand
+\begin{math-function}{ext\textunderscore superellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})}
+\mathcommand[extsuperellipsex(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})]
 Returns the $x$ value on a point of the superellipse with its center on the origin following
 \begin{equation*}
    x = r_x\cos^{2/m} t
 \end{equation*}
 for values of $0 \leq t \leq 90$.
 \end{math-function}
-\begin{math-function}{superellipsey(\mvar{t}, \mvar{2/n}, \mvar{$r_y$})}
-\mathcommand
+\begin{math-function}{ext\textunderscore superellipsey(\mvar{t}, \mvar{2/n}, \mvar{$r_y$})}
+\mathcommand[extsuperellipsey(\mvar{t}, \mvar{2/m}, \mvar{$r_x$})]
 Returns the $y$ value on a point of the superellipse with its center on the origin following
 \begin{equation*}
    y = r_y\cos^{2/n} t
@@ -63,7 +63,7 @@ for values of $0 \leq t \leq 90$.
 \end{math-function}
 
 Both \pgfname math functions can be used at once with the following macro.
-\begin{command}{\pgfmathsuperellipseXY\marg{t}\marg{2/m}\marg{2/n}\marg{a}\marg{b}}
+\begin{command}{\pgfextmathsuperellipseXY\marg{t}\marg{2/m}\marg{2/n}\marg{a}\marg{b}}
 Returns the $x$ value (in |\pgfmathresultX|) and the $y$ value (in |\pgfmathresultY|) of the superellipse with its center on the origin following
 \begin{align*}
    x & = a\cos^{2/m} t \\
@@ -74,15 +74,9 @@ for values of $0 \leq t \leq 90$.
 Note: all arguments must be a valid number since they will not be parsed by \pgfname math.
 \end{command}
 
-And additional internal macro was defined following the original naming scheme.
-\def\temp{\begin{command}}%
-\expandafter\temp\expandafter{\csname pgfutil@prefix@macrotomacro\endcsname\marg{macro 1}\marg{macro 2}}
-Adds the once-expansion of \meta{macro 2} in front of \meta{macro 1}.
-\end{command}
-
 \begin{codeexample}[preamble=\usetikzlibrary{ext.shapes.superellipse}]
-\begin{tikzpicture}[superellipse step=1]\Huge
-\node[name=s,shape=superellipse,shape example] {Superellipse\vrule width 1pt height 2cm};
+\begin{tikzpicture}[ext/superellipse step=1]\Huge
+\node[name=s,shape=ext_superellipse,shape example] {Superellipse\vrule width 1pt height 2cm};
 \foreach \anchor/\placement in
   {north west/above left, north/above, north east/above right,
    west/left, center/above, east/right,
@@ -98,8 +92,8 @@ Adds the once-expansion of \meta{macro 2} in front of \meta{macro 1}.
 \begin{codeexample}[width=8cm,preamble=\usetikzlibrary{ext.shapes.superellipse}]
 \begin{tikzpicture}[minimum width=1cm, minimum height=3cm]
 \foreach \xe/\ye[count=\i] in {.5/.5, 1/1, 2/2, 3/3, .5/5}
-  \node[draw, superellipse, superellipse x exponent=\xe, superellipse y exponent=\ye] at (1.5*\i,0) {};
+  \node[draw, ext_superellipse, ext/superellipse x exponent=\xe, ext/superellipse y exponent=\ye] at (1.5*\i,0) {};
 \end{tikzpicture}
 \end{codeexample}
-\end{shape}
+\end{ext_shape}
 \endinput

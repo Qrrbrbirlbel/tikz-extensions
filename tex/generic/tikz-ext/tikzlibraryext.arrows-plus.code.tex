@@ -118,7 +118,7 @@
     \else
       \pgfutil@packagewarning{tikz-ext}
         {arc arrow used on non-arc path segment, using ``softpath arrows'' instead}%
-      \tikzset{softpath arrows={#1}}%
+      \tikzset{ext/softpath arrows={#1}}%
     \fi
   },
   pos </.initial=0.0,
@@ -195,16 +195,6 @@
     \let\tikzext@arrow@softpath\tikzext@arrow@curvepath
   \fi
 }
-% |- and -|
-\def\tikzext@arrow@softpath@hvline{%
-  \let\tikzext@lastonpath      \pgfpointlastonpath
-  \let\tikzext@secondlastonpath\pgfpointsecondlastonpath
-  \pgfprocesssplitpath\pgfprocessresultsubpathprefix
-  \pgfprocesssplitsubpath\pgfprocessresultpathsuffix
-  \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
-  \let\tikzext@arrow@softpath\tikzext@arrow@hvpath
-}
-\let\tikzext@arrow@softpath@vhline\tikzext@arrow@softpath@hvline
 %
 % Paths
 %
@@ -330,3 +320,4 @@
     \tikzext@lib@dec@doarrowhead@{#1}[{#2}]{#3}%
   \fi
 }
+\endinput

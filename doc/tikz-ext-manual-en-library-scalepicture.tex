@@ -36,7 +36,7 @@ and an appropriate scaling for the picture can be installed.
   This will expand to |0pt| if the picture hasn't been measured before.
 \end{command}
 
-\begin{stylekey}{/tikz/save picture size}
+\begin{stylekey}{/\tikzext/save picture size}\keycompat{tikz}
   This key is usually used by the keys provided by this library.
   Normally, this is not needed to be explicitly given.
 \end{stylekey}
@@ -56,79 +56,79 @@ This means that the arguments need to be a valid
 \subsection{Keeping the aspect ratio}
 The following \emph{unstarred} keys do not change the aspect ratio of the picture.
 
-\begin{key}{/tikz/picture width=\meta{dimension}}
+\begin{key}{/\tikzext/picture width=\meta{dimension}}\keycompat{tikz}
   Scales the picture so that the width of the picture will be \meta{dimension}.
   This will keep the aspect ratio the same.
 \end{key}
 
-\begin{key}{/tikz/minimum picture width=\meta{dimension}}
+\begin{key}{/\tikzext/minimum picture width=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its width is greater than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/maximum picture width=\meta{dimension}}
+\begin{key}{/\tikzext/maximum picture width=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its width is less than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/picture height=\meta{dimension}}
+\begin{key}{/\tikzext/picture height=\meta{dimension}}\keycompat{tikz}
   Scales the picture so that the height of the picture will be \meta{dimension}.
   This will keep the aspect ratio the same.
 \end{key}
 
-\begin{key}{/tikz/minimum picture height=\meta{dimension}}
+\begin{key}{/\tikzext/minimum picture height=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its height is greater than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/maximum picture height=\meta{dimension}}
+\begin{key}{/\tikzext/maximum picture height=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its height is less than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/minimum picture size=\marg{width}\marg{height}}
+\begin{key}{/\tikzext/minimum picture size=\marg{width}\marg{height}}\keycompat{tikz}
   Scales the picture so that its height will be at least \meta{width}
   and its height will be at least \meta{height}.
 \end{key}
 
-\begin{key}{/tikz/maximum picture size=\marg{width}\marg{height}}
+\begin{key}{/\tikzext/maximum picture size=\marg{width}\marg{height}}\keycompat{tikz}
   Scales the picture so that its height will be at most \meta{width}
   and its height will be at most \meta{height}.
 \end{key}
 
 \subsection{Changing the aspect ratio}
 The following \emph{starred} keys do change the aspect ratio.
-\begin{key}{/tikz/picture width*=\meta{dimension}}
+\begin{key}{/\tikzext/picture width*=\meta{dimension}}\keycompat{tikz}
   Scales the picture so that the width of the picture will be \meta{dimension}.
   This will only scale the $x$ axis.
 \end{key}
 
-\begin{key}{/tikz/minimum picture width*=\meta{dimension}}
+\begin{key}{/\tikzext/minimum picture width*=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its width is greater than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/maximum picture width*=\meta{dimension}}
+\begin{key}{/\tikzext/maximum picture width*=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its width is less than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/picture height*=\meta{dimension}}
+\begin{key}{/\tikzext/picture height*=\meta{dimension}}\keycompat{tikz}
   Scales the picture so that the height of the picture will be \meta{dimension}.
   This will only scale the $y$ axis.
 \end{key}
 
-\begin{key}{/tikz/minimum picture height*=\meta{dimension}}
+\begin{key}{/\tikzext/minimum picture height*=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its height is greater than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/maximum picture height*=\meta{dimension}}
+\begin{key}{/\tikzext/maximum picture height*=\meta{dimension}}\keycompat{tikz}
   As above but will not change the size of the picture
   if its height is less than \meta{dimension}.
 \end{key}
 
-\begin{key}{/tikz/picture size*=\marg{width}\marg{height}}
+\begin{key}{/\tikzext/picture size*=\marg{width}\marg{height}}\keycompat{tikz}
   Scales the picture so that its width will be \meta{width}
   and its height will be \meta{height}.
   

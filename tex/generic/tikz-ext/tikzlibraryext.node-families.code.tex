@@ -6,13 +6,17 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
 \def\tikzext@nf@write#1{%
   \immediate\write\pgfutil@auxout{%
     \noexpand\expandafter\noexpand\gdef\noexpand\csname tikzext@nf@#1@previous\endcsname
       {\csname tikzext@nf@#1@next\endcsname}%
   }%
 }
-\pgfkeyssetvalue{/tikz/node family/prefix}{\pgfpictureid-}% no md5
+\pgfkeyssetvalue{/tikz/ext/node family/prefix}{\pgfpictureid-}% no md5
 \pgfutil@IfUndefined{mmz@mode}{% \mmz@mode is only defined with memoizable, not with memoizable or nomemoize
   \let\tikzext@nf@save\tikzext@nf@write
 }{%
@@ -49,12 +53,12 @@
 \def\tikzext@nf@align@center#1{\hfil\unhbox#1\hfil}
 \def\tikzext@nf@align@right#1{\hfil\unhbox#1}
 
-\pgfqkeys{/tikz/node family}{
+\pgfqkeys{/tikz/ext/node family}{
   width/.initial=,
-  width/.append style={/pgf/minimum width=nf_width},
+  width/.append style={/pgf/minimum width=ext_nf_width},
   height/.initial=,
-  height/.append style={/pgf/minimum height=nf_height},
-  size/.code=\pgfqkeys{/tikz/node family}{width={#1},height={#1}},
+  height/.append style={/pgf/minimum height=ext_nf_height},
+  size/.code=\pgfqkeys{/tikz/ext/node family}{width={#1},height={#1}},
   text depth/.initial=,
   text height/.initial=,
   text width align/.is choice,
@@ -63,9 +67,9 @@
   text width align/right/.code=\let\tikzext@nf@align@action\tikzext@nf@align@right,
   text width align=center,
   text width/.initial=,
-  text/.code=\pgfqkeys{/tikz/node family}{text depth={#1},text height={#1},text width={#1}},
+  text/.code=\pgfqkeys{/tikz/ext/node family}{text depth={#1},text height={#1},text width={#1}},
 }
-\tikzset{node family/.code=\pgfqkeys{/tikz/node family}{#1}}
+\tikzextset{node family/.code=\pgfqkeys{/tikz/ext/node family}{#1}}
 
 % #1 = value to set
 % #2 = family type
@@ -73,10 +77,10 @@
 \def\tikzext@nf@getandset#1#2#3{%
     % what's our family's name?
     #3=0pt\relax
-    \pgfkeysgetvalue{/tikz/node family/#2}\tikzext@nf@familyname
+    \pgfkeysgetvalue{/tikz/ext/node family/#2}\tikzext@nf@familyname
     \pgfutil@ifxempty\tikzext@nf@familyname{% no family to deal with
     }{%
-      \edef\tikzext@nf@familyname{\pgfkeysvalueof{/tikz/node family/prefix}\tikzext@nf@familyname}%
+      \edef\tikzext@nf@familyname{\pgfkeysvalueof{/tikz/ext/node family/prefix}\tikzext@nf@familyname}%
       % we need to save the value for the next run
       \pgfutil@IfUndefined{tikzext@nf@#2@\tikzext@nf@familyname @next}{%
         % first time: define first value and install hook at end of picture
@@ -99,9 +103,9 @@
 % #1 = family type
 % #2 = family
 \def\tikzext@nf@get#1#2{%
-  \pgfutil@IfUndefined{tikzext@nf@#1@\pgfkeysvalueof{/tikz/node family/prefix}#2@previous}
+  \pgfutil@IfUndefined{tikzext@nf@#1@\pgfkeysvalueof{/tikz/ext/node family/prefix}#2@previous}
                       {0pt}
-                      {\csname tikzext@nf@#1@\pgfkeysvalueof{/tikz/node family/prefix}#2@previous\endcsname}%
+                      {\csname tikzext@nf@#1@\pgfkeysvalueof{/tikz/ext/node family/prefix}#2@previous\endcsname}%
 }
 \def\tikzextnodefamiliesgetwidth{\tikzext@nf@get{width}}
 \def\tikzextnodefamiliesgetheight{\tikzext@nf@get{height}}
@@ -325,7 +329,7 @@
   \expandafter\expandafter\expandafter{\expandafter\pgf@temp#1}%
 }
 
-\pgfqkeys{/tikz/node family}{
+\pgfqkeys{/tikz/ext/node family}{
   setup shape/.code={%
     \expandafter\pgfutil@prefixto@macro\csname pgf@sh@s@#1\endcsname{%
       \tikzext@nf@getandset{\the\wd\pgfnodeparttextbox}{text width}{\pgfutil@tempdima}%
@@ -351,7 +355,7 @@
 \def\tikzext@nf@function@circle{{\the\pgf@x}{\the\pgf@x}}
 \def\tikzext@nf@function@circle@double{{\the\dimexpr2\pgf@x\relax}{\the\dimexpr2\pgf@x\relax}}
 
-\pgfmathdeclarefunction{nf_width}{0}{%
+\pgfmathdeclarefunction{ext_nf_width}{0}{%
   \begingroup
     \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name}{%
       \let\tikzext@nf@function\tikzext@nf@function@default
@@ -364,7 +368,7 @@
     \pgfmath@smuggleone\pgfmathresult
   \endgroup
 }
-\pgfmathdeclarefunction{nf_height}{0}{%
+\pgfmathdeclarefunction{ext_nf_height}{0}{%
   \begingroup
     \pgfutil@IfUndefined{tikzext@nf@function@\pgf@sm@shape@name}{%
       \let\tikzext@nf@function\tikzext@nf@function@default
@@ -376,4 +380,32 @@
     \edef\pgfmathresult{\pgf@sys@tonumber\pgfutil@tempdima}%
     \pgfmath@smuggleone\pgfmathresult
   \endgroup
+}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={node-families}{pre 0.6},
+  compat/node-families/warn/.append code=%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/prefix}          {/tikz/ext/node family/prefix}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text height}     {/tikz/ext/node family/text height}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text depth}      {/tikz/ext/node family/text depth}%
+    \tikzextutil@compatwarning@valuekey{node-families}{pre 0.6}{/tikz/node family/text width}      {/tikz/ext/node family/text width}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/text}            {/tikz/ext/node family/text}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/text width align}{/tikz/ext/node family/text width align}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/setup shape}     {/tikz/ext/node family/setup shape}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/width}           {/tikz/ext/node family/width}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/height}          {/tikz/ext/node family/height}%
+    \tikzextutil@compatwarning@key     {node-families}{pre 0.6}{/tikz/node family/size}            {/tikz/ext/node family/size},
+  compat/node-families/pre 0.6/.append code=%
+    \pgfkeysdef{/tikz/node family/prefix}          {\pgfkeyssetvalue{/tikz/ext/node family/prefix}{##1}}%
+    \pgfkeysdef{/tikz/node family/text height}     {\pgfkeyssetvalue{/tikz/ext/node family/text height}{##1}}%
+    \pgfkeysdef{/tikz/node family/text depth}      {\pgfkeyssetvalue{/tikz/ext/node family/text depth}{##1}}%
+    \pgfkeysdef{/tikz/node family/text width}      {\pgfkeyssetvalue{/tikz/ext/node family/text width}{##1}}%
+    \pgfkeysdef{/tikz/node family/text}            {\pgfkeysvalueof{/tikz/ext/node family/text/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node family/text width align}{\pgfkeysvalueof{/tikz/ext/node family/text width align/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node family/setup shape}     {\pgfkeysvalueof{/tikz/ext/node family/setup shape/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node family/width}           {\pgfkeysvalueof{/tikz/ext/node family/width/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node family/height}          {\pgfkeysvalueof{/tikz/ext/node family/height/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node family/size}            {\pgfkeysvalueof{/tikz/ext/node family/size/.@cmd}##1\pgfeov},
+  compat/node-families/\pgfkeysvalueof{/tikz/ext/compat/node-families}%
 }

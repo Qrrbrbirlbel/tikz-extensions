@@ -21,40 +21,41 @@
 \coordinate[label=below left:$C$]  (C) at (-2,-2);
 
 \draw[ultra thick, draw=green, fill=green!50]
-  (B) to[arc through={clockwise,(A)}] (C) 
+  (B) to[ext/arc through={clockwise, (A)}] (C)
   -- (arc through center) -- cycle;
 \draw[ultra thick, draw=blue, fill=blue!50]
-  (B) to[arc through=(A)]             (C)
+  (B) to[ext/arc through=(A)]              (C)
   -- (arc through center) -- cycle;
 
-\foreach \p in {A,B,C, arc through center} \fill[red] (\p) circle[radius=2pt];
+\foreach \p in {A, B, C, arc through center}
+  \fill[red] (\p) circle[radius=2pt];
 \end{tikzpicture}
 \end{codeexample}
 
 This can only by used for circles in the |canvas| coordinate system.
 
 \begin{multicols}{2}
-\begin{key}{/tikz/arc through/through=\meta{coordinate} (initially {(0,0)})}
+\begin{key}{/\tikzext/arc through/through=\meta{coordinate} (initially {(0,0)})}\keycompat{tikz/arc through}
   The coordinate on the circle that defines~-- together with the
   starting and target point~-- a circle.
 \end{key}
 
-\begin{key}{/tikz/arc through/center suffix=\meta{suffix} (initially {})}
+\begin{key}{/\tikzext/arc through/center suffix=\meta{suffix} (initially {})}\keycompat{tikz/arc trough}
   The |arc through| will define a coordinate named |arc through center|\meta{suffix}
   so that it can be referenced later.
 \end{key}
 
-\begin{key}{/tikz/arc through/clockwise}
+\begin{key}{/\tikzext/arc through/clockwise}\keycompat{tikz/arc trough}
   The resulting arc will go clockwise from the starting point to the target point.
   This will not necessarily go through the |through| point.
 \end{key}
 
-\begin{key}{/tikz/arc through/counter clockwise}
+\begin{key}{/\tikzext/arc through/counter clockwise}\keycompat{tikz/arc trough}
   The resulting arc will go counter clockwise from the starting point to the target point.
   This will not necessarily go through the |through| point.
 \end{key}
 
-\begin{key}{/tikz/arc through=\meta{key-value}}
+\begin{key}{/\tikzext/arc through=\meta{key-value}}\keycompat{tikz/arc trough}
   This key should be used with |to|\indexPathOperationO{to} or |edge|\indexPathOperationO{edge}.
   A parameter other than |center suffix|, |clockwise| or |counter clockwise| will
   be assumed to be the |through| coordinate.

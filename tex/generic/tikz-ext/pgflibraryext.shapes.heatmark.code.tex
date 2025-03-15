@@ -5,7 +5,11 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-\pgfset{
+\unless\ifcsname pgfextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\pgfextset{
     heatmark arc width/.initial=+4pt,
     heatmark arc sep/.initial=+1pt,
     heatmark arc rings/.initial=3,
@@ -14,7 +18,7 @@
     heatmark inner opacity/.initial=.8,
     heatmark outer opacity/.initial=.2
 }
-\pgfdeclareshape{heatmark}
+\pgfdeclareshape{ext_heatmark}
 %
 % Draws a circle around the text
 %
@@ -85,8 +89,8 @@
     \else%
       \advance\pgf@x by\pgf@xb%
     \fi%
-    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heatmark arc rings}}%
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heatmark arc width}+\pgfkeysvalueof{/pgf/heatmark arc sep}}%
+    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/ext/heatmark arc rings}}%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/ext/heatmark arc width}+\pgfkeysvalueof{/pgf/ext/heatmark arc sep}}%
     \multiply\pgf@xa\c@pgf@counta
     \advance\pgf@x\pgf@xa
   }%
@@ -120,33 +124,32 @@
   %
   %
   \behindbackgroundpath{%
-    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/heatmark arc rings}}%     heat arc rings
-    \pgfmathsetcount\c@pgf@countb{\pgfkeysvalueof{/pgf/heatmark arcs}}%          heat arcs
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/heatmark arc width}}%          heat arc width
-    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/heatmark arc sep}}%            heat arc sep
-    %\pgfmathsetmacro\pgf@tempa{\pgfkeysvalueof{/pgf/heat arc sep angle}}%    heat arc sep angle
-    \pgfmathsetmacro\pgf@tempb{360/\c@pgf@countb-(\pgfkeysvalueof{/pgf/heatmark arc sep angle})}% heat arc
+    \pgfmathsetcount\c@pgf@counta{\pgfkeysvalueof{/pgf/ext/heatmark arc rings}}%     heat arc rings
+    \pgfmathsetcount\c@pgf@countb{\pgfkeysvalueof{/pgf/ext/heatmark arcs}}%          heat arcs
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/ext/heatmark arc width}}%          heat arc width
+    \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/ext/heatmark arc sep}}%            heat arc sep
+    \pgfmathsetmacro\pgf@tempb{360/\c@pgf@countb-(\pgfkeysvalueof{/pgf/ext/heatmark arc sep angle})}% heat arc
     \pgfmathsetmacro\pgf@tempc{\pgfkeysvalueof{/pgf/shape border rotate}}%           heat rotate
     %
-    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/heatmark inner opacity}}%     heat opacity high
+    \pgfmathsetmacro\pgf@tempd{\pgfkeysvalueof{/pgf/ext/heatmark inner opacity}}%     heat opacity high
     \ifnum\c@pgf@counta=1
       \def\tikzext@heatmark@opacity@seps{0}%
     \else
       \pgfmathsetmacro\tikzext@heatmark@opacity@seps
-      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/heatmark outer opacity}))%
+      {(\pgf@tempd-(\pgfkeysvalueof{/pgf/ext/heatmark outer opacity}))%
          /(\c@pgf@counta-1)}%
     \fi
     \pgfutil@tempcnta=0
     \pgfutil@tempcntb=0
     \pgf@ya\innerradius\relax
-    \pgftransformshift{\centerpoint}
+    \pgftransformshift{\centerpoint}%
     \pgfutil@loop % ring loop
       \advance\pgf@ya\pgf@xb % current radius + heat arc sep
       \pgf@yb\pgf@ya         
       \advance\pgf@yb\pgf@xa % current radius + heat arc sep + heat arc width
       \pgfsetfillopacity{\pgf@tempd}%
       \begingroup
-        \edef\pgf@marshal{\noexpand\pgfset{heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax/.try}}%
+        \edef\pgf@marshal{\noexpand\pgfset{ext/heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax/.try}}%
         \pgf@marshal
         \csname tikz@options\endcsname
         {%
@@ -154,8 +157,8 @@
           \pgfmathsetmacro\tikzext@heatmark@start@angle{\pgf@tempc-.5*\pgf@tempb+\pgfutil@tempcntb*(360/\c@pgf@countb)}%
           % path
           \begingroup
-            \edef\pgf@marshal{\noexpand\pgfset{heatmark arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
-                              \noexpand\pgfset{heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax\space arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
+            \edef\pgf@marshal{\noexpand\pgfset{ext/heatmark arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}%
+                              \noexpand\pgfset{ext/heatmark ring \the\numexpr\pgfutil@tempcnta+1\relax\space arc \the\numexpr\pgfutil@tempcntb+1\relax/.try}}%
             \pgf@marshal
             \csname tikz@options\endcsname
             \pgfpathmoveto{\pgfpointpolar{\tikzext@heatmark@start@angle}{\pgf@ya}}%
@@ -177,5 +180,41 @@
     \pgfutil@repeat
     \pgftransformshift{\pgfqpointscale{-1}{\centerpoint}}%
   }
+}
+%%% Compatibility
+\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
+\tikzextset{
+  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.heatmark/warn,
+  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.heatmark/pre 0.6,
+  compat/shapes.heatmark/warn/.code={%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc width}{/pgf/ext/heatmark arc width}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc sep}{/pgf/ext/heatmark arc sep}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc rings}{/pgf/ext/heatmark arc rings}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arcs}{/pgf/ext/heatmark arcs}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc sep angle}{/pgf/ext/heatmark arc sep angle}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark inner opacity}{/pgf/ext/heatmark inner opacity}%
+    \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark outer opacity}{/pgf/ext/heatmark outer opacity}%
+    \tikzextutil@compat@cloneshape{heatmark}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
+    \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'heatmark'}{'ext_heatmark'}{shapes = pre 0.6}}%
+    \tikzextutil@prefix@macrotomacro\pgf@sh@s@heatmark\tikzext@temp
+  },
+  compat/shapes.heatmark/pre 0.6/.code={%
+    \pgfkeysdef{/pgf/heatmark arc width}{\pgfkeyssetvalue{/pgf/ext/heatmark arc width{##1}}}%
+    \pgfkeysdef{/pgf/heatmark arc sep}{\pgfkeyssetvalue{/pgf/ext/heatmark arc sep{##1}}}%
+    \pgfkeysdef{/pgf/heatmark arc rings}{\pgfkeyssetvalue{/pgf/ext/heatmark arc rings{##1}}}%
+    \pgfkeysdef{/pgf/heatmark arcs}{\pgfkeyssetvalue{/pgf/ext/heatmark arcs{##1}}}%
+    \pgfkeysdef{/pgf/heatmark arc sep angle}{\pgfkeyssetvalue{/pgf/ext/heatmark arc sep angle{##1}}}%
+    \pgfkeysdef{/pgf/heatmark inner opacity}{\pgfkeyssetvalue{/pgf/ext/heatmark inner opacity{##1}}}%
+    \pgfkeysdef{/pgf/heatmark outer opacity}{\pgfkeyssetvalue{/pgf/ext/heatmark outer opacity{##1}}}%
+    \pgfkeyssetvalue{/pgf/heatmark arc width}{\pgfkeysvalueof{/pgf/ext/heatmark arc width}}%
+    \pgfkeyssetvalue{/pgf/heatmark arc sep}{\pgfkeysvalueof{/pgf/ext/heatmark arc sep}}%
+    \pgfkeyssetvalue{/pgf/heatmark arc rings}{\pgfkeysvalueof{/pgf/ext/heatmark arc rings}}%
+    \pgfkeyssetvalue{/pgf/heatmark arcs}{\pgfkeysvalueof{/pgf/ext/heatmark arcs}}%
+    \pgfkeyssetvalue{/pgf/heatmark arc sep angle}{\pgfkeysvalueof{/pgf/ext/heatmark arc sep angle}}%
+    \pgfkeyssetvalue{/pgf/heatmark inner opacity}{\pgfkeysvalueof{/pgf/ext/heatmark inner opacity}}%
+    \pgfkeyssetvalue{/pgf/heatmark outer opacity}{\pgfkeysvalueof{/pgf/ext/heatmark outer opacity}}%
+    \tikzextutil@compat@cloneshape{heatmark}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
+  },
+  compat/shapes.heatmark/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
 }
 \endinput

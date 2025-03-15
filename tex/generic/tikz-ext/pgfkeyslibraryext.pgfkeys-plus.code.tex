@@ -6,6 +6,10 @@
 % 2. under the GNU Free Documentation License.
 %
 
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
 \input pgfmath.tex
 
 %% Handlers
@@ -13,17 +17,17 @@
 %% .pgfmath int truncates the result
 %% .pgfmath strcat concatenates the given values
 \pgfqkeys{/handlers}{
-  .pgfmath/.code=%
+  .ext_pgfmath/.code=%
     \begingroup
       \pgfmathparse{#1}%
     \expandafter\endgroup\expandafter
     \pgfkeys@exp@call\expandafter{\pgfmathresult},
-  .pgfmath int/.code=%
+  .ext_pgfmath int/.code=%
     \begingroup
       \pgfmathint{#1}%
     \expandafter\endgroup\expandafter
     \pgfkeys@exp@call\expandafter{\pgfmathresult},
-  .pgfmath wrap/.code 2 args={%
+  .ext_pgfmath wrap/.code 2 args={%
     \def\pgfkeys@temp##1{\def\pgfkeys@temp{#1}}%
     \begingroup
       \pgfmathparse{#2}%
@@ -31,7 +35,7 @@
     \expandafter\endgroup\expandafter
     \pgfkeys@exp@call\expandafter{\pgfkeys@temp}%
   },
-  .pgfmath if/.code n args={3}{%
+  .ext_pgfmath if/.code n args={3}{%
     \begingroup
       \pgfmathifthenelse{#1}{"1"}{"0"}%
     \expandafter\endgroup\expandafter
@@ -43,7 +47,7 @@
     {\pgfkeys@exp@call{#3}}%
     {\pgfkeys@exp@call{#2}}%
   },
-  .if/.code n args={4}{%
+  .ext_if/.code n args={4}{%
     \if#1#2%
       \expandafter\pgfutil@firstoftwo
     \else
@@ -52,7 +56,7 @@
     {\pgfkeys@exp@call{#3}}%
     {\pgfkeys@exp@call{#4}}%
   },
-  .ifnum/.code n args={3}{%
+  .ext_ifnum/.code n args={3}{%
     \ifnum#1\relax
       \expandafter\pgfutil@firstoftwo
     \else
@@ -61,7 +65,7 @@
     {\pgfkeys@exp@call{#2}}%
     {\pgfkeys@exp@call{#3}}%
   },
-  .ifdim/.code n args={3}{%
+  .ext_ifdim/.code n args={3}{%
     \ifdim#1\relax
       \expandafter\pgfutil@firstoftwo
     \else
@@ -70,7 +74,7 @@
     {\pgfkeys@exp@call{#2}}%
     {\pgfkeys@exp@call{#3}}%
   },
-  .ifx/.code n args={4}{%
+  .ext_ifx/.code n args={4}{%
     \ifx#1#2%
       \expandafter\pgfutil@firstoftwo
     \else
@@ -79,35 +83,36 @@
     {\pgfkeys@exp@call{#3}}%
     {\pgfkeys@exp@call{#4}}%
   },
-  .ifxempty/.code n args={3}{%
+  .ext_ifxempty/.code n args={3}{%
     \edef\pgfkeys@temp{#1}%
     \pgfutil@ifxempty\pgfkeys@temp{\pgfkeys@exp@call{#2}}{\pgfkeys@exp@call{#3}}%
   },
-  .ifempty/.code n args={3}{%
+  .ext_ifempty/.code n args={3}{%
     \pgfutil@ifempty{#1}{\pgfkeys@exp@call{#2}}{\pgfkeys@exp@call{#3}}%
   },
   %% http://tex.stackexchange.com/a/144187/16595
   %% key/.List={(point-1),(point-2),(point-...),(point-6)} will call
   %% key=(point-1)(point-2)(point-3)(point-4)(point-5)(point-6)
-  .List/.code=%
+  .ext_List/.code=%
     \let\pgfkeys@global@temp\pgfutil@empty
     \foreach\pgfkeys@temp in{#1}{%
         \expandafter\pgfutil@g@addto@macro\expandafter\pgfkeys@global@temp\expandafter{\pgfkeys@temp}%
     }%
     \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@global@temp},
-  .--/.code=% decrements a value (only TeX integers!)
+  .ext_--/.code=% decrements a value (only TeX integers!)
     \pgfkeyssetevalue{\pgfkeyscurrentpath}
       {\the\numexpr\pgfkeysvalueof{\pgfkeyscurrentpath}-1\relax},
-  .++/.code=% increments a value (only TeX integers!)
+  .ext_++/.code=% increments a value (only TeX integers!)
     \pgfkeyssetevalue{\pgfkeyscurrentpath}
       {\the\numexpr\pgfkeysvalueof{\pgfkeyscurrentpath}+1\relax},
-  .value/.code=% copies the value of one key to another w/o expanding it
+  .ext_value/.code=% copies the value of one key to another w/o expanding it
     \pgfkeysgetvalue{#1}\pgfkeys@temp
     \expandafter\pgfkeys@exp@call\expandafter{\pgfkeys@temp}%
 }
 
-\pgfqkeys{/utils}{
-  if/.code n args={3}{%
+\pgfqkeys{/utils/ext}{
+  .code=\pgfqkeys{/utils/ext}{#1},
+  pgfmath if/.code n args={3}{%
     \begingroup
       \pgfmathifthenelse{#1}{"1"}{"0"}%
     \expandafter\endgroup\expandafter
@@ -119,31 +124,79 @@
     {\pgfkeysalso{#3}}
     {\pgfkeysalso{#2}}%
   },
-  TeX/if/.code n args={4}{%
+  if/.code n args={4}{%
     \if#1#2\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
     {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
   },
-  TeX/ifnum/.code n args={3}{%
+  ifnum/.code n args={3}{%
     \ifnum#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
     {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
   },
-  TeX/ifdim/.code n args={3}{%
+  ifdim/.code n args={3}{%
     \ifdim#1\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
     {\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
   },
-  TeX/ifx/.code n args={4}{%
+  ifx/.code n args={4}{%
     \ifx#1#2\relax\expandafter\pgfutil@firstoftwo\else\expandafter\pgfutil@secondoftwo\fi
     {\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
   },
-  TeX/ifxempty/.code n args={3}{%
+  ifxempty/.code n args={3}{%
     \edef\pgfkeys@temp{#1}%
     \pgfutil@ifxempty\pgfkeys@temp{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
   },
-  TeX/ifempty/.code n args={3}{%
+  ifempty/.code n args={3}{%
     \pgfutil@ifempty{#1}{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
   },
-  tex/.search also=/utils/TeX,
   loops/do until/.code 2 args={\pgfutil@loop\pgfkeysalso{#1}#2\relax\pgfutil@repeat}%
 }
 
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={pgfkeys-plus}{pre 0.6},
+  compat/pgfkeys-plus/warn/.append code={%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/if}{/utils/ext/pgfmath if}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/if}{/utils/ext/if}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifx}{/utils/ext/ifx}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifnum}{/utils/ext/ifnum}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifdim}{/utils/ext/ifdim}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifempty}{/utils/ext/ifempty}%
+    \tikzextutil@compatwarning@key{pgfkeys-plus}{pre 0.6}{/utils/TeX/ifxempty}{/utils/ext/ifxempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath}{.ext_pgfmath}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath int}{.ext_pgfmath int}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath wrap}{.ext_pgfmath wrap}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.pgfmath if}{.ext_pgfmath if}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.if}{.ext_if}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifx}{.ext_ifx}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifdim}{.ext_ifdim}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifxempty}{.ext_ifxempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.ifempty}{.ext_ifempty}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.List}{.ext_List}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.--}{.ext_--}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.++}{.ext_++}%
+    \tikzextutil@compatwarning@handler{pgfkeys-plus}{pre 0.6}{.value}{.ext_value}%
+  },
+  compat/pgfkeys-plus/pre 0.6/.append code={%
+    \pgfkeysdef{/utils/if}{\pgfkeysvalueof{/utils/ext/pgfmath if/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/if}{\pgfkeysvalueof{/utils/ext/if/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/ifx}{\pgfkeysvalueof{/utils/ext/ifx/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/ifnum}{\pgfkeysvalueof{/utils/ext/ifnum/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/ifdim}{\pgfkeysvalueof{/utils/ext/ifdim/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/ifempty}{\pgfkeysvalueof{/utils/ext/ifempty/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/utils/TeX/ifxempty}{\pgfkeysvalueof{/utils/ext/ifxempty/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.pgfmath}{\pgfkeysvalueof{/handlers/.ext_pgfmath/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.pgfmath int}{\pgfkeysvalueof{/handlers/.ext_pgfmath int/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.pgfmath wrap}{\pgfkeysvalueof{/handlers/.ext_pgfmath wrap/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.pgfmath if}{\pgfkeysvalueof{/handlers/.ext_pgfmath if/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.if}{\pgfkeysvalueof{/handlers/.ext_if/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.ifx}{\pgfkeysvalueof{/handlers/.ext_ifx/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.ifdim}{\pgfkeysvalueof{/handlers/.ext_ifdim/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.ifxempty}{\pgfkeysvalueof{/handlers/.ext_ifxempty/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.ifempty}{\pgfkeysvalueof{/handlers/.ext_ifempty/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.List}{\pgfkeysvalueof{/handlers/.ext_List/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.--}{\pgfkeysvalueof{/handlers/.ext_--/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.++}{\pgfkeysvalueof{/handlers/.ext_++/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/handlers/.value}{\pgfkeysvalueof{/handlers/.ext_value/.@cmd}##1\pgfeov}%
+  },
+  compat/pgfkeys-plus/\pgfkeysvalueof{/tikz/ext/compat/pgfkeys-plus}%
+}
 \endinput

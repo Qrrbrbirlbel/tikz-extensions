@@ -50,7 +50,7 @@
 \tableofcontents
 }
 \include{tikz-ext-manual-en-intro}
-
+%
 \part{\tikzname\space Libraries}
 \label{part:tikz}
 
@@ -72,6 +72,7 @@ These libraries only work with \tikzname.
   level 4/.style={sibling angle=45},
   nodes={circle,draw,inner sep=+0pt, minimum size=+5pt},
   ]
+
 \path[rotate=30]
   node {}
   child foreach \cntI in {1,...,3} {
@@ -108,7 +109,7 @@ These libraries only work with \tikzname.
 \include{tikz-ext-manual-en-library-topaths.autobend}
 \tikzsetfigurename{trans}
 \include{tikz-ext-manual-en-library-trans}
-
+%
 \part{\pgfname\space Libraries}
 \label{part:pgf}
 These libraries (should) work with both \pgfname\space and \tikzname.
@@ -121,9 +122,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
     circle, minimum size=10mm, draw, densely dashdotted, thick,
     decide color/.expand once=#1},
   decide color/.style 2 args={
-    /utils/TeX/if=c#1
-      {/utils/TeX/ifnum={#2<5}{bluelight}{bluedark}}
-      {/utils/TeX/ifnum={#2<8}{light}{dark}}},
+    /utils/ext/if=c#1
+      {/utils/ext/ifnum={#2<5}{bluelight}{bluedark}}
+      {/utils/ext/ifnum={#2<8}{light}{dark}}},
   light/.style={fill=gray!20},  bluelight/.style={fill=blue!10},
   dark/.style ={fill=gray!60},  bluedark/.style ={fill=blue!30}}
 \tikz\graph[
@@ -168,9 +169,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \begin{codeexample}[width=6cm, preamble=\usetikzlibrary{ext.misc}]
 \begin{tikzpicture}[
   declare function={bigR(\n)=smallR+.05*\n;},
-  declare constant={smallR=1; segments=20;},
-  full arc=segments]
-\foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1]
+  ext/declare constant={smallR=1; segments=20;},
+  ext/full arc=segments]
+\foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, ext/use int=0 to segments-1]
   \filldraw[fill=gray!50] (\iN R:\endRadius)
     arc [radius=\endRadius, start angle=\iN R, delta angle=+1R] -- (\iN R+1R:smallR)
     arc [radius=smallR,       end angle=\iN R, delta angle=-1R] -- cycle;
@@ -179,9 +180,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \node at (north west:{sqrt 2 * bigR(segments/2)})  {$\{\Omega\}_{i=1}^n$};
 \node[rotate=-.5R, right] at (-.5R: bigR segments) {$\partial \varphi$};
 
-\tikzset{yshift=-5cm, declare constant={segments=25;}, full arc=segments}
+\tikzset{yshift=-5cm, ext/declare constant={segments=25;}, ext/full arc=segments}
 \filldraw[fill=gray!50] (right:smallR)
-  \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, use int=0 to segments-1] {
+  \foreach \iN[evaluate={\endRadius=bigR(\iN+1);}, ext/use int=0 to segments-1] {
     -- (\iN R:\endRadius) arc[radius=\endRadius, start angle=\iN R, delta angle=1R]}
     -- (right:smallR)     arc[radius=smallR,     start angle=0,     delta angle=-360];
 
@@ -196,7 +197,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \tikzsetfigurename{misc.pgffor}\include{tikz-ext-manual-en-library-pgffor}
 \tikzsetfigurename{misc.misc}\include{tikz-ext-manual-en-library-misc}
 
-%%% END
+%% END
 \newcommand*{\addPackage}[1]{Added package \texttt{#1-ext}.}
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}

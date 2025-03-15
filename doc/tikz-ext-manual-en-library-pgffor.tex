@@ -23,16 +23,16 @@
 Instead of |\foreach \var in {start, start + delta, ..., end}| one can use
 |\foreach \var[use int=start to end step delta]|.
 
-\begin{key}{/pgf/foreach/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+\begin{key}{/\pgfforeachext/use int=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}\keycompat{pgf/foreach}
 The values \meta{start}, \meta{end} and \meta{delta} are evaluates by \pgfname math at initialization.
 The part |step |\meta{delta} is optional (\meta{delta} = 1).
 \end{key}
 
-\begin{key}{/pgf/foreach/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}
+\begin{key}{/\pgfforeachext/use float=\meta{start}|to|\meta{end}\opt{|step|\meta{delta}}}\keycompat{pgf/foreach}
 Same as above, however the results are not truncated.
 \end{key}
 
-\begin{key}{/pgf/foreach/no separator}
+\begin{key}{/\pgfforeachext/no separator}\keycompat{pgf/foreach}
 This key disables any separator between elements of the list.
 Every token is its own element. This also means that Unicode characters
 need to be grouped between |{| and |}| if Lua\TeX\space isn't used.
@@ -43,11 +43,11 @@ Spaces will be ignored.
   \begin{tikzpicture}[#1]
     \foreach[
       count=\i from 0,
-      no separator,
+      ext/no separator,
       evaluate=\i as \colX using {mod(\i,#2)},
       evaluate=\i as \rowY using {int(\i/#2)}
     ] \elem in {#3} {
-        \draw[black, board/\elem/.try, rectangle timer/.try=line]
+        \draw[black, board/\elem/.try, ext/rectangle timer/.try=line]
           (\colX,\rowY) rectangle node {\elem} ++(1, 1);}
   \end{tikzpicture}}
 \board[
@@ -59,14 +59,14 @@ Spaces will be ignored.
 \end{codeexample}
 \end{key}
 
-\begin{key}{/pgf/foreach/normal list}
+\begin{key}{/\pgfforeachext/normal list}\keycompat{pgf/foreach}
 This key simply disables all other special parsers and returns to the original list parser.
 \end{key}
 
 The following keys only work with \LaTeX\ and cannot be used when only the \referenceLibraryandIndex{ext.misc}
 library or the plain\TeX\space |pgffor-ext.tex| are loaded.
 For this, you will need to use |\usepackage{pgffor-ext}|.
-\begin{key}{/pgf/foreach/xparser=\marg{argument specification}\marg{foreach value}}
+\begin{key}{/\pgfforeachext/xparser=\marg{argument specification}\marg{foreach value}}\keycompat{pgf/foreach}
 This key can be used to specify a \referencePackageandIndeXExt{xparse}
 specification for each element in the list.
 
@@ -80,14 +80,16 @@ For this to work somewhat seamless, the following needs to observed:
 \end{itemize}
 \end{key}
 
-\begin{key}{/pgf/foreach/xparser Om}
+\begin{key}{/\pgfforeachext/xparser Om=\opt{default} (default \{\})}\keycompat{pgf/foreach}
 Sets up a list whose elements may contain an optional argument inside |[]| which correspond to
 two |\foreach| variables, say |\Options/\Text|.
+The \opt{default} value is the default value if the optional argument is missing.
 \end{key}
 
-\begin{handler}{{.list xparse}|=|\marg{argument specification}\marg{comma-separated list of values}}
+\begin{ext_handler}{{list xparse}|=|\marg{argument specification}\marg{comma-separated list of values}}%
+\handlercompat{.list xparse}
   This handler causes the key to be used repeatedly, namely
   once for every element of the list of values.
   The \meta{comma-separated list of values} is processed using |\foreach|
   and the given |xparse| \meta{argument specification} with the aforementioned |xparser| key.
-\end{handler}
+\end{ext_handler}

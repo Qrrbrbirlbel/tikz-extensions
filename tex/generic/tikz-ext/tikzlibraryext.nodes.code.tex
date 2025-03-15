@@ -10,7 +10,7 @@
 \fi
 
 \newcount\tikzext@nodesonpath
-\tikzset{
+\tikzextset{
   pic/.is if=tikz@node@is@pic,
   /tikz-ext/nodes/node on line/.style 2 args={
     /tikz/to path={
@@ -147,14 +147,14 @@
 \pgfkeysdef{/tikz/auto/}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on}
 \tikzset{
   swap/.style={% overwriting
-    /tikz-ext/nodes/swap auto=\tikz@auto@anchor@direction
+    /tikz/ext/nodes/swap auto=\tikz@auto@anchor@direction
   },
   auto/.is choice, % overwriting
   auto/.default=,
   auto/false/.code=\let\tikz@do@auto@anchor\relax,
-  /tikz-ext/nodes/swap auto/.is choice,
+  /tikz/ext/nodes/swap auto/.is choice,
   /utils/temp/.style args={#1=#2}{
-    /tikz-ext/nodes/swap auto/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
+    /tikz/ext/nodes/swap auto/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
     /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}%
   },
   /utils/temp/.list={
@@ -759,5 +759,31 @@
   \tikzext@auto@offset@A{180}%
   \tikz@auto@post
   \tikzext@auto@offset@B@precise
+}
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={nodes}{pre 0.6},
+  compat/nodes/warn/.append code=%
+    % \pgfkeyssetvalue{/tikz/ext/compat/nodes@}{3}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/pic}            [true]{/tikz/ext/pic}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/node on line}   []    {/tikz/ext/node on line}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on line}        {/tikz/ext/nodes on line}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on curve} []    {/tikz/ext/nodes on curve}%
+    \tikzextutil@compatwarning@key{nodes}{pre 0.6}{/tikz/nodes on curve'}[]    {/tikz/ext/nodes on curve'},
+  compat/nodes/pre 0.6/.append code=%
+    % \pgfkeyssetvalue{/tikz/ext/compat/nodes@}{2}%
+    \pgfkeysdef{/tikz/pic}            {\pgfkeysvalueof{/tikz/ext/pic/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node on line}   {\pgfkeysvalueof{/tikz/ext/node on line/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on line}  {\pgfkeysvalueof{/tikz/ext/nodes on line/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on curve} {\pgfkeysvalueof{/tikz/ext/nodes on curve/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/nodes on curve'}{\pgfkeysvalueof{/tikz/ext/nodes on curve'/.@cmd}##1\pgfeov}%
+    \pgfkeyssetvalue{/tikz/pic/.@def}{true}%
+    \pgfkeyssetvalue{/tikz/node on line/.@def}{}%
+    \pgfkeyssetvalue{/tikz/nodes on curve/.@def}{}%
+    \pgfkeyssetvalue{/tikz/nodes on curve'/.@def}{},
+  % compat/nodes/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/nodes@}{1},
+  % compat/nodes/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/nodes@}{0},
+  compat/nodes/\pgfkeysvalueof{/tikz/ext/compat/nodes}%
 }
 \endinput

@@ -7,7 +7,7 @@
 %
 
 \RequirePackage{pgffor}
-\ifcsname tikzext@pgf@foreach@no@list@parse@to\endcsname
+\ifcsname tikzext@pgffor@nolist@parse\endcsname
   \expandafter\@gobble
 \else
   \expandafter\@firstofone
@@ -16,7 +16,8 @@
   \input{pgffor-ext.code.tex}
 }
 
-\pgfqkeys{/pgf/foreach}{
+\pgfqkeys{/pgf/foreach/ext}{
+  .code=\pgfqkeys{/pgf/foreach/ext}{#1},
   xparser/.code 2 args={%
     \DeclareDocumentCommand\pgffor@scan@custom{ #1 u, }{%
       \def\pgffor@value{#2}%
@@ -26,12 +27,11 @@
       \pgfutil@ifnextchar\pgffor@stop\pgffor@scanone\pgffor@scan@custom
     }%
   },
-  xparser Om/.style={
-      xparser={ O{} }{{##1}/{##2}}
-  },
+  xparser Om/.default=,
+  xparser Om/.style={/pgf/foreach/ext/xparser={ O{#1} }{{##1}/{##2}}},
 }
 \pgfqkeys{/handlers}{
-  .list xparse/.code n args={3}{%
+  .ext_list xparse/.code n args={3}{%
     \def\pgf@keys@temp{}%
     \foreach[xparser={#1}{#2}]\pgf@keys@key in{#3}{%
       \expandafter\pgfutil@g@addto@macro\expandafter\pgf@keys@temp\expandafter{\expandafter{\pgf@keys@key}}}%
@@ -40,5 +40,21 @@
       \expandafter\expandafter\expandafter{%
       \expandafter\pgf@keys@list@path\expandafter}%
       \pgf@keys@temp\pgf@stop}%
+}
+
+%%% Compatibility
+\tikzextset{
+  compat/pgffor-ext/warn/.append code={%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/xparser}{/pgf/foreach/ext/xparser}%
+    \tikzextutil@compatwarning@key{pgffor-ext}{pre 0.6}{/pgf/foreach/xparser Om}[]{/pgf/foreach/ext/xparser Om}%
+    \tikzextutil@compatwarning@handler{pgffor-ext}{pre 0.6}{.list xparse}{.ext list xparse}%
+  },
+  compat/pgffor-ext/pre 0.6/.append code={%
+    \pgfkeysdef{/pgf/foreach/xparser}{\pgfkeysvalueof{/pgf/foreach/ext/normal list/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/pgf/foreach/xparser Om}{\pgfkeysvalueof{/pgf/foreach/ext/xparser Om/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/pgf/foreach/xparser Om/.@def}{}%
+    \pgfkeysdef{/handlers/.list xparse}{\pgfkeysvalueof{/handlers/.ext list xparse/.@cmd}##1\pgfeov}%
+  },
+  compat/pgffor-ext/\pgfkeysvalueof{/tikz/ext/compat/pgffor-ext}%
 }
 \endinput

@@ -11,15 +11,13 @@
 \def\tikzext@layers@swapfirstsetbox#1\setbox#2\tikzext@stop{%
   #1\tikzext@layers@setbox@which#2%
 }
+\def\tikzext@layers@whichbox{\tikz@figbox}%
 \let\tikzext@layers@setbox@which\setbox
 
-\def\tikzshowdiscardlayeranyway{\box\pgf@layerbox@discard}
-\tikzset{
+\def\tikzextshowdiscardlayeranyway{\box\pgf@layerbox@discard}
+\pgfqkeys{/tikz/ext/layers}{
   discard layer/.code=\expandafter\let\csname pgf@layerbox@#1\endcsname\pgfutil@voidb@x,
   discard layer global/.code=\expandafter\global\expandafter\let\csname pgf@layerbox@#1\endcsname\pgfutil@voidb@x,
-}
-\def\tikzext@layers@whichbox{\tikz@figbox}%
-\pgfqkeys{/tikz-ext/layers}{
   in box/.code={%
     \expandafter\ifx\tikzext@layers@whichbox#1%
       \pgfutil@packagewarning{tikz-ext}{Layer is already set. Setting will be skipped.}%
@@ -30,68 +28,68 @@
     \fi
   },
   on layer/.style={
-    /tikz-ext/layers/in box/.expand once=\csname pgf@layerbox@#1\endcsname
+    /tikz/ext/layers/in box/.expand once=\csname pgf@layerbox@#1\endcsname
   },
   discard/.style={
-    /tikz-ext/layers/on layer=discard
-  },
-  @common patch/.style={
-    /tikz/behind path/.append code      =\let\tikzext@layers@setbox@which\setbox,
-    /tikz/in front of path/.append code =\let\tikzext@layers@setbox@which\setbox,
-    /tikz-ext/layers/@common patch/.code=%
+    /tikz/ext/layers/on layer=discard
   },
   patch/.is choice,
   patch/all/.style={
-    /tikz-ext/layers/@common patch,
-    /tikz-ext/layers/patch/node,
-    /tikz-ext/layers/patch/matrix,
-    /tikz-ext/layers/patch/pic,
-    /tikz-ext/layers/patch/edge,
+    /tikz/ext/layers/patch/@common patch,
+    /tikz/ext/layers/patch/node,
+    /tikz/ext/layers/patch/matrix,
+    /tikz/ext/layers/patch/pic,
+    /tikz/ext/layers/patch/edge,
+  },
+  patch/@common patch/.style={
+    /tikz/behind path/.append code      =\let\tikzext@layers@setbox@which\setbox,
+    /tikz/in front of path/.append code =\let\tikzext@layers@setbox@which\setbox,
+    /tikz/ext/layers/patch/@common patch/.code=%
   },
   patch/node/.style={%
     /utils/exec=%
       \expandafter\expandafter\expandafter\def
       \expandafter\expandafter\expandafter\tikz@fig@continue
       \expandafter\expandafter\expandafter{\expandafter\tikzext@layers@swapfirstsetbox\tikz@fig@continue\tikzext@stop},%
-    /tikz-ext/layers/@common patch,
-    /tikz-ext/layers/patch/node/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
-    /tikz/discard node/.style ={/tikz-ext/layers/discard},
-    /tikz/node on layer/.style={/tikz-ext/layers/on layer={##1}},
-    /tikz/node in box/.style  ={/tikz-ext/layers/in box={##1}},
+    /tikz/ext/layers/patch/@common patch,
+    /tikz/ext/layers/patch/node/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+    /tikz/ext/discard node/.style ={/tikz/ext/layers/discard},
+    /tikz/ext/node on layer/.style={/tikz/ext/layers/on layer={##1}},
+    /tikz/ext/node in box/.style  ={/tikz/ext/layers/in box={##1}},
   },
   patch/matrix/.style={%
     /utils/exec=%
       \expandafter\expandafter\expandafter\def
       \expandafter\expandafter\expandafter\tikz@do@matrix
       \expandafter\expandafter\expandafter{\expandafter\tikzext@layers@swapfirstsetbox\tikz@do@matrix\tikzext@stop},%
-    /tikz-ext/layers/@common patch,
-    /tikz-ext/layers/patch/matrix/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+    /tikz/ext/layers/patch/@common patch,
+    /tikz/ext/layers/patch/matrix/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
     /tikz/execute at begin matrix={% in case patched node/edge/pic is used inside matrix
       \let\tikzext@layers@setbox@which\setbox
       \def\tikz@whichbox{\tikz@figbox}%
-      \pgfkeys{/tikz-ext/layers/in box/.code=\pgfutil@packageerror{tikz-ext}{Layers inside a matrix can't be used.}}%
+      \tikzextset{layers/in box/.code=\pgfutil@packageerror{tikz-ext}{Layers inside a matrix can't be used.}}%
     },
-    /tikz/discard matrix/.style ={/tikz-ext/layers/discard},
-    /tikz/matrix on layer/.style={/tikz-ext/layers/on layer={##1}},
-    /tikz/matrix in box/.style  ={/tikz-ext/layers/in box={##1}},
+    /tikz/ext/discard matrix/.style ={/tikz/ext/layers/discard},
+    /tikz/ext/matrix on layer/.style={/tikz/ext/layers/on layer={##1}},
+    /tikz/ext/matrix in box/.style  ={/tikz/ext/layers/in box={##1}},
   },
   patch/edge/.style={%
     /utils/exec=\let\tikz@do@edge\tikzext@layers@tikz@do@edge,
-    /tikz-ext/layers/@common patch,
-    /tikz-ext/layers/patch/edge/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
-    /tikz/discard edge/.style={/tikz-ext/layers/discard},
-    /tikz/edge on layer/.style={
-      /tikz-ext/layers/on layer={##1}
+    /tikz/ext/layers/patch/@common patch,
+    /tikz/ext/layers/patch/edge/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+    /tikz/ext/discard edge/.style={/tikz-ext/layers/discard},
+    /tikz/ext/edge on layer/.style={
+      /tikz/ext/layers/on layer={##1}
     },
-    /tikz/edge in box/.style={/tikz-ext/layers/in box={##1}},
+    /tikz/ext/edge in box/.style={/tikz/ext/layers/in box={##1}},
   },
   patch/pic/.style={%
     /utils/exec=\let\tikz@subpicture@handle@\tikzext@layers@tikz@subpicture@handle@,
-    /tikz-ext/layers/@common patch,
-    /tikz-ext/layers/patch/pic/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
-    /tikz/discard pic/.style={/tikz-ext/layers/discard},
-    /tikz/pic on layer/.style={/tikz-ext/layers/on layer={##1}},
-    /tikz/pic in box/.style={/tikz-ext/layers/in box={##1}},
+    /tikz/ext/layers/patch/@common patch,
+    /tikz/ext/layers/patch/pic/.code=\pgfutil@packagewarning{tikz-ext}{You can't apply the layers patch twice.},
+    /tikz/ext/discard pic/.style={/tikz/ext/layers/discard},
+    /tikz/ext/pic on layer/.style={/tikz/ext/layers/on layer={##1}},
+    /tikz/ext/pic in box/.style={/tikz/ext/layers/in box={##1}},
   }
 }
 \def\tikzext@layers@tikz@do@edge{%
@@ -232,4 +230,27 @@
   \fi%
   \tikz@node@finish%
 }%
+\endinput
+
+%%% Compatibility
+\tikzextset{
+  /tikz-ext/compat/add library={layers}{pre 0.6},
+  compat/layers/warn/.append code=%
+    % \pgfkeyssetvalue{/tikz/ext/compat/layers@}{3}%
+    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz-ext/patch}      {/tikz/ext/layers/patch}%
+    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/node on layer}  {/tikz/ext/node on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/matrix on layer}{/tikz/ext/matrix on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/edge on layer}  {/tikz/ext/edge on layer}%
+    \tikzextutil@compatwarning@key{layers}{pre 0.6}{/tikz/pic on layer}   {/tikz/ext/pic on layer},
+  compat/layers/pre 0.6/.append code=%
+    % \pgfkeyssetvalue{/tikz/ext/compat/layers@}{2}%
+    \pgfkeysdef{/tikz-ext/patch}      {\pgfkeysvalueof{/tikz/ext/layers/patch/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/node on layer}  {\pgfkeysvalueof{/tikz/ext/node on layer/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/matrix on layer}{\pgfkeysvalueof{/tikz/ext/matrix on layer/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/edge on layer}  {\pgfkeysvalueof{/tikz/ext/edge on layer/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/pic on layer}   {\pgfkeysvalueof{/tikz/ext/pic on layer/.@cmd}##1\pgfeov},
+  % compat/layers/0.6/.append code=\pgfkeyssetvalue{/tikz/ext/compat/layers@}{1},
+  % compat/layers/newest/.append code=\pgfkeyssetvalue{/tikz/ext/compat/layers@}{0},
+  compat/layers/\pgfkeysvalueof{/tikz/ext/compat/layers}%
+}
 \endinput

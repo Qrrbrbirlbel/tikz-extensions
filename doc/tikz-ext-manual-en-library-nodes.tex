@@ -17,7 +17,8 @@ This library extends \tikzname's functionalities when it comes to nodes.
 \begin{multicols}{2}
 
 \subsection{Pic as a node}
-\begin{key}{/tikz/pic=\opt{\meta{boolean}} (default true, initially false)}
+\begin{key}{/\tikzext/pic=\opt{\meta{boolean}} (default true, initially false)}
+\keycompat{tikz}
 This key allows one to use a pic where usually only nodes are accepted,
 for example as a label.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.misc}]
@@ -26,10 +27,10 @@ for example as a label.
                   ( 2pt,-1.5pt)--(-2pt,-.5pt);}]
 \node[
   draw, minimum width=3cm, minimum height=1cm,
-  label={[pic            ] east:slsl},
-  label={[pic, rotate= 90]north:slsl},
-  label={[pic            ] west:slsl},
-  label={[pic, rotate=-90]south:slsl}]{};
+  label={[ext/pic            ] east:slsl},
+  label={[ext/pic, rotate= 90]north:slsl},
+  label={[ext/pic            ] west:slsl},
+  label={[ext/pic, rotate=-90]south:slsl}]{};
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
@@ -48,7 +49,8 @@ and everything else (including any |to path|).
 
 \subsubsection{Nodes on Lines}
 
-\begin{stylekey}{/tikz/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
+\begin{stylekey}{/\tikzext/node on line=\opt{\meta{anchor specification}} (default |\{\}|)}
+\keycompat{tikz}
 This installs a \referenceKeyandIndexO{to path} that places \emph{one}
 node along a straight line but connect the line with it.
 
@@ -61,7 +63,8 @@ anchors to which the line should connect.
 It allows one or two anchors divided by | and | to be specified.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/nodes on line}
+\begin{stylekey}{/\tikzext/nodes on line}
+\keycompat{tikz}
 This is similar to the previous key but allows
 multiple nodes to be placed on a straight line
 \emph{if} they are in the correct order (from start to target),
@@ -72,13 +75,13 @@ It allows \emph{no} anchor specification.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}]
 \tikz[inner sep=.15em, circle, nodes=draw, sloped]
-  \draw[ultra thick, ->, node on line] (0,0) to["0"] (1,1)
-                                             to["1"] (2,0)
-    to[nodes on line, "2.1" near start, "2.2", "2.3" near end] (5,1);
+  \draw[ultra thick, ->, ext/node on line] (0,0) to["0"] (1,1)
+                                                 to["1"] (2,0)
+    to[ext/nodes on line, "2.1" near start, "2.2", "2.3" near end] (5,1);
 \end{codeexample}
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, quotes}]
 \tikz[inner sep=.15em, nodes=draw]
-  \draw[thick, ->, node on line=west and east]
+  \draw[thick, ->, ext/node on line=west and east]
      (0,0) to["0"] (1,1)
            to["1"] (2,0)
            to["2"] (4,1);
@@ -95,14 +98,16 @@ Any \referenceKeyandIndexO[/pgf/]{outer sep} will be ignored.
 If you can, use \texttt{fill=\meta{bg color}}
 instead of these keys, it will be much faster and easier.
 
-\begin{stylekey}{/tikz/nodes on curve=\meta{to path} (default line to)}
-Similar to \referenceKeyandIndex{nodes on line}, this key allows
+\begin{stylekey}{/\tikzext/nodes on curve=\meta{to path} (default line to)}
+\keycompat{tikz}
+Similar to |nodes on line|, this key allows
 to have nodes on arbitrary paths.
 
 This is not suitable for paths connecting nodes.
 \end{stylekey}
 
-\begin{stylekey}{/tikz/nodes on curve'=\meta{to path} (default line to)}
+\begin{stylekey}{/\tikzext/nodes on curve'=\meta{to path} (default line to)}
+\keycompat{tikz}
 As above but suitable for connecting nodes.
 \end{stylekey}
 
@@ -110,7 +115,7 @@ As above but suitable for connecting nodes.
 \begin{tikzpicture}[ultra thick]
   \node (A) at (0, 0) {A} ;
   \node (B) at (3, 0) {B} ;
-  \draw [red, ->, nodes on curve'=bend left]
+  \draw [red, ->, ext/nodes on curve'=bend left]
     (A) to node[blue,draw]{label} (B)
         to ["X" {sloped, near start},
             "Z" {sloped, near end},
@@ -119,12 +124,13 @@ As above but suitable for connecting nodes.
 \end{codeexample}
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, intersections, quotes, spath3}]
 \tikz[inner sep=.15em, circle, nodes={draw, green}, sloped, ultra thick]
-  \draw[->, nodes on curve=bend left] (0,0) to["0"] (1,1)
-                                            to["1"] (2,0)
-              to["2" near start, "3", "4" near end] (4,1)
-                                            -- ++(down:1);
+  \draw[->, ext/nodes on curve=bend left] (0,0) to["0"] (1,1)
+                                                to["1"] (2,0)
+                  to["2" near start, "3", "4" near end] (4,1)
+                                                -- ++(down:1);
 \end{codeexample}
 
+\newcolumn
 \subsection{Automatic placement of nodes}
 The \referenceKeyandIndexO{auto} key allows automatic placement of
 nodes along a path segment.
@@ -155,7 +161,7 @@ These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
 \begin{center}
 \small
 \newcommand*\tikzauto[3]{%
-  \path[{Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
+  \path[{ext_Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
     (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
           edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
 \tikz[x=+.75cm,y=+.75cm]\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{
@@ -172,10 +178,10 @@ Nodes are usually placed with their border (including any |outer sep|)
 on the line.
 With the following option, a node will be shifted a certain offset distance.
 
-\begin{key}{/tikz/ext/auto with offset=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzext/auto with offset=\opt{\meta{true or false}} (default true)}
   This key activates the offset function.
 \end{key}
-\begin{key}{/tikz/ext/auto offset (initially 1cm)}
+\begin{key}{/\tikzext/auto offset (initially 1cm)}
 The offset distance itself.
 \end{key}
 
@@ -183,19 +189,19 @@ For the \referenceDecorationandIndexO{brace} decoration,
 the following keys are provided which needs the
 \referenceLibraryandIndexO{decorations.pathreplacing} loaded before they
 can be used.
-\begin{key}{/tikz/ext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
+\begin{key}{/\tikzext/nodes/install auto offset for brace decoration=\opt{\meta{distance}} (default 0pt)}
 This key installs the necessary customizations
 for the \referenceKeyandIndexO[/pgf/decoration/]{raise} key
 so that the given value is available as an offset.
 
 It also makes available the following keys.
-\begin{stylekey}{/tikz/ext/auto offset for brace decoration}
-This sets \referenceKeyandIndex[/tikz/ext/]{auto offset} to
+\begin{stylekey}{/\tikzext/auto offset for brace decoration}
+This sets \referenceKeyandIndex[/\tikzext/]{auto offset} to
 \texttt{\textbackslash pgfdecorationsegmentamplitude+
   (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
 \end{stylekey}
 %\columnbreak
-\begin{stylekey}{/tikz/ext/every brace node}
+\begin{stylekey}{/\tikzext/every brace node}
 Using this key on a node along a path that's decorated by the |brace| decoration
 will offset the node so that it will be placed at the tip of the brace.
 \end{stylekey}
@@ -204,7 +210,7 @@ will offset the node so that it will be placed at the tip of the brace.
 \subsubsection{Precise placement}
 The default behavior of the |auto| placement mechanism is
 to snap to one of the eight compass directions.
-\begin{key}{/tikz/ext/precise auto angle=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzext/precise auto angle=\opt{\meta{true or false}} (default true)}
 With this option set to |true|, the |auto| placement won't snap
 to one of the eight compass directions.
 

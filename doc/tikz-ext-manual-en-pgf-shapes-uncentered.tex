@@ -13,7 +13,7 @@
   A rectangle that has a variable horizontal center with three node parts.
   \inspiration{UncRectCD-Q,UncRectForest-Q}{UncRectCD-A,UncRectForest-A}
 \end{purepgflibrary}
-\begin{shape}{uncentered rectangle}
+\begin{ext_shape}{uncentered rectangle}
 
 For some alignment problems, this shape could be useful.
 
@@ -24,21 +24,21 @@ and the |right| part that is to the right of |text|.
 When edges are to be connected with this shape, the
 following key changes to which inner center this shape will
 calculate the appropriate point on the border.
-\begin{key}{/pgf/uncentered rectangle center=\meta{left}\textrm{ or }\meta{text}\textrm{ or }\meta{right}\textrm{ or }\meta{real} (initially text)}
+\begin{key}{/\pgfext/uncentered rectangle center=\meta{left}\textrm{ or }\meta{text}\textrm{ or }\meta{right}\textrm{ or }\meta{real} (initially text)}\keycompat{pgf}
   Sets the center that is to be used for connecting edges.
   
   This will also move the anchors |north|, |mid|, |base| and |south| along.
   In the picture below, this are marked red.
 \end{key}
 
-\begin{key}{/pgf/uncentered rectangle use saved center=\meta{true}\textrm{ or }\meta{false} (default true)}
+\begin{key}{/\pgfext/uncentered rectangle use saved center=\meta{true}\textrm{ or }\meta{false} (default true)}\keycompat{pgf}
 When this is set to true, the border anchors will use the horizontal center that was used when
 the node was created.
 \end{key}
 
 For support of the \referenceLibraryandIndexO{cd} library of the |tikz-cd| package,
 this shape also supports a dynamic $y$ value for its anchors |center|, |west| and |east|.
-\begin{key}{/pgf/uncentered rectangle center yshift=\meta{dimension} (initially \{\})}
+\begin{key}{/\pgfext/uncentered rectangle center yshift=\meta{dimension} (initially \{\})}\keycompat{pgf}
   This determines the distance between the baseline and the |center| anchors.
   
   If \meta{dimension} is empty, the real vertical center will be used.
@@ -49,7 +49,7 @@ this shape also supports a dynamic $y$ value for its anchors |center|, |west| an
 \begin{codeexample}[preamble=\usepgflibrary{ext.shapes.uncenteredrectangle}]
 \begin{tikzpicture}[style north/.style=red, style south/.style=red, style center/.style=red, style base/.style=red, style mid/.style=red]
 \Huge
-\node[shape example, name=n, uncentered rectangle]
+\node[shape example, name=n, ext_uncentered rectangle]
   {centered \nodepart{left} Un \nodepart{right} \space Rectangle\vrule width 1pt height 2cm}
   foreach \anchor/\pos in {
    north west/above left, north/below, north east/above right, real north/above,  left north/above, right north/above, text north/above,
@@ -62,7 +62,7 @@ this shape also supports a dynamic $y$ value for its anchors |center|, |west| an
     node[inner sep=.1em, style \anchor/.try, style/.expand once=\pos] {\tiny\ttfamily\anchor}};
 \end{tikzpicture}
 \end{codeexample}
-\end{shape}
+\end{ext_shape}
 
 \begin{tikzlibrary}{ext.shapes.uncenteredrectangle}
 This library extends the \referenceLibraryandIndexO{cd} library (from the |tikz-cd| package)
@@ -72,7 +72,7 @@ so that it can be used with the |uncentered rectangle| shape.
 \end{tikzlibrary}
 
 This library provides only one key.
-\begin{stylekey}{/tikz-ext/tikz-cd fix}
+\begin{stylekey}{/\tikzext/tikz-cd fix}\keycompat{tikz-ext}
 This key installs various \enquote{fixes} to the \referenceKeyandIndexO[/tikz/commutative diagrams/]{every diagram} style:
 
 \begin{itemize}
@@ -82,19 +82,19 @@ This key installs various \enquote{fixes} to the \referenceKeyandIndexO[/tikz/co
         with multipart nodes.}
 \item The helpful macro |\uncrec| will be installed.
 \begin{command}{\uncrec\marg{left}\marg{center}\marg{right}}
-  When used as the content of |uncentered rectangle|,
+  When used as the content of a |ext_uncentered rectangle| shape,
   the node parts will be setup so that \meta{left} is in the left part of the node part etc.
 \end{command}
-\item Since math mode will be disabled with the |uncentered rectangle|, it is automatically enabled for each node part with |\uncrec| but it can be disabled with the following key.
+\item Since math mode will be disabled with the |ext_uncentered rectangle|, it is automatically enabled for each node part with |\uncrec| but it can be disabled with the following key.
 \begin{key}{/tikz/uncrec math mode=\meta{true}\textrm{ or }\meta{false} (default true)}
 When enabled the contents of |\uncrec| will be set in math mode.
 \end{key}
 \item For easy access to the |uncentered rectangle| shape, the following keys are available inside a Commutative Diagram.
 \begin{stylekey}{/tikz/uncrec=\meta{left}\textrm{ or }\meta{text}\textrm{ or }\meta{right}\textrm{ or }\meta{real} (initially text)}
-This key sets the shape to |uncentered rectangle| and \referenceKeyandIndex[/pgf/]{uncentered rectangle center} to its argument.
+This key sets the shape to |ext_uncentered rectangle| and \referenceKeyandIndex[/\pgfext/]{uncentered rectangle center} to its argument.
 \end{stylekey}
 \begin{stylekey}{/tikz/commutative diagrams/install uncentered rectangle in columns=\meta{column}}
-All nodes in column \meta{column} will be set to the |uncentered rectangle| shape.
+All nodes in column \meta{column} will be set to the |ext_uncentered rectangle| shape.
 \end{stylekey}
 \end{itemize}
 \end{stylekey}
@@ -103,7 +103,7 @@ All nodes in column \meta{column} will be set to the |uncentered rectangle| shap
 \tikzexternaldisable
 %\catcode`\|=12
 \begin{codeexample}[leave comments, width=8cm, preamble=\usetikzlibrary{cd, ext.shapes.uncenteredrectangle}]
-\tikzcdset{/tikz-ext/tikz-cd fix}
+\tikzextset{tikz-cd fix}
 \newcommand*\C[1]{C_{\%_{#1}}}
 \begin{tikzcd}[
   sep=tiny,
@@ -117,7 +117,7 @@ All nodes in column \meta{column} will be set to the |uncentered rectangle| shap
 \end{tikzcd}
 \end{codeexample}
 \begin{codeexample}[leave comments, width=8cm, preamble=\usetikzlibrary{cd, ext.shapes.uncenteredrectangle}]
-\tikzset{/tikz-ext/tikz-cd fix}
+\tikzextset{tikz-cd fix}
 \begin{tikzcd}[install uncentered rectangle in column/.list={1,2}]
   \uncrec{S \supset {}}{U_\tau}{}                                      \arrow[r, "\varphi_0"]
                                                                        \arrow[d, "\tau", "\sim"']

@@ -7,7 +7,6 @@
 % 1. under the LaTeX Project Public License and/or
 % 2. under the GNU Free Documentation License.
 %
-
 \clearpage
 \section{Mirror, Mirror on the Wall}
 \label{library:mirror}
@@ -26,12 +25,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
   shape=regular polygon, regular polygon sides={#1}}]
 \node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
 \foreach \i[evaluate={\col=(\i-1)/.04}] in {1,...,5}
-  \node [mirror=(a.corner \i)--(a.side \i), transform shape,
+  \node [ext/mirror=(a.corner \i)--(a.side \i), transform shape,
          reg poly=5, minimum size=+2cm, draw=red!\col!blue] {};
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/xmirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/\tikzext/xmirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -40,18 +39,18 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
-\draw[xmirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
+\draw[ext/xmirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/ymirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/\tikzext/ymirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/mirror x=\meta{coordinate} (default {(0,0)})}
-  Similar to |/tikz/xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{key}{/\tikzext/mirror x=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
+  Similar to |xmirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
 
@@ -59,18 +58,18 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 
 \draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
 
-\draw[ xmirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
-\draw[mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
+\draw[ ext/xmirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
+\draw[ext/mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/mirror y=\meta{coordinate} (default {(0,0)})}
-  Similar to |/tikz/ymirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{key}{/\tikzext/mirror y=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
+  Similar to |ymirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 
 
-\begin{key}{/tikz/mirror=\meta{point A}|--|\meta{point B}}
+\begin{key}{/\tikzext/mirror=\meta{point A}|--|\meta{point B}}\keycompat{tikz}
   Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
   
   When only \meta{point A} is given that line goes through \meta{point A} and the origin.
@@ -83,12 +82,12 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
   shape=regular polygon, regular polygon sides={#1}}]
 \node[reg poly=5, minimum size=+2cm, draw, very thick] (a) {};
 \foreach \i[evaluate={\col=(\i-1)/.04}] in {1,...,5}
-  \node [Mirror=(a.corner \i)--(a.side \i), transform shape,
+  \node [ext/Mirror=(a.corner \i)--(a.side \i), transform shape,
          reg poly=5, minimum size=+2cm, draw=red!\col!blue] {};
 \end{tikzpicture}
 \end{codeexample}
 
-\begin{key}{/tikz/xMirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/\tikzext/xMirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a horizontal line that goes through point $(\text{\meta{value}}, 0)$ or \meta{coordinate}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
@@ -97,18 +96,18 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
-\draw[xMirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
+\draw[ext/xMirror=(m),-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/yMirror=\meta{value or coordinate} (default 0pt)}
+\begin{key}{/\tikzext/yMirror=\meta{value or coordinate} (default 0pt)}\keycompat{tikz}
   Sets up a transformation that mirrors along a vertical line that goes through point $(0, \text{\meta{value}})$ or \meta{coordinate}.
 \end{key}
 
 
-\begin{key}{/tikz/Mirror x=\meta{coordinate} (default {(0,0)})}
-  Similar to |/tikz/xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{key}{/\tikzext/Mirror x=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
+  Similar to |xMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.transformations.mirror}]
 \begin{tikzpicture}[x=.5cm, y=(45:1cm)]
 
@@ -116,18 +115,18 @@ As with the commands in \pgfname, we'll be using a lowercase |m| for the reflect
 
 \draw[dashed] (1.5, -.25) coordinate (m) -- (1.5, 1.25);
 
-\draw[ xMirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
-\draw[Mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
+\draw[ ext/xMirror=(m), -latex, red, dotted] (0,0) .. controls (.5,1) .. (1,1);
+\draw[ext/Mirror x=(m), -latex]              (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 
-\begin{key}{/tikz/Mirror y=\meta{coordinate} (default {(0,0)})}
-  Similar to |/tikz/yMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
+\begin{key}{/\tikzext/Mirror y=\meta{coordinate} (default {(0,0)})}\keycompat{tikz}
+  Similar to |yMirror|, this however uses the |xyz| coordinate system instead of the |canvas| system.
 \end{key}
 
 
-\begin{key}{/tikz/Mirror=\meta{point A}\opt{|--|\meta{point B}}}
+\begin{key}{/\tikzext/Mirror=\meta{point A}\opt{|--|\meta{point B}}}\keycompat{tikz}
   Sets up a transformation that mirrors along a line that goes through \meta{point A} and \meta{point B}.
   
   When only \meta{point A} is given that line goes through \meta{point A} and the origin.

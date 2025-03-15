@@ -23,49 +23,50 @@
 \subsection{Extensions}
 
 The following tests are added.
+In version pre~0.6, they're missing the prefix |ext/|.
 \begin{itemize}
-\itemcalendaroption{Jan} This test is passed by all dates that are in the month of January.
-\itemcalendaroption{Feb} as above.
-\itemcalendaroption{Mar} as above.
-\itemcalendaroption{Apr} as above.
-\itemcalendaroption{May} as above.
-\itemcalendaroption{Jun} as above.
-\itemcalendaroption{Jul} as above.
-\itemcalendaroption{Aug} as above.
-\itemcalendaroption{Sep} as above.
-\itemcalendaroption{Oct} as above.
-\itemcalendaroption{Nov} as above.
-\itemcalendaroption{Dec} as above.
-\itemcalendaroption{leap year}\opt{|=|\meta{year}}
+\itemcalendaroption{ext/Jan} This test is passed by all dates that are in the month of January.
+\itemcalendaroption{ext/Feb} as above.
+\itemcalendaroption{ext/Mar} as above.
+\itemcalendaroption{ext/Apr} as above.
+\itemcalendaroption{ext/May} as above.
+\itemcalendaroption{ext/Jun} as above.
+\itemcalendaroption{ext/Jul} as above.
+\itemcalendaroption{ext/Aug} as above.
+\itemcalendaroption{ext/Sep} as above.
+\itemcalendaroption{ext/Oct} as above.
+\itemcalendaroption{ext/Nov} as above.
+\itemcalendaroption{ext/Dec} as above.
+\itemcalendaroption{ext/leap year}\opt{|=|\meta{year}}
     This test checks whether the given year is a leap year. If
     \meta{year} is omitted, it checks the year of the current date.
-\itemcalendaroption{and}|=|\marg{tests}
+\itemcalendaroption{ext/and}|=|\marg{tests}
     This test passes when all \meta{tests} pass.
-\itemcalendaroption{not}|=|\marg{tests}
+\itemcalendaroption{ext/not}|=|\marg{tests}
     This test passes when \meta{tests} do not pass.
-\itemcalendaroption{week of month}|=|\meta{num}
+\itemcalendaroption{ext/week of month}|=|\meta{num}
     This test passes when the date is in \meta{num}th week of the month.
     The first week of the month start at day~1 and ends with day~7.
-\itemcalendaroption{week of month'}|=|\meta{num}
+\itemcalendaroption{ext/week of month'}|=|\meta{num}
     As above but counts from the last day of the month.
     For a month with 31~days, this means the ``1st'' week starts at day~25 and ends with day~31.
-\itemcalendaroption{calendar week of month}|=|\meta{num}
+\itemcalendaroption{ext/calendar week of month}|=|\meta{num}
     This test passes when the date is in \meta{num}th calendar week of the month.
     The first week starts at the first day of the month and ends at the next Sunday.
-\itemcalendaroption{calendar week of month'}|=|\meta{num}
+\itemcalendaroption{ext/calendar week of month'}|=|\meta{num}
     As above but counts from the last day of the month.
 \begin{codeexample}[width=5cm,preamble=\usetikzlibrary{ext.calendar-plus}]
 \tikz
   \calendar[
     dates=2022-10-01 to 2022-10-31,
     week list]
-    if (week of month=2) [red]
-    if (calendar week of month'=2) [blue];
+    if (ext/week of month=2)           [red]
+    if (ext/calendar week of month'=2) [blue];
 \end{codeexample}
-\itemcalendaroption{yesterday}|=|\marg{tests}
+\itemcalendaroption{ext/yesterday}|=|\marg{tests}
     This test passes when the previous day passes \meta{tests}.
-\itemcalendaroption{week}|=|\meta{num}
-    This test passes when the current week of the year equals \marg{num}.
+\itemcalendaroption{ext/week}|=|\meta{num}
+    This test passes when the current week of the year equals \meta{num}.
 \end{itemize}
 The shorthands for |d-| and |m-| are slightly changed so that they are
 expandable. This makes it possible to use these shorthands inside of \pgfname math.
@@ -79,7 +80,8 @@ are added. These are
 
 \subsection{Week numbering (ISO~8601)}
 \label{calendar:weeknumbering}
-\begin{command}{\pgfcalendarjulianyeartoweek\marg{Julian day}\marg{year}\marg{week count}}
+\begin{command}{\pgfextcalendarjulianyeartoweek\marg{Julian day}\marg{year}\marg{week count}}
+\cmdcompat{\pgfcalendarjulianyeartoweek}
   This command calculates the week for the \meta{Julian day} of \meta{year}.
   The \meta{week counter} must be a \TeX\space count.
 
@@ -87,14 +89,16 @@ are added. These are
   year's first Thursday in it.
 \end{command}
 
-Inside of |\pgfcalendar|\indexCommandO\pgfcalendar the command |\pgfcalendarcurrentweek| will be available.
-\begin{command}{\pgfcalendarcurrentweek}
+Inside of |\pgfcalendar|\indexCommandO\pgfcalendar the command |\pgfextcalendarcurrentweek| will be available.
+\begin{command}{\pgfextcalendarcurrentweek}
+\cmdcompat{\pgfcalendarcurrentweek}
   This command returns the current week number (always two digits -- use shorthand |n.|
   to strip the leading zero).
 \end{command}
 
-Inside of |\ifdate|\indexCommandO\ifdate the command |\pgfcalendarifdateweek| will be available.
-\begin{command}{\pgfcalendarifdateweek}
+Inside of |\ifdate|\indexCommandO\ifdate the command |\pgfextcalendarifdateweek| will be available.
+\begin{command}{\pgfextcalendarifdateweek}
+\cmdcompat{\pgfcalendarifdateweek}
   This command returns the week number (always two digits).
 \end{command}
 \end{multicols}

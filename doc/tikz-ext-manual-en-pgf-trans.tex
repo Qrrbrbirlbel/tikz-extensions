@@ -56,16 +56,16 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn*% <
 
-\begin{command}{\pgftransformxmirror\marg{value}}
+\begin{command}{\pgfexttransformxmirror\marg{value}}\cmdcompat\pgftransformxmirror
   Sets up a transformation that mirrors along a vertical line that goes through point $(\text{\meta{value}}, 0)$.
 
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -.25) grid (3.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (1.5, -.25) -- (1.5, 1.25);
-\pgftransformxmirror{1.5}
+\pgfexttransformxmirror{1.5}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
@@ -74,16 +74,16 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn% >
 
-\begin{command}{\pgftransformxMirror\marg{value}}
+\begin{command}{\pgfexttransformxMirror\marg{value}}\cmdcompat\pgftransformxMirror
   Sets up a transformation that mirrors along a vertical line that goes through point $(\text{\meta{value}}, 0)$.
 
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -.25) grid (3.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (1.5, -.25) -- (1.5, 1.25);
-\pgftransformxMirror{1.5}
+\pgfexttransformxMirror{1.5}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
@@ -92,21 +92,21 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn*% <
 
-\begin{command}{\pgftransformymirror\marg{value}}
+\begin{command}{\pgfexttransformymirror\marg{value}}\cmdcompat\pgftransformymirror
   Sets up a transformation that mirrors along a horizontal line that goes through point $(0, \text{\meta{value})}$.
 \end{command}
 
-\begin{command}{\pgftransformmirror\marg{point A}\marg{point B}}
+\begin{command}{\pgfexttransformmirror\marg{point A}\marg{point B}}\cmdcompat\pgftransformmirror
   Sets up a transformation that mirrors along the line that goes through \meta{point A} and \meta{point B}.
  
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -2.25) grid (2.5, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (0, -1) -- (2, 0);
-\pgftransformmirror{\pgfpointxy{0}{-1}}
-                   {\pgfpointxy{2}{ 0}}
+\pgfexttransformmirror{\pgfpointxy{0}{-1}}
+                      {\pgfpointxy{2}{ 0}}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
@@ -115,21 +115,21 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn% >
 
-\begin{command}{\pgftransformyMirror\marg{value}}
+\begin{command}{\pgfexttransformyMirror\marg{value}}\cmdcompat\pgftransformyMirror
   Sets up a transformation that mirrors along a horizontal line that goes through point $(0, \text{\meta{value})}$.
 \end{command}
 
-\begin{command}{\pgftransformMirror\marg{point A}\marg{point B}}
+\begin{command}{\pgfexttransformMirror\marg{point A}\marg{point B}}\cmdcompat\pgftransformMirror
   Sets up a transformation that mirrors along the line that goes through \meta{point A} and \meta{point B}.
  
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -2.25) grid (2.5, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (0, -1) -- (2, 0);
-\pgftransformMirror{\pgfpointxy{0}{-1}}
-                   {\pgfpointxy{2}{ 0}}
+\pgfexttransformMirror{\pgfpointxy{0}{-1}}
+                      {\pgfpointxy{2}{ 0}}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
@@ -138,16 +138,16 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn*% <
 
-\begin{command}{\pgfqtransformmirror\marg{point A}}
+\begin{command}{\pgfextqtransformmirror\marg{point A}}\cmdcompat\pgfqtransformmirror
   Sets up a transformation that mirrors along the line that goes through the origin and \meta{point A}.
 
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -.25) grid (2.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (0, 0) -- (2, 1);
-\pgfqtransformmirror{\pgfpointxy{2}{1}}
+\pgfextqtransformmirror{\pgfpointxy{2}{1}}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
@@ -156,16 +156,16 @@ only the |m| in |mirror| is capitalized.
 
 \switchcolumn
 
-\begin{command}{\pgfqtransformMirror\marg{point A}}
+\begin{command}{\pgfextqtransformMirror\marg{point A}}\cmdcompat\pgfqtransformMirror
   Sets up a transformation that mirrors along the line that goes through the origin and \meta{point A}.
 
-\begin{codeexample}[preamble=\usepgflibrary{transformations.mirror}]
+\begin{codeexample}[preamble=\usepgflibrary{ext.transformations.mirror}]
 \begin{tikzpicture}
 \draw[help lines] (-.25, -.25) grid (2.25, 1.25);
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 
 \draw[dashed] (0, 0) -- (2, 1);
-\pgfqtransformMirror{\pgfpointxy{2}{1}}
+\pgfextqtransformMirror{\pgfpointxy{2}{1}}
 
 \draw[-latex] (0,0) .. controls (.5,1) .. (1,1);
 \end{tikzpicture}
