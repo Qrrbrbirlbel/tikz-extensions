@@ -45,19 +45,19 @@ The |@|-protected macros are still available, of course.
 \subsection{Week numbering (ISO~8601)}
 
 The actual week number algorithm is implemented by the |pgfcalendar-ext| package/module in section~\ref{calendar:weeknumbering}.
-\begin{key}{/tikz/week code=\meta{code}}
+\begin{key}{/\tikzext/week code=\meta{code}}\keycompat{tikz}
   Works like |/tikz/day code| or |/tikz/month code|, only for weeks.\indexKeyO{day code}\indexKeyO{month code}
 \end{key}
 
-\begin{key}{/tikz/week text=\meta{text}}
+\begin{key}{/\tikzext/week text=\meta{text}}\keycompat{tikz}
   Works like |/tikz/day text| or |/tikz/month text|, only for weeks.\indexKeyO{day text}\indexKeyO{month text}
 \end{key}
 
-\begin{stylekey}{/tikz/every week}
+\begin{stylekey}{/\tikzext/every week}\keycompat{tikz}
   Works like |/tikz/every day| or |/tikz/every month|, only for weeks.\indexKeyO{every day}\indexKeyO{every month}
 \end{stylekey}
 
-\begin{stylekey}{/tikz/week label left}
+\begin{stylekey}{/\tikzext/week label left}\keycompat{tikz}
     Places the week label to the left of the first day of the month. (For
     |week list| and |month list| where a week does not start on a Monday, the
     position is chosen ``as if'' the week had started on a Monday --  which is
@@ -68,8 +68,8 @@ The actual week number algorithm is implemented by the |pgfcalendar-ext| package
   \calendar[
     week list, month label above centered,
     dates=2022-07-01 to 2022-07-31,
-    week label left,
-    every week/.append style={
+    ext/week label left,
+    ext/every week/.append style={
       gray!50!black, font=\sffamily}];
 \end{codeexample}
     %

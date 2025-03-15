@@ -115,12 +115,12 @@ This library provides the following pics:
 \item[|ext/softpath arrows|]
   This pic type places a possible bended arrow tip on the last segment of the path.
   
-  For the path operators \referencePathOperationandIndexO{--},
-  {\catcode`\|=12 \referencePathOperationandIndexO{|-}
-              and \referencePathOperationandIndexO{-|}}
-  this works even with a non-identity transformation.
-  If possible, the current timer will be used to take more segments into account so
-  that the arrow tip can be placed along the recent path operation.
+%  For the path operators \referencePathOperationandIndexO{--},
+%  {\catcode`\|=12 \referencePathOperationandIndexO{|-}
+%              and \referencePathOperationandIndexO{-|}}
+%  this works even with a non-identity transformation.
+%  If possible, the current timer will be used to take more segments into account so
+%  that the arrow tip can be placed along the recent path operation.
   
   This won't work for \referencePathOperationandIndexO{arc}s,
   for this the \referenceKeyandIndex[/\tikzext/]{arc arrows} key will be necessary.
@@ -137,7 +137,7 @@ This library provides the following pics:
   (defaults to the end tip specification of the path).
   
   
-  This obviously is best use as a pic along a path segment that supports it.
+  This obviously is best used as a pic along a path segment that supports it.
   It \emph{does not} support bended arrow tips.
 \begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
 \begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
@@ -163,7 +163,7 @@ This library provides the following pics:
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
     this will not work as expected. Use the |arc arrows| key instead.
 \end{pictype}
-\begin{pictype}{softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
+\begin{pictype}{ext/softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
   This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
 \end{pictype}
 
@@ -181,7 +181,7 @@ This style will be applied for every instance of |softpath arrows| (key version,
 For |arc|s the following key needs to be used directly after the |arc| path operation.
 \begin{key}{/\tikzext/arc arrows=\opt{\meta{options}} (default ->)}
 This key adds arrow tips to the previous arc segment.
-\begin{stylekey}{/\tikzext/every softpath arrows (initially \{\})}
+\begin{stylekey}{/\tikzext/every arc arrows (initially \{\})}
 This style will be applied for every instance of |arc arrows|.
 \end{stylekey}
 

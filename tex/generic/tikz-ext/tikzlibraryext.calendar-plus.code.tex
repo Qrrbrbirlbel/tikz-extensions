@@ -53,10 +53,10 @@
   week text/.initial={\%n=},
   every week/.code=,
   week label left/.style={
-    ext/every week/.append style={
-      anchor=base east,
-      xshift=-1.25*\pgfkeysvalueof{/tikz/day xshift}},
-    execute before day scope=%
+    /tikz/ext/every week/.append style={
+      /tikz/anchor=base east,
+      /tikz/xshift=-1.25*\pgfkeysvalueof{/tikz/day xshift}},
+    /tikz/execute before day scope=%
       \ifdate{Monday, equals=\pgfcalendarbeginiso}{\tikzextweekcode}{}}}
 
 %

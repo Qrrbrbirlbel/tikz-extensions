@@ -42,12 +42,10 @@ is not always optimal.
 They often reside in the main |/tikz| or |/pgf| path.
 Similar applies to macro names.
 
-For future versions,
-it is planned to move those in the |/tikz/ext| namespace.
-For keys in the |/pgf| namespace, this will probably not happen
-since it makes it not very intuitive to use them in \tikzname.
+Starting with version~0.6, the namespace for almost all keys is |/tikz/ext|
+or |/pgf/ext|. The same applies to macros that shall be starting with |\tikzext| or |\pgfext|.
 
-Starting from version 0.6,
+Starting with version~0.6,
 \tikzextname\ provides commands that return the current version for compatibility testing.
 The second simply increments with every release
 so that the first doesn't need to be parsed.
@@ -58,7 +56,7 @@ so that the first doesn't need to be parsed.
   Returns \texttt{\tikzextversionnumber}.
 \end{command}
 %
-Also starting from version 0.6, there's |\tikzextset| and |\pgfextset|.
+Also there's |\tikzextset| and |\pgfextset|.
 \begin{command}{\tikzextset\marg{options}}
   This command will process the \meta{options} using the
   |\pgfkeys| command with the default path set to |/tikz/ext|.
@@ -102,6 +100,7 @@ that do not appear in this manual are considered deprecated.
     paths.arcto                                          & \Xdef &   \X    & --  \\ \addlinespace
     paths.ortho                                          & \Xdef &   \X    & --  \\
     paths.timer                                          & \Xdef &   \X    & --  \\
+    patterns.images                                      & \Xdef &   \X    & --  \\
     pgffor-ext                                           & \Xdef &   \X    & --  \\
     pgfkeys-plus                                         & \Xdef &   \X    & --  \\
     positioning-plus                                     & \Xdef &   \X    & --  \\ \addlinespace
@@ -111,6 +110,8 @@ that do not appear in this manual are considered deprecated.
     topaths.arcthrough                                   & \Xdef &   \X    & --  \\ \bottomrule
   \end{tabular}
   \end{center}
+  
+  For future version, it is planned that the default compatibility setting will not be |warn|.
 \end{key}
 
 \newcolumn\noindent
@@ -125,6 +126,7 @@ after the extension is loaded.
   paths.arcto=\meta{version} (default pre 0.6),
   paths.ortho=\meta{version} (default pre 0.6),
   paths.timer=\meta{version} (default pre 0.6),
+  patterns.images=\meta{version} (default pre 0.6),
   pgffor-ext=\meta{version} (default pre 0.6),
   pgfkeys-plus=\meta{version} (default pre 0.6),
   positioning-plus=\meta{version} (default pre 0.6),

@@ -195,16 +195,6 @@
     \let\tikzext@arrow@softpath\tikzext@arrow@curvepath
   \fi
 }
-% |- and -|
-\def\tikzext@arrow@softpath@hvline{%
-  \let\tikzext@lastonpath      \pgfpointlastonpath
-  \let\tikzext@secondlastonpath\pgfpointsecondlastonpath
-  \pgfprocesssplitpath\pgfprocessresultsubpathprefix
-  \pgfprocesssplitsubpath\pgfprocessresultpathsuffix
-  \expandafter\pgf@parse@end\pgfprocessresultsubpathsuffix\pgf@stop\pgf@stop\pgf@stop
-  \let\tikzext@arrow@softpath\tikzext@arrow@hvpath
-}
-\let\tikzext@arrow@softpath@vhline\tikzext@arrow@softpath@hvline
 %
 % Paths
 %

@@ -161,7 +161,7 @@ These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
 \begin{center}
 \small
 \newcommand*\tikzauto[3]{%
-  \path[{Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
+  \path[{ext_Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
     (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
           edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
 \tikz[x=+.75cm,y=+.75cm]\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{
