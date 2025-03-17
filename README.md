@@ -12,9 +12,21 @@ Name: Qrrbrbirlbel
 
 This is not a LaTeX package but a collection of libraries for PGF and TikZ;
 
- * `ext.arrows` provides “Centered” arrow tips.
- * `ext.arrows-plus` allows to place bended tips along a path.
+ * `ext.arrows` provides additional arrow tips.
+   * Many of the standard `arrows.meta` library's get “Centered” and “Untipped” alternative.
+   * Furthermore, the arrow tips `ext_Hug Cap` for connecting circles neatly and `ext_Loop` are provided.
+ * `ext.arrows-plus` allows to place arrow tips along a path.
+   
+   These can either be placed via pics *along* a path operation (`ext/arrow`, `ext/softpath arrows` and `ext/softpath arrow`)
+   or via keys ( `ext/arc arrows` and `ext/softpath arrows`) along a previous arc or any path segment.
+   All except the `ext/arrow` key support the bending of arrow tips.
+
+   The `\arrow` command of the `decorations.markings` library has alternatives `\arrow*` and `\arrow**` for shifting and shifting/bending.
+   
  * `ext.calendar-plus` extends the `calendar` library with more tests, week numbers and a few goodies.
+   * The already defined keys `day xshift`, `day yshift`, `month xshift` and `month yshift` are now proper value-keys and can be accessed wtithout having to use an `@`-riddled macro name.
+   * The `if` key is nestable.
+   * Via the `pgfcalendar-ext` package more conditionals are available, also week numbering according to ISO 8601 is supported.
  * `ext.layers` allows to put nodes etc on a separate layer without having to use `pgfonlayer`.
  * `ext.nodes` extends the functionalities around nodes.
  * `ext.node-families` uses the AUX file to sync the sizes of nodes.
