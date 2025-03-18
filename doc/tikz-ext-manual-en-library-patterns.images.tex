@@ -26,13 +26,13 @@ This is a two-step process:
 \item Using the ``image-pattern''.
 \end{enumerate}
 
-\begin{command}{\pgfextsetupimageaspattern\oarg{options}\marg{name}\marg{image}}\cmdcompat{\pgfsetupimageaspattern}
+\begin{command}{\tikzextsetupimageaspattern\oarg{options}\marg{name}\marg{image}}\cmdcompat{\pgfsetupimageaspattern}
 \end{command}
 
 \begin{key}{/\tikzext/image as pattern=\meta{options} (default \{\})}\keycompat{tikz}
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.patterns.images,shapes.geometric}]
-\pgfextsetupimageaspattern[width=.5cm]{grid}{example-image-1x1}
+\tikzextsetupimageaspattern[width=.5cm]{grid}{example-image-1x1}
 \tikz \node[star, minimum size=3cm, draw,
   ext/image as pattern={name=grid, options={left, bottom, y=-.5cm, rotate=45}}] {};
 \end{codeexample}
@@ -47,6 +47,6 @@ Options that will be used by the internal |\pgftext|,\indexCommandO{\pgftext}
 only keys from |/pgf/text| should be used.\indexKeyO[/pgf/]{text}
 \end{stylekey}
 
-\begin{stylekey}{/\tikzext/image as pattern/options=\meta{style}}\keycompat{tikz/image as pattern}
-Appends style |/tikz/ext/image as pattern/option|.
-\end{stylekey}
+\begin{key}{/\tikzext/image as pattern/options=\meta{style}}\keycompat{tikz/image as pattern}
+Appends to style |/tikz/ext/image as pattern/option|.
+\end{key}
