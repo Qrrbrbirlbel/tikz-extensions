@@ -195,11 +195,11 @@ for the \referenceKeyandIndexO[/pgf/decoration/]{raise} key
 so that the given value is available as an offset.
 
 It also makes available the following keys.
-\begin{stylekey}{/\tikzext/auto offset for brace decoration}
+\begin{key}{/\tikzext/auto offset for brace decoration}
 This sets \referenceKeyandIndex[/\tikzext/]{auto offset} to
 \texttt{\textbackslash pgfdecorationsegmentamplitude+
-  (\textbackslash pgfkeysvalueof{/pgf/decoration/raise})}.
-\end{stylekey}
+  (\textbackslash pgfkeysvalueof\{/pgf/decoration/raise\})}.
+\end{key}
 %\columnbreak
 \begin{stylekey}{/\tikzext/every brace node}
 Using this key on a node along a path that's decorated by the |brace| decoration
@@ -207,6 +207,19 @@ will offset the node so that it will be placed at the tip of the brace.
 \end{stylekey}
 \end{key}
 
+\paragraph{Implementation note:}
+This redefines the keys \referenceKeyandIndexO{auto},
+\referenceKeyandIndexO{swap} and \referenceKeyandIndexO{sloped}.
+One can install custom auto placement rules by using the following key.
+\begin{key}{/\tikzext/nodes/install auto=\marg{left}\marg{right}}
+  This key defines \texttt{/tikz/auto/\meta{left}} which activates the auto placement
+  and installs the appropriate placement function.
+  Further more, the key \texttt{/tikz/swap/\meta{left}} will be defined
+  to active the \meta{right} placement function.
+  
+  The key |/tikz/swap| has been defined to apply \texttt{/tikz/swap/\meta{dir}}
+  where \meta{dir} is the current placement function.
+\end{key}
 \subsubsection{Precise placement}
 The default behavior of the |auto| placement mechanism is
 to snap to one of the eight compass directions.

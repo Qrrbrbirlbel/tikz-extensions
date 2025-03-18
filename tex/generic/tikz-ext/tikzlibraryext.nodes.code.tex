@@ -147,28 +147,25 @@
 \pgfkeysdef{/tikz/auto/}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on}
 \tikzset{
   swap/.style={% overwriting
-    /tikz/ext/nodes/swap auto=\tikz@auto@anchor@direction
+    /tikz/swap/\tikz@auto@anchor@direction
   },
   auto/.is choice, % overwriting
   auto/.default=,
   auto/false/.code=\let\tikz@do@auto@anchor\relax,
-  /tikz/ext/nodes/swap auto/.is choice,
-  /utils/temp/.style args={#1=#2}{
-    /tikz/ext/nodes/swap auto/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
+  /tikz/ext/nodes/install auto/.style 2 args={
+    /tikz/swap/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
     /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}%
   },
-  /utils/temp/.list={
-    left=right,
-    right=left,
-    ext/left=ext/light,
-    ext/right=ext/left,
-    ext/above=ext/below,
-    ext/below=ext/above,
-    ext/north=ext/south,
-    ext/south=ext/north,
-    ext/west=ext/east,
-    ext/east=ext/west%
-  },
+  /tikz/ext/nodes/install auto={left}{right},
+  /tikz/ext/nodes/install auto={right}{left},
+  /tikz/ext/nodes/install auto={ext/left}{ext/light},
+  /tikz/ext/nodes/install auto={ext/right}{ext/left},
+  /tikz/ext/nodes/install auto={ext/above}{ext/below},
+  /tikz/ext/nodes/install auto={ext/below}{ext/above},
+  /tikz/ext/nodes/install auto={ext/north}{ext/south},
+  /tikz/ext/nodes/install auto={ext/south}{ext/north},
+  /tikz/ext/nodes/install auto={ext/west}{ext/east},
+  /tikz/ext/nodes/install auto={ext/east}{ext/west},
   sloped/.default=true,
   sloped/.is choice, % overwriting
   sloped/true/.code=\pgfslopedattimetrue\tikzext@auto@precisefalse,
