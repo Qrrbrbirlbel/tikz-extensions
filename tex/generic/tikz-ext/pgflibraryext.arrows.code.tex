@@ -11,8 +11,8 @@
   \input tikzext-util.tex
 \fi
 
-\pgfqkeys{/pgf/@arrows decl}{
-  /tikz-ext/@arrows decl/clone/.code={%
+\pgfqkeys{/tikz-ext/@arrows decl}{
+  clone/.code={%
     \pgfutil@namelet{pgf@decl@arrow@code}{pgf@ar@code@#1}%
     \pgfutil@namelet{pgf@decl@arrow@defaults}{pgf@ar@defaults@#1}%
     \pgfutil@namelet{pgf@decl@arrow@setup}{pgf@ar@setup@#1}%
@@ -20,13 +20,13 @@
     \pgfutil@namelet{pgf@decl@arrow@par}{pgf@ar@par@#1}%
     \pgfutil@namelet{pgf@decl@arrow@cache}{pgf@ar@do@cache@#1}%
   },
-  /tikz-ext/@arrows decl/append setup code/.code=
+  append setup code/.code=
     \begingroup
       \pgfutil@toks@\expandafter{\pgf@decl@arrow@setup#1}%
     \expandafter\endgroup
     \expandafter\def\expandafter\pgf@decl@arrow@setup\expandafter
       {\the\pgfutil@toks@ },
-  % /tikz-ext/@arrows decl/append parameters/.code=
+  % append parameters/.code=
   %   \begingroup
   %     \show\pgf@decl@arrow@par
   %     \pgfutil@toks@\expandafter{\pgf@decl@arrow@par#1}%
@@ -294,6 +294,82 @@
     \ifpgfarrowopen\pgfusepathqstroke\else\pgfusepathqfillstroke\fi
   }
 }
+
+\pgfdeclarearrow{
+  name = ext_Double Cap@,
+  defaults = {length = +0pt +1 +1, width = +0pt +1 +0},
+  setup code={%
+    \pgfarrowssettipend{+0pt}%
+    \pgfarrowssetbackend{+-\pgfarrowlength}%
+    \pgfarrowssetlineend{+-.5\pgfarrowlength}%
+    \pgfarrowsupperhullpoint{+0pt}{+.5\pgfarrowwidth}%
+    \pgfarrowsupperhullpoint{+-\pgfarrowlength}{+.5\pgfarrowwidth}%
+    \pgfarrowssavethe\pgfarrowwidth
+    \pgfarrowssavethe\pgfarrowlength
+  },
+  drawing code={%
+    \pgfsetdash{}{+0pt}%
+    \ifpgfarrowroundcap\pgfsetroundcap\fi
+    \pgfpathmoveto{\pgfqpoint{-.5\pgfarrowlength}
+      {\dimexpr.5\pgfarrowwidth\ifpgfarrowroundcap-.5\pgfarrowlength\fi}}%
+    \pgfpathlineto{\pgfqpoint{-.5\pgfarrowlength}
+      {\dimexpr-.5\pgfarrowwidth\ifpgfarrowroundcap+.5\pgfarrowlength\fi}}%
+    \pgfsetlinewidth{+\pgfarrowlength}%
+    \pgfusepathqstroke
+  },
+  parameters={\the\pgfarrowlength,\the\pgfarrowwidth,\ifpgfarrowroundcap c\fi}}
+
+\pgfdeclarearrow{
+  name = ext_Double Stealth@,
+  /tikz-ext/@arrows decl/clone = Stealth,
+  /tikz-ext/@arrows decl/append setup code = {%
+    \pgfmathsetlengthmacro\lwocenter
+      {.5*\pgfinnerlinewidth+.25*(\pgflinewidth-\pgfinnerlinewidth)}%
+    \advance\pgfarrowinset by\pgf@yc % undo weird things
+    \ifdim\pgfarrowinset=0pt \def\shortenedinset{0pt}%
+    \else \pgfmathsetlengthmacro\shortenedinset
+      {\pgfarrowinset/\pgfutil@tempdimb*(\pgfutil@tempdimb-\lwocenter)}\fi
+    \pgfarrowssetlineend{\shortenedinset}%
+    \pgfarrowssave\lwocenter
+    \pgfarrowssave\shortenedinset
+  },
+  drawing code = {%
+    \pgfsetdash{}{+0pt}%
+    \ifpgfarrowroundjoin\pgfsetroundjoin\else\pgfsetmiterjoin\fi
+    \ifdim\pgfarrowlinewidth=\pgflinewidth
+      \else\pgfsetlinewidth{+\pgfarrowlinewidth}\fi
+    \ifdim\shortenedinset=0pt
+      \pgfsetrectcap
+      \pgfpathmoveto{\pgfqpoint{\shortenedinset}{-\lwocenter}}%
+    \else
+      \pgfsetbuttcap
+      \pgfpathmoveto{\pgfqpoint
+        {\shortenedinset\advance\pgf@x-.5\pgfarrowlinewidth}{-\lwocenter}}%
+      \pgfpathlineto{\pgfqpoint{\shortenedinset}{-\lwocenter}}%
+    \fi
+    \pgfpathlineto{\pgfqpoint{\pgf@ya}{-\pgfutil@tempdimb}}%
+    \pgfpathlineto{\pgfqpoint{\pgfutil@tempdima\advance\pgf@x by\pgf@ya}{0pt}}%
+    \pgfpathlineto{\pgfqpoint{\pgf@ya}{\pgfutil@tempdimb}}%
+    \pgfpathlineto{\pgfqpoint{\shortenedinset}{\lwocenter}}%
+    \ifdim\shortenedinset=0pt \else
+      \pgfpathlineto{\pgfqpoint
+        {\shortenedinset\advance\pgf@x-.5\pgfarrowlinewidth}{\lwocenter}}%
+    \fi
+    \ifpgfarrowopen \pgfusepathqstroke\else
+      \ifdim\pgfarrowlinewidth>0pt \pgfusepathqfillstroke
+                             \else \pgfusepathqfill \fi \fi
+  },
+  defaults = {
+    length  = +3pt +4.5 +.8,
+    width'  = +0pt +1.75,
+    inset'  = +0pt +0.425,
+    line width = +0pt +1 +1,
+  },
+}%
+
+\pgfdeclarearrow{name = ext_Double Cap,     means = {ext_Double     Cap@[quick]}}
+\pgfdeclarearrow{name = ext_Double Stealth, means = {ext_Double Stealth@[open, quick]}}
+\pgfdeclarearrow{name = ext_Double Triangle,means = {ext_Double Stealth[inset=+0pt]}}
 
 %%% Compatibility
 \pgfqkeys{/pgf/arrow keys}{radius/.style={/pgf/arrow keys/inset={#1}}} % should be removed after v0.6

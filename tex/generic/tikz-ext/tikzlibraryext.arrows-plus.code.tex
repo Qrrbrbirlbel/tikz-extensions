@@ -30,30 +30,33 @@
 
 
 % For bended arrows the shifting can't simply be done by a transformation
-% it must be done by the arrow system itself via the sep key.
-% For this to work as expected, the sep will need to be sneaked into
-% the options of the first or last arrow tip.
-\def\tikzext@arrow@sneakstart#1\pgf@stop{%
+\def\tikzext@arrow@sneak#1\pgf@stop#2{%
   \unless\ifdim\tikzext@arrow@shift@=0pt
-    \def\pgf@start@tip@sequence{\pgf@arrow@handle{_}{\pgfarrowsep=\tikzext@arrow@shift@\relax}#1}%
-  \fi
-}
-\def\tikzext@arrow@sneakend#1\pgf@stop{%
-  \unless\ifdim\tikzext@arrow@shift@=0pt
-    \def\pgf@end@tip@sequence{#1\pgf@arrow@handle{_}{\pgfarrowsep=\tikzext@arrow@shift@\relax}}%
+    \edef\tikzext@temp##1{%
+      \def\noexpand#2{%
+        ##1%
+        \noexpand\pgf@arrow@handle{_}{\pgfarrowsep=\tikzext@arrow@shift@\relax}%
+      }%
+    }%
+    \tikzext@temp{#1}%
   \fi
 }
 
 %
 % Arrow keys
 %
+\pgfkeysdef{/tikz/ext/angle pos >}{%
+  \pgfkeysvalueof{/tikz/pos/.@cmd}(#1-\tikz@timer@start@angle)/(\tikz@timer@end@angle-\tikz@timer@start@angle)\pgfeov}
 \tikzextset{%
   every softpath arrows/.code=
     \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
   every arc arrows/.code=
+    \pgfkeysdef{/tikz/angle pos <}{\pgfkeysvalueof{/tikz/ext/angle pos >/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/angle pos <}{\pgfkeysvalueof{/tikz/ext/angle pos </.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
+  angle pos </.code=\pgfkeyssetvalue{/tikz/ext/pos <}{(#1-\tikz@timer@start@angle)/(\tikz@timer@end@angle-\tikz@timer@start@angle)},
   softpath arrows/.default=,
   softpath arrows/.code={%
     \begingroup
@@ -69,11 +72,11 @@
           \pgfscope
             \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
               \tikzext@arrow@evalshift\pgf@start@tip@sequence
-              \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+              \expandafter\tikzext@arrow@sneak\pgf@start@tip@sequence\pgf@stop\pgf@start@tip@sequence
             }%
             \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
               \tikzext@arrow@evalshift\pgf@end@tip@sequence
-              \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+              \expandafter\tikzext@arrow@sneak\pgf@end@tip@sequence\pgf@stop\pgf@end@tip@sequence
             }%
             \pgfset{tips}%
             \pgftransformreset
@@ -99,11 +102,11 @@
             \pgfscope
               \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
                 \tikzext@arrow@evalshift\pgf@start@tip@sequence
-                \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+                \expandafter\tikzext@arrow@sneak\pgf@start@tip@sequence\pgf@stop\pgf@start@tip@sequence
               }%
               \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
                 \tikzext@arrow@evalshift\pgf@end@tip@sequence
-                \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+                \expandafter\tikzext@arrow@sneak\pgf@end@tip@sequence\pgf@stop\pgf@end@tip@sequence
               }%
               \pgfset{tips}%
               \tikzext@arrow@arcpath
@@ -168,11 +171,11 @@
       }%
       \pgfutil@ifxempty\pgf@start@tip@sequence{}{%
         \tikzext@arrow@evalshift\pgf@start@tip@sequence
-        \expandafter\tikzext@arrow@sneakstart\pgf@start@tip@sequence\pgf@stop
+        \expandafter\tikzext@arrow@sneak\pgf@start@tip@sequence\pgf@stop\pgf@start@tip@sequence
       }%
       \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
         \tikzext@arrow@evalshift\pgf@end@tip@sequence
-        \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+        \expandafter\tikzext@arrow@sneak\pgf@end@tip@sequence\pgf@stop\pgf@end@tip@sequence
       }%
       \pgfsyssoftpath@getcurrentpath\tikz@temp
       \pgfprocesssplitsubpath\tikz@temp
@@ -303,7 +306,7 @@
       \pgfsetarrowsend{#3}%
       \pgfutil@ifxempty\pgf@end@tip@sequence{}{%
         \tikzext@arrow@evalshift\pgf@end@tip@sequence
-        \expandafter\tikzext@arrow@sneakend\pgf@end@tip@sequence\pgf@stop
+        \expandafter\tikzext@arrow@sneak\pgf@end@tip@sequence\pgf@stop\pgf@end@tip@sequence
         \ifdim\pgf@decorate@inputsegmenttime pt=1pt % something weird for 1.0
           \def\pgf@decorate@inputsegmenttime{1}%
         \fi

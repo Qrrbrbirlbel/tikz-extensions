@@ -14,8 +14,8 @@
 \begin{pgflibrary}{ext.arrows}
   This library adds arrows to \pgfname/\tikzname.
   
-  \inspiration{ArrowLoop-Q,ArrowHug-Q,ArrowUntipped1-Q,ArrowUntipped2-Q}
-              {ArrowLoop-A,ArrowHug-A,ArrowUntipped1-A,ArrowUntipped2-A}
+  \inspiration{ArrowLoop-Q,ArrowHug-Q,ArrowUntipped1-Q,ArrowUntipped2-Q,DoubleTipQ}
+              {ArrowLoop-A,ArrowHug-A,ArrowUntipped1-A,ArrowUntipped2-A,DoubleTipA}
 \end{pgflibrary}
 \begin{multicols}{2}
 The arrow tips of the \referenceLibraryandIndexO{arrows.meta} library always
@@ -273,6 +273,26 @@ Use the \referenceKeyandIndexO[/pgf/arrow keys/]{length} key to set up the radiu
 
     On |double| lines, the arrow tip will not look correct.
 \end{arrowtip}
+\begin{arrowtipsimple}{\extus Double Stealth}
+  This arrow tip is similar to the original \referenceArrowtipandIndexO{Stealth},
+  its back is left open so that it aligns neatly to a |double|d path.
+\end{arrowtipsimple}
+\begin{arrowtipsimple}{\extus Double Triangle}
+  This arrow tip is similar to the original \referenceArrowtipandIndexO{Triangle},
+  its back is left open so that it aligns neatly to a |double|d path.
+\end{arrowtipsimple}
+\begin{arrowtipsimple}{\extus Double Cap}
+  This arrow tip closes a |double|d line so that it not left open.
+\end{arrowtipsimple}
+\begin{codeexample}[preamble=\usepgflibrary{ext.arrows}]
+\begin{tikzpicture}
+\draw[
+  ext_Double Cap-ext_Double Stealth,
+  double distance=1cm,
+  line width=3mm
+] (0,0) to[bend left] (right:9);
+\end{tikzpicture}
+\end{codeexample}
 \end{multicols}
 \tikzset{external/export/.try=true}%
 \endinput

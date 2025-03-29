@@ -32,7 +32,12 @@ this specifies the position of that sequence.
 This is an alias for \referenceKeyandIndex{pos},
 if an end arrow tip sequence is provided, it is placed at this position.
 \end{key}
-
+\begin{key}{/\tikzext/angle pos <=\meta{angle}}
+For tips along an arc the angle along that arc can be specified for the start tip sequence.
+\end{key}
+\begin{key}{/\tikzext/angle pos >=\meta{angle}}
+For tips along an arc the angle along that arc can be specified for the end tip sequence.
+\end{key}
 \begin{key}{/\tikzext/arrow shift mode=\meta{shift mode} (initially total length)}
 This key is used to set the \meta{shift mode} for the arrow tip.
 It can be one of the following.
@@ -175,6 +180,11 @@ This key adds arrow tips to the previous path segment (a curve or a line).
 
 \begin{stylekey}{/\tikzext/every softpath arrows (initially \{\})}
 This style will be applied for every instance of |softpath arrows| (key version, not the pic).
+It also sets up forwarding
+\begin{itemize}
+  \item from |/tikz/pos >| to |/tikz/ext/pos >| and
+  \item from |/tikz/pos <| to |/tikz/ext/pos >|.
+\end{itemize}
 \end{stylekey}
 \end{key}
 
@@ -183,6 +193,13 @@ For |arc|s the following key needs to be used directly after the |arc| path oper
 This key adds arrow tips to the previous arc segment.
 \begin{stylekey}{/\tikzext/every arc arrows (initially \{\})}
 This style will be applied for every instance of |arc arrows|.
+It also sets up forwarding
+\begin{itemize}
+  \item from |/tikz/pos >| to |/tikz/ext/pos >|,
+  \item from |/tikz/pos <| to |/tikz/ext/pos >| as well as
+  \item from |/tikz/angle pos >| to |/tikz/ext/angle pos >| and
+  \item from |/tikz/angle pos <| to |/tikz/ext/angle pos >|.
+\end{itemize}
 \end{stylekey}
 
 \paragraph{Tip:}

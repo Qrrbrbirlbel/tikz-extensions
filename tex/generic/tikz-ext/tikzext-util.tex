@@ -6,8 +6,8 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikzextversion{0.6}
-\def\tikzextversionnumber{8}
+\def\tikzextversion{0.6.1}
+\def\tikzextversionnumber{9}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
 \def\pgfextset{\pgfqkeys{/pgf/ext}}
 \gdef\tikzextutil@compatwarning@counter{0}
@@ -150,8 +150,11 @@
   %
   compat/.is choice, compat/.default=warn,
   /tikz-ext/compat/add library/.code 2 args={%
-    \tikzextset{compat/#1/.is choice, compat/#1/.default=#2}%
-    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
+    \tikzextset{
+      compat/#1/.is choice,
+      compat/#1/.default=#2,
+      compat/#1/0.6.1/.style={/tikz/ext/compat/#1/0.6}}%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,0.6.1,newest,warn\do{%
       \pgfkeys@expanded{%
         \noexpand\tikzextset{%
           compat/\tikzext@temp/.append style=%
@@ -161,12 +164,8 @@
         {\noexpand\pgfkeyssetvalue{/tikz/ext/compat/#1}{\tikzext@temp}}%
     }%
   },
-  % /handlers/.ext_compat to warn/.code={%
-  %   \edef\tikz@temp{\expandafter\tikzext@compat@stripext\pgfkeyscurrentpath\tikzext@stop}%
-  %   \tikzextset{compat/#1/warn/.append code/.expanded=\noexpand}
-  % },
 }
-% \def\tikzext@compat@stripext#1/ext/#2\tikzext@stop{#1/#2}
+
 \def\tikzext@temp#1{%
   \pgfkeysedef{/tikz/ext/compat/#1}{%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/arrows}                {#1}%
@@ -174,7 +173,7 @@
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/misc}                  {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/nodes}                 {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/node-families}         {#1}%
-    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/patterns.images}        {#1}%
+    \noexpand\pgfkeyssetvalue{/tikz/ext/compat/patterns.images}       {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.arcto}           {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.ortho}           {#1}%
     \noexpand\pgfkeyssetvalue{/tikz/ext/compat/paths.timer}           {#1}%
@@ -189,6 +188,7 @@
   }}
 \tikzext@temp{pre 0.6}
 \tikzext@temp{0.6}
+\tikzextset{compat/0.6.1/.style={/tikz/ext/compat/0.6}}
 \tikzext@temp{newest}
 \tikzext@temp{warn}
 \tikzextset{compat=warn}

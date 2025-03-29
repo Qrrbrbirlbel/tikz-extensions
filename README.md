@@ -13,7 +13,7 @@ Name: Qrrbrbirlbel
 This is not a LaTeX package but a collection of libraries for PGF and TikZ;
 
  * `ext.arrows` provides additional arrow tips.
-   * Many of the standard `arrows.meta` library's get “Centered” and “Untipped” alternative.
+   * Many of the standard `arrows.meta` library's tips get “Centered” and “Untipped” alternatives.
    * Furthermore, the arrow tips `ext_Hug Cap` for connecting circles neatly and `ext_Loop` are provided.
  * `ext.arrows-plus` allows to place arrow tips along a path.
    
