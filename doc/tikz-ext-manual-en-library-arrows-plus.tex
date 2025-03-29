@@ -166,7 +166,20 @@ This library provides the following pics:
   It supports the |pos <| key.
   
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
-    this will not work as expected. Use the |arc arrows| key instead.
+    this will not work as expected. Use the |/tikz/ext/arc arrows| key instead.
+\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
+\ttfamily
+\foreach[count=\y] \shiftmode in {off, total length, length until line end}
+  \draw[ext/arrow shift mode=\shiftmode] (0, -\y  )
+                to[bend  left] pic {ext/softpath arrow=>}    ++(right:2)
+                to[bend  left] pic {ext/softpath arrow=>>.>} ++(right:2)
+                                             node[below right] {\shiftmode}
+    ++(down:.4) to[bend right] pic {ext/softpath arrow=>>.>} ++( left:2)
+                to[bend right] pic {ext/softpath arrow=>}    ++( left:2);
+\draw[thin, gray] (1,-.5) -- +(down:3) (3,-.5) -- +(down:3);
+\end{tikzpicture}
+\end{codeexample}
 \end{pictype}
 \begin{pictype}{ext/softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
   This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
@@ -198,9 +211,22 @@ It also sets up forwarding
   \item from |/tikz/pos >| to |/tikz/ext/pos >|,
   \item from |/tikz/pos <| to |/tikz/ext/pos >| as well as
   \item from |/tikz/angle pos >| to |/tikz/ext/angle pos >| and
-  \item from |/tikz/angle pos <| to |/tikz/ext/angle pos >|.
+  \item from |/tikz/angle pos <| to |/tikz/ext/angle pos <|.
 \end{itemize}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.arrows-plus}]
+\begin{tikzpicture}
+\draw (0,0) -- (135:1)
+      (0,0) -- (225:1) [help lines];
+\draw[arrows={[bend] Stealth-Latex}]
+  (120:1) arc[start angle=120,
+                end angle=240, radius=1]
+  [ext/arc arrows={angle pos <=135,
+                   angle pos >=225,
+                   arrows=[red]}];
+\end{tikzpicture}
+\end{codeexample}
 \end{stylekey}
+
 
 \paragraph{Tip:}
 Use an arc with the full 360${}^\circ$ to place bended arrow tips along a circle or an ellipse.
