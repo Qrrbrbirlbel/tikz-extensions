@@ -32,10 +32,10 @@ this specifies the position of that sequence.
 This is an alias for \referenceKeyandIndex{pos},
 if an end arrow tip sequence is provided, it is placed at this position.
 \end{key}
-\begin{key}{/\tikzext/angle pos <=\meta{angle}}
+\begin{key}{/\tikzext/pos < angle=\meta{angle}}
 For tips along an arc the angle along that arc can be specified for the start tip sequence.
 \end{key}
-\begin{key}{/\tikzext/angle pos >=\meta{angle}}
+\begin{key}{/\tikzext/pos > angle=\meta{angle}}
 For tips along an arc the angle along that arc can be specified for the end tip sequence.
 \end{key}
 \begin{key}{/\tikzext/arrow shift mode=\meta{shift mode} (initially total length)}
@@ -144,7 +144,7 @@ This library provides the following pics:
   
   This obviously is best used as a pic along a path segment that supports it.
   It \emph{does not} support bended arrow tips.
-\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{codeexample}[preamble=\usetikzlibrary{arrows.meta, bending, ext.arrows-plus}]
 \begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
 \ttfamily
 \foreach[count=\y] \shiftmode in {off, total length, length until line end}
@@ -167,7 +167,7 @@ This library provides the following pics:
   
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
     this will not work as expected. Use the |/tikz/ext/arc arrows| key instead.
-\begin{codeexample}[preamble=\usetikzlibrary{bending, ext.arrows-plus}]
+\begin{codeexample}[preamble=\usetikzlibrary{arrows.meta, bending, ext.arrows-plus}]
 \begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
 \ttfamily
 \foreach[count=\y] \shiftmode in {off, total length, length until line end}
@@ -210,18 +210,18 @@ It also sets up forwarding
 \begin{itemize}
   \item from |/tikz/pos >| to |/tikz/ext/pos >|,
   \item from |/tikz/pos <| to |/tikz/ext/pos >| as well as
-  \item from |/tikz/angle pos >| to |/tikz/ext/angle pos >| and
-  \item from |/tikz/angle pos <| to |/tikz/ext/angle pos <|.
+  \item from |/tikz/pos > angle| to |/tikz/ext/pos > angle| and
+  \item from |/tikz/pos < angle| to |/tikz/ext/pos < angle|.
 \end{itemize}
-\begin{codeexample}[preamble=\usetikzlibrary{ext.arrows-plus}]
+\begin{codeexample}[preamble=\usetikzlibrary{arrows.meta, ext.arrows-plus}]
 \begin{tikzpicture}
 \draw (0,0) -- (135:1)
       (0,0) -- (225:1) [help lines];
 \draw[arrows={[bend] Stealth-Latex}]
   (120:1) arc[start angle=120,
                 end angle=240, radius=1]
-  [ext/arc arrows={angle pos <=135,
-                   angle pos >=225,
+  [ext/arc arrows={pos < angle=135,
+                   pos > angle=225,
                    arrows=[red]}];
 \end{tikzpicture}
 \end{codeexample}

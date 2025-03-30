@@ -45,18 +45,18 @@
 %
 % Arrow keys
 %
-\pgfkeysdef{/tikz/ext/angle pos >}{%
+\pgfkeysdef{/tikz/ext/pos > angle}{%
   \pgfkeysvalueof{/tikz/pos/.@cmd}(#1-\tikz@timer@start@angle)/(\tikz@timer@end@angle-\tikz@timer@start@angle)\pgfeov}
 \tikzextset{%
   every softpath arrows/.code=
     \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
   every arc arrows/.code=
-    \pgfkeysdef{/tikz/angle pos >}{\pgfkeysvalueof{/tikz/ext/angle pos >/.@cmd}##1\pgfeov}%
-    \pgfkeysdef{/tikz/angle pos <}{\pgfkeysvalueof{/tikz/ext/angle pos </.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/pos > angle}{\pgfkeysvalueof{/tikz/ext/pos > angle/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/pos < angle}{\pgfkeysvalueof{/tikz/ext/pos < angle/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos >}{\pgfkeysvalueof{/tikz/pos/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/pos <}{\pgfkeyssetvalue{/tikz/ext/pos <}{##1}},
-  angle pos </.code=\pgfkeyssetvalue{/tikz/ext/pos <}{(#1-\tikz@timer@start@angle)/(\tikz@timer@end@angle-\tikz@timer@start@angle)},
+  pos < angle/.code=\pgfkeyssetvalue{/tikz/ext/pos <}{(#1-\tikz@timer@start@angle)/(\tikz@timer@end@angle-\tikz@timer@start@angle)},
   softpath arrows/.default=,
   softpath arrows/.code={%
     \begingroup
