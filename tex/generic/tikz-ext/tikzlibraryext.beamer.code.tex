@@ -1,0 +1,227 @@
+% Copyright 2024 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\tikzextset{
+  ignore line width/.value forbidden,
+  ignore line width/.style={
+    /pgf/local bounding box=tikzext@ilw,
+    /tikz/execute at end scope/.expanded={%
+      \global\pgf@picminx=\the\pgf@picminx\relax
+      \global\pgf@picmaxx=\the\pgf@picmaxx\relax
+      \global\pgf@picminy=\the\pgf@picminy\relax
+      \global\pgf@picmaxy=\the\pgf@picmaxy\relax
+    },
+    /tikz/execute at end scope={%
+      \pgf@protocolsizes\pgf@lbb@minx@tikzext@ilw\pgf@lbb@miny@tikzext@ilw
+      \pgf@protocolsizes\pgf@lbb@maxx@tikzext@ilw\pgf@lbb@maxy@tikzext@ilw
+    }%
+  },
+  ext/max bounding box/.style={
+    /tikz/execute at end picture={%
+      \pgfutil@IfUndefined{tikzext@maxbb@#1@prev}{%
+        \tikzext@atenddocument{%
+          \immediate\write\pgfutil@auxout{%
+            \noexpand\expandafter\gdef\noexpand\csname tikzext@maxbb@#1@next\endcsname
+              {\csname tikzext@maxbb@#1@prev\endcsname}%
+          }%
+        }%
+        \tikzext@@maxbb@set{#1}%
+      }{%
+        \expandafter\expandafter\expandafter\tikzext@@maxbb@get\csname tikzext@maxbb@#1@prev\endcsname
+        \tikzext@@maxbb@set{#1}%
+      }%
+      \pgfutil@IfUndefined{tikzext@maxbb@#1@next}{}{%
+        \expandafter\expandafter\expandafter\tikzext@@maxbb@get\csname tikzext@maxbb@#1@next\endcsname
+      }%
+    }%
+  }%
+}
+\def\tikzext@@maxbb@get#1#2#3#4{%
+  \ifdim#1<\pgf@picminx\global\pgf@picminx#1\fi
+  \ifdim#3>\pgf@picmaxx\global\pgf@picmaxx#3\fi
+  \ifdim#2<\pgf@picminy\global\pgf@picminy#2\fi
+  \ifdim#4>\pgf@picmaxy\global\pgf@picmaxy#4\fi}
+\def\tikzext@@maxbb@set#1{%
+  \expandafter\xdef\csname tikzext@maxbb@#1@prev\endcsname
+    {{\the\pgf@picminx}{\the\pgf@picminy}{\the\pgf@picmaxx}{\the\pgf@picmaxy}}%
+}%
+
+\ifcsname @ifclassloaded\endcsname % latex?
+  \let\tikzext@atenddocument\AtEndDocument
+  \@ifclassloaded{beamer}{% beamer?
+  }{%
+    \expandafter\endinput
+  }%
+\else
+  \def\tikzext@atenddocument#1{%
+    \pgfutil@everybye\expandafter{\the\pgfutil@everybye#1}%
+  }%
+  \expandafter\endinput
+\fi
+
+\newcounter{tikzextbb}
+\resetcounteronoverlays{tikzextbb}
+\tikzextset{
+  sync bounding box/.code={%
+    \stepcounter{tikzextbb}%
+    \tikzextset{max bounding box={beamer-\the\value{tikzextbb}}}%
+  }
+}
+
+\long\def\tikzext@beamerfunction@alt      #1#2{\alt      <#1>{\tikz@@command@path#2;}{\tikz@path@do@at@end}}
+\long\def\tikzext@beamerfunction@uncover  #1#2{\uncover  <#1>{\tikz@@command@path#2;}\tikz@path@do@at@end}
+\long\def\tikzext@beamerfunction@visible  #1#2{\visible  <#1>{\tikz@@command@path#2;}\tikz@path@do@at@end}
+\long\def\tikzext@beamerfunction@invisible#1#2{\invisible<#1>{\tikz@@command@path#2;}\tikz@path@do@at@end}
+\let\tikzext@beamerfunction\tikzext@beamerfunction@alt
+
+% Overwriting original dispatchers
+\long\def\tikz@eargnormalsemicolon<#1>#2;{\tikzext@beamerfunction{#1}{#2}}%
+\begingroup
+  \catcode`\;=\active
+  \long\global\def\tikz@eargactivesemicolon<#1>#2;{\tikzext@beamerfunction{#1}{#2}}%
+\endgroup
+
+\tikzextset{
+  ext/beamer/alt/.code args={#1#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
+  beamer function/.is choice,
+  beamer function/original/.code =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
+  beamer function/alt/.code      =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
+  beamer function/only/.code     =\let\tikzext@beamerfunction\tikzext@beamerfunction@only,
+  beamer function/uncover/.code  =\let\tikzext@beamerfunction\tikzext@beamerfunction@uncover,
+  beamer function/visible/.code  =\let\tikzext@beamerfunction\tikzext@beamerfunction@visible,
+  beamer function/invisible/.code=\let\tikzext@beamerfunction\tikzext@beamerfunction@invisible,
+  uncover/.code=%
+    \tikz@addoption{%
+      \beamer@noargsonslide<#1>%
+      \aftergroup\beamer@noargsonslide
+    },
+  cover/.code=%
+    \tikz@addoption{%
+      \beamer@endpause
+      \beamer@alt<#1>{\beamer@startcovered\gdef\beamer@endpause{\beamer@endcovered}}%
+                     {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
+      \aftergroup\beamer@noargsonslide
+    },
+  visible/.code=%
+    \tikz@addoption{%
+      \beamer@noargsvisibleonslide<#1>%
+      \aftergroup\beamer@noargsonslide
+    },
+  invisible/.code=%
+    \tikz@addoption{%
+      \beamer@endpause
+      \beamer@alt<#1>{\beamer@begininvisible\gdef\beamer@endpause{\beamer@endinvisible}}%
+                     {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
+      \aftergroup\beamer@noargsonslide
+    },
+  ext/uncover'/.style  ={/tikz/ext/cover={#1}},
+  ext/visible'/.style  ={/tikz/ext/invisible={#1}},
+  ext/cover'/.style    ={/tikz/ext/uncover={#1}},
+  ext/invisible'/.style={/tikz/ext/visible={#1}},
+  /handlers/.ext_</.code=\tikzext@beamer@handler#1\pgf@stop,
+  beamer shortcuts/.code=\pgfqkeys{/tikz/ext/beamer shortcuts}{#1},
+  beamer shortcuts/first char/.initial=uncover, % or visible
+  beamer shortcuts/@enable first char/.code 2 args={%
+    \pgfkeys@syntax@handlerstrue % \pgfkeys{/handlers/first char syntax=true}%
+    \pgfkeyssetvalue{/handlers/first char syntax/\expandafter\meaning\string#1}{#2}%
+  },
+  beamer shortcuts/enable first char </.style={/tikz/ext/beamer shortcuts/@enable first char={<}{\tikzext@beamer@firstchar}},
+  beamer shortcuts/enable first char/.style={/tikz/ext/beamer shortcuts/@enable first char={#1}{\tikzext@beamer@graphfirstchar}},
+  beamer shortcuts/enable handler/.code={\pgfkeysdef{/handlers/.<}{\pgfkeysvalueof{/handlers/.ext_<}##1\pgfeov}},
+}
+% first char syntax: <*overlay*>            → uses "first char"  = *overlay*
+%                    <*overlay*>'           → uses "first char"' = *overlay* (i.e. the inverse)
+%                    <*overlay*>  {options} → uses \only<*overlay*>{\pgfkeysalso{options}}
+%                    <*overlay*>' {options} → uses \alt<*overlay*>{}{\pgfkeysalso{options}} (i.e. the inverse)
+\def\tikzext@beamer@firstchar#1{\tikzext@beamer@firstchar@#1\pgf@stop}
+\def\tikzext@beamer@firstchar@<#1>{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
+    \pgfutil@gobble
+  }{%
+    \pgfutil@ifnextchar'{%
+      \tikzext@beamer@firstchar@apo{#1}%
+    }{%
+      \tikzext@beamer@firstchar@opts{#1}%
+    }%
+  }%
+}
+\def\tikzext@beamer@firstchar@opts#1#2\pgf@stop{%
+  \beamer@only<#1>{\pgfkeysalso{#2}}%
+}
+\def\tikzext@beamer@firstchar@apo#1'{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
+    \pgfutil@gobble
+  }{%
+    \tikzext@beamer@firstchar@apo@{#1}%
+  }%
+}
+\def\tikzext@beamer@firstchar@apo@#1#2\pgf@stop{%
+  \beamer@alt<#1>{}{\pgfkeysalso{#2}}%
+}
+
+\def\tikzext@beamer@graphfirstchar#1{\expandafter\tikzext@beamer@firstchar@\pgfutil@gobble#1\pgf@stop}
+
+% handler .ext_< = *overlay*>            → uses the key w/o options        on *overlay*
+%         .ext_< = *overlay*>'           → uses the key w/o options unless on *overlay*
+%         .ext_< = *overlay*>  {options} → uses the key  /w options        on *overlay*
+%         .ext_< = *overlay*>' {options} → uses the key  /w options unless on *overlay*
+\def\tikzext@beamer@handler#1>{%
+  \pgfutil@ifnextchar\pgf@stop
+    {\beamer@only<#1>{\pgfkeysalso{\pgfkeyscurrentpath}}}%
+    {%
+      \pgfutil@ifnextchar'%
+        {\tikzext@beamer@handler@apo{#1}}%
+        {\tikzext@beamer@handler@{#1}}%
+    }%
+}
+\def\tikzext@beamer@handler@#1#2\pgf@stop{%
+  \beamer@only<#1>{\pgfkeysalso{\pgfkeyscurrentpath={#2}}}%
+}
+\def\tikzext@beamer@handler@apo#1'{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \beamer@alt<#1>{}{\pgfkeysalso{\pgfkeyscurrentpath}}%
+    \pgfutil@gobble
+  }{%
+    \tikzext@beamer@handler@apo@opts{#1}%
+  }%
+}
+\def\tikzext@beamer@handler@apo@opts#1#2\pgf@stop{%
+  \beamer@alt<#1>{}{\pgfkeysalso{\pgfkeyscurrentpath={#2}}}%
+}
+
+\pgfqkeys{/tikz/graphs}{
+  ext/uncover/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/uncover={#1}}},
+  ext/visible/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/visible={#1}}},
+  ext/cover/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/cover={#1}}},
+  ext/invisible/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/invisible={#1}}},
+}
+\ifcsname tikz@library@graphs@loaded\endcsname
+  \tikzgraphsset{
+    new ->/.code n args={4}{%
+      \path [arrows=->,every new ->/.try] (#1\tikzgraphleftanchor)
+                              edge[#3] #4 (#2\tikzgraphrightanchor);},
+    new --/.code n args={4}{%
+        \path [arrows=-,every new --/.try] (#1\tikzgraphleftanchor)
+                              edge[#3] #4 (#2\tikzgraphrightanchor);},
+    new <->/.code n args={4}{%
+      \path [arrows=<->,every new <->/.try] (#1\tikzgraphleftanchor)
+                                edge[#3] #4 (#2\tikzgraphrightanchor);
+      \typeout{%
+        \noexpand\path [arrows=<->,every new <->/.try] (#1\tikzgraphleftanchor)
+                                          edge[#3] #4 (#2\tikzgraphrightanchor);}},
+    new -!-/.code n args={4}{},
+    new <-/.code n args={4}{%
+      \path [arrows=<-,every new <-/.try] (#1\tikzgraphleftanchor)
+                              edge[#3] #4 (#2\tikzgraphrightanchor);}}%
+\fi
