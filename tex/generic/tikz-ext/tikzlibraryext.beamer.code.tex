@@ -25,7 +25,7 @@
       \pgf@protocolsizes\pgf@lbb@maxx@tikzext@ilw\pgf@lbb@maxy@tikzext@ilw
     }%
   },
-  ext/max bounding box/.style={
+  max bounding box/.style={
     /tikz/execute at end picture={%
       \pgfutil@IfUndefined{tikzext@maxbb@#1@prev}{%
         \tikzext@atenddocument{%
@@ -91,19 +91,24 @@
 \endgroup
 
 \tikzextset{
-  ext/beamer/alt/.code args={#1#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
+  /utils/ext/only/.code 2 args={\only<#1>{\pgfkeysalso{#2}}},
+  /utils/ext/alt/.code args={#1#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
+  /utils/ext/temporal/.code n args={4}{\temporal<#1>{\pgfkeysalso{#2}{\pgfkeysalso{#3}{\pgfkeysalso{#4}}}}},
+  % beamer/temporal/.code args={#1#2#3#4}{\temporal<#1>{\pgfkeysalso{#3}}}
   beamer function/.is choice,
   beamer function/original/.code =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
   beamer function/alt/.code      =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
-  beamer function/only/.code     =\let\tikzext@beamerfunction\tikzext@beamerfunction@only,
+  beamer function/only/.code     =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
   beamer function/uncover/.code  =\let\tikzext@beamerfunction\tikzext@beamerfunction@uncover,
   beamer function/visible/.code  =\let\tikzext@beamerfunction\tikzext@beamerfunction@visible,
   beamer function/invisible/.code=\let\tikzext@beamerfunction\tikzext@beamerfunction@invisible,
+  uncover/.default=all,
   uncover/.code=%
     \tikz@addoption{%
       \beamer@noargsonslide<#1>%
       \aftergroup\beamer@noargsonslide
     },
+  cover/.default=all,
   cover/.code=%
     \tikz@addoption{%
       \beamer@endpause
@@ -111,11 +116,13 @@
                      {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
       \aftergroup\beamer@noargsonslide
     },
+  visible/.default=all,
   visible/.code=%
     \tikz@addoption{%
       \beamer@noargsvisibleonslide<#1>%
       \aftergroup\beamer@noargsonslide
     },
+  invisible/.default=all,
   invisible/.code=%
     \tikz@addoption{%
       \beamer@endpause
@@ -129,12 +136,18 @@
   ext/invisible'/.style={/tikz/ext/visible={#1}},
   /handlers/.ext_</.code=\tikzext@beamer@handler#1\pgf@stop,
   beamer shortcuts/.code=\pgfqkeys{/tikz/ext/beamer shortcuts}{#1},
+  beamer shortcuts/aot/.code={%
+    \pgfkeysdef{/tikz/alt}{\pgfkeysvalueof{/utils/ext/alt/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/only}{\pgfkeysvalueof{/utils/ext/only/.@cmd}##1\pgfeov}%
+    \pgfkeysdef{/tikz/temporal}{\pgfkeysvalueof{/utils/ext/temporal/.@cmd}##1\pgfeov}%
+  },
   beamer shortcuts/first char/.initial=uncover, % or visible
   beamer shortcuts/@enable first char/.code 2 args={%
     \pgfkeys@syntax@handlerstrue % \pgfkeys{/handlers/first char syntax=true}%
     \pgfkeyssetvalue{/handlers/first char syntax/\expandafter\meaning\string#1}{#2}%
   },
   beamer shortcuts/enable first char </.style={/tikz/ext/beamer shortcuts/@enable first char={<}{\tikzext@beamer@firstchar}},
+  beamer shortcuts/enable first char/.value required,
   beamer shortcuts/enable first char/.style={/tikz/ext/beamer shortcuts/@enable first char={#1}{\tikzext@beamer@graphfirstchar}},
   beamer shortcuts/enable handler/.code={\pgfkeysdef{/handlers/.<}{\pgfkeysvalueof{/handlers/.ext_<}##1\pgfeov}},
 }
@@ -200,11 +213,20 @@
   \beamer@alt<#1>{}{\pgfkeysalso{\pgfkeyscurrentpath={#2}}}%
 }
 
+% ext/ keys need special handling in graphs library
 \pgfqkeys{/tikz/graphs}{
-  ext/uncover/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/uncover={#1}}},
-  ext/visible/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/visible={#1}}},
-  ext/cover/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/cover={#1}}},
-  ext/invisible/.style={/tikz/graphs/@edges styling/.append={,/tikz/ext/invisible={#1}}},
+  ext/uncover/.style={
+    /tikz/graphs/@edges styling/.append={,/tikz/ext/uncover={#1}},
+    /tikz/ext/uncover={#1}},
+  ext/visible/.style={
+    /tikz/graphs/@edges styling/.append={,/tikz/ext/visible={#1}},
+    /tikz/ext/visible={#1}},
+  ext/cover/.style={
+    /tikz/graphs/@edges styling/.append={,/tikz/ext/cover={#1}}
+    /tikz/ext/cover={#1}},
+  ext/invisible/.style={
+    /tikz/graphs/@edges styling/.append={,/tikz/ext/invisible={#1}}
+    /tikz/ext/invisible={#1}}
 }
 \ifcsname tikz@library@graphs@loaded\endcsname
   \tikzgraphsset{

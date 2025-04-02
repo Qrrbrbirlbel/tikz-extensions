@@ -1,0 +1,198 @@
+% !TeX TS-program = lualatex
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2025 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\section{Beamer with \tikzname}
+\label{tikzlibrary:beamer}
+\begin{tikzlibrary}{ext.beamer}
+  This library can help create \tikzname\ diagrams in \referencePackageandIndexO{beamer}.
+\end{tikzlibrary}
+
+\subsection{Helpers}
+\begin{multicols*}{2}
+\begin{key}{/\tikzext/ignore line width}
+If this key is used on a scope (or the \tikzname\ picture itself),
+the line widths of paths will not contribute to the bounding box
+of the diagram.
+\end{key}
+\begin{key}{/\tikzext/max bounding box=\meta{name}}
+This key is to be used on multiple |tikzpicture| environments.
+All \tikzname\ diagram with the same \meta{name} will have the same bounding box.
+
+This uses the \filetype{aux} file.
+\end{key}
+
+\subsection{Beamer}
+While \tikzname\ has some rudimentary support for the |beamer| class,
+i.\,e. in the form of \texttt{\string\path<}\meta{overlay specification}\texttt{>},
+this uses Beamer's |\alt| command internally so that on overlays
+that are not included in \meta{overlay specification}, the path will not be typeset
+and will therefore not contribute to the diagram's bounding box.
+
+This in turn will lead to the diagram \enquote{jumping around}
+as every overlay will contain a different diagram with different dimensions.
+The \referencePackageandIndexO{aobs-tikz} package solves this by setting the |opacity| to zero
+for all those slides an element shouldn't be visisble on.
+
+I believe we can do better.
+
+Though, remember that for many simple diagrams,
+you can simply use \referenceCommandandIndexO{\onslide}.
+The following diagram will show
+\begin{itemize}
+\item nodes and edges transparent on overlay 1,
+\item nodes fully visible and edges transparent on overlay 2 and
+\item all elements fully visible on overlay 3.
+\end{itemize}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.beamer} \setbeamercovered{transparent},code only]
+\begin{tikzpicture}
+\onslide<2->
+\path node (a)          {A}
+      node (b) at (1,2) {B};
+\onslide<3->
+\path (a) edge[bend right] (b);
+\end{tikzpicture}
+\end{codeexample}
+\subsubsection{Stop Jumping}
+One solution to this is to have the same \tikzname\ diagram
+have the same size on every overlay.
+The |/tikz/ext/ignore line width| might help if all that changes between overlays
+is the line width of elements.
+
+Another one is the following key.
+\begin{key}{/\tikzext/sync bounding box}
+This key uses |/tikz/ext/max bounding box| with a specific \meta{name}
+that is stable across overlays.
+\end{key}
+
+\subsubsection{Beamer Function and keys}
+\begin{key}{/\tikzext/beamer function=\mchoice{original, alt, only, uncover, visible, invisible}}
+This key changes how the \meta{overlay specification} in
+\texttt{\string\path<}\meta{overlay specification}\texttt{>}
+is applied internally.
+The choices |original|, |alt| and |only| are all the same
+and will result in the default behavior of \tikzname.
+
+The same overlays as above can be created now with the following diagram.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.beamer} \setbeamercovered{transparent},code only]
+\begin{tikzpicture}[ext/beamer function=uncover]
+\path<2-> node (a)          {A}
+          node (b) at (1,2) {B};
+\path<3-> (a) edge[bend right] (b);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\begin{keylist}[/\tikzext]{%
+    uncover=\meta{overlay specification} (default all),
+      cover=\meta{overlay specification} (default all),
+    visible=\meta{overlay specification} (default all),
+  invisible=\meta{overlay specification} (default all)%
+}
+These keys work similar to Beamer's own |\onlside| key
+but only apply to the element it is used on.
+
+The implementation of this is rather experimental and should be used carefully.
+Multiple uses of these key on various element on a path will not play nicely.
+
+The same overlays as above can be created with the first of the following diagram.
+In the second diagram |ext/uncover| is only used on the (actual) empty path.
+Just like |draw|/|\draw|, the nodes will not observe the request to be covered on overlay 1.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.beamer} \setbeamercovered{transparent},code only]
+\begin{tikzpicture}
+\path[nodes={ext/uncover=2-}]
+  node (a)          {A}
+  node (b) at (1,2) {B}
+  (a) edge[bend right, ext/uncover=3-] (b);
+\end{tikzpicture}
+\begin{tikzpicture}
+\draw[ext/uncover=2-]
+  node (a)          {A}
+  node (b) at (1,2) {B};
+\end{tikzpicture}
+\end{codeexample}
+\end{keylist}
+
+Of course, an extension to Beamer is not complete without the following keys.
+\begin{key}{/\utilsext/only=\marg{overlay specification}\marg{key-value list}}
+  Applies the \meta{key-value list} only on \meta{overlay specification}.
+\end{key}
+\begin{key}{/\utilsext/alt=\marg{overlay specification}\marg{default kv list}\marg{alternative kv list}}
+  Applies the \meta{default kv list} on \meta{overlay specification},
+  otherwise the \meta{alternative kv list}.
+\end{key}
+\begin{key}{/\utilsext/temporal=\marg{overlay specification}%
+  \marg{before kv list}\marg{default kv list}\marg{after kv list}}
+  Applies the specific list depending whether the current overlay is before,
+  on or after the specified \meta{overlay specification}.
+\end{key}
+\subsubsection{Beamer Shortcuts}
+But, of course, no one wants to write |/utils/ext/only={2}{red}| to
+make an element red on overlay 2.
+\begin{key}{/\tikzext/beamer shortcuts=\marg{key-value list}}
+  This executes the \meta{key-value list} in the namespace |/tikz/ext/beamer shortcuts|.
+\end{key}
+\begin{key}{/\tikzext/beamer shortcuts/aot}
+  This forwards the keys \referenceKeyandIndex{alt}, \referenceKeyandIndex{only}
+  and \referenceKeyandIndex{temporal} to the aforementioned homonymous |/utils/ext| keys.
+\end{key}
+\begin{key}{/\tikzext/beamer shortcuts/first char=\mchoice{uncover, cover, visible, invisible} (initially uncover)}
+  The value of this key will be used for the first char shorthands that can be enabled with the following keys.
+\end{key}
+\begin{key}{/\tikzext/beamer shortcuts/enable first char <}
+  This install a \enquote{first char} handler with the character |<|.
+  
+  This allows the example diagram to specified in the following way.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.beamer} \setbeamercovered{transparent},code only]
+\begin{tikzpicture}[ext/beamer shortcuts={enable first char <}]
+\node (a) [<2->]          {A};
+\node (b) [<2->] at (1,2) {B};
+\path (a) edge[<3->, bend right] (b);
+\end{tikzpicture}
+\end{codeexample}
+
+  Internally, this will converted to |ext/uncover=|\marg{overlay specification}.
+  Actually, the full syntax is:
+  \begin{quote}
+      |<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}
+  \end{quote}
+  
+  If no \meta{options} are present the \meta{overlay specification} will
+  be forwarded to one of the four keys |ext/uncover|, |ext/cover|, |ext/visible|, |ext/invisible|
+  -- depending on |ext/beamer shortcuts/first char|, see above.
+  The optional |'| after |>| will invert the \meta{overlay specification}.
+  
+  If there are \meta{options} present, this syntax applies these only on \meta{overlay specifications},
+  or the inverse of them with the |'|.
+\end{key}
+\begin{key}{/\tikzext/beamer shortcuts/enable first char=\marg{character}}
+  As the |<| character might lead to problems as it conflicts with the \tikzname\ shorthand
+  of specifying arrow tip sequences
+  (i.\,e. the famous |<->|\footnote{Though, remember, you can always write \texttt{arrows = <->}.})
+  and the \referenceLibraryandIndexO{graphs} library's own first char syntax
+  an alternative is presented here.
+  
+  This key enables a first char syntax with \meta{character} where the full syntax is now:
+  \begin{quote}
+      \meta{character}|<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}
+  \end{quote}
+  
+  This means, the example diagram can be created in the following way.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.beamer} \setbeamercovered{transparent},code only]
+\begin{tikzpicture}[ext/beamer shortcuts={enable first char=?}]
+\node (a) [?<2->]          {A};
+\node (b) [?<2->] at (1,2) {B};
+\path (a) edge[?<3->, bend right] (b);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+%\newcolumn
+\end{multicols*}
+\endinput
