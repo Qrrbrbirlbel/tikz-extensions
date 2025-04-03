@@ -83,12 +83,19 @@ and multiplied with the |arrow shift factor|.
 The result of this evaluation is used to shift the arrow tip sequence
 in the tip's direction.
 
-\begin{key}{/\tikzext/arrow shift factor=\meta{value} (initially 0.5)}
-  This determines the shift factor.
+\begin{key}{/\tikzext/arrow shift factor start=\meta{value} (initially 0.5)}
+  This determines the shift factor for the start tip sequence.
   
   The default value is probably good for most cases.
 \end{key}
-
+\begin{key}{/\tikzext/arrow shift factor end=\meta{value} (initially 0.5)}
+  This determines the shift factor for the start tip sequence.
+  
+  The default value is probably good for most cases.
+\end{key}
+\begin{key}{/\tikzext/arrow shift factor=\meta{value}}
+  This sets both the start and end shift factor.
+\end{key}
 \subsection{Arrow pic types}
 
 This library provides the following pics:
@@ -167,6 +174,10 @@ This library provides the following pics:
   
   \paragraph{Note:} For arcs with an angle greater than 90${}^\circ$
     this will not work as expected. Use the |/tikz/ext/arc arrows| key instead.
+\end{pictype}
+\begin{pictype}{ext/softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
+  This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
+
 \begin{codeexample}[preamble=\usetikzlibrary{arrows.meta, bending, ext.arrows-plus}]
 \begin{tikzpicture}[>={Triangle[color=red]}, arrows={[bend]}, ultra thick]
 \ttfamily
@@ -180,9 +191,6 @@ This library provides the following pics:
 \draw[thin, gray] (1,-.5) -- +(down:3) (3,-.5) -- +(down:3);
 \end{tikzpicture}
 \end{codeexample}
-\end{pictype}
-\begin{pictype}{ext/softpath arrow}{\opt{|=|\meta{\rmfamily end tip specification}}}
-  This pic type is an alias for |softpath arrows = -|\meta{end tip specification}.
 \end{pictype}
 
 \subsection{Arrow keys}
