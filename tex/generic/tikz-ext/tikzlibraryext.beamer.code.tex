@@ -121,6 +121,8 @@
                      {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
       \aftergroup\beamer@noargsonslide
     },
+  aobs visible/.style={/utils/ext/alt={#1}{}{/tikz/opacity=0,/tikz/text opacity=0}},
+  aobs invisible/.style={/utils/ext/only={#1}{/tikz/opacity=0,/tikz/text opacity=0}},
   visible/.default=all,
   visible/.code=%
     \tikz@addoption{%
@@ -135,10 +137,12 @@
                      {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
       \aftergroup\beamer@noargsonslide
     },
-  ext/uncover'/.style  ={/tikz/ext/cover={#1}},
-  ext/visible'/.style  ={/tikz/ext/invisible={#1}},
-  ext/cover'/.style    ={/tikz/ext/uncover={#1}},
-  ext/invisible'/.style={/tikz/ext/visible={#1}},
+         uncover'/.style={/tikz/ext/cover={#1}},
+    aobs visible'/.style={/tikz/ext/aobs invisible={#1}},
+         visible'/.style={/tikz/ext/invisible={#1}},
+           cover'/.style={/tikz/ext/uncover={#1}},
+       invisible'/.style={/tikz/ext/visible={#1}},
+  aobs invisible'/.style={/tikz/ext/aobs visible={#1}},
   /handlers/.ext_</.code=\tikzext@beamer@handler#1\pgf@stop,
   beamer shortcuts/.code=\pgfqkeys{/tikz/ext/beamer shortcuts}{#1},
   beamer shortcuts/aot/.code={%
@@ -146,7 +150,7 @@
     \pgfkeysdef{/tikz/only}{\pgfkeysvalueof{/utils/ext/only/.@cmd}##1\pgfeov}%
     \pgfkeysdef{/tikz/temporal}{\pgfkeysvalueof{/utils/ext/temporal/.@cmd}##1\pgfeov}%
   },
-  beamer shortcuts/first char/.initial=uncover, % or visible
+  beamer shortcuts/first char/.is choice,
   beamer shortcuts/@enable first char/.code 2 args={%
     \pgfkeys@syntax@handlerstrue % \pgfkeys{/handlers/first char syntax=true}%
     \pgfkeyssetvalue{/handlers/first char syntax/\expandafter\meaning\string#1}{#2}%
@@ -156,6 +160,14 @@
   beamer shortcuts/enable first char/.style={/tikz/ext/beamer shortcuts/@enable first char={#1}{\tikzext@beamer@graphfirstchar}},
   beamer shortcuts/enable handler/.code={\pgfkeysdef{/handlers/.<}{\pgfkeysvalueof{/handlers/.ext_<}##1\pgfeov}},
 }
+\def\tikzext@temp#1{%
+  \pgfkeysdef{/tikz/ext/beamer shortcuts/first char/#1}{\pgfkeyssetvalue{/tikz/ext/beamer shortcuts/first char}{#1}}}
+\tikzext@temp{visible}
+\tikzext@temp{uncover}
+\tikzext@temp{cover}
+\tikzext@temp{aobs   visible}
+\tikzext@temp{aobs invisible}
+\pgfkeyssetvalue{/tikz/ext/beamer shortcuts/first char}{uncover}
 % first char syntax: <*overlay*>            → uses "first char"  = *overlay*
 %                    <*overlay*>'           → uses "first char"' = *overlay* (i.e. the inverse)
 %                    <*overlay*>  {options} → uses \only<*overlay*>{\pgfkeysalso{options}}
