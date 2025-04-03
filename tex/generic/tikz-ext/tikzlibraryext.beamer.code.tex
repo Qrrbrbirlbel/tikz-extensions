@@ -26,6 +26,11 @@
     }%
   },
   max bounding box/.style={
+    /tikz/execute at begin picture={%
+      \pgfutil@IfUndefined{tikzext@maxbb@#1@next}{}{%
+        \pgfkeys@expanded{\noexpand\tikzext@@maxbb@get\csname tikzext@maxbb@#1@next\endcsname}%
+      }%
+    },
     /tikz/execute at end picture={%
       \pgfutil@IfUndefined{tikzext@maxbb@#1@prev}{%
         \tikzext@atenddocument{%
