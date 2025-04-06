@@ -141,7 +141,6 @@
   /utils/ext/only/.code 2 args={\only<#1>{\pgfkeysalso{#2}}},
   /utils/ext/alt/.code args={#1#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
   /utils/ext/temporal/.code n args={4}{\temporal<#1>{\pgfkeysalso{#2}{\pgfkeysalso{#3}{\pgfkeysalso{#4}}}}},
-  % beamer/temporal/.code args={#1#2#3#4}{\temporal<#1>{\pgfkeysalso{#3}}}
   beamer function/.is choice,
   beamer function/original/.code =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,
   beamer function/alt/.code      =\let\tikzext@beamerfunction\tikzext@beamerfunction@alt,

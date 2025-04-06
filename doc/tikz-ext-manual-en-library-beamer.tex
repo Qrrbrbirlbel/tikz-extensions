@@ -15,9 +15,9 @@
   This library can help create \tikzname\ diagrams in the class Beamer\indexPackageO{beamer}.
 \end{tikzlibrary}
 
+%\begin{multicols*}{2}
 \subsection{Helpers}
 These helpers are always available, even if this library is loaded outside of Beamer.
-\begin{multicols*}{2}
 \begin{key}{/\tikzext/ignore line width}
 If this key is used on a scope (or the \tikzname\ picture itself),
 the line widths of paths will not contribute to the bounding box
@@ -26,8 +26,15 @@ of the diagram.
 \begin{key}{/\tikzext/max bounding box=\meta{name}}
 This key is to be used on multiple |tikzpicture| environments.
 All \tikzname\ diagram with the same \meta{name} will have the same bounding box.
+Refrain from using (unprotected) commas (|,|) in the \meta{name}.
 
-This uses the \filetype{aux} file.
+This uses the \filetype{aux} file and
+is therefore incompatible with the \referenceLibraryandIndexO{external} library.
+
+However, it is made compatible with the
+\referencePackageandIndexO{memoize} \cite{memoize} package,
+even if it takes a few compilations until it is stable again
+after a new diagram is added to the group.
 \end{key}
 
 \subsection{Beamer}
@@ -69,8 +76,12 @@ is the line width of elements.
 
 Another one is the following key.
 \begin{key}{/\tikzext/sync bounding box}
-This key uses |/tikz/ext/max bounding box| with a specific \meta{name}
+This key uses |ext/max bounding box| with a specific \meta{name}
 that is stable across overlays.
+
+If you find yourself often rearrange diagrams or changing overlays,
+you might be better off using the |ext/sync bounding box| key
+directly with a distinct \meta{name}.
 \end{key}
 
 \subsubsection{Beamer Function and keys}
@@ -215,5 +226,5 @@ Maybe this is a syntax that someone wants \dots
     \end{handler}
   \end{key}
 \end{ext_handler}
-\end{multicols*}
+%\end{multicols*}
 \endinput
