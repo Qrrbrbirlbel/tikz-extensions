@@ -10,6 +10,36 @@
   \input tikzext-util.tex
 \fi
 
+\unless\ifcsname ifmemoizing\endcsname
+  \expandafter\newif\csname ifmemoizing\endcsname
+\fi
+
+\let\tikzext@maxbb@list\pgfutil@gobble
+\def\tikzext@maxbb@write{%
+  \unless\ifx\tikzext@maxbb@list\pgfutil@gobble
+    \pgfutil@for\tikzext@temp:=\tikzext@maxbb@list\do{%
+      % if next is not existing (because of memoize)
+      % we just write the prev again
+      \immediate\write\pgfutil@auxout{%
+        \noexpand\expandafter\gdef\noexpand\csname tikzext@maxbb@\tikzext@temp @prev\endcsname{%
+          \csname tikzext@maxbb@\tikzext@temp @%
+            \ifcsname tikzext@maxbb@\tikzext@temp @next\endcsname next\else prev\fi
+          \endcsname
+        }%
+      }%
+    }%
+  \fi
+}
+\def\tikzext@maxbb@addtolist#1{%
+  \edef\pgf@marshal{\noexpand\pgfutil@in@{,#1,}{,\tikzext@maxbb@list,}}%
+  \pgf@marshal
+  \unless\ifpgfutil@in@
+    \xdef\tikzext@maxbb@list{\tikzext@maxbb@list,#1}%
+  \fi
+}
+\def\tikzext@maxbb@if#1#2#3{%
+  \ifcsname tikzext@maxbb@#1\endcsname#2\else#3\fi
+}
 \tikzextset{
   ignore line width/.value forbidden,
   ignore line width/.style={
@@ -25,51 +55,63 @@
       \pgf@protocolsizes\pgf@lbb@maxx@tikzext@ilw\pgf@lbb@maxy@tikzext@ilw
     }%
   },
-  max bounding box/.style={
-    /tikz/execute at begin picture={%
-      \pgfutil@IfUndefined{tikzext@maxbb@#1@next}{}{%
-        \pgfkeys@expanded{\noexpand\tikzext@@maxbb@get\csname tikzext@maxbb@#1@next\endcsname}%
+  max bounding box/.code={%
+    \tikzext@maxbb@if{#1@prev}{% not the first run
+      \pgfkeys@expanded{\noexpand\tikzext@maxbb@setbb\csname tikzext@maxbb@#1@prev\endcsname}%
+    }{% first run
+      \ifmemoizing
+        \mmzAbort
+      \fi
+    }%
+    \tikzext@maxbb@if{#1@next}{% not the first picture
+      \pgfkeys@expanded{\noexpand\tikzext@maxbb@setbb\csname tikzext@maxbb@#1@next\endcsname}%
+    }{% first picture
+      \tikzext@maxbb@addtolist{#1}%
+    }%
+    \ifmemoizing
+      \mmzset{context=\csname tikzext@maxbb@#1@prev\endcsname}%
+      \gtoksapp\mmzCCMemo{%
+        \csname tikzext@maxbb@addtolist\endcsname{#1}%
       }%
-    },
-    /tikz/execute at end picture={%
-      \pgfutil@IfUndefined{tikzext@maxbb@#1@prev}{%
-        \tikzext@atenddocument{%
-          \immediate\write\pgfutil@auxout{%
-            \noexpand\expandafter\gdef\noexpand\csname tikzext@maxbb@#1@next\endcsname
-              {\csname tikzext@maxbb@#1@prev\endcsname}%
-          }%
+    \fi
+    \tikzset{
+      execute at end picture={%
+        \tikzext@maxbb@setnext{#1}%
+        \tikzext@maxbb@if{#1@prev}{% not the first run
+          % if memoizing, check whether picture is bigger/different then prev
+          \ifmemoizing
+            \expandafter\ifx\csname tikzext@maxbb@#1@next\expandafter\endcsname\csname tikzext@maxbb@#1@prev\endcsname
+              % it's the same  
+            \else
+              % it is not the same
+              \mmzAbort
+            \fi
+          \fi
+        }{% first run
         }%
-        \tikzext@@maxbb@set{#1}%
-      }{%
-        \expandafter\expandafter\expandafter\tikzext@@maxbb@get\csname tikzext@maxbb@#1@prev\endcsname
-        \tikzext@@maxbb@set{#1}%
-      }%
-      \pgfutil@IfUndefined{tikzext@maxbb@#1@next}{}{%
-        \expandafter\expandafter\expandafter\tikzext@@maxbb@get\csname tikzext@maxbb@#1@next\endcsname
       }%
     }%
-  }%
+  }
 }
-\def\tikzext@@maxbb@get#1#2#3#4{%
-  \ifdim#1<\pgf@picminx\global\pgf@picminx#1\fi
-  \ifdim#3>\pgf@picmaxx\global\pgf@picmaxx#3\fi
-  \ifdim#2<\pgf@picminy\global\pgf@picminy#2\fi
-  \ifdim#4>\pgf@picmaxy\global\pgf@picmaxy#4\fi}
-\def\tikzext@@maxbb@set#1{%
-  \expandafter\xdef\csname tikzext@maxbb@#1@prev\endcsname
-    {{\the\pgf@picminx}{\the\pgf@picminy}{\the\pgf@picmaxx}{\the\pgf@picmaxy}}%
+\def\tikzext@maxbb@setbb#1#2#3#4{%
+  \ifdim#1pt<\pgf@picminx\global\pgf@picminx#1pt\fi
+  \ifdim#3pt>\pgf@picmaxx\global\pgf@picmaxx#3pt\fi
+  \ifdim#2pt<\pgf@picminy\global\pgf@picminy#2pt\fi
+  \ifdim#4pt>\pgf@picmaxy\global\pgf@picmaxy#4pt\fi}
+\def\tikzext@maxbb@setnext#1{%
+  \expandafter\xdef\csname tikzext@maxbb@#1@next\endcsname
+    {{\pgf@sys@tonumber\pgf@picminx}{\pgf@sys@tonumber\pgf@picminy}%
+     {\pgf@sys@tonumber\pgf@picmaxx}{\pgf@sys@tonumber\pgf@picmaxy}}%
 }%
 
 \ifcsname @ifclassloaded\endcsname % latex?
-  \let\tikzext@atenddocument\AtEndDocument
+  \AtEndDocument{\tikzext@maxbb@write}%
   \@ifclassloaded{beamer}{% beamer?
   }{%
     \expandafter\endinput
   }%
 \else
-  \def\tikzext@atenddocument#1{%
-    \pgfutil@everybye\expandafter{\the\pgfutil@everybye#1}%
-  }%
+  \pgfutil@everybye\expandafter{\the\pgfutil@everybye\tikzext@maxbb@write}%
   \expandafter\endinput
 \fi
 
