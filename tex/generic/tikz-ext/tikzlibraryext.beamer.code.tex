@@ -55,6 +55,7 @@
       \pgf@protocolsizes\pgf@lbb@maxx@tikzext@ilw\pgf@lbb@maxy@tikzext@ilw
     }%
   },
+  max bounding box/.value required,
   max bounding box/.code={%
     \tikzext@maxbb@if{#1@prev}{% not the first run
       \pgfkeys@expanded{\noexpand\tikzext@maxbb@setbb\csname tikzext@maxbb@#1@prev\endcsname}%
@@ -118,6 +119,7 @@
 \newcounter{tikzextbb}
 \resetcounteronoverlays{tikzextbb}
 \tikzextset{
+  sync bounding box/.value forbidden,
   sync bounding box/.code={%
     \stepcounter{tikzextbb}%
     \tikzextset{max bounding box={beamer-\the\value{tikzextbb}}}%
