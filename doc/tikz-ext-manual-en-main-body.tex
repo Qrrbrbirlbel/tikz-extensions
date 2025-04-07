@@ -11,6 +11,7 @@
 %\includeonly{
 %  tikz-ext-manual-en-intro,
 %  tikz-ext-manual-en-library-arrows-plus,
+%  tikz-ext-manual-en-library-beamer,
 %  tikz-ext-manual-en-library-calendar-plus,
 %  tikz-ext-manual-en-library-layers,
 %  tikz-ext-manual-en-library-node-families,
@@ -92,6 +93,7 @@ These libraries only work with \tikzname.
 \end{center}
 
 \tikzsetfigurename{arrows-plus}     \include{tikz-ext-manual-en-library-arrows-plus}
+                                    \include{tikz-ext-manual-en-library-beamer}
 \tikzsetfigurename{calendar-plus}   \include{tikz-ext-manual-en-library-calendar-plus}
 \tikzsetfigurename{layers}          \include{tikz-ext-manual-en-library-layers}
 \tikzsetfigurename{node-families}   \include{tikz-ext-manual-en-library-node-families}
@@ -209,7 +211,8 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \noindent
 Version 0.6.1 (\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day)
 \begin{itemize}
-\item Added new tps |ext_Double Cap|, |ext_Double Stealth| and |ext_Double Triange|.
+\item \addTikz{beamer}
+\item Added new tips |ext_Double Cap|, |ext_Double Stealth| and |ext_Double Triange|.
 \item Bugfix to |ext.arrows-plus|. \cite{GH18}
 \end{itemize}
 Version 0.6 (2025-03-18)
