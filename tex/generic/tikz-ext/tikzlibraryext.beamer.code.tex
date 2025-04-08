@@ -227,7 +227,8 @@
 \def\tikzext@beamer@firstchar#1{\tikzext@beamer@firstchar@#1\pgf@stop}
 \def\tikzext@beamer@firstchar@<#1>{%
   \pgfutil@ifnextchar\pgf@stop{% just the overlay specifications, forward
-    \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
+    % \pgfkeysvalueof{/tik}
+    \tikzextset{\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
     \pgfutil@gobble
   }{%
     \pgfutil@ifnextchar={% graphs does silly things
@@ -246,7 +247,7 @@
   }%
 }
 \def\tikzext@beamer@firstchar@graph#1=#2\pgf@stop{%
-  \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
+  \tikzextset{\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
 }
 \def\tikzext@beamer@firstchar@only#1#2\pgf@stop{%
   \beamer@only<#1>{\pgfkeysalso{#2}}%
@@ -273,7 +274,7 @@
 
 \def\tikzext@beamer@firstchar@apo#1'{%
   \pgfutil@ifnextchar\pgf@stop{% just the overlay specifications, forward (and invert)
-    \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
+    \tikzextset{\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
     \pgfutil@gobble
   }{%
     \pgfutil@ifnextchar={% graphs does silly things
@@ -288,7 +289,7 @@
   }%
 }
 \def\tikzext@beamer@firstchar@apo@graph#1=#2\pgf@stop{%
-  \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
+  \tikzextset{\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
 }
 \def\tikzext@beamer@firstchar@apo@only#1#2\pgf@stop{%
   \beamer@alt<#1>{}{\pgfkeysalso{#2}}%

@@ -10,6 +10,28 @@
 \def\tikzextversionnumber{9}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
 \def\pgfextset{\pgfqkeys{/pgf/ext}}
+\pgfextset{
+  pgf/.code=\pgfset{#1},
+  .code=\pgfextset{#1}%
+}
+\tikzextset{
+  tikz/.code=\tikzset{#1},
+  .code=\tikzextset{#1},
+  .unknown/.code={%
+    \pgfextset{\pgfkeyscurrentname/.try={#1}}%
+    \unless\ifpgfkeyssuccess
+      \pgfutil@packageerror{tikz-ext}{%
+        I neither know '/tikz/ext/\pgfkeyscurrentname' nor
+        '/pgf/ext/\pgfkeyscurrentname' to which you passed '#1'.%
+      }%
+    \fi
+  },
+  /pgfplots/ext/.code=\tikzextset{#1},
+  /pgfplots/ext/.unknown/.code={%
+    \tikzextset{\pgfkeyscurrentname={#1}}%
+  }
+}
+% Compatibility
 \gdef\tikzextutil@compatwarning@counter{0}
 \def\tikzextutil@compatmaybewarning#1#2#3{%
   \ifnum\tikzextutil@compatwarning@counter<25
@@ -139,15 +161,8 @@
     \pgfutil@namelet{pgf@anchor@#1@\tikzext@temp}{pgf@anchor@ext_#1@\tikzext@temp}}%
   \pgfutil@for\tikzext@temp:=bbg,bg,fbg,fg,ffg\do{%
     \pgfutil@namelet{pgf@sh@\tikzext@temp @#1}{pgf@sh@\tikzext@temp @ext_#1}}}
-\pgfextset{
-  pgf/.code=\pgfset{#1},
-  .code=\pgfextset{#1}%
-}
+
 \tikzextset{
-  tikz/.code=\tikzset{#1},
-  .code=\tikzextset{#1},
-  .search also={/pgf/ext,/pgf},
-  %
   compat/.is choice, compat/.default=warn,
   /tikz-ext/compat/add library/.code 2 args={%
     \tikzextset{
