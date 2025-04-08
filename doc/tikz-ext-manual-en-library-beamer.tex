@@ -224,13 +224,14 @@ make an element red on overlay 2.
 
 \subsubsection{Key Handler}
 Maybe this is a syntax that someone wants \dots
-\begin{ext_handler}{{<}|=|\meta{overlay specification}|>|\opt{value}}
+\begin{ext_handler}{{<}|=|\meta{overlay specification}|>| \opt{value}}
   This handler applies the key on \meta{overlay specification}.
   If \meta{value} is missing, then the key is also used without a value.
-  For an empty value, use |{}|.
+  For an empty value, use |{}|. If the \meta{value} contains comas or equal signs,
+  as always, you will need to protect those with |{}|.
   \begin{key}{/\tikzext/beamer shortcuts/enable handler}
     If |ext_| is too much, using this key activates the |.<| handler.
-    \begin{handler}{{<}|=|\meta{overlay specification}|>|\opt{value}}
+    \begin{handler}{{.<}|=|\meta{overlay specification}|>| \opt{value}}
       This handler is then an alias for the |.ext_<| handler.
     \end{handler}
   \end{key}
