@@ -139,6 +139,14 @@
   \long\global\def\tikz@eargactivesemicolon<#1>#2;{\tikzext@beamerfunction{#1}{#2}}%
 \endgroup
 
+\let\tikzext@beameroption\relax
+\def\tikzext@setbeameroption#1{%
+  \tikz@addoption{\tikzext@beameroption}%
+  \def\tikzext@beameroption{%
+    #1%
+    \let\tikzext@beameroption\relax
+  }%
+}
 \tikzextset{
   /utils/ext/only/.code 2 args={\only<#1>{\pgfkeysalso{#2}}},
   /utils/ext/alt/.code args={#1#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
@@ -151,14 +159,15 @@
   beamer function/visible/.code  =\let\tikzext@beamerfunction\tikzext@beamerfunction@visible,
   beamer function/invisible/.code=\let\tikzext@beamerfunction\tikzext@beamerfunction@invisible,
   uncover/.default=all,
-  uncover/.code=%
-    \tikz@addoption{%
+  uncover/.code={%
+    \tikzext@setbeameroption{%
       \beamer@noargsonslide<#1>%
       \aftergroup\beamer@noargsonslide
-    },
+    }%
+  },
   cover/.default=all,
   cover/.code=%
-    \tikz@addoption{%
+    \tikzext@setbeameroption{%
       \beamer@endpause
       \beamer@alt<#1>{\beamer@startcovered\gdef\beamer@endpause{\beamer@endcovered}}%
                      {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
@@ -168,13 +177,13 @@
   aobs invisible/.style={/utils/ext/only={#1}{/tikz/opacity=0,/tikz/text opacity=0}},
   visible/.default=all,
   visible/.code=%
-    \tikz@addoption{%
+    \tikzext@setbeameroption{%
       \beamer@noargsvisibleonslide<#1>%
       \aftergroup\beamer@noargsonslide
     },
   invisible/.default=all,
   invisible/.code=%
-    \tikz@addoption{%
+    \tikzext@setbeameroption{%
       \beamer@endpause
       \beamer@alt<#1>{\beamer@begininvisible\gdef\beamer@endpause{\beamer@endinvisible}}%
                      {\beamer@spacingcover\gdef\beamer@endpause{\beamer@spacingcover}}%
@@ -217,32 +226,90 @@
 %                    <*overlay*>' {options} → uses \alt<*overlay*>{}{\pgfkeysalso{options}} (i.e. the inverse)
 \def\tikzext@beamer@firstchar#1{\tikzext@beamer@firstchar@#1\pgf@stop}
 \def\tikzext@beamer@firstchar@<#1>{%
-  \pgfutil@ifnextchar\pgf@stop{%
+  \pgfutil@ifnextchar\pgf@stop{% just the overlay specifications, forward
     \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
     \pgfutil@gobble
   }{%
-    \pgfutil@ifnextchar'{%
-      \tikzext@beamer@firstchar@apo{#1}%
+    \pgfutil@ifnextchar={% graphs does silly things
+      \tikzext@beamer@firstchar@graph{#1}%
     }{%
-      \tikzext@beamer@firstchar@opts{#1}%
+      \pgfutil@ifnextchar'{% apo = invert overlay specification
+        \tikzext@beamer@firstchar@apo{#1}%
+      }{%
+        \pgfutil@ifnextchar\bgroup{% first options grouped, maybe there are more?
+          \tikzext@beamer@firstchar@onlyoralt{#1}%
+        }{%
+          \tikzext@beamer@firstchar@only{#1}%
+        }%
+      }%
     }%
   }%
 }
-\def\tikzext@beamer@firstchar@opts#1#2\pgf@stop{%
+\def\tikzext@beamer@firstchar@graph#1=#2\pgf@stop{%
+  \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}={#1}}%
+}
+\def\tikzext@beamer@firstchar@only#1#2\pgf@stop{%
   \beamer@only<#1>{\pgfkeysalso{#2}}%
 }
-\def\tikzext@beamer@firstchar@apo#1'{%
+\def\tikzext@beamer@firstchar@onlyoralt#1#2{%
   \pgfutil@ifnextchar\pgf@stop{%
+    \beamer@only<#1>{\pgfkeysalso{#2}}%
+    \pgfutil@gobble
+  }{% second options, must be in {}
+    \tikzext@beamer@firstchar@altortemp{#1}{#2}%  
+  }%
+}
+\def\tikzext@beamer@firstchar@altortemp#1#2#3{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \beamer@alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}%
+    \pgfutil@gobble
+  }{% oh, there are third options, must be temporal
+    \tikzext@beamer@firstchar@temp{#1}{#2}{#3}%
+  }%
+}
+\def\tikzext@beamer@firstchar@temp#1#2#3#4\pgf@stop{%
+  \temporal<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}{\pgfkeysalso{#4}}%
+}
+
+\def\tikzext@beamer@firstchar@apo#1'{%
+  \pgfutil@ifnextchar\pgf@stop{% just the overlay specifications, forward (and invert)
     \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
     \pgfutil@gobble
   }{%
-    \tikzext@beamer@firstchar@apo@{#1}%
+    \pgfutil@ifnextchar={% graphs does silly things
+      \tikzext@beamer@firstchar@apo@graph{#1}%
+    }{%
+      \pgfutil@ifnextchar\bgroup{%
+        \tikzext@beamer@firstchar@apo@onlyoralt{#1}%
+      }{%
+        \tikzext@beamer@firstchar@apo@only{#1}%
+      }%
+    }%
   }%
 }
-\def\tikzext@beamer@firstchar@apo@#1#2\pgf@stop{%
+\def\tikzext@beamer@firstchar@apo@graph#1=#2\pgf@stop{%
+  \pgfkeysalso{ext/\pgfkeysvalueof{/tikz/ext/beamer shortcuts/first char}'={#1}}%
+}
+\def\tikzext@beamer@firstchar@apo@only#1#2\pgf@stop{%
   \beamer@alt<#1>{}{\pgfkeysalso{#2}}%
 }
-
+\def\tikzext@beamer@firstchar@apo@onlyoralt#1#2{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \beamer@alt<#1>{}{\pgfkeysalso{#2}}%
+  }{% second options, must be in {}
+    \tikzext@beamer@firstchar@apo@altortemp{#1}{#2}%
+  }%
+}
+\def\tikzext@beamer@firstchar@apo@altortemp#1#2#3{%
+  \pgfutil@ifnextchar\pgf@stop{%
+    \beamer@alt<#1>{\pgfkeysalso{#3}}{\pgfkeysalso{#2}}%
+  }{% oh, there arethird options, must be temporal
+    \tikzext@beamer@firstchar@apo@temp{#1}{#2}{#3}%
+  }%
+}
+\def\tikzext@beamer@firstchar@apo@temp#1#2#3#4\pgf@stop{%
+  \temporal<#1>{\pgfkeysalso{#4}}{\pgfkeysalso{#3}}{\pgfkeysalso{#2}}%
+}
 \def\tikzext@beamer@graphfirstchar#1{\expandafter\tikzext@beamer@firstchar@\pgfutil@gobble#1\pgf@stop}
 
 % handler .ext_< = *overlay*>            → uses the key w/o options        on *overlay*
@@ -286,24 +353,13 @@
     /tikz/ext/cover={#1}},
   ext/invisible/.style={
     /tikz/graphs/@edges styling/.append={,/tikz/ext/invisible={#1}}
-    /tikz/ext/invisible={#1}}
+    /tikz/ext/invisible={#1}},
+  ext/better beamer shortcut/.code={%
+    \pgfkeyslet{/handlers/first char syntax/\expandafter\meaning\string<}\relax % disable < shortcut
+    \tikzgraphsset{
+      @edges styling/.append={,/tikz/ext/beamer shortcuts/enable first char <},
+      @nodes styling/.append style={/tikz/ext/beamer shortcuts/enable first char <},
+      /tikz/every label/.append style={/tikz/ext/beamer shortcuts/enable first char <}
+    }%
+  }
 }
-\ifcsname tikz@library@graphs@loaded\endcsname
-  \tikzgraphsset{
-    new ->/.code n args={4}{%
-      \path [arrows=->,every new ->/.try] (#1\tikzgraphleftanchor)
-                              edge[#3] #4 (#2\tikzgraphrightanchor);},
-    new --/.code n args={4}{%
-        \path [arrows=-,every new --/.try] (#1\tikzgraphleftanchor)
-                              edge[#3] #4 (#2\tikzgraphrightanchor);},
-    new <->/.code n args={4}{%
-      \path [arrows=<->,every new <->/.try] (#1\tikzgraphleftanchor)
-                                edge[#3] #4 (#2\tikzgraphrightanchor);
-      \typeout{%
-        \noexpand\path [arrows=<->,every new <->/.try] (#1\tikzgraphleftanchor)
-                                          edge[#3] #4 (#2\tikzgraphrightanchor);}},
-    new -!-/.code n args={4}{},
-    new <-/.code n args={4}{%
-      \path [arrows=<-,every new <-/.try] (#1\tikzgraphleftanchor)
-                              edge[#3] #4 (#2\tikzgraphrightanchor);}}%
-\fi

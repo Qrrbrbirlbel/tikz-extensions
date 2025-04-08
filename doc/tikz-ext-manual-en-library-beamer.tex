@@ -66,6 +66,7 @@ The following diagram will show
       node (b) at (1,2) {B};
 \onslide<3->
 \path (a) edge[bend right] (b);
+\onslide
 \end{tikzpicture}
 \end{codeexample}
 \subsubsection{Stop Jumping}
@@ -108,11 +109,13 @@ The same overlays as above can be created now with the following diagram.
     visible=\meta{overlay specification} (default all),
   invisible=\meta{overlay specification} (default all)%
 }
-These keys work similar to Beamer's own |\onlside| key
+These keys work similar to Beamer's own |\onslide| command
 but only apply to the element it is used on.
 
 The implementation of this is rather experimental and should be used carefully.
-Multiple uses of these key on various element on a path will not play nicely.
+Multiple uses of these options \emph{don't} stack, only the last one wins --
+this includes the use of the first syntax shorcuts introduced
+in the next subsubsection.
 
 The same overlays as above can be created with the first of the following diagram.
 In the second diagram |ext/uncover| is only used on the (actual) empty path.
@@ -177,19 +180,24 @@ make an element red on overlay 2.
 \end{tikzpicture}
 \end{codeexample}
 
-  Internally, this will converted to |ext/uncover=|\marg{overlay specification}.
-  Actually, the full syntax is:
+  Internally, this will be converted to |ext/uncover=|\marg{overlay specification}.
+  
+  Actually, the full syntax is much more versatile
   \begin{quote}
-      |<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}
+      |<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}\\
+      |<|\meta{overlay specification}|>|\opt{|'|}\opt{\marg{options A}}\opt{\marg{options B}}\opt{\marg{options C}}
   \end{quote}
   
-  If no \meta{options} are present the \meta{overlay specification} will
+  If no options are present the \meta{overlay specification} will
   be forwarded to one of the keys explained in the subsection above
   -- depending on |ext/beamer shortcuts/first char|.
   The optional |'| after |>| will invert the \meta{overlay specification}.
   
-  If there are \meta{options} present, this syntax applies these only on \meta{overlay specifications},
-  or the inverse of them with the |'|.
+  If \meta{options} or \marg{options A} are present,
+  these will only applied on \meta{overlay specifications} (or the inverse of them with the |'|).
+  If two sets of options are present, they will be |\alt|ed, three options will be |\temporal|ed.
+  
+  The |'| will swap two sets of options while for three the first and the last will be swapped.
 \end{key}
 \begin{key}{/\tikzext/beamer shortcuts/enable first char=\marg{character}}
   As the |<| character might lead to problems as it conflicts with the \tikzname\ shorthand
@@ -198,9 +206,10 @@ make an element red on overlay 2.
   and the \referenceLibraryandIndexO{graphs} library's own first char syntax
   an alternative is presented here.
   
-  This key enables a first char syntax with \meta{character} where the full syntax is now:
+  This key enables a first char syntax with \meta{character} where the full syntax is the same as above:
   \begin{quote}
-      \meta{character}|<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}
+      \meta{character}|<|\meta{overlay specification}|>|\opt{|'|}\opt{\meta{options}}\\
+      \meta{character}|<|\meta{overlay specification}|>|\opt{|'|}\opt{\marg{options A}}\opt{\marg{options B}}\opt{\marg{options C}}
   \end{quote}
   
   This means, the example diagram can be created in the following way.
