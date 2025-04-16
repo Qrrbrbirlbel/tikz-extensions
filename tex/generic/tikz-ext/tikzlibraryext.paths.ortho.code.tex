@@ -46,7 +46,7 @@
 
 %% TikZ interjects are done, the rest is independent:
 \newdimen\tikzext@tikz@udlr@distance
-\newdimen\tikzext@tikz@hvvh@distance
+\newdimen\tikzext@ortho@distance
 \newif\iftikzext@ortho@middle         % checks whether spacing = 0 was selected
 \newif\iftikzext@ortho@fromcenter
 \newif\iftikzext@ortho@preflush
@@ -78,9 +78,9 @@
       \let\tikzext@tikz@hvvh@timing@subtr\pgfmathresult
       \pgfmathsetmacro\tikzext@tikz@hvvh@timing@factor{1+2*\pgfmathresult}%
     \fi,%
-  ortho/ratio/.code=\pgfmathsetmacro\tikzext@tikz@hvvh@ratio{#1},%
+  ortho/ratio/.code=\pgfmathsetmacro\tikzext@ortho@ratio{#1},%
   % TODO: not possible to do distance in TikZ coordinate system
-  ortho/distance/.code=\pgfmathsetlength\tikzext@tikz@hvvh@distance{#1}\let\tikzext@tikz@hvvh@ratio\pgfutil@empty,%
+  ortho/distance/.code=\pgfmathsetlength\tikzext@ortho@distance{#1}\let\tikzext@ortho@ratio\pgfutil@empty,%
   ortho/udlr distance/.style={%
     /tikz/ext/ortho/ud distance={#1},%
     /tikz/ext/ortho/du distance={#1},%
@@ -209,14 +209,15 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\pgf@yc}}\pgf@xc\pgf@yc
   \begingroup
-    \tikzextset{ortho/.expand once=\tikzext@ortho@options}%
+    \def\tikzext@temp{\pgfqkeys{/tikz/ext/ortho}}%
+    \expandafter\tikzext@temp\expandafter{\tikzext@ortho@options}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@xb}{\tikz@lasty}}}%
       \iftikzext@ortho@fromcenter
         \pgf@xc\pgf@xb
       \fi
-      \ifx\tikzext@tikz@hvvh@ratio\pgfutil@empty
-        \ifdim\tikzext@tikz@hvvh@distance<0pt\relax
+      \ifx\tikzext@ortho@ratio\pgfutil@empty
+        \ifdim\tikzext@ortho@distance<0pt\relax
           \iftikzext@ortho@fromcenter
             \pgf@xc\tikz@lastx
           \else
@@ -224,18 +225,18 @@
           \fi
         \fi
         \ifdim\pgf@xb>\tikz@lastx
-          \tikzext@tikz@hvvh@distance-\tikzext@tikz@hvvh@distance
+          \tikzext@ortho@distance-\tikzext@ortho@distance
         \fi
       \else
         \iftikzext@ortho@fromcenter
-          \tikzext@tikz@hvvh@distance\tikz@lastx
+          \tikzext@ortho@distance\tikz@lastx
         \else
-          \tikzext@tikz@hvvh@distance\pgf@x
+          \tikzext@ortho@distance\pgf@x
         \fi
-        \advance\tikzext@tikz@hvvh@distance-\pgf@xc
-        \tikzext@tikz@hvvh@distance\tikzext@tikz@hvvh@ratio\tikzext@tikz@hvvh@distance
+        \advance\tikzext@ortho@distance-\pgf@xc
+        \tikzext@ortho@distance\tikzext@ortho@ratio\tikzext@ortho@distance
       \fi
-      \advance\pgf@xc\tikzext@tikz@hvvh@distance
+      \advance\pgf@xc\tikzext@ortho@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
       \edef\pgf@temp{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
@@ -244,19 +245,19 @@
       \iftikzext@ortho@fromcenter
         \pgf@xc\pgf@xb
       \fi
-      \ifx\tikzext@tikz@hvvh@ratio\pgfutil@empty
-        \ifdim\tikzext@tikz@hvvh@distance<0pt\relax
+      \ifx\tikzext@ortho@ratio\pgfutil@empty
+        \ifdim\tikzext@ortho@distance<0pt\relax
           \pgf@xc\tikz@lastx
         \fi
         \ifdim\pgf@xb>\tikz@lastx
-          \tikzext@tikz@hvvh@distance-\tikzext@tikz@hvvh@distance
+          \tikzext@ortho@distance-\tikzext@ortho@distance
         \fi
       \else
-        \tikzext@tikz@hvvh@distance\tikz@lastx
-        \advance\tikzext@tikz@hvvh@distance-\pgf@xc
-        \tikzext@tikz@hvvh@distance\tikzext@tikz@hvvh@ratio\tikzext@tikz@hvvh@distance
+        \tikzext@ortho@distance\tikz@lastx
+        \advance\tikzext@ortho@distance-\pgf@xc
+        \tikzext@ortho@distance\tikzext@ortho@ratio\tikzext@ortho@distance
       \fi
-      \advance\pgf@xc\tikzext@tikz@hvvh@distance
+      \advance\pgf@xc\tikzext@ortho@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
       \edef\pgf@temp{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
@@ -280,14 +281,15 @@
   \tikz@make@last@position{#1}%
   \tikz@flush@moveto@toward{\pgfqpoint{\pgf@xc}{\tikz@lasty}}\pgf@xc\pgf@yc
   \begingroup
-    \tikzextset{ortho/.expand once=\tikzext@ortho@options}%
+    \def\tikzext@temp{\pgfqkeys{/tikz/ext/ortho}}%
+    \expandafter\tikzext@temp\expandafter{\tikzext@ortho@options}%
     \iftikz@shapeborder
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\tikz@lastx}{\pgf@yb}}}%
       \iftikzext@ortho@fromcenter
         \pgf@yc\pgf@yb
       \fi
-      \ifx\tikzext@tikz@hvvh@ratio\pgfutil@empty
-        \ifdim\tikzext@tikz@hvvh@distance<0pt\relax
+      \ifx\tikzext@ortho@ratio\pgfutil@empty
+        \ifdim\tikzext@ortho@distance<0pt\relax
           \iftikzext@ortho@fromcenter
             \pgf@yc\tikz@lasty
           \else
@@ -295,18 +297,18 @@
           \fi
         \fi
         \ifdim\pgf@yb>\tikz@lasty
-          \tikzext@tikz@hvvh@distance-\tikzext@tikz@hvvh@distance
+          \tikzext@ortho@distance-\tikzext@ortho@distance
         \fi
       \else
         \iftikzext@ortho@fromcenter
-          \tikzext@tikz@hvvh@distance\tikz@lasty
+          \tikzext@ortho@distance\tikz@lasty
         \else
-          \tikzext@tikz@hvvh@distance\pgf@y
+          \tikzext@ortho@distance\pgf@y
         \fi
-        \advance\tikzext@tikz@hvvh@distance-\pgf@yc
-        \tikzext@tikz@hvvh@distance\tikzext@tikz@hvvh@ratio\tikzext@tikz@hvvh@distance
+        \advance\tikzext@ortho@distance-\pgf@yc
+        \tikzext@ortho@distance\tikzext@ortho@ratio\tikzext@ortho@distance
       \fi
-      \advance\pgf@yc\tikzext@tikz@hvvh@distance
+      \advance\pgf@yc\tikzext@ortho@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\pgf@yc}}%
       \edef\pgf@temp{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
@@ -315,19 +317,19 @@
       \iftikzext@ortho@fromcenter
         \pgf@yc\pgf@yb
       \fi
-      \ifx\tikzext@tikz@hvvh@ratio\pgfutil@empty
-        \ifdim\tikzext@tikz@hvvh@distance<0pt\relax
+      \ifx\tikzext@ortho@ratio\pgfutil@empty
+        \ifdim\tikzext@ortho@distance<0pt\relax
           \pgf@yc\tikz@lasty
         \fi
         \ifdim\pgf@yb>\tikz@lasty
-          \tikzext@tikz@hvvh@distance-\tikzext@tikz@hvvh@distance
+          \tikzext@ortho@distance-\tikzext@ortho@distance
         \fi
       \else
-        \tikzext@tikz@hvvh@distance\tikz@lasty
-        \advance\tikzext@tikz@hvvh@distance-\pgf@yc
-        \tikzext@tikz@hvvh@distance\tikzext@tikz@hvvh@ratio\tikzext@tikz@hvvh@distance
+        \tikzext@ortho@distance\tikz@lasty
+        \advance\tikzext@ortho@distance-\pgf@yc
+        \tikzext@ortho@distance\tikzext@ortho@ratio\tikzext@ortho@distance
       \fi
-      \advance\pgf@yc\tikzext@tikz@hvvh@distance
+      \advance\pgf@yc\tikzext@ortho@distance
       \edef\pgf@tempa{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
       \edef\pgf@tempb{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\pgf@yc}}%
       \edef\pgf@temp{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
@@ -364,8 +366,9 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \tikzextset{ortho/.expand once=\tikzext@ortho@options}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/#3 distance}}%
+    \def\tikzext@temp{\pgfqkeys{/tikz/ext/ortho}}%
+    \expandafter\tikzext@temp\expandafter{\tikzext@ortho@options}%
+    \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/ext/ortho/#3 distance}}%
     \iftikz@shapeborder
       \advance\pgf@y#21pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -382,7 +385,7 @@
           \pgf@yc=\pgf@y
         \fi
       \fi
-      \advance\pgf@yc#2\tikzext@tikz@udlr@distance
+      \advance\pgf@yc#2\pgfutil@tempdima
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
     \else
       \let\tikz@shapeborder@name\pgfutil@empty
@@ -392,7 +395,7 @@
         \fi
       \fi
       \ifdim\pgf@yb#4\tikz@lasty\pgf@yb\tikz@lasty\fi
-      \advance\pgf@yb#2\tikzext@tikz@udlr@distance
+      \advance\pgf@yb#2\pgfutil@tempdima
       \pgf@yc\pgf@yb
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
@@ -416,8 +419,9 @@
   \tikz@flush@moveto@toward{\pgfqpoint{\tikz@lastx}{\tikz@lasty}}\pgf@xc\pgf@yc
   \tikz@make@last@position{#1}%
   \begingroup
-    \tikzextset{ortho/.expand once=\tikzext@ortho@options}%
-    \pgfmathsetlength\tikzext@tikz@udlr@distance{\pgfkeysvalueof{/tikz/ext/ortho/#3 distance}}%
+    \def\tikzext@temp{\pgfqkeys{/tikz/ext/ortho}}%
+    \expandafter\tikzext@temp\expandafter{\tikzext@ortho@options}%
+    \pgfmathsetlength\pgfutil@tempdima{\pgfkeysvalueof{/tikz/ext/ortho/#3 distance}}%
     \iftikz@shapeborder
       \advance\pgf@x#21pt%
       \pgf@process{\pgfpointshapeborder{\tikz@shapeborder@name}{\pgfqpoint{\pgf@x}{\pgf@y}}}%
@@ -434,7 +438,7 @@
           \pgf@xc=\pgf@x
         \fi
       \fi
-      \advance\pgf@xc#2\tikzext@tikz@udlr@distance
+      \advance\pgf@xc#2\pgfutil@tempdima
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
     \else
       \let\tikz@shapeborder@name\pgfutil@empty
@@ -444,7 +448,7 @@
         \fi
       \fi
       \ifdim\pgf@xb#4\tikz@lastx\pgf@xb\tikz@lastx\fi
-      \advance\pgf@xb#2\tikzext@tikz@udlr@distance
+      \advance\pgf@xb#2\pgfutil@tempdima
       \pgf@xc\pgf@xb
       \edef\pgf@temp{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
     \fi
