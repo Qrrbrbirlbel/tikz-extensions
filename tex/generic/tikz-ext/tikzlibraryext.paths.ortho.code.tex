@@ -47,7 +47,6 @@
 %% TikZ interjects are done, the rest is independent:
 \newdimen\tikzext@tikz@udlr@distance
 \newdimen\tikzext@ortho@distance
-\newif\iftikzext@ortho@middle         % checks whether spacing = 0 was selected
 \newif\iftikzext@ortho@fromcenter
 \newif\iftikzext@ortho@preflush
 \tikzext@ortho@preflushtrue
@@ -62,21 +61,20 @@
   ortho/from center/.is if=tikzext@ortho@fromcenter,%
   ortho/spacing/.code=% spacing = 0 means that the middle part are the pos-itions 0 to 1,
   %                                           the first part is -1 to 0, the last part is to 2
-    \pgfmathint{#1}\let\tikzext@tikz@hvvh@timing@parts\pgfmathresult% in case they are calculations to be done
-    \ifcase\tikzext@tikz@hvvh@timing@parts\relax
-      \tikzext@ortho@middletrue
-      \def\tikzext@tikz@hvvh@timing@parts{1}%
-      \def\tikzext@tikz@hvvh@timing@first{0}%
-      \def\tikzext@tikz@hvvh@timing@last{1}%
-      \def\tikzext@tikz@hvvh@timing@subtr{0}%
-      \def\tikzext@tikz@hvvh@timing@factor{1}%
+    \pgfmathint{#1}\let\tikzext@ortho@timing@parts\pgfmathresult% in case they are calculations to be done
+    \ifnum\tikzext@ortho@timing@parts<2
+      \def\tikzext@ortho@timing@parts{1}%
+      \def\tikzext@ortho@timing@first{0}%
+      \def\tikzext@ortho@timing@last{1}%
+      \def\tikzext@ortho@timing@subtr{0}%
+      \def\tikzext@ortho@timing@factor{1}%
     \else            % in all other cases n > 0 the kinks are at pos = 1/n and (n - 1)/n
-      \tikzext@ortho@middlefalse
-      \pgfmathreciprocal{#1}\let\tikzext@tikz@hvvh@timing@first\pgfmathresult
-      \pgfmathsetmacro\tikzext@tikz@hvvh@timing@last{1-\pgfmathresult}%
-      \pgfmathreciprocal{#1-2}%
-      \let\tikzext@tikz@hvvh@timing@subtr\pgfmathresult
-      \pgfmathsetmacro\tikzext@tikz@hvvh@timing@factor{1+2*\pgfmathresult}%
+      \pgfmathreciprocal{\tikzext@ortho@timing@parts}%
+      \let\tikzext@ortho@timing@first\pgfmathresult
+      \pgfmathsetmacro\tikzext@ortho@timing@last{1-\pgfmathresult}%
+      \pgfmathreciprocal{\tikzext@ortho@timing@parts-2}%
+      \let\tikzext@ortho@timing@subtr\pgfmathresult
+      \pgfmathsetmacro\tikzext@ortho@timing@factor{1+2*\pgfmathresult}%
     \fi,%
   ortho/ratio/.code=\pgfmathsetmacro\tikzext@ortho@ratio{#1},%
   % TODO: not possible to do distance in TikZ coordinate system
@@ -93,64 +91,6 @@
   ortho/ratio=.5,% default value
   ortho/spacing=4,% default value
 }%
-
-%BEGIN_FOLD Timer
-\def\tikzext@timer@hvhline{%
-  \pgf@process{\tikz@timer@start}\pgf@ya\pgf@y
-  \pgf@process{\tikz@timer@end}\pgf@yc\pgf@y
-  \pgf@process{\tikz@timer@middle}\pgf@xb\tikz@time pt%
-  \ifdim\tikz@time pt<\tikzext@tikz@hvvh@timing@first pt% first quarter
-    \iftikzext@ortho@middle
-      \advance\pgf@xb1pt%
-    \else
-      \pgf@xb\tikzext@tikz@hvvh@timing@parts\pgf@xb
-    \fi
-    \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}{\noexpand\tikz@timer@start}{%
-        \noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@ya}}}%
-  \else
-    \ifdim\tikz@time pt>\tikzext@tikz@hvvh@timing@last pt% last quarter
-      \iftikzext@ortho@middle
-        \advance\pgf@xb-1pt%
-      \else
-        \pgf@xb\tikzext@tikz@hvvh@timing@parts\pgf@xb
-      \fi
-      \advance\pgf@xb\dimexpr-\tikzext@tikz@hvvh@timing@parts pt+1pt\relax%
-      \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}%
-        {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@yc}}{\noexpand\tikz@timer@end}}%
-    \else% middle half
-      \pgf@xb\tikzext@tikz@hvvh@timing@factor\pgf@xb%
-      \advance\pgf@xb-\tikzext@tikz@hvvh@timing@subtr pt%
-      \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}%
-        {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@ya}}{\noexpand\tikz@timer@middle}}%
-    \fi\fi\tikz@marshal}
-\def\tikzext@timer@vhvline{%
-  \pgf@process{\tikz@timer@start}\pgf@xa\pgf@x
-  \pgf@process{\tikz@timer@end}\pgf@xc\pgf@x
-  \pgf@process{\tikz@timer@middle}\pgf@xb\tikz@time pt%
-  \ifdim\tikz@time pt<\tikzext@tikz@hvvh@timing@first pt% first quarter
-    \iftikzext@ortho@middle
-      \advance\pgf@xb1pt%
-    \else
-      \pgf@xb\tikzext@tikz@hvvh@timing@parts\pgf@xb
-    \fi
-    \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}{\noexpand\tikz@timer@start}{%
-        \noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@y}}}%
-  \else
-    \ifdim\tikz@time pt>\tikzext@tikz@hvvh@timing@last pt% last quarter
-    \iftikzext@ortho@middle
-      \advance\pgf@xb-1pt%
-    \else
-      \pgf@xb\tikzext@tikz@hvvh@timing@parts\pgf@xb
-    \fi
-      \advance\pgf@xb by\dimexpr-\tikzext@tikz@hvvh@timing@parts pt+1pt\relax%
-      \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}%
-        {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@y}}{\noexpand\tikz@timer@end}}%
-    \else% middle half
-      \pgf@xb=\tikzext@tikz@hvvh@timing@factor\pgf@xb
-      \advance\pgf@xb by-\tikzext@tikz@hvvh@timing@subtr pt%
-      \edef\tikz@marshal{\noexpand\pgftransformlineattime{\pgf@sys@tonumber{\pgf@xb}}%
-        {\noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@y}}{\noexpand\tikz@timer@middle}}%
-      \fi\fi\tikz@marshal}%
 
 %% collect options and nodes, coordinates and pics onpath
 \let\tikzext@ortho@options\pgfutil@empty
@@ -180,7 +120,7 @@
     {\pgfutil@ifnextchar c{\tikz@collect@coordinate@onpath\tikzext@ortho@rl@next}
       {\pgfutil@ifnextchar p{\tikz@collect@pic@onpath\tikzext@ortho@rl@next}{\tikz@scan@one@point\tikzext@ortho@rl@do}}}}%
 
-\def\tikzext@ortho@do#1#2#3#4#5{%
+\def\tikzext@ortho@do#1#2#3#4{%
   % #1 = first kink
   % #2 = second kink
   % #3 = end
@@ -189,10 +129,11 @@
   \pgfpathlineto{#1}%
   \pgfpathlineto{#2}%
   \pgfpathlineto{#3}%
-  \def\tikz@timer@middle{#2}%
+  \def\tikzext@ortho@timer@kinkA{#1}%
+  \def\tikzext@ortho@timer@kinkB{#2}%
   \def\tikz@timer@end{#3}%
-  \let\tikz@timer#4%
-  \edef\tikzext@temp{#5}%
+  \let\tikz@timer\tikzext@ortho@timer
+  \let\tikzext@temp#4%
   \ifx\tikzext@temp\pgfutil@empty
     \let\tikz@moveto@waiting\relax
   \else
@@ -200,6 +141,40 @@
   \fi
   \tikz@scan@next@command}%
 
+\def\tikzext@ortho@timer{%
+  \pgfutil@tempdima=\tikz@time pt
+  \ifdim\pgfutil@tempdima<\tikzext@ortho@timer@first pt % first quarter
+    \ifnum\tikzext@ortho@timer@parts=1
+      \advance\pgfutil@tempdima1pt
+    \else
+      \pgfutil@tempdima\tikzext@ortho@timer@parts\pgfutil@tempdima
+    \fi
+    \pgftransformlineattime{\pgf@sys@tonumber\pgfutil@tempdima}{\tikz@timer@start}{\tikzext@ortho@timer@kinkA}%
+  \else
+    \ifdim\pgfutil@tempdima>\tikzext@ortho@timer@last pt %last quarter
+      \ifnum\tikzext@ortho@timer@parts=1
+        \advance\pgfutil@tempdima-1pt%
+      \else
+        \pgfutil@tempdima\tikzext@ortho@timer@parts\pgfutil@tempdima
+      \fi
+      \advance\pgfutil@tempdima-\tikzext@ortho@timer@parts pt
+      \advance\pgfutil@tempdima1pt
+      \pgftransformlineattime{\pgf@sys@tonumber\pgfutil@tempdima}{\tikzext@ortho@timer@kinkB}{\tikz@timer@end}%
+    \else % middle bit
+      \pgfutil@tempdima=\tikzext@ortho@timer@factor\pgfutil@tempdima
+      \advance\pgfutil@tempdima-\tikzext@ortho@timer@subtr pt
+      \pgftransformlineattime{\pgf@sys@tonumber\pgfutil@tempdima}{\tikzext@ortho@timer@kinkA}{\tikzext@ortho@timer@kinkB}%
+    \fi
+  \fi
+}
+
+\def\tikzext@ortho@savetimer{%
+  \def\noexpand\tikzext@ortho@timer@parts{\tikzext@ortho@timing@parts}%
+  \def\noexpand\tikzext@ortho@timer@first{\tikzext@ortho@timing@first}%
+  \def\noexpand\tikzext@ortho@timer@last{\tikzext@ortho@timing@last}%
+  \def\noexpand\tikzext@ortho@timer@subtr{\tikzext@ortho@timing@subtr}%
+  \def\noexpand\tikzext@ortho@timer@factor{\tikzext@ortho@timing@factor}%
+}
 %% -|- operator
 \def\tikzext@ortho@hvh@do#1{%
   \edef\tikz@timer@start{\noexpand\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
@@ -264,11 +239,12 @@
     \fi%
     \edef\tikzext@temp{%
   \endgroup
+      \tikzext@ortho@savetimer
       \noexpand\tikzext@ortho@do
         {\expandafter\noexpand\pgf@tempa}%
         {\expandafter\noexpand\pgf@tempb}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikzext@timer@hvhline}{\tikz@shapeborder@name}}%
+        {\tikz@shapeborder@name}}%
   \tikzext@temp
 }%
 
@@ -336,11 +312,12 @@
     \fi%
     \edef\tikzext@temp{%
   \endgroup
+      \tikzext@ortho@savetimer
       \noexpand\tikzext@ortho@do
         {\expandafter\noexpand\pgf@tempa}%
         {\expandafter\noexpand\pgf@tempb}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikzext@timer@vhvline}{\tikz@shapeborder@name}}%
+        {\tikz@shapeborder@name}}%
     \tikzext@temp
 }
 
@@ -401,11 +378,12 @@
     \fi
     \edef\tikzext@temp{%
   \endgroup
+      \tikzext@ortho@savetimer
       \noexpand\tikzext@ortho@do
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\tikz@lastx}{\the\pgf@yc}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikzext@timer@vhvline}{\tikz@shapeborder@name}}%
+        {\tikz@shapeborder@name}}%
   \tikzext@temp
 }
 
@@ -454,11 +432,12 @@
     \fi
     \edef\tikzext@temp{%
   \endgroup
+      \tikzext@ortho@savetimer
       \noexpand\tikzext@ortho@do
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
         {\noexpand\pgfqpoint{\the\pgf@xc}{\the\tikz@lasty}}%
         {\expandafter\noexpand\pgf@temp}%
-        {\noexpand\tikzext@timer@hvhline}{\tikz@shapeborder@name}}%
+        {\tikz@shapeborder@name}}%
   \tikzext@temp
 }
 
