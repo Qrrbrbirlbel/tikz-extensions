@@ -656,7 +656,7 @@
         \edef\tikztostart{[xshift={#1}]\tikztostart\tikzext@ortho@anchor}%
       \fi
     \endpgfextra
-    expandafter(\tikztostart)
+    \expandafter(\tikztostart)
     -- (perpendicular cs: vertical line through/.expanded={(\tikztostart)},
                         horizontal line through={(\tikztotarget)})
     \tikztonodes
