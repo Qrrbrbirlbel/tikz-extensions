@@ -6,8 +6,8 @@
 % 2. under the GNU Free Documentation License.
 %
 
-\def\tikzextversion{0.6.1}
-\def\tikzextversionnumber{9}
+\def\tikzextversion{0.6.2}
+\def\tikzextversionnumber{10}
 \def\tikzextset{\pgfqkeys{/tikz/ext}}
 \def\pgfextset{\pgfqkeys{/pgf/ext}}
 \pgfextset{
@@ -168,8 +168,9 @@
     \tikzextset{
       compat/#1/.is choice,
       compat/#1/.default=#2,
-      compat/#1/0.6.1/.style={/tikz/ext/compat/#1/0.6}}%
-    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,0.6.1,newest,warn\do{%
+      compat/#1/0.6.1/.style={/tikz/ext/compat/#1/0.6},
+      compat/#1/0.6.2/.style={/tikz/ext/compat/#1/0.6}}%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,0.6.1,0.6.2,newest,warn\do{%
       \pgfkeys@expanded{%
         \noexpand\tikzextset{%
           compat/\tikzext@temp/.append style=%
@@ -203,7 +204,10 @@
   }}
 \tikzext@temp{pre 0.6}
 \tikzext@temp{0.6}
-\tikzextset{compat/0.6.1/.style={/tikz/ext/compat/0.6}}
+\tikzextset{
+  compat/0.6.1/.style={/tikz/ext/compat/0.6},
+  compat/0.6.2/.style={/tikz/ext/compat/0.6}%
+}
 \tikzext@temp{newest}
 \tikzext@temp{warn}
 \tikzextset{compat=warn}
