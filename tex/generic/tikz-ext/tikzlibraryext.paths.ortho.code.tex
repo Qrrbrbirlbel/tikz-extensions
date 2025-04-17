@@ -148,8 +148,7 @@
   % #1 = first kink
   % #2 = second kink
   % #3 = end
-  % #4 = timer
-  % #5 = tikz@shapeborder@name
+  % #4 = tikz@shapeborder@name
   \pgfpathlineto{#1}%
   \pgfpathlineto{#2}%
   \pgfpathlineto{#3}%
@@ -157,7 +156,7 @@
   \def\tikzext@ortho@timer@kinkB{#2}%
   \def\tikz@timer@end{#3}%
   \let\tikz@timer\tikzext@ortho@timer
-  \let\tikzext@temp#4%
+  \def\tikzext@temp{#4}%
   \ifx\tikzext@temp\pgfutil@empty
     \let\tikz@moveto@waiting\relax
   \else
@@ -412,7 +411,10 @@
       \pgfutil@tempdima=\pgfmathresult pt
     \else
       \pgf@process{\pgfqpointxy{0}{\pgfmathresult}}%
-      \pgfutil@tempdima=\pgf@x
+      \pgfutil@tempdima=\pgf@y
+      \ifdim\pgfutil@tempdima<0pt
+        \pgfutil@tempdima=-\pgfutil@tempdima
+      \fi
     \fi
     \iftikz@shapeborder
       \advance\pgf@y#21pt%
@@ -473,6 +475,9 @@
     \else
       \pgf@process{\pgfqpointxy{\pgfmathresult}{0}}%
       \pgfutil@tempdima=\pgf@x
+      \ifdim\pgfutil@tempdima<0pt
+        \pgfutil@tempdima=-\pgfutil@tempdima
+      \fi
     \fi
     \iftikz@shapeborder
       \advance\pgf@x#21pt%

@@ -12,13 +12,50 @@
 \label{library:paths.ortho}
 
 \begin{tikzlibrary}{ext.paths.ortho}
-  This library adds new path specifications \verb!|-|!, \verb!-|-! as well as
-  |r-ud|, |r-du|, |r-lr| and |r-rl|.
+  This library adds new path specifications \verb!|-|!, \verb!-|-!
+  as well as |r-ud|, |r-du|, |r-lr| and |r-rl|.
 \end{tikzlibrary}
 
-\subsection{Zig-Zag}
+\begin{multicols*}{2}[\subsection{Timers}]
+New timers are setup for both the Zig-Zag and the Zig-Zig connections
+that will be introduced in this section.
+These can be configured through the following keys.
+\begin{key}{/\tikzext/ortho/spacing=\meta{number} (initially 4)}\keycompat{tikz/ortho}
+  For $\meta{number} \geq 2$
+  \begin{itemize}
+  \item |pos = 0| will be at the start,\indexKeyO{pos}
+  \item |pos = 1| will be at the end,
+  \item |pos = |$\frac{1}{\meta{number}}$ will be at the first kink,
+  \item |pos = |$\frac{\meta{number}-1}{\meta{number}}$ will be at the second kink and
+  \item |pos = .5| will be in the middle of the middle part of the connection.
+  \end{itemize}
+  
+  If $\meta{number} \leq 1$ then
+  \begin{itemize}
+  \item |pos = -1| will be at the start,
+  \item |pos = 2| will be at the end,
+  \item |pos = 0| will be at the first kink,
+  \item |pos = 1| will be at the second kink and
+  \item |pos = .5| will still be in the middle of the middle part of the connection.
+  \end{itemize}
+\end{key}
+
+\newcolumn
+\begin{key}{/\tikzext/ortho/middle 0 to 1}\keycompat{tikz/ortho}
+  This is an alias for |spacing = 0|.
+\end{key}
+
+\begin{codeexample}[width=4cm,preamble=\usetikzlibrary{ext.paths.ortho}]
+\tikz \draw (0,0) -|- (2,3) 
+  foreach \p in {0.0, 0.25, 0.5, 0.75, 1.0}{
+    node [pos=\p] {\p}};
+\end{codeexample}
+\end{multicols*}
+
+\pagebreak
+\begin{multicols*}{2}[\subsection{Zig-Zag}]
 Similar to the path operations \verb!|-! and \verb!-|! this library adds\indexPathOperationO{\protect\pgfmanualbar-}\indexPathOperationO{-\protect\pgfmanualbar}
-the path operations \verb!|-|! and \verb!-|-!.
+the path operations \verb!|-|! (\enquote{vhv}) and \verb!-|-! (\enquote{hvh}).
 {\catcode`\|=12
 \begin{pathoperation}[noindex]{|-|}{\opt{\oarg{options}}\meta{coordinate or cycle}}
     \index{---1@\protect\texttt{\protect\pgfmanualbar-\protect\pgfmanualbar} path operation}%
@@ -33,11 +70,30 @@ the path operations \verb!|-|! and \verb!-|-!.
     This operation means ``first horizontal, then vertical and then horizontal again''.
 \end{pathoperation}
 }
-\begin{key}{/\tikzext/ortho/ratio=\meta{ratio} (initially 0.5)}\keycompat{tikz/ortho}
-  This sets the ratio for the middle part of the Zig-Zag connection.
-  
-  For values $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
-  look more like Zig-Zig lines.
+
+Where the middle part (horizontal for \verb!|-|! and vertical for \verb!-|-!)
+of these path operation end up can be specified by a ratio, a distance or
+a factor of one base vector of the $x\!y$ coordinate system.
+
+If used with nodes, the key |from center| toggles from where these are measured.
+\begin{key}{/\tikzext/ortho/from center=\opt{\meta{true or false}} (default true)}\keycompat{tikz/ortho}
+  When nodes get connected the placement of the middle part of the Zig-Zag
+  and the Zig-Zig (see below) connections will be calculated from the border
+  of these nodes.
+  The middle part of the connections will be calculated from the nodes' center
+  if this key is set to |true|.
+\end{key}
+
+\begin{keylist}[/\tikzext/ortho]{%
+  hvh ratio=\meta{ratio} (initially 0.5),
+  vhv ratio=\meta{ratio} (initially 0.5),
+  hvvh ratio=\meta{ratio},
+  ratio=\meta{ratio}}\keylistcompat{tikz/ortho}
+  This sets the ratio for the middle part of the \verb!-|-! and/or the \verb!|-|! operation.
+
+  For values of $\meta{ratio} < 0$ and $\meta{ratio} > 1$ the Zig-Zag lines will
+  look more like the Zig-Zig lines.
+
 \begin{codeexample}[preamble=\usetikzlibrary{ext.paths.ortho}]
 \begin{tikzpicture}[very thick, rounded corners]
 \draw[help lines] (-.25, -1.25) grid (2.25, 1.25);
@@ -45,129 +101,104 @@ the path operations \verb!|-|! and \verb!-|-!.
       (2, 0) -|-[ratio=.25] (0,-1) -- cycle;
 \end{tikzpicture}
 \end{codeexample}
-\end{key}
-%TODO: hvvh/distance needs fixing, maybe?
-\begin{key}{/\tikzext/ortho/distance=\meta{distance}}\keycompat{tikz/ortho}
-  This sets the distance between the start point
-  and the middle part of the Zig-Zag connection.
+\end{keylist}
+
+For specifying a distance or a factor in the $x\!y$ coordinate system the same option will be used.
+\begin{keylist}[/\tikzext/ortho]{%
+  hvh distance=\meta{distance},
+  vhv distance=\meta{distance},
+  hvvh distance=\meta{distance},
+  distance=\meta{distance}}\keylistcompat{tikz/ortho}
   
-  For values $\meta{distance} < 0$ the distance will be used for the target coordinate.
-\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{ext.paths.ortho}]
+If \meta{distance} contains a unit, this will be used as the absolute distance
+for the middle part of the \verb!-|-! and/or the \verb!|-|! operation.
+If \meta{distance} doesn't contain a unit it will be interpreted
+as the factor for the base $y$ (\verb!|-|!) or $x$ vector (\verb!-|-!)
+in the $x\!y$ coordinate system.
+
+This distance is measured from the target coordinate if it's negative,
+otherwise from the start coordinate.
+
+The |distance| option also sets the distance of the Zig-Zig path operations below.
+
+\begin{codeexample}[width=6cm,preamble=\usetikzlibrary{ext.paths.ortho}]
 \begin{tikzpicture}[very thick,-latex]
-\draw[help lines,-] (-.25, -.25) grid (5.25, 3.25);
-\draw (0, 0) -|-[distance= .5cm] ++(2, 1);
-\draw (0, 2) -|-[distance=-.5cm] ++(2, 1);
+\draw[help lines,-]
+  (-.25, -.25) grid (5.25, 3.25);
+\draw (0, 0)
+  -|-[hvh distance=+ .5cm] ++(2, 1);
+\draw (0, 2)
+  -|-[hvh distance=+-.5cm] ++(2, 1);
 
 \tikzset{xshift=3cm}
-\draw (2, 1) -|-[distance= .5cm] ++(-2, -1);
-\draw (2, 3) -|-[distance=-.5cm] ++(-2, -1);
+\draw (2, 1)
+  -|-[hvh distance=+ .5cm]++(-2,-1);
+\draw (2, 3)
+  -|-[hvh distance=+-.5cm]++(-2,-1);
 \end{tikzpicture}
 \end{codeexample}
-\end{key}
-\begin{key}{/\tikzext/ortho/from center=\opt{\meta{true or false}} (default true)}\keycompat{tikz/ortho}
-  When nodes get connected the placement of the middle part of the Zig-Zag
-  and the Zig-Zig (see below) connections will be calculated from the border
-  of these nodes.
-  The middle part of the connections can be calculated from the nodes' center
-  if this key is set to |true|.
-\end{key}
+\end{keylist}
+\end{multicols*}
 
-New timers are setup for both the Zig-Zag and the Zig-Zig connections,
-these can be configured through the following keys.
-\begin{codeexample}[width=8cm,preamble=\usetikzlibrary{ext.paths.ortho}]
-\tikz \draw (0,0) -|- (2,3) 
-  foreach \p in {0.0, 0.25, 0.5, 0.75, 1.0}{
-    node [pos=\p] {\p}};
-\end{codeexample}
-\begin{key}{/\tikzext/ortho/spacing=\meta{number} (initially 4)}\keycompat{tikz/ortho}
-  Unless $\meta{number} = 0$ is set
-  \begin{itemize}
-  \item |pos = 0| will be at the start,\indexKeyO{pos}
-  \item |pos = 1| will be at the end,
-  \item |pos = |$\frac{1}{\meta{number}}$ will be at the first kink,
-  \item |pos = |$\frac{\meta{number}-1}{\meta{number}}$ will be at the second kink and
-  \item |pos = .5| will be in the middle of the middle part of the connection.
-  \end{itemize}
-  
-  If $\meta{number} = 0$ then
-  \begin{itemize}
-  \item |pos = -1| will be at the start,
-  \item |pos = 2| will be at the end,
-  \item |pos = 0| will be at the first kink,
-  \item |pos = 1| will be at the second kink and
-  \item |pos = .5| will still be in the middle of the middle part of the connection.
-  \end{itemize}
-\end{key}
-\begin{key}{/\tikzext/ortho/middle 0 to 1}\keycompat{tikz/ortho}
-  This is an alias for |spacing = 0|.
-\end{key}
-
-\subsection{Zig-Zig}
+\begin{multicols*}{2}[\subsection{Zig-Zig}]
 \begin{pathoperation}{r-ud}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first up, then horizontal and then down''.
-  \begin{key}{/\tikzext/ortho/ud distance=\meta{length} (initially .5cm)}\keycompat{tikz/ortho}
-    This sets the distance between the start and the horizontal line to \meta{length}.
-  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-du}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first down, then horizontal and then up''.
-  \begin{key}{/\tikzext/ortho/du distance=\meta{length} (initially .5cm)}\keycompat{tikz/ortho}
-    This sets the distance between the start and the horizontal line to \meta{length}.
-  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-lr}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``left down, then vertical and then right''.
-  \begin{key}{/\tikzext/ortho/lr distance=\meta{length} (initially .5cm)}\keycompat{tikz/ortho}
-    This sets the distance between the start and the vertical line to \meta{length}.
-  \end{key}
 \end{pathoperation}
 \begin{pathoperation}{r-rl}{\opt{\oarg{options}}\meta{coordinate or cycle}}
   This operation means ``first right, then vertical and then down''.
-  \begin{key}{/\tikzext/ortho/rl distance=\meta{length} (initially .5cm)}\keycompat{tikz/ortho}
-    This sets the distance between the start and the vertical line to \meta{length}.
-  \end{key}
 \end{pathoperation}
 
-All distances can be set with one key.
-\begin{key}{/\tikzext/ortho/udlr distance=\meta{length}}\keycompat{tikz/ortho}
-  Sets all the previous distances to the same value \meta{length}.
-\end{key}
+\newcolumn
+\begin{keylist}[/\tikzext/ortho]{%
+  ud distance=\meta{distance} (initially .5cm),
+  du distance=\meta{distance} (initially .5cm),
+  lr distance=\meta{distance} (initially .5cm),
+  rl distance=\meta{distance} (initially .5cm),
+  udlr distance=\meta{distance},
+  distance=\meta{distance}}%
+  \listcompat{These were all in the \texttt{/tikz/ortho} namespace.}
+  If \meta{distance} contains a unit, this will be used as the absolute distance
+  for the middle part of the previously introduced path operation.
+  If \meta{distance} doesn't contain a unit it will be interpreted
+  as the factor for the base $y$ (|ud|/|du|) or $x$ vector (|lr|/|rl|)
+  in the $x\!y$ coordinate system.
+  
+  The distance is measured from the start, never from the target coordinate.
+  
+  The |distance| option also sets the distance of the Zig-Zag path operations above.
+\end{keylist}
+\end{multicols*}
 
-\subsection{Even more Horizontal and Vertical Lines}
+\begin{multicols*}{2}[\subsection{Even more Horizontal and Vertical Lines}]
 
 The following keys can be used to access vertical and horizontal line path operations.
-\begin{stylekey}{/\tikzext/horizontal vertical}\keycompat{tikz}
-  This installs  \verb!to path = -| (\tikztotarget) \tikztonodes!\indexKeyO{to path}
+\begin{keylist}[/\tikzext]{%
+  horizontal vertical,
+  vertical horizontal}\keylistcompat{tikz/horizontal vertical, /tikz}
+  These install the path operations \verb!-|! or \verb!|-! respectively as to paths%
+  \indexKeyO{to path} that can be used with the path operations |to| or |edge|.
+\end{keylist}
+\begin{keylist}[/tikzext]{%
+  horizontal vertical horizontal=\opt{\meta{options}},
+  vertical horizontal vertical=\opt{\meta{options}}}\keylistcompat{tikz/horizontal vertical horizontal, /tikz}
+  These installs the operations \verb!-|-! or \verb!|-|! respectively as to paths
   that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/vertical horizontal}\keycompat{tikz}
-  This installs \verb!to path = |- (\tikztotarget) \tikztonodes!
+\end{keylist}
+\begin{keylist}[/\tikzext]{%
+  up horizontal down=\opt{\meta{options}},
+  down horizontal up=\opt{\meta{options}},
+  left vertical right=\opt{\meta{options}},
+  right vertical left=\opt{\meta{options}}}\listcompat{These were all in the \texttt{/tikz} namespace.}
+  These install the Zig-Zig path operations as to paths
   that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/horizontal vertical horizontal=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = -|- (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/vertical horizontal vertical=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = |-| (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/up horizontal down=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = r-ud (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/down horizontal up=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = r-du (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/left vertical right=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = r-lr (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
-\begin{stylekey}{/\tikzext/right vertical left=\opt{\meta{options}}}\keycompat{tikz}
-  This installs  \verb!to path = r-rl (\tikztotarget) \tikztonodes!
-  that can be used with the path operations |to| or |edge|.
-\end{stylekey}
+\end{keylist}
+
 When connecting rectangular nodes, these keys could be useful as well.
 They all need to be given to a |to| or |edge| path operation.
 \begin{stylekey}{/\tikzext/only vertical second=\opt{\meta{length}} (default 0pt)}\keycompat{tikz}
@@ -195,7 +226,7 @@ it connects to the start point in the center (or at its border in case it is a n
 The optional \meta{length} can be used to shift the line orthogonally to its direction.
 \end{stylekey}
 
-%\pagebreak
+%\newcolumn
 Since all previous key are rather cumbersome, one can install shortcuts for these.
 \begin{stylekey}{/\tikzext/ortho/install shortcuts}\keycompat{tikz/ortho}
 Installs the following shortcuts:\\
@@ -216,3 +247,4 @@ Installs the following shortcuts:\\
 \end{tabular}
 }
 \end{stylekey}
+\end{multicols*}
