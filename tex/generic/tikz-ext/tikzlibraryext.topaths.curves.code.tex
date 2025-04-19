@@ -1,0 +1,94 @@
+% Copyright 2025 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\unless\ifcsname tikzextset\endcsname
+  \input tikzext-util.tex
+\fi
+
+\let\tikzextorig@pgfpathcurveto\pgfpathcurveto
+\def\tikzext@pathcurveto#1#2#3#4{%
+  \let\pgfpathcurveto\tikzextorig@pgfpathcurveto
+  \pgfmathparse{\pgfkeysvalueof{/tikz/ext/curve between/from}}%
+  \ifdim\pgfmathresult pt=0pt
+    \pgf@ignoremovetotrue
+  \else
+    \pgf@ignoremovetofalse
+  \fi
+  \pgf@@pathcurvebetweentime
+    {\pgfkeysvalueof{/tikz/ext/curve between/from}}
+    {\pgfkeysvalueof{/tikz/ext/curve between/to}}
+    {\tikz@timer@start}
+    {#1}{#2}{#3}%
+  \ifx\global#4%
+    \let\tikzext@temp\tikzext@curve@global
+  \else
+    \ifx\let#4%
+      \let\tikzext@temp\tikzext@curve@normal
+    \else
+      \let\tikzext@temp\pgfutil@firstofone
+    \fi
+  \fi
+  \tikzext@temp
+  #4%
+}
+\def\tikzext@curve@normal#1\fi#2\tikz@scan@next@command{%
+    #1%
+  \fi
+  #2%
+  \tikz@lastx=\pgf@xc \tikz@lasty=\pgf@yc
+  \let\tikz@timer\tikzext@curve@timer
+  \let\tikz@tangent\tikz@tangent@lookup
+  \tikz@scan@next@command
+}
+\def\tikzext@curve@global{%
+  \aftergroup\tikzext@curve@global@
+}
+\def\tikzext@curve@global@#1\tikz@scan@next@command{%
+  #1%
+  \let\tikz@timer\tikzext@curve@timer
+  \let\tikz@tangent\tikz@tangent@lookup
+  \tikz@scan@next@command
+}
+\def\tikzext@curve@timer{%
+  \pgftransformcurveattime{%
+    \tikz@time*(\pgfkeysvalueof{/tikz/ext/curve between/to}-(\pgfkeysvalueof{/tikz/ext/curve between/from}))%
+                                                           +(\pgfkeysvalueof{/tikz/ext/curve between/from})}
+    {\tikz@timer@start}{\tikz@timer@cont@one}{\tikz@timer@cont@two}{\tikz@timer@end}%
+}
+
+
+\pgfkeysdef{/tikz/ext/curve between}{%
+  \pgfqkeys{/tikz/ext/curve between}{#1}%
+}
+\pgfkeysdef{/tikz/ext/curve between/off}{%
+  \let\pgfpathcurveto\tikzextorig@pgfpathcurveto
+}
+\pgfkeysdef{/tikz/ext/curve between/from}{%
+  \pgfkeyssetvalue{/tikz/ext/curve between/from}{#1}%
+  \let\pgfpathcurveto\tikzext@pathcurveto
+}
+\pgfkeysdef{/tikz/ext/curve between/to}{%
+  \pgfkeyssetvalue{/tikz/ext/curve between/to}{#1}%
+  \let\pgfpathcurveto\tikzext@pathcurveto
+}
+\pgfkeysdefargs{/tikz/ext/curve between/from and to}{#1..#2}{%
+  \pgfkeyssetvalue{/tikz/ext/curve between/from}{#1}%
+  \pgfkeyssetvalue{/tikz/ext/curve between/to}{#2}%
+  \let\pgfpathcurveto\tikzext@pathcurveto
+}
+\pgfkeysdef{/tikz/ext/curve between/.unknown}{%
+  \pgfkeys@expanded{\noexpand\pgfutil@in@{..}{\pgfkeyscurrentname}}%
+  \ifpgfutil@in@
+    \pgfkeysgetvalue{/tikz/ext/curve between/from and to/.@cmd}\tikzext@temp
+    \expandafter\tikzext@temp\pgfkeyscurrentname\pgfeov
+  \else
+    \pgfkeyssetvalue{/tikz/ext/curve between/from}{0}%
+    \pgfkeyssetevalue{/tikz/ext/curve between/to}{\pgfkeyscurrentname}%
+    \let\pgfpathcurveto\tikzext@pathcurveto
+  \fi
+}
