@@ -7,14 +7,9 @@
 %
 
 \RequirePackage{pgffor}
-\ifcsname tikzext@pgffor@nolist@parse\endcsname
-  \expandafter\@gobble
-\else
-  \expandafter\@firstofone
+\unless\ifcsname iftikzext@pgffor@nolist\endcsname
+  \input pgffor-ext.code.tex
 \fi
-{
-  \input{pgffor-ext.code.tex}
-}
 
 \pgfqkeys{/pgf/foreach/ext}{
   .code=\pgfqkeys{/pgf/foreach/ext}{#1},

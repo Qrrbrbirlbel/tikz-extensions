@@ -41,9 +41,9 @@
   \endgroup
 }
 
-\pgfutil@IfUndefined{tikzext@pgf@foreach@no@list@parse@to}{% stupid test
+\unless\ifcsname iftikzext@pgffor@nolist\endcsname
   \input pgffor-ext.code.tex
-}{}
+\fi
 
 %% PGFmath
 %% strrepeat("x", 5) = "xxxxx"
