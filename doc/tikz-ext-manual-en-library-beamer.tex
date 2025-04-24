@@ -12,12 +12,12 @@
 \section{Beamer with \tikzname}
 \label{tikzlibrary:beamer}
 \begin{tikzlibrary}{ext.beamer}
-  This library can help create \tikzname\ diagrams in the class Beamer\indexPackageO{beamer}.
+  This library can help create \tikzname\ diagrams in the \Beamer\ class.
 \end{tikzlibrary}
 
 %\begin{multicols*}{2}
 \subsection{Helpers}
-These helpers are always available, even if this library is loaded outside of Beamer.
+These helpers are always available, even if this library is loaded outside of \Beamer.
 \begin{key}{/\tikzext/ignore line width}
 If this key is used on a scope (or the \tikzname\ picture itself),
 the line widths of paths will not contribute to the bounding box
@@ -38,9 +38,9 @@ after a new diagram is added to the group.
 \end{key}
 
 \subsection{Beamer}
-While \tikzname\ has some rudimentary support for the |beamer| class,
+While \tikzname\ has some rudimentary support for the \Beamer\ class,
 i.\,e. in the form of \texttt{\string\path<}\meta{overlay specification}\texttt{>},
-this uses Beamer's |\alt| command internally so that on overlays
+this uses \Beamer's |\alt| command internally so that on overlays
 that are not included in \meta{overlay specification}, the path will not be typeset
 and will therefore not contribute to the diagram's bounding box.
 
@@ -85,7 +85,7 @@ you might be better off using the |ext/sync bounding box| key
 directly with a distinct \meta{name}.
 \end{key}
 
-\subsubsection{Beamer Function and keys}
+\subsubsection{\Beamer Function and keys}
 \begin{key}{/\tikzext/beamer function=\mchoice{original, alt, only, uncover, visible, invisible}}
 This key changes how the \meta{overlay specification} in
 \texttt{\string\path<}\meta{overlay specification}\texttt{>}
@@ -109,12 +109,12 @@ The same overlays as above can be created now with the following diagram.
     visible=\meta{overlay specification} (default all),
   invisible=\meta{overlay specification} (default all)%
 }
-These keys work similar to Beamer's own |\onslide| command
+These keys work similar to \Beamer's own |\onslide| command
 but only apply to the element it is used on.
 
 The implementation of this is rather experimental and should be used carefully.
 Multiple uses of these options \emph{don't} stack, only the last one wins --
-this includes the use of the first syntax shorcuts introduced
+this includes the use of the first syntax shortcuts introduced
 in the next subsubsection.
 
 The same overlays as above can be created with the first of the following diagram.
@@ -154,7 +154,7 @@ Of course, an extension to Beamer is not complete without the following keys.
   Applies the specific list depending whether the current overlay is before,
   on or after the specified \meta{overlay specification}.
 \end{key}
-\subsubsection{Beamer Shortcuts}
+\subsubsection{\Beamer Shortcuts}
 But, of course, no one wants to write |/utils/ext/only={2}{red}| to
 make an element red on overlay 2.
 \begin{key}{/\tikzext/beamer shortcuts=\marg{key-value list}}
@@ -167,7 +167,6 @@ make an element red on overlay 2.
 \begin{key}{/\tikzext/beamer shortcuts/first char=%
   \mchoice{uncover, cover, visible, invisible, aobs visible, aobs invisible} (initially uncover)}
   The value of this key will be used for the first char shorthands that can be enabled with the following keys.
-\end{key}
 \begin{key}{/\tikzext/beamer shortcuts/enable first char <}
   This install a \enquote{first char} handler with the character |<|.
   
@@ -220,6 +219,12 @@ make an element red on overlay 2.
 \path (a) edge[?<3->, bend right] (b);
 \end{tikzpicture}
 \end{codeexample}
+\end{key}
+\begin{key}{/{tikz/graphs/ext}/better beamer shortcut}
+This sets up a few things that enables the |<| first char syntax in the appropriate places.
+For nodes, it tries to be smart and checks for the presence of a |>| to decide whether the \Beamer\ shortcut
+or the the |graphs| library's own shortcut should be used.
+\end{key}
 \end{key}
 
 \subsubsection{Key Handler}

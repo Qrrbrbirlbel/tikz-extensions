@@ -342,25 +342,34 @@
 }
 
 % ext/ keys need special handling in graphs library
-\pgfqkeys{/tikz/graphs}{
-  ext/uncover/.style={
-    /tikz/graphs/@edges styling/.append={,/tikz/ext/uncover={#1}},
-    /tikz/ext/uncover={#1}},
-  ext/visible/.style={
-    /tikz/graphs/@edges styling/.append={,/tikz/ext/visible={#1}},
-    /tikz/ext/visible={#1}},
-  ext/cover/.style={
-    /tikz/graphs/@edges styling/.append={,/tikz/ext/cover={#1}}
-    /tikz/ext/cover={#1}},
-  ext/invisible/.style={
-    /tikz/graphs/@edges styling/.append={,/tikz/ext/invisible={#1}}
-    /tikz/ext/invisible={#1}},
-  ext/better beamer shortcut/.code={%
-    \pgfkeyslet{/handlers/first char syntax/\expandafter\meaning\string<}\relax % disable < shortcut
-    \tikzgraphsset{
-      @edges styling/.append={,/tikz/ext/beamer shortcuts/enable first char <},
-      @nodes styling/.append style={/tikz/ext/beamer shortcuts/enable first char <},
-      /tikz/every label/.append style={/tikz/ext/beamer shortcuts/enable first char <}
-    }%
-  }
+\def\tikzext@beamer@graphs@firstchar#1{%
+  \pgfutil@in@{>}{#1}%
+  \ifpgfutil@in@
+    \tikzext@beamer@firstchar{#1}%
+  \else
+    \tikz@lg@parse@less{#1}%
+  \fi
+}
+\pgfkeysdef{/tikz/ext/beamer shortcuts/enable first char < graphs}{%
+  \pgfkeysvalueof{/tikz/ext/beamer shortcuts/@enable first char/.@cmd}{<}{\tikzext@beamer@graphs@firstchar}\pgfeov
+}
+\pgfkeysdef{/tikz/graphs/ext/uncover}{%
+  \pgfkeysaddvalue{/tikz/graphs/@edges styling}{}{,/tikz/ext/uncover={#1}}%
+  \pgfkeysvalueof{/tikz/ext/uncover/.@cmd}{#1}\pgfeov}
+\pgfkeysdef{/tikz/graphs/ext/visible}{%
+  \pgfkeysadd{/tikz/graphs/@edges styling}{}{,/tikz/ext/visible={#1}}%
+  \pgfkeysvalueof{/tikz/ext/visible/.@cmd}{#1}\pgfeov}
+\pgfkeysdef{/tikz/graphs/ext/cover}{%
+  \pgfkeysaddvalue{/tikz/graphs/@edges styling}{}{,/tikz/ext/cover={#1}}%
+  \pgfkeysvalueof{/tikz/ext/cover/.@cmd}{#1}\pgfeov}
+\pgfkeysdef{/tikz/graphs/ext/invisible}{%
+  \pgfkeysaddvalue{/tikz/graphs/@edges styling}{}{,/tikz/ext/invisible={#1}}%
+  \pgfkeysvalueof{/tikz/ext/invisible/.@cmd}{#1}\pgfeov}
+\pgfkeysdef{/tikz/graphs/ext/better beamer shortcut}{%
+  \pgfkeyslet{/handlers/first char syntax/\expandafter\meaning\string<}\relax % disable < shortcut
+  \pgfkeysaddvalue{/tikz/graphs/@edges styling}{}{,/tikz/ext/beamer shortcuts/enable first char <}%
+  \pgfkeys{
+    /tikz/graphs/@nodes styling/.append style={/tikz/ext/beamer shortcuts/enable first char < graphs},
+    /tikz/every label/.append style={/tikz/ext/beamer shortcuts/enable first char <}
+  }%
 }
