@@ -15,7 +15,6 @@ This library extends \tikzname's functionalities when it comes to nodes.
 \end{tikzlibrary}
 
 \begin{multicols}{2}
-
 \subsection{Pic as a node}
 \begin{key}{/\tikzext/pic=\opt{\meta{boolean}} (default true, initially false)}
 \keycompat{tikz}
@@ -34,6 +33,62 @@ for example as a label.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
+\newcolumn
+
+\subsection{Node as a pic}
+A pic allows any (sub)picture to be handled like a node --
+with one caveat: it doesn't provide anchors like a node and
+is thus not able to be placed like one.
+
+A \pgfname\ matrix on the other hand allows a (sub)picture in a node (multiple even)
+but the matrix is not able to be transformed.
+
+The following should find a compromise between these two.
+Here are some rules and guidelines for using this:
+
+\begin{itemize}
+\item The \enquote{text} of a node is a (sub)picture like a pic's code or a matrix cell.
+      The (sub)picture will be typeset as the text of the node.
+\item Only the |text| node part is available. The |\nodepart| command should not be used.
+      The solution is \emph{not} a matrix. It can only contain one cell. No |\\| is needed at the end.
+\item The baseline of the node is the (sub)pictures $y$ value of $0$.
+\item Just like with a pic or a matrix, certain settings and values will be inherited by the (sub)picture.
+\item The bounding box of the (sub)picture will be evaluated automatically and the result will be used to determine
+      the size of the \enquote{text}.
+
+      However, the line width will not contribute to the size.
+      This has the advantage that with |/pgf/inner sep| set to zero, paths of the (sub)picture
+      can lie on the border of the node.
+\item This is not nestable!
+      You cannot use |node is pic| inside a (sub)picture created by |node is pic|.
+\end{itemize}
+
+\newcolumn
+\begin{key}{/\tikzext/node is pic=\opt{\meta{true or false}} (default true)}
+  Setting this to |true| activates the aforementioned procedure for the node's text to be a picture.
+  Setting it to |false| returns to the default behavior of a normal node.
+\end{key}
+\begin{stylekey}{/\tikzext/every node pic}
+This key will be applied at the start of every (sub)picture.
+\end{stylekey}
+\begin{key}{/\tikzext/node pic reset graphic state}
+This key sets up |/tikz/ext/every node pic| so that it resets many settings and values
+to their \pgfname/\tikzname\ default.
+\end{key}
+
+\begin{key}{/\tikzext/name prefix ..}
+  Similar to a pic, |/tikz/name prefix| is set to the name of the outer node.
+  This key will return to the name prefix that was set beforehand.
+\end{key}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
+\begin{tikzpicture}[x=+7mm, y=+7mm]
+\draw (0,0) to[bend left]
+  node[ext/node is pic, sloped, draw, above]{
+    \draw[red] (0,0) circle[radius=1];
+  } (3,3);
+\end{tikzpicture}
+\end{codeexample}
+\newcolumn
 
 \subsection{Nodes on paths}
 When nodes are placed along paths they don't interrupt
@@ -129,8 +184,8 @@ As above but suitable for connecting nodes.
                   to["2" near start, "3", "4" near end] (4,1)
                                                 -- ++(down:1);
 \end{codeexample}
-
 \newcolumn
+
 \subsection{Automatic placement of nodes}
 The \referenceKeyandIndexO{auto} key allows automatic placement of
 nodes along a path segment.
@@ -155,23 +210,29 @@ is used.
 
 Certain cases exist for |ext/west|, |ext/east|, |ext/north| and |ext/south| placements
 where it is not clear how a node should be placed.
-These cases and their behavior can be seen in figure~\ref{fig:autoplacements}.
-%\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.arrows}]
-\begin{figure*}
+These cases and their behavior can be seen in the following figure.%~\ref{fig:autoplacements}.
+%\begin{figure*}
 \begin{center}
 \small
 \newcommand*\tikzauto[3]{%
-  \path[{ext_Centered Circle[black]}-Latex, auto=ext/#1, passive/.style={gray, nodes=gray, behind path}]
-    (0,0) edge[#2] node {#1} (left:2) edge[#2] node {#1} (right:2)
-          edge[#3] node {#1} (  up:2) edge[#3] node {#1} ( down:2);}
-\tikz[x=+.75cm,y=+.75cm]\matrix[nodes=draw, row sep=5mm, column sep=5mm, ampersand replacement=\&]{
-  \tikzauto{west}{}{passive}  \& \tikzauto{east}{}{passive}  \\
-  \tikzauto{north}{passive}{} \& \tikzauto{south}{passive}{} \\};
+  \path[{ext_Centered Circle[black]}-Latex]
+    (0,0) edge[auto=ext/#2] node {#2} (left:2) edge[auto=ext/#2] node {#2} (right:2)
+          edge[auto=ext/#3] node {#3} (  up:2) edge[auto=ext/#3] node {#3} ( down:2);}
+\begin{tikzpicture}[x=+.75cm,y=+.75cm, nodes=draw]
+\path[{ext_Centered Circle[black]}-Latex]
+    (0,0) edge node[auto=ext/west] {west}
+               node[auto=ext/east] {east} (left:2)
+          edge node[auto=ext/west] {west}
+               node[auto=ext/east] {east} (right:2)
+          edge node[auto=ext/north] {north}
+               node[auto=ext/south] {south} (  up:2)
+          edge node[auto=ext/north] {north}
+               node[auto=ext/south] {south} (down:2);
+\end{tikzpicture}
 \end{center}
-\caption{Behavior of \texttt{ext/est}, \texttt{ext/east}, \texttt{ext/north} and \texttt{ext/south} in certain cases}
-\label{fig:autoplacements}
-\end{figure*}
-%\end{codeexample}
+%\caption{Behavior of \texttt{ext/est}, \texttt{ext/east}, \texttt{ext/north} and \texttt{ext/south} in certain cases}
+%\label{fig:autoplacements}
+%\end{figure*}
 
 \subsubsection{Offset}
 Nodes are usually placed with their border (including any |outer sep|)
@@ -230,4 +291,6 @@ to one of the eight compass directions.
 This key disables the \referenceKeyandIndexO{sloped} option
 which in turn will disable this option.
 \end{key}
+\newcolumn
+\null
 \end{multicols}

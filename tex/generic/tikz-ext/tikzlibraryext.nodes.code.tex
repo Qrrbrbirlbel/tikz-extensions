@@ -759,6 +759,106 @@
   \tikzext@auto@offset@B@precise
 }
 
+%%% node pic
+% named nodes need correction
+\def\tikzext@nodepic@callback#1{\xdef\tikzext@nodepic@list{\tikzext@nodepic@list,{#1}}}
+\def\tikzext@nodepic@callback@#1{%
+  \unless\ifx\tikzext@nodepic@list\pgfutil@gobble
+  \begingroup
+    \pgfsettransform{\csname pgf@sh@nt@#1\endcsname}%
+    \pgftransformshift{\pgfqpoint{-\pgf@lbb@minx@tikzext@picnode}{0pt}}
+    \csname pgf@sh@np@#1\endcsname
+    \csname pgf@sh@ma@#1\endcsname
+    \pgftransformshift{\pgf@sh@reanchor{\csname pgf@sh@ns@#1\endcsname}{text}}%
+    \pgfutil@for\tikzext@temp:=\tikzext@nodepic@list\do{%
+      \unless\ifcsname tikzext@nodeaspic@\tikzext@temp @visited\endcsname
+        \expandafter\let\csname tikz@nodeaspic@\tikzext@temp @visited\endcsname\pgfutil@empty
+        \begingroup
+          \pgfkeys@expanded{\noexpand\tikzext@transformcm\csname pgf@sh@nt@\tikzext@temp\endcsname}%
+          \pgfgettransform\tikzext@cm
+          \expandafter\xdef\csname pgf@sh@nt@\tikzext@temp\endcsname{\tikzext@cm}%
+        \endgroup
+      \fi
+    }%
+  \endgroup
+  \fi
+}
+% transformation helper
+\def\tikzext@transformcm#1#2#3#4#5#6{%
+  \pgftransformcm{#1}{#2}{#3}{#4}{\pgfqpoint{#5}{#6}}%
+}
+\let\tikzextorig@tikz@do@fig\tikz@do@fig
+\def\tikzext@do@nodeispic{%
+  \tikz@fig@mustbenamed
+  \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
+    \pgfextra{\tikzext@nodepic@callback@{\tikzlastnode}}%
+  \pgfeov
+  \setbox\pgfnodeparttextbox=\hbox\bgroup%
+    \pgfinterruptpath
+      \pgfscope
+        \pgfinterruptboundingbox
+          \pgftransformreset
+          \tikzset{
+            /pgf/local bounding box=tikzext@picnode,
+            /tikz/ext/every node pic,
+            /tikz/ext/name prefix ../.style/.expanded={/tikz/name prefix={\pgfkeysvalueof{/tikz/name prefix}}},
+            /tikz/name prefix/.expanded=\tikz@fig@name
+          }%
+          \let\tikz@do@fig\tikzextorig@tikz@do@fig
+          \let\pgf@nodecallback\tikzext@nodepic@callback
+          \global\let\tikzext@nodepic@list\pgfutil@gobble
+          \let\tikz@options\pgfutil@empty
+          \bgroup
+            \aftergroup\tikzext@nodeispic@done
+}
+\def\tikzext@nodeispic@done{
+        \endpgfinterruptboundingbox
+      \endpgfscope
+    \endpgfinterruptpath
+  \egroup
+  \setbox\pgfnodeparttextbox=\hbox{%
+    \kern-\pgf@lbb@minx@tikzext@picnode
+    \unhbox\pgfnodeparttextbox
+    \kern\pgf@lbb@maxx@tikzext@picnode
+  }%
+  \ht\pgfnodeparttextbox=+\pgf@lbb@maxy@tikzext@picnode\relax
+  \dp\pgfnodeparttextbox=-\pgf@lbb@miny@tikzext@picnode\relax
+  \tikz@fig@continue
+}
+\pgfqkeys{/tikz/ext}{
+  node is pic/.is choice,
+  node is pic/true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@do@nodeispic,
+  node is pic/false/.code=\let\tikz@do@fig\tikzextorig@tikz@do@fig,
+  node is pic/.default=true,
+}
+\pgfkeysdef{/tikz/ext/every node pic}{}
+
+% helpers
+\pgfkeysdef{/tikz/ext/every node pic}{}
+\pgfkeysdef{/tikz/ext/node pic reset graphic state}{%
+  \pgfkeysalso{%
+    /tikz/ext/every node pic/.append style={
+      /tikz/color=black,
+      /tikz/arrows=-,
+      /tikz/solid,
+      /tikz/every path/.append style=/tikz/thin,
+      /tikz/opaque,
+      /tikz/line cap=butt,
+      /tikz/line join=miter,
+      /tikz/anchor=center,
+      /tikz/midway,
+      /tikz/shape=rectangle,
+      /tikz/text width=,
+      /tikz/text depth=,
+      /tikz/text height=,
+      /tikz/sloped=false,
+      /tikz/allow upside down=false,
+      /pgf/inner sep=+.3333em,
+      /pgf/outer sep=+.5\pgflinewidth,
+      /pgf/minimum size=+1pt%
+    }%
+  }%
+}
 %%% Compatibility
 \tikzextset{
   /tikz-ext/compat/add library={nodes}{pre 0.6},
