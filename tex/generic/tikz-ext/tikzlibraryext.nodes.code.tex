@@ -804,7 +804,6 @@
   \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
     \pgfextra{\tikzext@nodepic@callback@{\tikzlastnode}}%
   \pgfeov
-  % \def\tikzext@nodeispic@npname{text}%
   \setbox\pgfnodeparttextbox=\hbox\bgroup%
     \pgfinterruptpath
       \pgfscope
@@ -839,12 +838,6 @@
   \tikz@fig@continue
 }
 
-% \def\tikzext@nodeispic@nodepart{%
-%   \pgfutil@ifnextchar[{\tikzext@nodeispic@nodepart@}{\tikzext@nodeispic@nodepart@[]}%
-% }
-% \def\tikzext@nodeispic@nodepart@[#1]#2{%
-  
-% }
 \pgfqkeys{/tikz/ext}{
   node is pic/.is choice,
   node is pic/true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@nodeispic@do,
