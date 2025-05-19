@@ -761,7 +761,17 @@
 
 %%% node pic
 % named nodes need correction
-\def\tikzext@nodepic@callback#1{\xdef\tikzext@nodepic@list{\tikzext@nodepic@list,{#1}}}
+\def\tikzext@nodepic@callback#1{%
+  \def\tikzext@temp{#1}%
+  \unless\ifx\pgfutil@empty\tikzext@temp
+    \xdef\tikzext@nodepic@list{\tikzext@nodepic@list,{#1}}%
+  \fi
+}
+\let\tikzextorig@pgf@matrix@nodecallback\pgf@matrix@nodecallback
+\def\tikzext@nodeispic@matrix@callback#1{%
+  \tikzext@nodepic@callback{#1}%
+  \tikzextorig@pgf@matrix@nodecallback{#1}%
+}
 \def\tikzext@nodepic@callback@#1{%
   \unless\ifx\tikzext@nodepic@list\pgfutil@gobble
   \begingroup
@@ -787,12 +797,14 @@
 \def\tikzext@transformcm#1#2#3#4#5#6{%
   \pgftransformcm{#1}{#2}{#3}{#4}{\pgfqpoint{#5}{#6}}%
 }
+
 \let\tikzextorig@tikz@do@fig\tikz@do@fig
-\def\tikzext@do@nodeispic{%
+\def\tikzext@nodeispic@do{%
   \tikz@fig@mustbenamed
   \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
     \pgfextra{\tikzext@nodepic@callback@{\tikzlastnode}}%
   \pgfeov
+  % \def\tikzext@nodeispic@npname{text}%
   \setbox\pgfnodeparttextbox=\hbox\bgroup%
     \pgfinterruptpath
       \pgfscope
@@ -806,6 +818,7 @@
           }%
           \let\tikz@do@fig\tikzextorig@tikz@do@fig
           \let\pgf@nodecallback\tikzext@nodepic@callback
+          \let\pgf@matrix@nodecallback\tikzext@nodeispic@matrix@callback
           \global\let\tikzext@nodepic@list\pgfutil@gobble
           \let\tikz@options\pgfutil@empty
           \bgroup
@@ -825,9 +838,16 @@
   \dp\pgfnodeparttextbox=-\pgf@lbb@miny@tikzext@picnode\relax
   \tikz@fig@continue
 }
+
+% \def\tikzext@nodeispic@nodepart{%
+%   \pgfutil@ifnextchar[{\tikzext@nodeispic@nodepart@}{\tikzext@nodeispic@nodepart@[]}%
+% }
+% \def\tikzext@nodeispic@nodepart@[#1]#2{%
+  
+% }
 \pgfqkeys{/tikz/ext}{
   node is pic/.is choice,
-  node is pic/true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@do@nodeispic,
+  node is pic/true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@nodeispic@do,
   node is pic/false/.code=\let\tikz@do@fig\tikzextorig@tikz@do@fig,
   node is pic/.default=true,
 }

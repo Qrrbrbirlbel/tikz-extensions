@@ -1,5 +1,5 @@
 % !TeX root = tikz-ext-manual.tex
-% !TeX spellcheck = en_US
+% !TeX spellcheck = <none>
 % Copyright 2022 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
@@ -10,7 +10,7 @@
 
 \section{Nodes}
 \begin{tikzlibrary}{ext.nodes}
-This library extends \tikzname's functionalities when it comes to nodes.
+This library extends \tikzname's functionalities around nodes.
 \inspiration{NodesOnLine-Q, NodesOnCurve-Q}{NodesOnLine-A, NodesOnCurve-A}
 \end{tikzlibrary}
 
@@ -20,7 +20,7 @@ This library extends \tikzname's functionalities when it comes to nodes.
 \keycompat{tikz}
 This key allows one to use a pic where usually only nodes are accepted,
 for example as a label.
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, ext.misc}]
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
 \begin{tikzpicture}[
   slsl/.pic={\draw(-2pt, 1.5pt)--( 2pt, .5pt)
                   ( 2pt,-1.5pt)--(-2pt,-.5pt);}]
@@ -35,13 +35,13 @@ for example as a label.
 \end{key}
 \newcolumn
 
-\subsection{Node as a pic}
+\subsection{Node (text) as a pic}
 A pic allows any (sub)picture to be handled like a node --
 with one caveat: it doesn't provide anchors like a node and
 is thus not able to be placed like one.
 
-A \pgfname\ matrix on the other hand allows a (sub)picture in a node (multiple even)
-but the matrix is not able to be transformed.
+A \pgfname\ matrix on the other hand allows multiple (sub)picture in a node
+but the matrix cannot be transformed.
 
 The following should find a compromise between these two.
 Here are some rules and guidelines for using this:
@@ -77,8 +77,8 @@ to their \pgfname/\tikzname\ default.
 \end{key}
 
 \begin{key}{/\tikzext/name prefix ..}
-  Similar to a pic, |/tikz/name prefix| is set to the name of the outer node.
-  This key will return to the name prefix that was set beforehand.
+  Similar to a pic, \referenceKeyandIndexO{name prefix} is set to the name of the outer node.
+  This key will return to the prefix that was set beforehand.
 \end{key}
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
 \begin{tikzpicture}[x=+7mm, y=+7mm]
