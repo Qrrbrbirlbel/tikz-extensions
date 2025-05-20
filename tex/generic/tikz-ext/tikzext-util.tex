@@ -31,6 +31,23 @@
     \tikzextset{\pgfkeyscurrentname={#1}}%
   }
 }
+
+\pgfkeysdef{/tikz/graphs/ext/.unknown}{%
+  \pgfkeys@expanded{%
+    \noexpand\pgfkeysaddvalue{/tikz/graphs/@edges styling}{}{%
+      ext={\pgfkeyscurrentname={\pgfkeys@unexpanded{#1}}}%
+    }%
+  }%
+  \tikzgraphsset{
+    @nodes styling/.append style/.expanded={
+      ext={
+        \pgfkeyscurrentname={
+          \pgfkeys@unexpanded{#1}
+        }
+      }
+    }
+  }%
+}
 % Compatibility
 \gdef\tikzextutil@compatwarning@counter{0}
 \def\tikzextutil@compatmaybewarning#1#2#3{%

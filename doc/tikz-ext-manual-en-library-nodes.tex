@@ -35,44 +35,45 @@ for example as a label.
 \end{key}
 \newcolumn
 
-\subsection{Node (text) as a pic}
+\subsection{Node pictures}
 A pic allows any (sub)picture to be handled like a node --
 with one caveat: it doesn't provide anchors like a node and
 is thus not able to be placed like one.
 
-A \pgfname\ matrix on the other hand allows multiple (sub)picture in a node
+A \pgfname\ matrix on the other hand allows multiple (sub)pictures in a node
 but the matrix cannot be transformed.
 
-The following should find a compromise between these two.
+The here introduced \emph{node picture} should find a compromise between these two.
 Here are some rules and guidelines for using this:
-
 \begin{itemize}
-\item The \enquote{text} of a node is a (sub)picture like a pic's code or a matrix cell.
-      The (sub)picture will be typeset as the text of the node.
-\item Only the |text| node part is available. The |\nodepart| command should not be used.
-      The solution is \emph{not} a matrix. It can only contain one cell. No |\\| is needed at the end.
-\item The baseline of the node is the (sub)pictures $y$ value of $0$.
-\item Just like with a pic or a matrix, certain settings and values will be inherited by the (sub)picture.
-\item The bounding box of the (sub)picture will be evaluated automatically and the result will be used to determine
-      the size of the \enquote{text}.
+\item The node picture will be typeset as the text of the node.
+\item Only the |text| node part is available.
+      The \referenceCommandandIndexO{\nodepart} command may not be used.
+      A node picture is \emph{not} a matrix.
+      It only exists of one \enquote{cell}.
+\item The baseline of the node is the picture's $y$ value of $0$.
+\item Just like with a pic or a matrix, certain settings and values will be inherited by the node picture.
+\item However, other options might not be correctly applied like with other nodes.
+\item The bounding box of the picture will be evaluated automatically and the result will be used to determine
+      the size of the \enquote{text} of the node.
 
       However, the line width will not contribute to the size.
-      This has the advantage that with |/pgf/inner sep| set to zero, paths of the (sub)picture
+      This has the advantage that with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
 \item This is not nestable!
-      You cannot use |node is pic| inside a (sub)picture created by |node is pic|.
+      You cannot use a node picture inside a node picture.
 \end{itemize}
 
 \newcolumn
-\begin{key}{/\tikzext/node is pic=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzext/node picture=\opt{\meta{true or false}} (default true)}
   Setting this to |true| activates the aforementioned procedure for the node's text to be a picture.
   Setting it to |false| returns to the default behavior of a normal node.
 \end{key}
-\begin{stylekey}{/\tikzext/every node pic}
-This key will be applied at the start of every (sub)picture.
+\begin{stylekey}{/\tikzext/every node picture}
+This key will be applied at the start of every node picture.
 \end{stylekey}
-\begin{key}{/\tikzext/node pic reset graphic state}
-This key sets up |/tikz/ext/every node pic| so that it resets many settings and values
+\begin{key}{/\tikzext/node picture/reset graphic state}
+This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
 to their \pgfname/\tikzname\ default.
 \end{key}
 
@@ -83,11 +84,50 @@ to their \pgfname/\tikzname\ default.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
 \begin{tikzpicture}[x=+7mm, y=+7mm]
 \draw (0,0) to[bend left]
-  node[ext/node is pic, sloped, draw, above]{
+  node[ext/node picture, sloped, draw, above]{
     \draw[red] (0,0) circle[radius=1];
   } (3,3);
 \end{tikzpicture}
 \end{codeexample}
+
+\newcolumn
+
+A \pgfname\ matrix alone is not able to be transformed but
+as part of this construct, it is possible.
+As you can see in the next exmaple,
+you can reference the nodes defined inside the (sub)picture
+from the outside.
+
+Unfortunately, due to how a \tikzname\ matrix sets up the
+naming of its nodes, a name prefix would be applied twice (see \cite{MatrixNamePrefix}),
+you'll have to \emph{first} name the matrix and \emph{then} clear the name prefix.
+
+The example below also shows that
+all nodes include their own inner sep:
+The outer node (solid line),
+the matrix node (dashed line)
+as well as the nodes in the matrix themselves (dotted lines).
+\begingroup
+\catcode`\|=12
+\catcode`\&=\active\relax
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, matrix}]
+\begin{tikzpicture}
+\draw (0,0) to[bend left]
+  node[ext/node picture, sloped, draw, below] (n) {
+    \matrix[
+      matrix of nodes, row sep=5mm, column sep=5mm,
+      draw, dashed, nodes={draw, dotted},
+      name=-m, ext/name prefix ..
+    ] {
+      abc & def \\
+      ghi & jkl \\
+    };
+    \draw (-m-1-1) -- (-m-2-2);
+  } (2,3) [gray];
+  \draw (n-m-2-1) -- (n-m-1-2);
+\end{tikzpicture}
+\end{codeexample}
+\endgroup
 \newcolumn
 
 \subsection{Nodes on paths}
