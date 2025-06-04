@@ -8,46 +8,71 @@
 \unless\ifcsname tikzextset\endcsname
   \input tikzext-util.tex
 \fi
+\def\tikzext@arc@cw{%
+  \ifdim\pgfkeysvalueof{/tikz/end angle}pt>\pgfkeysvalueof{/tikz/start angle}pt
+    \pgfmathsubtract@{\pgfkeysvalueof{/tikz/end angle}}{360}%
+    \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}%
+  \fi
+}
+\def\tikzext@arc@ccw{%
+  \ifdim\pgfkeysvalueof{/tikz/start angle}pt>\pgfkeysvalueof{/tikz/end angle}pt
+    \pgfmathsubtract@{\pgfkeysvalueof{/tikz/start angle}}{360}%
+    \pgfkeyssetevalue{/tikz/start angle}{+\pgfmathresult}%
+  \fi
+}
+\def\tikzext@arc@auto{%
+  \pgfmathanglebetweenpoints{\tikzext@arc@center}{\tikzext@arc@through}%
+  \let\tikzext@arc@angle\pgfmathresult
+  \pgfmathsubtract@{\tikzext@arc@angle}{\pgfkeysvalueof{/tikz/start angle}}%
+  \pgfmathMod@{\pgfmathresult}{360}%
+  \let\tikzext@temp\pgfmathresult
+  \pgfmathsubtract@{\pgfkeysvalueof{/tikz/end angle}}{\tikzext@arc@angle}%
+  \pgfmathMod@{\pgfmathresult}{360}%
+  \pgfmathadd@{\pgfmathresult}{\tikzext@temp}%
+  \ifdim\pgfmathresult pt<360pt % counter clockwise
+    \tikzext@arc@ccw
+  \else % clockwise
+    \tikzext@arc@cw
+  \fi
+}
 
 \tikzextset{
+  every arc through/.code=,
   arc through/.unknown/.code=\pgfkeyssetevalue{/tikz/ext/arc through/through}{\pgfkeyscurrentname},
   arc through/through/.initial={(0,0)},
   arc through/center suffix/.initial=,
-  arc through/clockwise/.code=%
-    \def\tikz@arcthrough@clockwise{%
-      \pgfmathsubtract@{\pgfkeysvalueof{/tikz/end angle}}{360}%
-      \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}},
-  arc through/counter clockwise/.code=\let\tikz@arcthrough@clockwise\relax,
+  arc through/clockwise/.code=\let\tikzext@arc@dir\tikzext@arc@cw,
+  arc through/counter clockwise/.code=\let\tikzext@arc@dir\tikzext@arc@ccw,
+  arc through/auto/.code=\let\tikzext@arc@dir\tikzext@arc@auto,
   arc through/clockwise/.value forbidden,
   arc through/counter clockwise/.value forbidden,
   arc through/counter clockwise,
-  arc through/.code={% \tikzset{every arc/.try,ext/every arc to/.try,ext/arc to/.expand once=\tikzext@arcto@options@}%
-    \tikzset{ext/every arc through/.try}%
+  arc through/.code={%
+    \tikzset{ext/every arc through}%
     \pgfqkeys{/tikz/ext/arc through}{#1}%
     \pgfkeysgetvalue{/tikz/ext/arc through/through}\tikz@temp
-    \pgfextract@process\pgf@tostart{\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax}%
-    \expandafter\pgfextract@process\expandafter\pgf@tothrough\expandafter
+    \pgfextract@process\tikzext@arc@start{\tikz@scan@one@point\pgfutil@firstofone(\tikztostart)\relax}%
+    \expandafter\pgfextract@process\expandafter\tikzext@arc@through\expandafter
       {\expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\tikz@temp\relax}%
-    \pgfextract@process\pgf@totarget{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)\relax}%
-    \pgfextract@process\pgf@topointMidA{\pgfpointlineattime{.5}{\pgf@tostart}{\pgf@tothrough}}%
-    \pgfextract@process\pgf@topointMidB{\pgfpointlineattime{.5}{\pgf@totarget}{\pgf@tothrough}}%
-    \pgfextract@process\pgf@tocenter{%
+    \pgfextract@process\tikzext@arc@target{\tikz@scan@one@point\pgfutil@firstofone(\tikztotarget)\relax}%
+    \pgfextract@process\tikzext@arc@midA{\pgfpointlineattime{.5}{\tikzext@arc@start}{\tikzext@arc@through}}%
+    \pgfextract@process\tikzext@arc@midB{\pgfpointlineattime{.5}{\tikzext@arc@target}{\tikzext@arc@through}}%
+    \pgfextract@process\tikzext@arc@center{%
       \pgfpointintersectionoflines
-        {\pgf@topointMidA}{\pgfmathrotatepointaround{\pgf@tothrough}{\pgf@topointMidA}{90}}%
-        {\pgf@topointMidB}{\pgfmathrotatepointaround{\pgf@tothrough}{\pgf@topointMidB}{90}}}%
-    \pgfcoordinate{arc through center\pgfkeysvalueof{/tikz/ext/arc through/center suffix}}{\pgf@tocenter}%
-    \pgfpointdiff{\pgf@tocenter}{\pgf@tostart}%
+        {\tikzext@arc@midA}{\pgfmathrotatepointaround{\tikzext@arc@through}{\tikzext@arc@midA}{90}}%
+        {\tikzext@arc@midB}{\pgfmathrotatepointaround{\tikzext@arc@through}{\tikzext@arc@midB}{90}}}%
+    \pgfcoordinate{arc through center\pgfkeysvalueof{/tikz/ext/arc through/center suffix}}{\tikzext@arc@center}%
+    \pgf@process{\pgfpointdiff{\tikzext@arc@center}{\tikzext@arc@start}}%
     \pgfmathveclen@{\pgfmath@tonumber\pgf@x}{\pgfmath@tonumber\pgf@y}%
     \pgfkeyssetevalue{/tikz/x radius}{+\pgfmathresult pt}%
     \pgfkeyssetevalue{/tikz/y radius}{+\pgfmathresult pt}%
-    \pgfmathanglebetweenpoints{\pgf@tocenter}{\pgf@totarget}%
-    \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}%
-    \pgfmathanglebetweenpoints{\pgf@tocenter}{\pgf@tostart}%
-    \ifdim\pgfmathresult pt>\pgfkeysvalueof{/tikz/end angle}pt\relax
-      \pgfmathsubtract@{\pgfmathresult}{360}%
-    \fi
+    \pgfmathanglebetweenpoints{\tikzext@arc@center}{\tikzext@arc@start}%
     \pgfkeyssetevalue{/tikz/start angle}{+\pgfmathresult}%
-    \tikz@arcthrough@clockwise
+    \pgfmathanglebetweenpoints{\tikzext@arc@center}{\tikzext@arc@target}%
+    \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}%
+    \typeout{start: \pgfkeysvalueof{/tikz/start angle}, end: \pgfkeysvalueof{/tikz/end angle}}%
+    \tikzext@arc@dir
+    \typeout{-> start: \pgfkeysvalueof{/tikz/start angle}, end: \pgfkeysvalueof{/tikz/end angle}}%
     \pgfkeyslet{/tikz/delta angle}\pgfutil@empty
     \def\tikz@to@path{arc[]\tikztonodes}%
   }%

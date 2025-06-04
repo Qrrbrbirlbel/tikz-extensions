@@ -12,29 +12,35 @@
 \label{library:topaths.arcthrough}
 \begin{tikzlibrary}{ext.topaths.arcthrough}
   This library allows to use an arc defined by three points.
+  \inspiration{ArcThroughQ}{ArcThroughA}
 \end{tikzlibrary}
 
 \begin{codeexample}[width=10cm,preamble=\usetikzlibrary{ext.topaths.arcthrough}]
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=.75]
 \coordinate[label=above right:$A$] (A) at ( 3, 1);
 \coordinate[label=above:$B$]       (B) at ( 1, 2);
 \coordinate[label=below left:$C$]  (C) at (-2,-2);
 
 \draw[ultra thick, draw=green, fill=green!50]
-  (B) to[ext/arc through={clockwise, (A)}] (C)
-  -- (arc through center) -- cycle;
+  (B) to[ext/arc through={clockwise, (A)}] (C) -- (arc through center) -- cycle;
 \draw[ultra thick, draw=blue, fill=blue!50]
-  (B) to[ext/arc through=(A)]              (C)
-  -- (arc through center) -- cycle;
+  (B) to[ext/arc through=(A)]              (C) -- (arc through center) -- cycle;
+\draw[ultra thick, draw=black, dashed]
+  (B) to[ext/arc through={auto, (A)}]      (C) -- (arc through center) -- cycle;
 
-\foreach \p in {A, B, C, arc through center}
-  \fill[red] (\p) circle[radius=2pt];
+\foreach \p in {A, B, C, arc through center} \fill[red] (\p) circle[radius=2pt];
 \end{tikzpicture}
 \end{codeexample}
 
 This can only by used for circles in the |canvas| coordinate system.
 
 \begin{multicols}{2}
+\begin{key}{/\tikzext/arc through=\meta{key-value}}\keycompat{tikz/arc trough}
+  This key should be used with |to|\indexPathOperationO{to} or |edge|\indexPathOperationO{edge}.
+  A parameter other than the key described below will
+  be assumed to be the |through| coordinate.
+\end{key}
+
 \begin{key}{/\tikzext/arc through/through=\meta{coordinate} (initially {(0,0)})}\keycompat{tikz/arc through}
   The coordinate on the circle that defines~-- together with the
   starting and target point~-- a circle.
@@ -55,10 +61,9 @@ This can only by used for circles in the |canvas| coordinate system.
   This will not necessarily go through the |through| point.
 \end{key}
 
-\begin{key}{/\tikzext/arc through=\meta{key-value}}\keycompat{tikz/arc trough}
-  This key should be used with |to|\indexPathOperationO{to} or |edge|\indexPathOperationO{edge}.
-  A parameter other than |center suffix|, |clockwise| or |counter clockwise| will
-  be assumed to be the |through| coordinate.
+\begin{key}{/\tikzext/arc through/auto}
+  The resulting arc will go automatically clockwise or counter clockwise
+  so that it goes through the |through| point.
 \end{key}
 \end{multicols}
 \endinput
