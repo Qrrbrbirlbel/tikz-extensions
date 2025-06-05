@@ -70,9 +70,7 @@
     \pgfkeyssetevalue{/tikz/start angle}{+\pgfmathresult}%
     \pgfmathanglebetweenpoints{\tikzext@arc@center}{\tikzext@arc@target}%
     \pgfkeyssetevalue{/tikz/end angle}{+\pgfmathresult}%
-    \typeout{start: \pgfkeysvalueof{/tikz/start angle}, end: \pgfkeysvalueof{/tikz/end angle}}%
     \tikzext@arc@dir
-    \typeout{-> start: \pgfkeysvalueof{/tikz/start angle}, end: \pgfkeysvalueof{/tikz/end angle}}%
     \pgfkeyslet{/tikz/delta angle}\pgfutil@empty
     \def\tikz@to@path{arc[]\tikztonodes}%
   }%
