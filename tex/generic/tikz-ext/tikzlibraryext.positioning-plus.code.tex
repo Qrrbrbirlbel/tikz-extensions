@@ -248,10 +248,10 @@
   \fi
 }
 \tikzextset{
-  fit bounding box/.code=\tikz@lib@place@fit@scan{#1}{0},
-  span vertical/.code=\tikz@lib@place@fit@scan{#1}{1},
-  span horizontal/.code=\tikz@lib@place@fit@scan{#1}{2},
-  span/.code=\tikz@lib@place@fit@scan{#1}{3}}
+  fit bounding box/.code=\tikzext@posp@fit{#1}{0},
+  span vertical/.code=\tikzext@posp@fit{#1}{1},
+  span horizontal/.code=\tikzext@posp@fit{#1}{2},
+  span/.code=\tikzext@posp@fit{#1}{3}}
 
 \pgfmathdeclarefunction{ext_x_node_dist}{0}{%
   \begingroup
