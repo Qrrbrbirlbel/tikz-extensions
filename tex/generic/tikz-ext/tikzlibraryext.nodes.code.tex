@@ -762,50 +762,50 @@
 %%% node pic
 % named nodes need correction
 
-\newcount\tikzext@picturenode
-\let\tikzext@picturenode@list\pgfutil@gobble
+\newcount\tikzext@nodepicture
+\let\tikzext@nodepicture@list\pgfutil@gobble
 
-\def\tikzext@picturenode@callback#1{%
+\def\tikzext@nodepicture@callback#1{%
   \def\tikzext@temp{#1}%
   \unless\ifx\pgfutil@empty\tikzext@temp
-    \xdef\tikzext@picturenode@list{\tikzext@picturenode@list,{\the\tikzext@picturenode}{#1}}%
+    \xdef\tikzext@nodepicture@list{\tikzext@nodepicture@list,{\the\tikzext@nodepicture}{#1}}%
   \fi
 }
 \let\tikzextorig@pgf@matrix@nodecallback\pgf@matrix@nodecallback
-\def\tikzext@picturenode@matrix@callback#1{%
-  \tikzext@picturenode@callback{#1}%
+\def\tikzext@nodepicture@matrix@callback#1{%
+  \tikzext@nodepicture@callback{#1}%
   \tikzextorig@pgf@matrix@nodecallback{#1}%
 }
-\def\tikzext@picturenode@callback@#1{%
-  \unless\ifx\tikzext@picturenode@list\pgfutil@gobble
+\def\tikzext@nodepicture@callback@#1{%
+  \unless\ifx\tikzext@nodepicture@list\pgfutil@gobble
   \begingroup
     \pgfsettransform{\csname pgf@sh@nt@#1\endcsname}%
-    \pgftransformshift{\pgfqpoint{-\csname pgf@lbb@minx@tikzext@picturenode\the\tikzext@picturenode\endcsname}{0pt}}
+    \pgftransformshift{\pgfqpoint{-\csname pgf@lbb@minx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname}{0pt}}
     \csname pgf@sh@np@#1\endcsname
     \csname pgf@sh@ma@#1\endcsname
     \pgftransformshift{\pgf@sh@reanchor{\csname pgf@sh@ns@#1\endcsname}{text}}%
     \pgftransformyshift{+-\tikzext@nodepicture@baseline@}%
-    \let\tikzext@temp\tikzext@picturenode@list
-    \global\let\tikzext@picturenode@list\pgfutil@gobble
+    \let\tikzext@temp\tikzext@nodepicture@list
+    \global\let\tikzext@nodepicture@list\pgfutil@gobble
     \pgfutil@for\tikzext@temp:=\tikzext@temp\do{%
-      \expandafter\tikzext@picturenode@callback@special\tikzext@temp
+      \expandafter\tikzext@nodepicture@callback@special\tikzext@temp
     }%
   \endgroup
   \fi
 }
-\def\tikzext@picturenode@callback@special#1#2{%
-  \ifnum\tikzext@picturenode>\pgfinteval{#1-1}
-    \xdef\tikzext@picturenode@list{\tikzext@picturenode@list,{#1}{#2}}%
+\def\tikzext@nodepicture@callback@special#1#2{%
+  \ifnum\tikzext@nodepicture>\pgfinteval{#1-1}
+    \xdef\tikzext@nodepicture@list{\tikzext@nodepicture@list,{#1}{#2}}%
   \else
-    \unless\ifcsname tikzext@picturenode@#2-#1@visited\endcsname
-      \expandafter\let\csname tikzext@picturenode@#2-#1@visited\endcsname\pgfutil@empty
+    \unless\ifcsname tikzext@nodepicture@#2-#1@visited\endcsname
+      \expandafter\let\csname tikzext@nodepicture@#2-#1@visited\endcsname\pgfutil@empty
       \begingroup
         \pgfkeys@expanded{\noexpand\tikzext@transformcm\csname pgf@sh@nt@#2\endcsname}%
         \pgfgettransform\tikzext@cm
         \expandafter\xdef\csname pgf@sh@nt@#2\endcsname{\tikzext@cm}%
       \endgroup
       \ifnum#1>1
-        \xdef\tikzext@picturenode@list{\tikzext@picturenode@list,{\pgfinteval{#1-1}}{#2}}%
+        \xdef\tikzext@nodepicture@list{\tikzext@nodepicture@list,{\pgfinteval{#1-1}}{#2}}%
       \fi
     \fi
   \fi
@@ -814,12 +814,12 @@
 \def\tikzext@transformcm#1#2#3#4#5#6{%
   \pgftransformcm{#1}{#2}{#3}{#4}{\pgfqpoint{#5}{#6}}%
 }
-\def\tikzextnodepicture{\pgfinteval{\tikzext@picturenode-1}}%
+\def\tikzextnodepicture{\pgfinteval{\tikzext@nodepicture-1}}%
 \let\tikzextorig@tikz@do@fig\tikz@do@fig
-\def\tikzext@picturenode@do{%
+\def\tikzext@nodepicture@do{%
   \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
     \pgfextra{%
-      \tikzext@picturenode@callback@{\tikzlastnode}%
+      \tikzext@nodepicture@callback@{\tikzlastnode}%
     }%
   \pgfeov
   \tikzextset{name prefix ../.style/.expanded={/tikz/name prefix={\pgfkeysvalueof{/tikz/name prefix}}}}%
@@ -833,29 +833,29 @@
         \pgfinterruptboundingbox
           \pgftransformreset
           \edef\tikzext@temp{%
-            \noexpand\pgfkeysvalueof{/pgf/local bounding box/.@cmd}tikzext@picturenode\the\tikzext@picturenode\noexpand\pgfeov
+            \noexpand\pgfkeysvalueof{/pgf/local bounding box/.@cmd}tikzext@nodepicture\the\tikzext@nodepicture\noexpand\pgfeov
           }\tikzext@temp
-          \advance\tikzext@picturenode by1
+          \advance\tikzext@nodepicture by1
           \pgfkeysvalueof{/tikz/ext/every node picture/.@cmd}\pgfeov
           \let\tikz@do@fig\tikzextorig@tikz@do@fig
-          \let\pgf@nodecallback\tikzext@picturenode@callback
-          \let\pgf@matrix@nodecallback\tikzext@picturenode@matrix@callback
+          \let\pgf@nodecallback\tikzext@nodepicture@callback
+          \let\pgf@matrix@nodecallback\tikzext@nodepicture@matrix@callback
           \let\tikz@options\pgfutil@empty
           \bgroup
             \expandafter\def\csname pgf@sh@np@current bounding box\endcsname{%
-              \def\southwest{\pgfqpoint{\csname pgf@lbb@minx@tikzext@picturenode\pgfinteval{\tikzext@picturenode-1}\endcsname}%
-                                       {\csname pgf@lbb@miny@tikzext@picturenode\pgfinteval{\tikzext@picturenode-1}\endcsname}}%
-              \def\northeast{\pgfqpoint{\csname pgf@lbb@maxx@tikzext@picturenode\pgfinteval{\tikzext@picturenode-1}\endcsname}%
-                                       {\csname pgf@lbb@maxy@tikzext@picturenode\pgfinteval{\tikzext@picturenode-1}\endcsname}}%
+              \def\southwest{\pgfqpoint{\csname pgf@lbb@minx@tikzext@nodepicture\pgfinteval{\tikzext@nodepicture-1}\endcsname}%
+                                       {\csname pgf@lbb@miny@tikzext@nodepicture\pgfinteval{\tikzext@nodepicture-1}\endcsname}}%
+              \def\northeast{\pgfqpoint{\csname pgf@lbb@maxx@tikzext@nodepicture\pgfinteval{\tikzext@nodepicture-1}\endcsname}%
+                                       {\csname pgf@lbb@maxy@tikzext@nodepicture\pgfinteval{\tikzext@nodepicture-1}\endcsname}}%
             }%
-            \aftergroup\tikzext@picturenode@done
+            \aftergroup\tikzext@nodepicture@done
 }
-\def\tikzext@picturenode@done{
-          \ifx\tikzext@picturenode@baseline\pgfutil@empty
+\def\tikzext@nodepicture@done{
+          \ifx\tikzext@nodepicture@baseline\pgfutil@empty
             \gdef\tikzext@nodepicture@baseline@{0pt}%
           \else
-            \def\tikzext@temp{\tikz@handle@vec{\tikzext@picturenode@baseline@coord}{\tikzext@picturenode@baseline@value}}%
-            \expandafter\tikzext@temp\tikzext@picturenode@baseline\relax
+            \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
+            \expandafter\tikzext@temp\tikzext@nodepicture@baseline\relax
           \fi
         \endpgfinterruptboundingbox
       \endpgfscope
@@ -863,36 +863,36 @@
   \egroup
   %
   \setbox\pgfnodeparttextbox=\hbox{%
-    \kern-\csname pgf@lbb@minx@tikzext@picturenode\the\tikzext@picturenode\endcsname
+    \kern-\csname pgf@lbb@minx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname
     \lower\tikzext@nodepicture@baseline@\relax
     \box\pgfnodeparttextbox
-    \kern\csname pgf@lbb@maxx@tikzext@picturenode\the\tikzext@picturenode\endcsname
+    \kern\csname pgf@lbb@maxx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname
   }%
-  \pgf@ya=\csname pgf@lbb@maxy@tikzext@picturenode\the\tikzext@picturenode\endcsname\relax
+  \pgf@ya=\csname pgf@lbb@maxy@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
   \advance\pgf@ya by -\tikzext@nodepicture@baseline@
   \ht\pgfnodeparttextbox=+\pgf@ya
-  \pgf@ya=-\csname pgf@lbb@miny@tikzext@picturenode\the\tikzext@picturenode\endcsname\relax
+  \pgf@ya=-\csname pgf@lbb@miny@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
   \advance\pgf@ya by \tikzext@nodepicture@baseline@
   \dp\pgfnodeparttextbox=\pgf@ya
   \tikz@fig@continue
 }
-\def\tikzext@picturenode@baseline@coord#1{%
+\def\tikzext@nodepicture@baseline@coord#1{%
   \xdef\tikzext@nodepicture@baseline@{\the\pgf@y}%
 }
-\def\tikzext@picturenode@baseline@value#1{%
+\def\tikzext@nodepicture@baseline@value#1{%
   \pgfmathsetlength\pgf@ya{#1}%
   \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
 }
 
 \pgfqkeys{/tikz/ext/node picture}{
   .is choice,
-  true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@picturenode@do,
+  true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@nodepicture@do,
   false/.code=\let\tikz@do@fig\tikzextorig@tikz@do@fig,
   .default=true,
 }
 \pgfkeysdef{/tikz/ext/every node picture}{}
-\pgfkeysdef{/tikz/ext/baseline}{\gdef\tikzext@picturenode@baseline{#1}}
-\global\let\tikzext@picturenode@baseline\pgfutil@empty
+\pgfkeysdef{/tikz/ext/baseline}{\gdef\tikzext@nodepicture@baseline{#1}}
+\global\let\tikzext@nodepicture@baseline\pgfutil@empty
 
 % helpers
 \pgfkeysdef{/tikz/ext/node picture/reset graphic state}{%
