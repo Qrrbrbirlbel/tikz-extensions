@@ -50,8 +50,8 @@ Here are some rules and guidelines for using this:
 \item Only the |text| node part is available.
       The \referenceCommandandIndexO{\nodepart} command may not be used.
       A node picture is \emph{not} a matrix.
-      It only exists of one \enquote{cell}.
-\item The baseline of the node is the picture's $y$ value of $0$.
+      It only contains one \enquote{cell}.
+\item The baseline of the node is the picture's $y$ value of $0$, it can be changed though by using |/tikz/ext/baseline| (see below).
 \item Just like with a pic or a matrix, certain settings and values will be inherited by the node picture.
 \item However, other options might not be correctly applied like with other nodes.
 \item The bounding box of the picture will be evaluated automatically and the result will be used to determine
@@ -60,8 +60,7 @@ Here are some rules and guidelines for using this:
       However, the line width will not contribute to the size.
       This has the advantage that with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
-\item This is not nestable!
-      You cannot use a node picture inside a node picture.
+\item You can use a node picture inside a node picture.
 \end{itemize}
 
 \newcolumn
@@ -316,7 +315,7 @@ One can install custom auto placement rules by using the following key.
   This key defines \texttt{/tikz/auto/\meta{left}} which activates the auto placement
   and installs the appropriate placement function.
   Further more, the key \texttt{/tikz/swap/\meta{left}} will be defined
-  to active the \meta{right} placement function.
+  to activate the \meta{right} placement function.
   
   The key |/tikz/swap| has been defined to apply \texttt{/tikz/swap/\meta{dir}}
   where \meta{dir} is the current placement function.
