@@ -661,7 +661,18 @@
 {
   \end{pgfmanualentry}
 }
-
+\newenvironment{ext_predefinednode}[1]{
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{%
+      \pgfmanualpdflabel{ext_#1}{}%
+      \textbf{Predefined node} {\ttfamily\declare{ext\textunderscore#1}}}%
+    \index{ext\textunderscore#1@\protect\texttt{ext\textunderscore#1} node}%
+    \index{Predefined node!ext\textunderscore#1@\protect\texttt{ext\textunderscore#1}}
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
 %\newenvironment{ext_math-function}[1]{
 %  \def\mathdefaultname{ext\textunderscore#1}
 %  \extractmathfunctionname{ext#1}
@@ -696,3 +707,8 @@
 \makeatother
 
 \newcommand*\Beamer{\textsc{Beamer}}
+
+\pgfqkeys{/pdflinks}{
+  internal link prefix=tikzext,
+%  search key prefixes in={/tikz/ext, /pgf/ext, /tikz, /pgf}
+}

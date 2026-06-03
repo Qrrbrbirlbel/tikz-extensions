@@ -35,7 +35,7 @@ for example as a label.
 \end{key}
 \newcolumn
 
-\subsection{Node pictures}
+\subsection{Node Pictures}%\hypertarget{NodePictures}{}
 A Node Picture is a mix of a pic, a \pgfname matrix and nesting \tikzname\ pictures as well as
 using the \referenceLibraryandIndexO{fit} library while sharing advantages and disadvantages with all of these:
 \newcommand*\OK{$\checkmark$}%
@@ -49,7 +49,7 @@ using the \referenceLibraryandIndexO{fit} library while sharing advantages and d
   \pgfname matrix          &    \NOK    &     \NOK      &     \OK      &    \NOK     &     \MAY      &      \OK      &  \\
   \tikzname\ pic           &    \OK     &      \OK      &     \OK      &     \OK     &      \OK      &     \MAY      &  \\
   Nested \tikzname picture &    \OK     &     \MAY      &     \MAY     &     \OK     &      \OK      &      \OK      &  \\
-  |fit|                    &    \MAY    &      \OK      &     \OK      &    \NOK     &     \NOK      &     \MAY      &  \\
+  |fit|                    &    \MAY    &      \OK      &     \OK      &    \NOK     &     \NOK      &     \NOK      &  \\ \addlinespace
   Node Picture             &    \OK     &     \NOK      &     \OK      &     \OK     &      \OK      &      \OK      &  \\ \bottomrule
 \end{tabular}
 \end{center}
@@ -57,14 +57,38 @@ In this table, \enquote{\OK} means that the functionality is supported by the fe
 \enquote{\NOK} means it is not and \enquote{\MAY} means the functionality is supported but with some caveat.
 The functionalities are:
 \begin{description}
-\item[nest] whether the feature can be nested (matrices cannot be nested)
-\item[ref out] whether one can reference coordinates/nodes outside of a feature (you can't reference a node in the outer \tikzname picture from inside a matrix)
-\item[ref in] whether one can reference coordinates/nodes from outside of a feature (nested \tikzname pictures need |remember picture|)
-\item[trans] whether the feature can be transformed (a \pgfname\ matrix can only be shifted)
-\item[inherit] whether settings from outside the feature gets inherited -- this is usually something we have to be careful about, only the \pgfname matrix allows some protection against it
-\item[placing] whether a feature can be placed well (a \tikzname\ pic doesn't provide any anchors)
+\item[nest] whether the feature can be nested
+
+  \pgfname\ matrices cannot be nested.
+  Nodes that are |fit|ted don't actually contain the nodes they are fitted to.
+
+\item[ref out] whether one can reference coordinates/nodes outside of a feature
+
+  You can't reference a node in the outer \tikzname picture from inside a matrix or a Node Picture.
+  \tikzname pictures need |remember picture| for you to reference a node in the outer \tikzname picture.
+
+\item[ref in] whether one can reference coordinates/nodes from outside of a feature
+
+  \tikzname pictures need |remember picture| for you to reference a node in the inner \tikzname picture.
+
+\item[trans] whether the feature can be transformed
+
+  A \pgfname\ matrix can only be shifted, a |fit|ted node can be transformed but its \enquote{content} will remain where it has been placed.
+
+\item[inherit] whether settings from outside the feature gets inherited
+
+  This is usually something we have to fight against and can be quite messy to deal with.
+  Only the \pgfname matrix allows some protection against it by using the \referenceKeyandIndexO{every outer matrix} style.
+  The content a node is |fit|ted around doesn't inherit any settings.
+
+\item[placing] whether a feature can be placed well
+
+  A \tikzname\ pic doesn't provide any anchors and can't be placed other than at the origin
+  but it can be placed along a path.
+  A |fit|ted node surely can be placed somewhere else but then it it doesn't fit anymore.
+  Once its \enquote{content} is placed, it can't be moved anymore.
 \end{description}
-The introduced Node Picture shall offer a compromise between a \tikzname\ pic and a \pgfname\ matrix
+The Node Picture shall offer a compromise between a \tikzname\ pic and a \pgfname\ matrix
 without having to nest \tikzname pictures.
 It also shares the visual output with a node that has been |fit|ted around its content but with more flexibility,
 after all the whole node including its Node Picture can be moved around.
@@ -76,26 +100,64 @@ Here are some rules and guidelines for using this:
       The \referenceCommandandIndexO{\nodepart} command may not be used.
       A Node Picture is \emph{not} a matrix.
       It only contains one \enquote{cell}.
-\item The baseline of the node is the picture's $y$ value of $0$, it can be changed, though, by using |/tikz/ext/baseline| (see below).
+\item The baseline of the node is the picture's $y$ value of $0$, it can be changed, though, by using |/tikz/ext/node picture/baseline| (see below).
 \item Just like with a pic or a matrix, certain settings and values will be inherited by the node picture.
-\item However, other options might not be correctly applied like with other nodes.
 \item The bounding box of the picture will be evaluated automatically and the result will be used to determine
       the size of the \enquote{text} of the node.
       The key |/tikz/ext/node picture/ignore line width| changes whether line widths contribute to the size.
       If they do not and with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
+      
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2.5cm]
+\begin{tikzpicture}
+  \node[
+    ext/node picture,
+    inner sep=+0pt, line width=2pt, draw=gray]{
+    \draw[line width=5pt, black] (-1,1) -| (0,0) |- (1,-1);
+  };
+\end{tikzpicture}
+\end{codeexample}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2.5cm]
+\begin{tikzpicture}
+  \node[
+    ext/node picture={true, ignore line width},
+    inner sep=+0pt, line width=2pt, draw=gray]{
+    \draw[line width=5pt, black] (-1,1) -| (0,0) |- (1,-1);
+  };
+\end{tikzpicture}
+\end{codeexample}
 \item You can use a node pictures inside a node picture.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2cm]
+\begin{tikzpicture}[
+  nodes=draw,
+  do/.code={
+    \node[
+      rounded corners,
+      fill=blue!\inteval{100-#10*2}] (L) {#1};
+    \pgfmathtruncatemacro\LEVEL{#1-1}
+    \ifnum\LEVEL>0
+      \node[
+        anchor=north, yshift=-1mm, ext/node picture,
+        fill=red!\inteval{\LEVEL0*2}] at (L.south) {
+        \tikzset{do=\LEVEL}
+      };
+    \fi
+  },
+  do=4
+]
+\end{tikzpicture}
+\end{codeexample}
 \end{itemize}
 
 \newcolumn
-\begin{key}{/\tikzext/node picture=\opt{\meta{true or false or any of the options below}} (default true)}
-  Setting this to |true| activates the aforementioned procedure for the node's text to be a picture.
-  Setting it to |false| returns to the default behavior of a normal node.
-\end{key}
 \begin{stylekey}{/\tikzext/every node picture=\marg{Node Picture level}}
 This key will be applied at the start of every node picture.
 Its parameter is the current Node Picture level.
 \end{stylekey}
+\begin{key}{/\tikzext/node picture=\opt{\meta{true or false or any of the options below}} (default true)}
+  Setting this to |true| activates the aforementioned procedure for the node's text to be a picture.
+  Setting it to |false| returns to the default behavior of a normal node.
+\end{key}
 \begin{key}{/\tikzext/node picture/reset graphic state}
 This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
 to their \pgfname/\tikzname\ default.
@@ -106,34 +168,33 @@ This changes whether line widths contribute to the size of a Node Picture.
 \begin{key}{/\tikzext/node picture/baseline=\meta{dimension or coordinate} (default 0pt)}
 This changes where the baseline of the node lies.
 \end{key}
+\begin{key}{/\tikzext/node picture/anchor=\meta{coordinate} (initially \normalfont{empty})}
+  Similar to |/tikz/matrix anchor| this allows to specify any coordinate in the Node Picture's coordinate system
+  to be used as an anchor for the node.
+  Like its inspiration, the parentheses aren't to be included in the \meta{coordinate} specification.
+  Unlike its inspiration, any coordinate specification is allowed, not only named nodes/coordinates.
+\end{key}
 \begin{key}{/\tikzext/node picture/name prefix ..}
   Similar to a pic, \referenceKeyandIndexO{name prefix} is set to the name of the outer node.
   This key will return to the prefix that was set beforehand.
 \end{key}
+
+A \TeX-macro is available for accessing the current Node Picture level.
 \begin{command}{\tikzextnodepicture}
 This command returns the current level of Node Picture.
 The outside (i.\,e. the original \tikzname picture) is level~0.
 Remember that when this command is used on -- not in -- the node that contains
 the Node Picture it will not return the level of its picture.
 \end{command}
+A Node Picture also supports two predefined nodes.
 \begin{predefinednode}{current bounding box}
   Just like the original \referenceShapeandIndexO{current bounding box},
   this will be available inside a Node Picture and refers to its bounding box.
 \end{predefinednode}
-\begin{predefinednode}{current node picture bounding box}
+\begin{ext_predefinednode}{current node picture bounding box}
   Similar to |current bounding box| this returns the bounding box of
   the Node Picture with an ignored line width.
-\end{predefinednode}
-%\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
-%\begin{tikzpicture}[x=+7mm, y=+7mm]
-%\draw (0,0) to[bend left]
-%  node[ext/node picture, sloped, draw, above]{
-%    \draw[red] (0,0) circle[radius=1];
-%  } (3,3);
-%\end{tikzpicture}
-%\end{codeexample}
-
-\newcolumn
+\end{ext_predefinednode}
 
 A \pgfname\ matrix alone is not able to be transformed but
 as part of this construct, it is possible.
@@ -172,6 +233,7 @@ as well as the nodes in the matrix themselves (dotted lines).
 \end{codeexample}
 \endgroup
 
+\newcolumn
 The following example is adapted from \cite{NodePicQ}.
 
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, arrows.meta, positioning, graphs}]
