@@ -306,7 +306,6 @@
       \ifpgfmathunitsdeclared
         \pgfutil@tempdima=\pgfmathresult pt
       \else
-        \typeout{\pgfmathresult\space before}%
         \pgf@process{\pgfqpointxy{0}{\pgfmathresult}}%
         \ifdim\pgf@y<0pt
           \pgf@y=-\pgf@y
@@ -314,7 +313,6 @@
         \ifdim\pgfmathresult pt<0pt
           \pgf@y=-\pgf@y
         \fi
-        \typeout{\pgfmathresult\space after, \the\pgf@y}%
         \pgfutil@tempdima=\pgf@y
       \fi
     \else
