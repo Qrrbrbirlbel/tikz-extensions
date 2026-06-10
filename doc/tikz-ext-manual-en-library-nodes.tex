@@ -64,7 +64,12 @@ The functionalities are:
 
 \item[ref out] whether one can reference coordinates/nodes outside of a feature
 
-  You can't reference a node in the outer \tikzname picture from inside a matrix or a Node Picture.
+  You can't reference a node in the outer \tikzname picture from inside a matrix.
+  Referencing node from the outer scope while inside a Node Picture can be done
+  if using the |absolute| key (see below).
+  You probably want to use |overlay| so that the path that connect to an outer node
+  does not change the Node Picture -- or maybe that's exactly what you want \dots
+
   \tikzname pictures need |remember picture| for you to reference a node in the outer \tikzname picture.
 
 \item[ref in] whether one can reference coordinates/nodes from outside of a feature
@@ -96,18 +101,31 @@ after all the whole node including its Node Picture can be moved around.
 Here are some rules and guidelines for using this:
 \begin{itemize}
 \item The Node Picture will be typeset as the text of the node.
+\item The baseline of this text is the vertical center of the Node Picture's bounding box.
+      This can be changed with the |ext/node picture/baseline| option (similar to \tikzname's \referenceKeyandIndexO{baseline} option).
+      This must be set \emph{inside} the Node Picture!
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
+\begin{tikzpicture}
+\foreach[count=\i] \b in {north, base, south}
+  \node[
+    ext/node picture, anchor=base,
+    draw, fill=blue!50
+  ] at (right:2*\i) {
+    \tikzextset{node picture/baseline=(n.\b)}
+    \node[fill=red!50, draw] (n) {\b $\displaystyle \frac12$};
+  };
+\draw[thick, green] (1,0) -- (right:7);
+\end{tikzpicture}
+\end{codeexample}
 \item Only the |text| node part is available.
       The \referenceCommandandIndexO{\nodepart} command may not be used.
-      A Node Picture is \emph{not} a matrix.
-      It only contains one \enquote{cell}.
-\item The baseline of the node is the picture's $y$ value of $0$, it can be changed, though, by using |/tikz/ext/node picture/baseline| (see below).
-\item Just like with a pic or a matrix, certain settings and values will be inherited by the node picture.
+\item A Node Picture is \emph{not} a matrix. It only contains one \enquote{cell}.
+\item Just like with a pic or a matrix, certain settings and values will be inherited by the Node Picture. (It's a gift and a curse.)
 \item The bounding box of the picture will be evaluated automatically and the result will be used to determine
       the size of the \enquote{text} of the node.
-      The key |/tikz/ext/node picture/ignore line width| changes whether line widths contribute to the size.
+      The key |ext/node picture/ignore line width| changes whether line widths contribute to the size.
       If they do not and with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
-      
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2.5cm]
 \begin{tikzpicture}
   \node[
@@ -149,36 +167,77 @@ Here are some rules and guidelines for using this:
 \end{codeexample}
 \end{itemize}
 
-\newcolumn
 \begin{stylekey}{/\tikzext/every node picture=\marg{Node Picture level}}
-This key will be applied at the start of every node picture.
+This key will be applied for every node picture,
+this will be executed on the same as \referenceKeyandIndexO{every node}.
 Its parameter is the current Node Picture level.
 \end{stylekey}
 \begin{key}{/\tikzext/node picture=\opt{\meta{true or false or any of the options below}} (default true)}
-  Setting this to |true| activates the aforementioned procedure for the node's text to be a picture.
-  Setting it to |false| returns to the default behavior of a normal node.
+  This is only a key to set keys in the namespace |/tikz/ext/node picture|.
+  However, without any options used, it activates a Node Picture as it uses |true| as the default value.
+  To return to a normal node, use the argument |false|.
+\end{key}
+\begin{key}{/\tikzext/node picture/prefix name=\opt{\meta{true or false}} (default true, initially true)}
+  By default, every node's name inside a Node Picture gets the Node Picture's outer node's name prefixed --
+  similar to how a \tikzname\ pic works.
+  This can be disabled by setting this to |false|.
+  
+  It is not possible to set the Node Picture's name to an empty value.
+  \begin{key}{/\tikzext/node picture/name prefix ..}
+    Similar to a \tikzname\ pic, \referenceKeyandIndexO{name prefix} is set to the name of the outer node.
+    This key will return to the prefix that was set beforehand.
+  \end{key}
+\end{key}
+\begin{key}{/\tikzext/node picture/ignore line width=\opt{\meta{true or false}} (default true)}
+This changes whether line widths contribute to the size of a Node Picture.
 \end{key}
 \begin{key}{/\tikzext/node picture/reset graphic state}
 This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
 to their \pgfname/\tikzname\ default.
 \end{key}
-\begin{key}{/\tikzext/node picture/ignore line width=\opt{\meta{true or false}} (default true)}
-This changes whether line widths contribute to the size of a Node Picture.
-\end{key}
 \begin{key}{/\tikzext/node picture/baseline=\meta{dimension or coordinate} (default 0pt)}
-This changes where the baseline of the node lies.
+This changes where the baseline of the Node Picture's node lies.
+This must be used \emph{inside} a Node Picture to have an effect on that Node Picture.
 \end{key}
 \begin{key}{/\tikzext/node picture/anchor=\meta{coordinate} (initially \normalfont{empty})}
   Similar to |/tikz/matrix anchor| this allows to specify any coordinate in the Node Picture's coordinate system
   to be used as an anchor for the node.
   Like its inspiration, the parentheses aren't to be included in the \meta{coordinate} specification.
   Unlike its inspiration, any coordinate specification is allowed, not only named nodes/coordinates.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
+\begin{tikzpicture}
+\foreach[count=\i] \b in {north, base, south}
+  \node[
+    ext/node picture={
+      true,
+      anchor=n.\b
+    },
+    draw,
+    fill=blue!50
+  ] at (right:2*\i) {
+    \node[fill=red!50, draw] (n) {\b $\displaystyle \frac12$};
+  };
+\draw[green] (1,0) -- (right:7);
+\end{tikzpicture}
+\end{codeexample}
 \end{key}
-\begin{key}{/\tikzext/node picture/name prefix ..}
-  Similar to a pic, \referenceKeyandIndexO{name prefix} is set to the name of the outer node.
-  This key will return to the prefix that was set beforehand.
-\end{key}
+\begin{key}{/\tikzext/node picture/absolute=\opt{\meta{coordinate}} (default 0,0)}
+This key syncs the Node Picture's coordinate system with the outer scope's coordinate system.
+This sets both |ext/node picture/anchor| and |at| to the same value.
 
+This also may make it possible to sucessfully reference nodes outside of a Node Picture.
+You probably want to use |overlay| on any connection, though.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes},width=2.7cm]
+\begin{tikzpicture}[nodes=draw]
+\node[fill=red] at (2,1) (ABC) {ABC};
+\node[ext/node picture={true, absolute}, fill=green]{
+  \node[fill=blue!50] (DEF) at (1,0) {DEF} edge[overlay] (ABC);
+  \draw (DEF.south west) to[bend right] (DEF.south east);
+};
+\draw (0,0) grid (2,1);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
 A \TeX-macro is available for accessing the current Node Picture level.
 \begin{command}{\tikzextnodepicture}
 This command returns the current level of Node Picture.
@@ -233,11 +292,11 @@ as well as the nodes in the matrix themselves (dotted lines).
 \end{codeexample}
 \endgroup
 
-\newcolumn
+%\newcolumn
 The following example is adapted from \cite{NodePicQ}.
-
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, arrows.meta, positioning, graphs}]
 \begin{tikzpicture}[
+  ext/node picture={prefix name=false, reset graphic state},
   fixed height/.style={text depth=+0pt, text height=+.7\baselineskip},
   n/.style={shape=rectangle, rounded corners, draw, fixed height},
   b/.style={
@@ -248,13 +307,12 @@ The following example is adapted from \cite{NodePicQ}.
   node distance=3mm and 4mm
 ]
 \NewDocumentCommand{\nbox}{O{} m d() m }{%
-  \node[b,#1]{
-    \tikzextset{node picture/name prefix ..}
+  \node[{b,#1}]{
     \IfValueT{#3}{\tikzextset{node picture/baseline={(#3.base)}}}
     #4
     \node[h]{#2};
     \node[white, below left=0pt and 0pt of current bounding box.north east]
-      {Lvl $\tikzextnodepicture$};
+      {L\tikzextnodepicture};
   };
 }
 \nbox{Pipeline}{

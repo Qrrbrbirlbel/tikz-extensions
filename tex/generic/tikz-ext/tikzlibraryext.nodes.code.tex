@@ -387,7 +387,6 @@
   \tikz@auto@post
   \tikzext@auto@offset@B@precise
 }
-
 % direction: North (always above the line)
 \pgfutil@namedef{tikz@auto@anchor@ext/north}{%
   \tikzext@auto@pre
@@ -765,7 +764,52 @@
 \newcount\tikzext@nodepicture
 \let\tikzext@nodepicture@list\pgfutil@gobble
 \newif\iftikzext@nodepicture@ilw
+\newif\iftikzext@nodepicture@prefix
+\tikzext@nodepicture@prefixtrue
+\global\let\tikzext@nodepicture@baseline\pgfutil@empty
 
+\pgfkeysdef{/tikz/ext/node picture}{\pgfqkeys{/tikz/ext/node picture}{#1}}
+\pgfkeyssetvalue{/tikz/ext/node picture/.@def}{true}
+\pgfkeysdef{/tikz/ext/node picture/true}{\tikz@node@is@picfalse\tikz@is@matrixfalse\let\tikz@do@fig\tikzext@nodepicture@do}
+\pgfkeysdef{/tikz/ext/node picture/false}{\let\tikz@do@fig\tikzextorig@tikz@do@fig}
+\pgfkeysdef{node picture/enable}{\pgfkeysvalueof{/tikz/ext/node picture/true/.@cmd}\pgfeov}
+\pgfkeysdef{node picture/disable}{\pgfkeysvalueof{//tikz/ext/node picture/false/.@cmd}\pgfeov}
+\tikzextset{
+  node picture/ignore line width/.is if=tikzext@nodepicture@ilw,
+  node picture/prefix name/.is if=tikzext@nodepicture@prefix
+}
+\pgfkeysdef{/tikz/ext/every node picture}{}
+\pgfkeyssetvalue{/tikz/ext/node picture/at start}{}
+\pgfkeyssetvalue{/tikz/ext/node picture/at end}{}
+\pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}
+\pgfkeysdef{/tikz/ext/node picture/baseline}{\gdef\tikzext@nodepicture@baseline{#1}}
+\pgfkeysdef{/tikz/ext/node picture/absolute}{\pgfkeysalso{/tikz/ext/node picture/anchor={#1},/tikz/at={(#1)}}}
+\pgfkeyssetvalue{/tikz/ext/node picture/absolute/.@def}{0,0}
+
+
+\pgfkeysdef{/tikz/ext/node picture/reset graphic state}{%
+  \pgfkeysaddvalue{/tikz/ext/node picture/at start}{%
+      \tikzset{
+        /tikz/color=black,
+        /tikz/arrows=-,
+        /tikz/solid,
+        /tikz/every path/.append style=/tikz/thin,
+        /tikz/opaque,
+        /tikz/line cap=butt,
+        /tikz/line join=miter,
+        /tikz/anchor=center,
+        /tikz/midway,
+        /tikz/shape=rectangle,
+        /tikz/text width=,
+        /tikz/text depth=,
+        /tikz/text height=,
+        /tikz/sloped=false,
+        /tikz/allow upside down=false,
+        /pgf/inner sep=+.3333em,
+        /pgf/outer sep=+.5\pgflinewidth,
+        /pgf/minimum size=+1pt}%
+    }{}%
+}
 \def\tikzext@nodepicture@callback#1{%
   \def\tikzext@temp{#1}%
   \unless\ifx\pgfutil@empty\tikzext@temp
@@ -818,16 +862,23 @@
 \def\tikzextnodepicture{\the\tikzext@nodepicture}%
 \let\tikzextorig@tikz@do@fig\tikz@do@fig
 \def\tikzext@nodepicture@do{%
+  \tikzset{ext/every node picture=\the\tikzext@nodepicture}%
   \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
     \pgfextra{%
       \tikzext@nodepicture@callback@{\tikzlastnode}%
     }%
   \pgfeov
-  \tikzextset{node picture/name prefix ../.style/.expanded={/tikz/name prefix={\pgfkeysvalueof{/tikz/name prefix}}}}%
-  \unless\ifx\tikz@fig@name\pgfutil@empty
-    \pgfkeyslet{/tikz/name prefix}{\tikz@fig@name}%
+  \ifx\tikz@fig@name\pgfutil@empty % yes, this test happens twice if it's true
+    \tikz@fig@mustbenamed
+    \pgfkeysdef{/tikz/ext/node picture/name prefix ..}{}% no prefix to reset
+  \else
+    \iftikzext@nodepicture@prefix
+      \tikzextset{node picture/name prefix ../.style/.expanded={/tikz/name prefix={\pgfkeysvalueof{/tikz/name prefix}}}}%
+      \pgfkeyslet{/tikz/name prefix}{\tikz@fig@name}%
+    \else
+      \pgfkeysdef{/tikz/ext/node picture/name prefix ..}{}% no prefix to reset
+    \fi
   \fi
-  \tikz@fig@mustbenamed
   \let\tikzext@nodepicture@baseline@save\tikzext@nodepicture@baseline
   \setbox\pgfnodeparttextbox=\hbox\bgroup%
     \pgfinterruptpath
@@ -841,9 +892,9 @@
           \let\tikz@do@fig\tikzextorig@tikz@do@fig
           \let\pgf@nodecallback\tikzext@nodepicture@callback
           \let\pgf@matrix@nodecallback\tikzext@nodepicture@matrix@callback
+          \global\let\tikzext@nodepicture@baseline\pgfutil@empty
           \let\tikz@options\pgfutil@empty
           \let\tikz@transform\relax
-          \pgfkeysvalueof{/tikz/ext/every node picture/.@cmd}\the\tikzext@nodepicture\pgfeov
           \pgfkeysvalueof{/tikz/ext/node picture/at start}%
           \bgroup
             \aftergroup\tikzext@nodepicture@done
@@ -851,8 +902,16 @@
 \def\tikzext@nodepicture@done{%
           \pgfkeysvalueof{/tikz/ext/node picture/at end}%
           \pgftransformreset
+          \iftikzext@nodepicture@ilw
+            \global\pgf@picminx=\csname pgf@lbb@minx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
+            \global\pgf@picmaxx=\csname pgf@lbb@maxx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
+            \global\pgf@picminy=\csname pgf@lbb@miny@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
+            \global\pgf@picmaxy=\csname pgf@lbb@maxy@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
+          \fi
           \ifx\tikzext@nodepicture@baseline\pgfutil@empty
-            \gdef\tikzext@nodepicture@baseline@{0pt}%
+            \pgf@ya=.5\pgf@picminy
+            \advance\pgf@ya by .5\pgf@picmaxy
+            \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
           \else
             \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
             \expandafter\tikzext@temp\tikzext@nodepicture@baseline\relax
@@ -864,23 +923,13 @@
             \def\tikz@anchor{text}%
             \expandafter\tikz@scan@one@point\expandafter\tikzext@nodepicture@shift\expandafter(\expandafter{\tikzext@temp})\relax
           \fi
-          \iftikzext@nodepicture@ilw
-            \xdef\tikzext@gtemp{%
-              \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
-              \def\noexpand\tikzext@nodepicture@minx{\csname pgf@lbb@minx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname}%
-              \def\noexpand\tikzext@nodepicture@miny{\csname pgf@lbb@miny@tikzext@nodepicture\the\tikzext@nodepicture\endcsname}%
-              \def\noexpand\tikzext@nodepicture@maxx{\csname pgf@lbb@maxx@tikzext@nodepicture\the\tikzext@nodepicture\endcsname}%
-              \def\noexpand\tikzext@nodepicture@maxy{\csname pgf@lbb@maxy@tikzext@nodepicture\the\tikzext@nodepicture\endcsname}%
-            }%
-          \else
-            \xdef\tikzext@gtemp{%
-              \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
-              \def\noexpand\tikzext@nodepicture@minx{\the\pgf@picminx}%
-              \def\noexpand\tikzext@nodepicture@miny{\the\pgf@picminy}%
-              \def\noexpand\tikzext@nodepicture@maxx{\the\pgf@picmaxx}%
-              \def\noexpand\tikzext@nodepicture@maxy{\the\pgf@picmaxy}%
-            }%
-          \fi
+          \xdef\tikzext@gtemp{%
+            \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
+            \def\noexpand\tikzext@nodepicture@minx{\the\pgf@picminx}%
+            \def\noexpand\tikzext@nodepicture@miny{\the\pgf@picminy}%
+            \def\noexpand\tikzext@nodepicture@maxx{\the\pgf@picmaxx}%
+            \def\noexpand\tikzext@nodepicture@maxy{\the\pgf@picmaxy}%
+          }%
         \endpgfinterruptboundingbox
       \endpgfscope
     \endpgfinterruptpath
@@ -940,47 +989,7 @@
 \pgfutil@namedef{pgf@sh@nt@ext_current node picture bounding box}{{1}{0}{0}{1}{0pt}{0pt}}
 \pgfutil@namedef{pgf@sh@pi@ext_current node picture bounding box}{\pgfpictureid}
 
-\tikzextset{
-  node picture/.code=\pgfqkeys{/tikz/ext/node picture}{#1},
-  node picture/.default=true,
-  node picture/true/.code=\tikz@node@is@picfalse\tikz@is@matrixfalse\tikz@fig@mustbenamed\let\tikz@do@fig\tikzext@nodepicture@do,
-  node picture/enable/.style=/tikz/ext/node picture/true,
-  node picture/disable/.style=/tikz/ext/node picture/false,
-  node picture/false/.code=\let\tikz@do@fig\tikzextorig@tikz@do@fig,
-  node picture/ignore line width/.is if=tikzext@nodepicture@ilw
-}
-\pgfkeysdef{/tikz/ext/every node picture}{}
-\pgfkeyssetvalue{/tikz/ext/node picture/at start}{}
-\pgfkeyssetvalue{/tikz/ext/node picture/at end}{}
-\pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}
-\pgfkeysdef{/tikz/ext/node picture/baseline}{\gdef\tikzext@nodepicture@baseline{#1}}
-\global\let\tikzext@nodepicture@baseline\pgfutil@empty
 
-% helpers
-\pgfkeysdef{/tikz/ext/node picture/reset graphic state}{%
-  \pgfkeysalso{%
-    /tikz/ext/every node picture/.append style={
-      /tikz/color=black,
-      /tikz/arrows=-,
-      /tikz/solid,
-      /tikz/every path/.append style=/tikz/thin,
-      /tikz/opaque,
-      /tikz/line cap=butt,
-      /tikz/line join=miter,
-      /tikz/anchor=center,
-      /tikz/midway,
-      /tikz/shape=rectangle,
-      /tikz/text width=,
-      /tikz/text depth=,
-      /tikz/text height=,
-      /tikz/sloped=false,
-      /tikz/allow upside down=false,
-      /pgf/inner sep=+.3333em,
-      /pgf/outer sep=+.5\pgflinewidth,
-      /pgf/minimum size=+1pt%
-    }%
-  }%
-}
 %%% Compatibility
 \tikzextset{
   /tikz-ext/compat/add library={nodes}{pre 0.6},
