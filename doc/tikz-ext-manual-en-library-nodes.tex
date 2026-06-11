@@ -90,7 +90,7 @@ The functionalities are:
 
   A \tikzname\ pic doesn't provide any anchors and can't be placed other than at the origin
   but it can be placed along a path.
-  A |fit|ted node surely can be placed somewhere else but then it it doesn't fit anymore.
+  A |fit|ted node surely can be placed somewhere else but then it doesn't fit anymore.
   Once its \enquote{content} is placed, it can't be moved anymore.
 \end{description}
 The Node Picture shall offer a compromise between a \tikzname\ pic and a \pgfname\ matrix
@@ -102,75 +102,47 @@ Here are some rules and guidelines for using this:
 \begin{itemize}
 \item The Node Picture will be typeset as the text of the node.
 \item The baseline of this text is the vertical center of the Node Picture's bounding box.
-      This can be changed with the |ext/node picture/baseline| option (similar to \tikzname's \referenceKeyandIndexO{baseline} option).
-      This must be set \emph{inside} the Node Picture!
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
-\begin{tikzpicture}
-\foreach[count=\i] \b in {north, base, south}
-  \node[
-    ext/node picture, anchor=base,
-    draw, fill=blue!50
-  ] at (right:2*\i) {
-    \tikzextset{node picture/baseline=(n.\b)}
-    \node[fill=red!50, draw] (n) {\b $\displaystyle \frac12$};
-  };
-\draw[thick, green] (1,0) -- (right:7);
-\end{tikzpicture}
-\end{codeexample}
+      This can be changed with the |ext/node picture/baseline| option -- similar to \tikzname's \referenceKeyandIndexO{baseline} option.
+      But unlike \tikzname's |baseline| it need to not be set inside the Node Picture.
 \item Only the |text| node part is available.
       The \referenceCommandandIndexO{\nodepart} command may not be used.
 \item A Node Picture is \emph{not} a matrix. It only contains one \enquote{cell}.
-\item Just like with a pic or a matrix, certain settings and values will be inherited by the Node Picture. (It's a gift and a curse.)
+\item Just like with a pic or a matrix, certain settings and values will be inherited by the Node Picture.
+      (It's a gift and a curse.)
 \item The bounding box of the picture will be evaluated automatically and the result will be used to determine
       the size of the \enquote{text} of the node.
       The key |ext/node picture/ignore line width| changes whether line widths contribute to the size.
       If they do not and with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2.5cm]
-\begin{tikzpicture}
-  \node[
-    ext/node picture,
-    inner sep=+0pt, line width=2pt, draw=gray]{
-    \draw[line width=5pt, black] (-1,1) -| (0,0) |- (1,-1);
-  };
-\end{tikzpicture}
-\end{codeexample}
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2.5cm]
-\begin{tikzpicture}
-  \node[
-    ext/node picture={true, ignore line width},
-    inner sep=+0pt, line width=2pt, draw=gray]{
-    \draw[line width=5pt, black] (-1,1) -| (0,0) |- (1,-1);
-  };
-\end{tikzpicture}
-\end{codeexample}
 \item You can use a node pictures inside a node picture.
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=2cm]
-\begin{tikzpicture}[
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=3cm]
+\tikz[
   nodes=draw,
   do/.code={
     \node[
       rounded corners,
-      fill=blue!\inteval{100-#10*2}] (L) {#1};
-    \pgfmathtruncatemacro\LEVEL{#1-1}
-    \ifnum\LEVEL>0
+      fill=blue!\inteval{\tikzextnodepicture0*2}]
+      (L) {\tikzextnodepicture};
+    \ifnum\tikzextnodepicture<#1
       \node[
         anchor=north, yshift=-1mm, ext/node picture,
-        fill=red!\inteval{\LEVEL0*2}] at (L.south) {
-        \tikzset{do=\LEVEL}
-      };
+        fill=red!\inteval{100-\tikzextnodepicture0*2}]
+        at (L.south) {\tikzset{do=#1}};
     \fi
   },
-  do=4
-]
-\end{tikzpicture}
+  do=4]{}
 \end{codeexample}
 \end{itemize}
 
-\begin{stylekey}{/\tikzext/every node picture=\marg{Node Picture level}}
-This key will be applied for every node picture,
-this will be executed on the same as \referenceKeyandIndexO{every node}.
-Its parameter is the current Node Picture level.
+Most of the time, all that is needed is to add |/tikz/ext/node picture| to a node 
+and it will be a Node Picture node.
+(That key's default value is |true| which is actually the key that activates it.)
+Let's look at further keys and tools for this.
+\begin{stylekey}{/\tikzext/every node picture=\meta{Node Picture level}}
+  This key will be applied for every node picture,
+  this will be executed on the same level as \referenceKeyandIndexO{every node},
+  i.\,e. not inside the actual Node Picture.
+  Its parameter is the current Node Picture level.
 \end{stylekey}
 \begin{key}{/\tikzext/node picture=\opt{\meta{true or false or any of the options below}} (default true)}
   This is only a key to set keys in the namespace |/tikz/ext/node picture|.
@@ -189,15 +161,49 @@ Its parameter is the current Node Picture level.
   \end{key}
 \end{key}
 \begin{key}{/\tikzext/node picture/ignore line width=\opt{\meta{true or false}} (default true)}
-This changes whether line widths contribute to the size of a Node Picture.
+  This changes whether line widths contribute to the size of a Node Picture.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=3.5cm]
+\begin{tikzpicture}
+  \node[
+    ext/node picture,
+    inner sep=+0pt, line width=2pt, draw=gray]{
+    \draw[line width=5pt, black]
+      (-1,1) -| (0,0) |- (1,-1);
+  };
+\end{tikzpicture}
+\end{codeexample}
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=3.5cm]
+\begin{tikzpicture}
+  \node[
+    ext/node picture={true, ignore line width},
+    inner sep=+0pt, line width=2pt, draw=gray]{
+    \draw[line width=5pt, black]
+      (-1,1) -| (0,0) |- (1,-1);
+  };
+\end{tikzpicture}
+\end{codeexample}
 \end{key}
 \begin{key}{/\tikzext/node picture/reset graphic state}
-This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
-to their \pgfname/\tikzname\ default.
+  This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
+  to their \pgfname/\tikzname\ default.
 \end{key}
-\begin{key}{/\tikzext/node picture/baseline=\meta{dimension or coordinate} (default 0pt)}
-This changes where the baseline of the Node Picture's node lies.
-This must be used \emph{inside} a Node Picture to have an effect on that Node Picture.
+\begin{key}{/\tikzext/node picture/baseline=\meta{dimension or coordinate} (default \normalfont{empty})}
+  This changes where the baseline of the Node Picture's node lies.
+  This must be used \emph{outside} of a Node Picture to have an effect on that Node Picture.
+  A coordinate must be enclosed in parenthesis, like in the following example.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
+\begin{tikzpicture}
+\foreach[count=\i] \b/\c in {n/orth, b/ase, s/outh}
+  \node[
+    ext/node picture={true, baseline=(n.\b\c)},
+    anchor=base, draw, fill=blue!50
+  ] at (right:\i) {
+    \node[fill=red!50, draw] (n)
+      {\b$\displaystyle\frac12$};
+  };
+\draw[thick, green] (.5,0) -- (3.5,0);
+\end{tikzpicture}
+\end{codeexample}
 \end{key}
 \begin{key}{/\tikzext/node picture/anchor=\meta{coordinate} (initially \normalfont{empty})}
   Similar to |/tikz/matrix anchor| this allows to specify any coordinate in the Node Picture's coordinate system
@@ -206,32 +212,32 @@ This must be used \emph{inside} a Node Picture to have an effect on that Node Pi
   Unlike its inspiration, any coordinate specification is allowed, not only named nodes/coordinates.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
 \begin{tikzpicture}
-\foreach[count=\i] \b in {north, base, south}
+\foreach[count=\i] \b/\c in {n/orth, b/ase, s/outh}
   \node[
-    ext/node picture={
-      true,
-      anchor=n.\b
-    },
-    draw,
-    fill=blue!50
-  ] at (right:2*\i) {
-    \node[fill=red!50, draw] (n) {\b $\displaystyle \frac12$};
+    ext/node picture={true, anchor=n.\b\c},
+    draw, fill=blue!50
+  ] at (right:\i) {
+    \node[fill=red!50, draw] (n)
+    {\b$\displaystyle\frac12$};
   };
-\draw[green] (1,0) -- (right:7);
+\draw[thick, green] (.5,0) -- (3.5,0);
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
 \begin{key}{/\tikzext/node picture/absolute=\opt{\meta{coordinate}} (default 0,0)}
-This key syncs the Node Picture's coordinate system with the outer scope's coordinate system.
-This sets both |ext/node picture/anchor| and |at| to the same value.
-
-This also may make it possible to sucessfully reference nodes outside of a Node Picture.
-You probably want to use |overlay| on any connection, though.
-\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes},width=2.7cm]
+  This applies a transformation so that the \meta{coordinate} inside the Node Picture
+  lies at the same \meta{coordinate} in the outer scope.
+  This simply sets both |/tikz/ext/node picture/anchor| and |/tikz/at| to the same \meta{coordinate}.
+  
+  This also may make it possible to sucessfully reference nodes outside of a Node Picture
+  unless you add further transformation to the outer node.
+  You probably also want to use |overlay| on any connections.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes},width=3.5cm]
 \begin{tikzpicture}[nodes=draw]
 \node[fill=red] at (2,1) (ABC) {ABC};
 \node[ext/node picture={true, absolute}, fill=green]{
-  \node[fill=blue!50] (DEF) at (1,0) {DEF} edge[overlay] (ABC);
+  \node[fill=blue!50] (DEF) at (1,0) {DEF}
+    edge[overlay] (ABC);
   \draw (DEF.south west) to[bend right] (DEF.south east);
 };
 \draw (0,0) grid (2,1);

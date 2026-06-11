@@ -766,7 +766,6 @@
 \newif\iftikzext@nodepicture@ilw
 \newif\iftikzext@nodepicture@prefix
 \tikzext@nodepicture@prefixtrue
-\global\let\tikzext@nodepicture@baseline\pgfutil@empty
 
 \pgfkeysdef{/tikz/ext/node picture}{\pgfqkeys{/tikz/ext/node picture}{#1}}
 \pgfkeyssetvalue{/tikz/ext/node picture/.@def}{true}
@@ -782,7 +781,7 @@
 \pgfkeyssetvalue{/tikz/ext/node picture/at start}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/at end}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}
-\pgfkeysdef{/tikz/ext/node picture/baseline}{\gdef\tikzext@nodepicture@baseline{#1}}
+\pgfkeyssetvalue{/tikz/ext/node picture/baseline}{}
 \pgfkeysdef{/tikz/ext/node picture/absolute}{\pgfkeysalso{/tikz/ext/node picture/anchor={#1},/tikz/at={(#1)}}}
 \pgfkeyssetvalue{/tikz/ext/node picture/absolute/.@def}{0,0}
 
@@ -879,7 +878,8 @@
       \pgfkeysdef{/tikz/ext/node picture/name prefix ..}{}% no prefix to reset
     \fi
   \fi
-  \let\tikzext@nodepicture@baseline@save\tikzext@nodepicture@baseline
+  \pgfkeysgetvalue{/tikz/ext/node picture/baseline}{\tikzext@nodepicture@baseline@save}%
+  \pgfkeysgetvalue{/tikz/ext/node picture/anchor}{\tikzext@nodepicture@anchor@save}%
   \setbox\pgfnodeparttextbox=\hbox\bgroup%
     \pgfinterruptpath
       \pgfscope
@@ -892,7 +892,8 @@
           \let\tikz@do@fig\tikzextorig@tikz@do@fig
           \let\pgf@nodecallback\tikzext@nodepicture@callback
           \let\pgf@matrix@nodecallback\tikzext@nodepicture@matrix@callback
-          \global\let\tikzext@nodepicture@baseline\pgfutil@empty
+          \pgfkeyssetvalue{/tikz/ext/node picture/baseline}{}%
+          \pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}%
           \let\tikz@options\pgfutil@empty
           \let\tikz@transform\relax
           \pgfkeysvalueof{/tikz/ext/node picture/at start}%
@@ -908,20 +909,19 @@
             \global\pgf@picminy=\csname pgf@lbb@miny@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
             \global\pgf@picmaxy=\csname pgf@lbb@maxy@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
           \fi
-          \ifx\tikzext@nodepicture@baseline\pgfutil@empty
+          \ifx\tikzext@nodepicture@baseline@save\pgfutil@empty
             \pgf@ya=.5\pgf@picminy
             \advance\pgf@ya by .5\pgf@picmaxy
             \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
           \else
             \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
-            \expandafter\tikzext@temp\tikzext@nodepicture@baseline\relax
+            \expandafter\tikzext@temp\tikzext@nodepicture@baseline@save\relax
           \fi
-          \pgfkeysgetvalue{/tikz/ext/node picture/anchor}{\tikzext@temp}%
-          \ifx\tikzext@temp\pgfutil@empty
+          \ifx\tikzext@nodepicture@anchor@save\pgfutil@empty
             \let\tikzext@nodepicture@shift@\pgfutil@empty
           \else
             \def\tikz@anchor{text}%
-            \expandafter\tikz@scan@one@point\expandafter\tikzext@nodepicture@shift\expandafter(\expandafter{\tikzext@temp})\relax
+            \expandafter\tikz@scan@one@point\expandafter\tikzext@nodepicture@shift\expandafter(\expandafter{\tikzext@nodepicture@anchor@save})\relax
           \fi
           \xdef\tikzext@gtemp{%
             \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
@@ -934,7 +934,6 @@
       \endpgfscope
     \endpgfinterruptpath
   \egroup
-  \global\let\tikzext@nodepicture@baseline\tikzext@nodepicture@baseline@save
   %
   \tikzext@gtemp
   \ifdim\tikzext@nodepicture@maxx=-16000pt
