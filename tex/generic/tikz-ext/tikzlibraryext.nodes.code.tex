@@ -797,12 +797,13 @@
 
 
 \pgfkeysdef{/tikz/ext/node picture/reset graphic state}{%
-  \pgfkeysaddvalue{/tikz/ext/node picture/at start}{%
+  \tikzextset{
+    every node picture scope/.prefix code={%
       \tikzset{
         /tikz/color=black,
         /tikz/arrows=-,
         /tikz/solid,
-        /tikz/every path/.append style=/tikz/thin,
+        /tikz/thin,
         /tikz/opaque,
         /tikz/line cap=butt,
         /tikz/line join=miter,
@@ -816,8 +817,10 @@
         /tikz/allow upside down=false,
         /pgf/inner sep=+.3333em,
         /pgf/outer sep=+.5\pgflinewidth,
-        /pgf/minimum size=+1pt}%
-    }{}%
+        /pgf/minimum size=+1pt
+      }%
+    }%
+  }%
 }
 % If nodes gets defined inside a node picture,
 % they need to be transformed to the place
@@ -910,7 +913,7 @@
   \fi
 }
 \def\tikzext@nodepicture@doanchors#1#2#3#4{%
-  \tikz@scan@one@point\pgfutil@firstofone({#2})\relax
+  \tikz@scan@one@point\pgfutil@firstofone(#2)\relax
   \global\advance\pgf@y by -\tikzext@nodepicture@baseline@\relax
   \global\advance\pgf@x by -\pgf@picminx\relax
   \pgf@xa=\tikzext@nodepicture@outerxsep\relax
@@ -1001,7 +1004,7 @@
             \let\tikzext@nodepicture@shift@\pgfutil@empty
           \else
             \def\tikz@anchor{text}%
-            \expandafter\tikz@scan@one@point\expandafter\tikzext@nodepicture@shift\expandafter(\expandafter{\tikzext@nodepicture@anchor@save})\relax
+            \tikz@scan@one@point\tikzext@nodepicture@shift(\tikzext@nodepicture@anchor@save)\relax
           \fi
           \unless\ifx\tikzext@nodepicture@anchors@list@save\pgfutil@gobble
             \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@anchors@list@save\do{%
