@@ -778,12 +778,22 @@
   node picture/prefix name/.is if=tikzext@nodepicture@prefix
 }
 \pgfkeysdef{/tikz/ext/every node picture}{}
+\pgfkeysdef{/tikz/ext/every node picture scope}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/at start}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/at end}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/baseline}{}
+\let\tikzext@nodepicture@anchors@list\pgfutil@gobble
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{0}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor west}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{-1}{0}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor east}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{1}{0}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor north}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{1}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor south}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{-1}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor osep}{4}{%
+  \edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{#3}{#4}}}
 \pgfkeysdef{/tikz/ext/node picture/absolute}{\pgfkeysalso{/tikz/ext/node picture/anchor={#1},/tikz/at={(#1)}}}
 \pgfkeyssetvalue{/tikz/ext/node picture/absolute/.@def}{0,0}
+\def\tikzextnodepicture{\the\tikzext@nodepicture}%
 
 
 \pgfkeysdef{/tikz/ext/node picture/reset graphic state}{%
@@ -809,27 +819,43 @@
         /pgf/minimum size=+1pt}%
     }{}%
 }
+% If nodes gets defined inside a node picture,
+% they need to be transformed to the place
+% where they actually lie after the node picture is placed.
+% This is done by a special callback
+% which adds the level and the name to a list
 \def\tikzext@nodepicture@callback#1{%
   \def\tikzext@temp{#1}%
   \unless\ifx\pgfutil@empty\tikzext@temp
     \xdef\tikzext@nodepicture@list{\tikzext@nodepicture@list,{\the\tikzext@nodepicture}{#1}}%
   \fi
 }
+% A PGF matrix uses this callback for each own purpose,
+% so if a matrix inside a node picture is used,
+% both the matrix callback and the node picture callback needs to be applied.
 \let\tikzextorig@pgf@matrix@nodecallback\pgf@matrix@nodecallback
 \def\tikzext@nodepicture@matrix@callback#1{%
   \tikzext@nodepicture@callback{#1}%
   \tikzextorig@pgf@matrix@nodecallback{#1}%
 }
+% This is the macro that actually goes through the list
+% and applies the transformation.
+% This macro is called with \tikzlastnode
+% after the node picture node is placed.
 \def\tikzext@nodepicture@callback@#1{%
   \unless\ifx\tikzext@nodepicture@list\pgfutil@gobble
   \begingroup
+    % First install the transformation matrix of the node picture's node.
     \pgfsettransform{\csname pgf@sh@nt@#1\endcsname}%
-    \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx@g}{0pt}}% TODO which x?
     \csname pgf@sh@np@#1\endcsname
     \csname pgf@sh@ma@#1\endcsname
+    % But the origin of the node is not at node picture's origin.
+    % Usually that's at the text anchor but just in case:
     \pgftransformshift{\pgf@sh@reanchor{\csname pgf@sh@ns@#1\endcsname}{text}}%
-    \pgftransformyshift{+-\tikzext@nodepicture@baseline@}%
+    % Correction: Baseline and left side of node picture.
+    \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx@g}{-\tikzext@nodepicture@baseline@}}%
     \let\tikzext@temp\tikzext@nodepicture@list
+    % Empty list and loop over entries:
     \global\let\tikzext@nodepicture@list\pgfutil@gobble
     \pgfutil@for\tikzext@temp:=\tikzext@temp\do{%
       \expandafter\tikzext@nodepicture@callback@special\tikzext@temp
@@ -858,10 +884,51 @@
 \def\tikzext@transformcm#1#2#3#4#5#6{%
   \pgftransformcm{#1}{#2}{#3}{#4}{\pgfqpoint{#5}{#6}}%
 }
-\def\tikzextnodepicture{\the\tikzext@nodepicture}%
+
+% node picture: baseline
+\def\tikzext@nodepicture@baseline@coord#1{%
+  \xdef\tikzext@nodepicture@baseline@{\the\pgf@y}%
+}
+\def\tikzext@nodepicture@baseline@value#1{%
+  \pgfmathsetlength\pgf@ya{#1}%
+  \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
+}
+\def\tikzext@nodepicture@shift#1{%
+  \def\tikzext@nodepicture@shift@{#1}%
+}
+
+% node picture: anchors
+\def\tikzext@nodepicture@callback@anchors#1{%
+  \unless\ifx\tikzext@nodepicture@anchorslist\pgfutil@empty
+    \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@anchorslist\do{%
+      \edef\tikzext@marshal##1##2{%
+        \noexpand\expandafter\noexpand\pgfutil@g@addto@macro\noexpand\expandafter\expandafter\noexpand\csname pgf@sh@ma@#1\endcsname
+          \noexpand\expandafter{%
+          \noexpand\expandafter\def\noexpand\csname pgf@anchor@\csname pgf@sh@ns@#1\endcsname @##1\endcsname{##2}}}%
+      \expandafter\tikzext@marshal\tikzext@temp
+    }%
+  \fi
+}
+\def\tikzext@nodepicture@doanchors#1#2#3#4{%
+  \tikz@scan@one@point\pgfutil@firstofone({#2})\relax
+  \global\advance\pgf@y by -\tikzext@nodepicture@baseline@\relax
+  \global\advance\pgf@x by -\pgf@picminx\relax
+  \pgf@xa=\tikzext@nodepicture@outerxsep\relax
+  \pgf@ya=\tikzext@nodepicture@outerysep\relax
+  \global\advance\pgf@x by #3\pgf@xa
+  \global\advance\pgf@y by #4\pgf@ya
+  \ifx\tikzext@nodepicture@anchorslist\pgfutil@empty
+    \edef\tikzext@temp{{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
+  \else
+    \edef\tikzext@temp{{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
+  \fi
+  \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@nodepicture@anchorslist\expandafter{\tikzext@temp}%
+}
+
 \let\tikzextorig@tikz@do@fig\tikz@do@fig
 \def\tikzext@nodepicture@do{%
   \tikzset{ext/every node picture=\the\tikzext@nodepicture}%
+  \tikzextutil@prefixtomacro\tikz@alias{\tikzext@nodepicture@callback@anchors{\tikz@fig@name}}%
   \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
     \pgfextra{%
       \tikzext@nodepicture@callback@{\tikzlastnode}%
@@ -880,6 +947,17 @@
   \fi
   \pgfkeysgetvalue{/tikz/ext/node picture/baseline}{\tikzext@nodepicture@baseline@save}%
   \pgfkeysgetvalue{/tikz/ext/node picture/anchor}{\tikzext@nodepicture@anchor@save}%
+  \let\tikzext@nodepicture@anchors@list@save\tikzext@nodepicture@anchors@list
+  \global\let\tikzext@nodepicture@anchorslist\pgfutil@empty
+  \begingroup
+    \pgf@outer@adjust@hook
+    \pgfmathsetlengthmacro\tikzext@nodepicture@outerxsep{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \pgfmathsetlengthmacro\tikzext@nodepicture@outerysep{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \edef\tikzext@temp{%
+  \endgroup
+      \def\noexpand\tikzext@nodepicture@outerxsep{\tikzext@nodepicture@outerxsep}%
+      \def\noexpand\tikzext@nodepicture@outerysep{\tikzext@nodepicture@outerysep}}%
+    \tikzext@temp
   \setbox\pgfnodeparttextbox=\hbox\bgroup%
     \pgfinterruptpath
       \pgfscope
@@ -894,13 +972,15 @@
           \let\pgf@matrix@nodecallback\tikzext@nodepicture@matrix@callback
           \pgfkeyssetvalue{/tikz/ext/node picture/baseline}{}%
           \pgfkeyssetvalue{/tikz/ext/node picture/anchor}{}%
-          \let\tikz@options\pgfutil@empty
+          \let\tikzext@nodepicture@anchors@list\pgfutil@gobble
           \let\tikz@transform\relax
           \pgfkeysvalueof{/tikz/ext/node picture/at start}%
-          \bgroup
-            \aftergroup\tikzext@nodepicture@done
+          \scope[ext/every node picture scope=\the\tikzext@nodepicture]
+            \bgroup
+              \aftergroup\tikzext@nodepicture@done
 }
 \def\tikzext@nodepicture@done{%
+          \endscope
           \pgfkeysvalueof{/tikz/ext/node picture/at end}%
           \pgftransformreset
           \iftikzext@nodepicture@ilw
@@ -922,6 +1002,11 @@
           \else
             \def\tikz@anchor{text}%
             \expandafter\tikz@scan@one@point\expandafter\tikzext@nodepicture@shift\expandafter(\expandafter{\tikzext@nodepicture@anchor@save})\relax
+          \fi
+          \unless\ifx\tikzext@nodepicture@anchors@list@save\pgfutil@gobble
+            \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@anchors@list@save\do{%
+              \expandafter\tikzext@nodepicture@doanchors\tikzext@temp
+            }%
           \fi
           \xdef\tikzext@gtemp{%
             \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
@@ -951,7 +1036,7 @@
   }%
   \pgf@ya=\tikzext@nodepicture@maxy\relax
   \advance\pgf@ya by -\tikzext@nodepicture@baseline@
-  \ht\pgfnodeparttextbox=+\pgf@ya
+  \ht\pgfnodeparttextbox=\pgf@ya
   \pgf@ya=-\tikzext@nodepicture@miny\relax
   \advance\pgf@ya by \tikzext@nodepicture@baseline@
   \dp\pgfnodeparttextbox=\pgf@ya
@@ -969,16 +1054,6 @@
       }}%
   \fi
   \tikz@fig@continue
-}
-\def\tikzext@nodepicture@baseline@coord#1{%
-  \xdef\tikzext@nodepicture@baseline@{\the\pgf@y}%
-}
-\def\tikzext@nodepicture@baseline@value#1{%
-  \pgfmathsetlength\pgf@ya{#1}%
-  \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
-}
-\def\tikzext@nodepicture@shift#1{%
-  \def\tikzext@nodepicture@shift@{#1}%
 }
 \pgfutil@namedef{pgf@sh@ns@ext_current node picture bounding box}{rectangle}
 \pgfutil@namedef{pgf@sh@np@ext_current node picture bounding box}{%
