@@ -778,6 +778,7 @@
   node picture/prefix name/.is if=tikzext@nodepicture@prefix
 }
 \pgfkeysdef{/tikz/ext/every node picture}{}
+\pgfkeysdef{/tikz/ext/every outer node picture}{}
 \pgfkeysdef{/tikz/ext/every node picture scope}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/at start}{}
 \pgfkeyssetvalue{/tikz/ext/node picture/at end}{}
@@ -785,10 +786,10 @@
 \pgfkeyssetvalue{/tikz/ext/node picture/baseline}{}
 \let\tikzext@nodepicture@anchors@list\pgfutil@gobble
 \pgfkeysdefnargs{/tikz/ext/node picture/add anchor}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{0}}}
-\pgfkeysdefnargs{/tikz/ext/node picture/add anchor west}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{-1}{0}}}
-\pgfkeysdefnargs{/tikz/ext/node picture/add anchor east}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{1}{0}}}
-\pgfkeysdefnargs{/tikz/ext/node picture/add anchor north}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{1}}}
-\pgfkeysdefnargs{/tikz/ext/node picture/add anchor south}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{-1}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor/rectangle west}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{-1}{0}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor/rectangle east}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{1}{0}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor/rectangle north}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{1}}}
+\pgfkeysdefnargs{/tikz/ext/node picture/add anchor/rectangle south}{2}{\edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{0}{-1}}}
 \pgfkeysdefnargs{/tikz/ext/node picture/add anchor osep}{4}{%
   \edef\tikzext@nodepicture@anchors@list{\tikzext@nodepicture@anchors@list,{#1}{#2}{#3}{#4}}}
 \pgfkeysdef{/tikz/ext/node picture/absolute}{\pgfkeysalso{/tikz/ext/node picture/anchor={#1},/tikz/at={(#1)}}}
@@ -1056,6 +1057,7 @@
         \advance\pgf@y by\tikzext@nodepicture@baseline@
       }}%
   \fi
+  \tikzset{ext/every outer node picture=\the\tikzext@nodepicture}%
   \tikz@fig@continue
 }
 \pgfutil@namedef{pgf@sh@ns@ext_current node picture bounding box}{rectangle}
