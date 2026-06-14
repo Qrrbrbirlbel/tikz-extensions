@@ -891,6 +891,7 @@
 
 % node picture: baseline
 \def\tikzext@nodepicture@baseline@coord#1{%
+  \pgf@process{\pgfpointtransformed{#1}}%
   \xdef\tikzext@nodepicture@baseline@{\the\pgf@y}%
 }
 \def\tikzext@nodepicture@baseline@value#1{%
@@ -898,7 +899,8 @@
   \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
 }
 \def\tikzext@nodepicture@shift#1{%
-  \def\tikzext@nodepicture@shift@{#1}%
+  \pgf@process{\pgfpointtransformed{#1}}%
+  \xdef\tikzext@nodepicture@shift@{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
 }
 
 % node picture: anchors
@@ -914,7 +916,7 @@
   \fi
 }
 \def\tikzext@nodepicture@doanchors#1#2#3#4{%
-  \tikz@scan@one@point\pgfutil@firstofone(#2)\relax
+  \tikz@scan@one@point\pgfpointtransformed(#2)\relax
   \global\advance\pgf@y by -\tikzext@nodepicture@baseline@\relax
   \global\advance\pgf@x by -\pgf@picminx\relax
   \pgf@xa=\tikzext@nodepicture@outerxsep\relax
@@ -984,6 +986,25 @@
               \aftergroup\tikzext@nodepicture@done
 }
 \def\tikzext@nodepicture@done{%
+            \ifx\tikzext@nodepicture@baseline@save\pgfutil@empty
+              \pgf@ya=.5\pgf@picminy
+              \advance\pgf@ya by .5\pgf@picmaxy
+              \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
+            \else
+              \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
+              \expandafter\tikzext@temp\tikzext@nodepicture@baseline@save\relax
+            \fi
+            \ifx\tikzext@nodepicture@anchor@save\pgfutil@empty
+              \global\let\tikzext@nodepicture@shift@\pgfutil@empty
+            \else
+              \def\tikz@anchor{text}%
+              \tikz@scan@one@point\tikzext@nodepicture@shift(\tikzext@nodepicture@anchor@save)\relax
+            \fi
+            \unless\ifx\tikzext@nodepicture@anchors@list@save\pgfutil@gobble
+              \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@anchors@list@save\do{%
+                \expandafter\tikzext@nodepicture@doanchors\tikzext@temp
+              }%
+            \fi
           \endscope
           \pgfkeysvalueof{/tikz/ext/node picture/at end}%
           \pgftransformreset
@@ -993,27 +1014,7 @@
             \global\pgf@picminy=\csname pgf@lbb@miny@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
             \global\pgf@picmaxy=\csname pgf@lbb@maxy@tikzext@nodepicture\the\tikzext@nodepicture\endcsname\relax
           \fi
-          \ifx\tikzext@nodepicture@baseline@save\pgfutil@empty
-            \pgf@ya=.5\pgf@picminy
-            \advance\pgf@ya by .5\pgf@picmaxy
-            \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
-          \else
-            \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
-            \expandafter\tikzext@temp\tikzext@nodepicture@baseline@save\relax
-          \fi
-          \ifx\tikzext@nodepicture@anchor@save\pgfutil@empty
-            \let\tikzext@nodepicture@shift@\pgfutil@empty
-          \else
-            \def\tikz@anchor{text}%
-            \tikz@scan@one@point\tikzext@nodepicture@shift(\tikzext@nodepicture@anchor@save)\relax
-          \fi
-          \unless\ifx\tikzext@nodepicture@anchors@list@save\pgfutil@gobble
-            \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@anchors@list@save\do{%
-              \expandafter\tikzext@nodepicture@doanchors\tikzext@temp
-            }%
-          \fi
           \xdef\tikzext@gtemp{%
-            \def\noexpand\tikzext@nodepicture@shift@{\expandafter\noexpand\tikzext@nodepicture@shift@}%
             \def\noexpand\tikzext@nodepicture@minx{\the\pgf@picminx}%
             \def\noexpand\tikzext@nodepicture@miny{\the\pgf@picminy}%
             \def\noexpand\tikzext@nodepicture@maxx{\the\pgf@picmaxx}%
