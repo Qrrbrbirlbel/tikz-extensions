@@ -967,13 +967,13 @@
   % Execute every outer node picture inside a group to extract outer seps.
   \begingroup
     \tikzset{ext/every outer node picture=\the\tikzext@nodepicture}%
+    \tikz@node@textfont
     \pgf@outer@adjust@hook
     \pgfmathsetlengthmacro\tikzext@nodepicture@innerxsep{\pgfkeysvalueof{/pgf/inner xsep}}%
     \pgfmathsetlengthmacro\tikzext@nodepicture@innerysep{\pgfkeysvalueof{/pgf/inner ysep}}%
     \pgfmathsetlengthmacro\tikzext@nodepicture@outerxsep{\pgfkeysvalueof{/pgf/outer xsep}}%
     \pgfmathsetlengthmacro\tikzext@nodepicture@outerysep{\pgfkeysvalueof{/pgf/outer ysep}}%
     \edef\tikzext@temp{%
-      \noexpand\show\noexpand\tikzext@temp
   \endgroup
       \def\noexpand\tikzext@nodepicture@innerxsep{\tikzext@nodepicture@innerxsep}%
       \def\noexpand\tikzext@nodepicture@innerysep{\tikzext@nodepicture@innerysep}%
