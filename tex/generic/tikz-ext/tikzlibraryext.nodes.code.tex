@@ -923,11 +923,7 @@
   \pgf@ya=\tikzext@nodepicture@outerysep\relax
   \global\advance\pgf@x by #3\pgf@xa
   \global\advance\pgf@y by #4\pgf@ya
-  \ifx\tikzext@nodepicture@anchorslist\pgfutil@empty
-    \edef\tikzext@temp{{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
-  \else
-    \edef\tikzext@temp{{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
-  \fi
+  \edef\tikzext@temp{\unless\ifx\tikzext@nodepicture@anchorslist\pgfutil@empty,\fi{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
   \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@nodepicture@anchorslist\expandafter{\tikzext@temp}%
 }
 
