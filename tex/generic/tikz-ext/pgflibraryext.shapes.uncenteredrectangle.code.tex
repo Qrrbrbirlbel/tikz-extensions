@@ -342,10 +342,8 @@
   }%
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
-  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.uncenteredrectangle/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.uncenteredrectangle/pre 0.6,
+  /tikz-ext/compat/add library*={shapes.uncenteredrectangle}{shapes}{pre 0.6},
   compat/shapes.uncenteredrectangle/warn/.code={%
     \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/uncentered rectangle use saved center}[true]{/pgf/ext/uncentered rectangle use saved center}%
     \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/uncentered rectangle center yshift}{/pgf/ext/uncentered rectangle center yshift}
@@ -362,6 +360,6 @@
     \pgfkeyssetvalue{/pgf/uncentered rectangle center yshift}{\pgfkeysvalueof{/pgf/ext/uncentered rectangle center yshift}}%
     \tikzextutil@compat@cloneshape{uncentered rectangle}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,real center,real mid,real base,real south,left,left north,left center,left mid,left base,left south,text north,text center,text mid,text base,text south,right north,right center,right mid,right base,right south}%
   },
-  compat/shapes.uncenteredrectangle/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+  compat/shapes.uncenteredrectangle/\pgfkeysvalueof{/tikz/ext/compat/shapes}/.try%
 }
 \endinput

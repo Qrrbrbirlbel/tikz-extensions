@@ -210,10 +210,8 @@
   }
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
-  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.superellipse/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.superellipse/pre 0.6,
+  /tikz-ext/compat/add library*={shapes.superellipse}{shapes}{pre 0.6},
   compat/shapes.superellipse/warn/.code={%
     \tikzextutil@compatwarning@key     {shapes}{pre 0.6}{/pgf/superellipse exponent}  {/pgf/ext/superellipse exponent}%
     \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/superellipse x exponent}{/pgf/ext/superellipse x exponent}%
@@ -233,6 +231,6 @@
     \pgfkeyssetvalue{/pgf/superellipse step}      {\pgfkeysvalueof{/pgf/ext/superellipse step}}%
     \tikzextutil@compat@cloneshape{superellipse}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
   },
-  compat/shapes.superellipse/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+  compat/shapes.superellipse/\pgfkeysvalueof{/tikz/ext/compat/shapes}/.try%
 }
 \endinput

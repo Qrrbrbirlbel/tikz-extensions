@@ -295,10 +295,8 @@
   }%
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
-  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.circlecrosssplit/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.circlecrosssplit/pre 0.6,
+  /tikz-ext/compat/add library*={shapes.circlecrosssplit}{shapes}{pre 0.6},
   compat/shapes.circlecrosssplit/warn/.code={%
     \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part fill}{/pgf/ext/circle cross split part fill}%
     \tikzextutil@compatwarning@key{shapes}{pre 0.6}{/pgf/circle cross split part custom fill}[true]{/pgf/ext/circle cross split part fill}%
@@ -312,5 +310,5 @@
     \pgfkeyssetvalue{/pgf/circle cross split part custom flll/.@def}{true}%
     \tikzextutil@compat@cloneshape{circle cross split}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center,two,three,four,lower mid,lower base,lower mid east,lower base east,lower mid west,lower base west}%
   },
-  compat/shapes.circlecrosssplit/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+  compat/shapes.circlecrosssplit/\pgfkeysvalueof{/tikz/ext/compat/shapes}/.try
 }

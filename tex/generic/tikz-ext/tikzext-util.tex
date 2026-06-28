@@ -182,12 +182,8 @@
 \tikzextset{
   compat/.is choice, compat/.default=warn,
   /tikz-ext/compat/add library/.code 2 args={%
-    \tikzextset{
-      compat/#1/.is choice,
-      compat/#1/.default=#2,
-      compat/#1/0.6.1/.style={/tikz/ext/compat/#1/0.6},
-      compat/#1/0.6.2/.style={/tikz/ext/compat/#1/0.6}}%
-    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,0.6.1,0.6.2,newest,warn\do{%
+    \tikzextset{compat/#1/.is choice,compat/#1/.default=#2}%
+    \pgfutil@for\tikzext@temp:=pre 0.6,0.6,newest,warn\do{%
       \pgfkeys@expanded{%
         \noexpand\tikzextset{%
           compat/\tikzext@temp/.append style=%
@@ -197,6 +193,17 @@
         {\noexpand\pgfkeyssetvalue{/tikz/ext/compat/#1}{\tikzext@temp}}%
     }%
   },
+  /tikz-ext/compat/add library*/.code n args={3}{%
+    \pgfkeysifdefined{/tikz/ext/compat/#2/.@cmd}{}{%
+      \pgfkeysalso{/tikz-ext/compat/add library={#2}{#3}}%
+    }%
+    \tikzextset{%
+      compat/#2/pre 0.6/.append style=/tikz/ext/compat/#1/pre 0.6/.try,
+      compat/#2/0.6/.append style=/tikz/ext/compat/#1/0.6/.try,
+      compat/#2/warn/.append style=/tikz/ext/compat/#1/warn/.try,
+      compat/#2/newest/.append style=/tikz/ext/compat/#1/newest/.try,
+    }%
+  }
 }
 
 \def\tikzext@temp#1{%
@@ -221,13 +228,9 @@
   }}
 \tikzext@temp{pre 0.6}
 \tikzext@temp{0.6}
-\tikzextset{
-  compat/0.6.1/.style={/tikz/ext/compat/0.6},
-  compat/0.6.2/.style={/tikz/ext/compat/0.6}%
-}
 \tikzext@temp{newest}
 \tikzext@temp{warn}
-\tikzextset{compat=warn}
+\tikzextset{compat=0.6}
 
 \long\def\tikzextutil@gobblethree#1#2#3{}
 \def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}} % calendar: if

@@ -14,7 +14,7 @@ This library extends \tikzname's functionalities around nodes.
 \inspiration{NodesOnLine-Q, NodesOnCurve-Q}{NodesOnLine-A, NodesOnCurve-A}
 \end{tikzlibrary}
 
-\begin{multicols}{2}
+\begin{multicols*}{2}
 \subsection{Pic as a node}
 \begin{key}{/\tikzext/pic=\opt{\meta{boolean}} (default true, initially false)}
 \keycompat{tikz}
@@ -46,11 +46,11 @@ using the \referenceLibraryandIndexO{fit} library while sharing advantages and d
 \begin{tabular}{lccccccl}
   \toprule
   Feature                  & \ROT{nest} & \ROT{ref out} & \ROT{ref in} & \ROT{trans} & \ROT{inherit} & \ROT{placing} &  \\ \midrule
-  \pgfname matrix          &    \NOK    &     \NOK      &     \OK      &    \NOK     &     \MAY      &      \OK      &  \\
+  \pgfname\ matrix         &    \NOK    &     \NOK      &     \OK      &    \NOK     &     \MAY      &      \OK      &  \\
   \tikzname\ pic           &    \OK     &      \OK      &     \OK      &     \OK     &      \OK      &     \MAY      &  \\
   Nested \tikzname picture &    \OK     &     \MAY      &     \MAY     &     \OK     &      \OK      &      \OK      &  \\
   |fit|                    &    \MAY    &      \OK      &     \OK      &    \NOK     &     \NOK      &     \NOK      &  \\ \addlinespace
-  Node Picture             &    \OK     &     \NOK      &     \OK      &     \OK     &      \OK      &      \OK      &  \\ \bottomrule
+  Node Picture             &    \OK     &     \NOK      &     \OK      &     \OK     &     \MAY      &      \OK      &  \\ \bottomrule
 \end{tabular}
 \end{center}
 In this table, \enquote{\OK} means that the functionality is supported by the feature,
@@ -64,17 +64,15 @@ The functionalities are:
 
 \item[ref out] whether one can reference coordinates/nodes outside of a feature
 
-  You can't reference a node in the outer \tikzname picture from inside a matrix.
+  It is not possible to reference a node in the outer \tikzname picture from inside a matrix.
   Referencing node from the outer scope while inside a Node Picture can be done
   if using the |absolute| key (see below).
-  You probably want to use |overlay| so that the path that connect to an outer node
-  does not change the Node Picture -- or maybe that's exactly what you want \dots
-
-  \tikzname pictures need |remember picture| for you to reference a node in the outer \tikzname picture.
+  
+  \tikzname pictures need |remember picture| to be able to reference a node in the outer \tikzname picture.
 
 \item[ref in] whether one can reference coordinates/nodes from outside of a feature
 
-  \tikzname pictures need |remember picture| for you to reference a node in the inner \tikzname picture.
+  \tikzname pictures need |remember picture| to be able to reference a node in the inner \tikzname picture.
 
 \item[trans] whether the feature can be transformed
 
@@ -82,7 +80,7 @@ The functionalities are:
 
 \item[inherit] whether settings from outside the feature gets inherited
 
-  This is usually something we have to fight against and can be quite messy to deal with.
+  This is usually something one has tp fight against and can be quite messy to deal with.
   Only the \pgfname matrix allows some protection against it by using the \referenceKeyandIndexO{every outer matrix} style.
   The content a node is |fit|ted around doesn't inherit any settings.
 
@@ -93,6 +91,8 @@ The functionalities are:
   A |fit|ted node surely can be placed somewhere else but then it doesn't fit anymore.
   Once its \enquote{content} is placed, it can't be moved anymore.
 \end{description}
+
+\subsubsection{Overview}
 The Node Picture shall offer a compromise between a \tikzname\ pic and a \pgfname\ matrix
 without having to nest \tikzname pictures.
 It also shares the visual output with a node that has been |fit|ted around its content but with more flexibility,
@@ -114,7 +114,7 @@ Here are some rules and guidelines for using this:
       The key |ext/node picture/ignore line width| changes whether line widths contribute to the size.
       If they do not and with any inner seps set to zero, paths of the (sub)picture
       can lie on the border of the node.
-\item You can use a node pictures inside a node picture.
+\item You can use a Node Pictures inside a Node Picture.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=3cm]
 \tikz[
   nodes=draw,
@@ -138,29 +138,46 @@ Most of the time, all that is needed is to add |/tikz/ext/node picture| to a nod
 and it will be a Node Picture node.
 (That key's default value is |true| which is actually the key that activates it.)
 Let's look at further keys and tools for this.
+
+\subsubsection{Styles}
 \begin{stylekey}{/\tikzext/every node picture=\meta{Node Picture level}}
-  This key will be applied for every node picture,
+  This style will be applied for every node that is enabled to be a Node Picture's node,
   this will be executed on the same level as \referenceKeyandIndexO{every node},
   i.\,e. not inside the actual Node Picture.
+
   Its parameter is the current Node Picture level.
 \end{stylekey}
+\begin{stylekey}{/\tikzext/every outer node picture=\meta{Node Picture level}}
+  This style will be applied for every node that is enabled to be a Node Picture's node
+  but it will be executed after the Node Picture has been constructed.
+  This can be used to change options that don't get inherited by the Node Picture.
+
+  Its parameter is the current Node Picture level.
+\end{stylekey}
+\begin{stylekey}{/\tikzext/every node picture scope=\meta{Node Picture level}}
+  This style will be applied on the scope that encompasses the whole Node Picture.
+  
+  Its parameter is the current (outer) Node Picture level.
+\end{stylekey}
+
+\subsubsection{Settings}
 \begin{key}{/\tikzext/node picture=\opt{\meta{true or false or any of the options below}} (default true)}
   This is only a key to set keys in the namespace |/tikz/ext/node picture|.
   However, without any options used, it activates a Node Picture as it uses |true| as the default value.
   To return to a normal node, use the argument |false|.
 \end{key}
-\begin{key}{/\tikzext/node picture/prefix name=\opt{\meta{true or false}} (default true, initially true)}
+\begin{key}{/\tikzextnp/prefix name=\opt{\meta{true or false}} (default true, initially true)}
   By default, every node's name inside a Node Picture gets the Node Picture's outer node's name prefixed --
   similar to how a \tikzname\ pic works.
   This can be disabled by setting this to |false|.
   
   It is not possible to set the Node Picture's name to an empty value.
-  \begin{key}{/\tikzext/node picture/name prefix ..}
+  \begin{key}{/\tikzextnp/name prefix ..}
     Similar to a \tikzname\ pic, \referenceKeyandIndexO{name prefix} is set to the name of the outer node.
     This key will return to the prefix that was set beforehand.
   \end{key}
 \end{key}
-\begin{key}{/\tikzext/node picture/ignore line width=\opt{\meta{true or false}} (default true)}
+\begin{key}{/\tikzextnp/ignore line width=\opt{\meta{true or false}} (default true)}
   This changes whether line widths contribute to the size of a Node Picture.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}, width=3.5cm]
 \begin{tikzpicture}
@@ -183,11 +200,11 @@ Let's look at further keys and tools for this.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/\tikzext/node picture/reset graphic state}
+\begin{key}{/\tikzextnp/reset graphic state}
   This key sets up |/tikz/ext/every node picture| so that it resets many settings and values
   to their \pgfname/\tikzname\ default.
 \end{key}
-\begin{key}{/\tikzext/node picture/baseline=\meta{dimension or coordinate} (default \normalfont{empty})}
+\begin{key}{/\tikzextnp/baseline=\meta{dimension or coordinate} (default \normalfont{empty})}
   This changes where the baseline of the Node Picture's node lies.
   This must be used \emph{outside} of a Node Picture to have an effect on that Node Picture.
   A coordinate must be enclosed in parenthesis, like in the following example.
@@ -205,7 +222,7 @@ Let's look at further keys and tools for this.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/\tikzext/node picture/anchor=\meta{coordinate} (initially \normalfont{empty})}
+\begin{key}{/\tikzextnp/anchor=\meta{coordinate} (initially \normalfont{empty})}
   Similar to |/tikz/matrix anchor| this allows to specify any coordinate in the Node Picture's coordinate system
   to be used as an anchor for the node.
   Like its inspiration, the parentheses aren't to be included in the \meta{coordinate} specification.
@@ -224,7 +241,7 @@ Let's look at further keys and tools for this.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
-\begin{key}{/\tikzext/node picture/absolute=\opt{\meta{coordinate}} (default 0,0)}
+\begin{key}{/\tikzextnp/absolute=\opt{\meta{coordinate}} (default 0,0)}
   This applies a transformation so that the \meta{coordinate} inside the Node Picture
   lies at the same \meta{coordinate} in the outer scope.
   This simply sets both |/tikz/ext/node picture/anchor| and |/tikz/at| to the same \meta{coordinate}.
@@ -244,6 +261,8 @@ Let's look at further keys and tools for this.
 \end{tikzpicture}
 \end{codeexample}
 \end{key}
+
+\subsubsection{More and Examples}
 A \TeX-macro is available for accessing the current Node Picture level.
 \begin{command}{\tikzextnodepicture}
 This command returns the current level of Node Picture.
@@ -260,6 +279,40 @@ A Node Picture also supports two predefined nodes.
   Similar to |current bounding box| this returns the bounding box of
   the Node Picture with an ignored line width.
 \end{ext_predefinednode}
+
+Further more, anchors can be added to a Node Picture's node.
+\begin{key}{/\tikzextnp/add anchor=\marg{n}\marg{c}}
+  This will add the anchor \meta{n} to the Node Picture's node at \meta{c}
+  which will evaluated at the end of the Node Picture.
+\end{key}
+For rectangular nodes, these keys might be helpful as well.
+\begin{key}{/\tikzextnp/add anchor/rectangle east=\marg{n}\marg{c}}
+  This key works like the previous key but it also shifts
+  bhe anchor by the amount of |inner xsep| and |outer xsep| to the right.
+\end{key}
+\begin{key}{/\tikzextnp/add anchor/rectangle west=\marg{n}\marg{c}}
+  As above but to the left.
+\end{key}
+\begin{key}{/\tikzextnp/add anchor/rectangle north=\marg{n}\marg{c}}
+  This key works like the previous keys but it shifts
+  the anchor by the amount of |inner ysep| and |outer ysep| upwards.
+\end{key}
+\begin{key}{/\tikzextnp/add anchor/rectangle south=\marg{n}\marg{c}}
+  As above but downwards.
+\end{key}
+Those are special versions of these more general keys
+for which the given factors must be purely numerical as no evaluation are done for them.
+\begin{key}{/\tikzextnp/add anchor osep=\marg{n}\marg{c}\marg{o x}\marg{osep y}}
+  Thus key works like the |add anchor| key but it shifts the anchor by the |outer xsep| and |outer ysep| values
+  multiplied by the given factors \meta{ox} and \meta{oy}.
+\end{key}
+\begin{key}{/\tikzextnp/add anchor osep=\marg{n}\marg{c}\marg{ix}\marg{iy}}
+  As above but with the values of |inner xsep| and |inner ysep|.
+\end{key}
+\begin{key}{/\tikzextnp/add anchor sep=\marg{n}\marg{c}\marg{ix}\marg{iy}\marg{ox}\marg{oy}}
+  This is a combination of the last two keys.
+  This is the most general version to add anchors.
+\end{key}
 
 A \pgfname\ matrix alone is not able to be transformed but
 as part of this construct, it is possible.
@@ -287,10 +340,7 @@ as well as the nodes in the matrix themselves (dotted lines).
       matrix of nodes, row sep=5mm, column sep=5mm,
       draw, dashed, nodes={draw, dotted},
       name=-m, ext/node picture/name prefix ..
-    ] {
-      abc & def \\
-      ghi & jkl \\
-    };
+    ] { abc & def \\ ghi & jkl \\ };
     \draw (-m-1-1) -- (-m-2-2);
   } (2,3) [gray];
   \draw (n-m-2-1) -- (n-m-1-2);
@@ -298,7 +348,7 @@ as well as the nodes in the matrix themselves (dotted lines).
 \end{codeexample}
 \endgroup
 
-%\newcolumn
+\newcolumn
 The following example is adapted from \cite{NodePicQ}.
 \begin{codeexample}[preamble=\usetikzlibrary{ext.nodes, arrows.meta, positioning, graphs}]
 \begin{tikzpicture}[
@@ -313,12 +363,13 @@ The following example is adapted from \cite{NodePicQ}.
   node distance=3mm and 4mm
 ]
 \NewDocumentCommand{\nbox}{O{} m d() m }{%
-  \node[{b,#1}]{
-    \IfValueT{#3}{\tikzextset{node picture/baseline={(#3.base)}}}
+  \node[{b,#1,style/.expanded=\IfValueT{#3}{ext/node picture/baseline={(#3.base)}}}]{
     #4
     \node[h]{#2};
-    \node[white, below left=0pt and 0pt of current bounding box.north east]
-      {L\tikzextnodepicture};
+    \node[
+      white, inner xsep=+0pt,
+      below left=0pt and 0pt of current bounding box.north east
+    ] {L\tikzextnodepicture};
   };
 }
 \nbox{Pipeline}{
@@ -541,6 +592,4 @@ to one of the eight compass directions.
 This key disables the \referenceKeyandIndexO{sloped} option
 which in turn will disable this option.
 \end{key}
-\newcolumn
-\null
-\end{multicols}
+\end{multicols*}

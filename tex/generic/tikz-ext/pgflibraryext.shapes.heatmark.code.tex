@@ -182,11 +182,9 @@
   }
 }
 %%% Compatibility
-\pgfkeysifdefined{/tikz/ext/compat/shapes/.@cmd}{}{\pgfextset{/tikz-ext/compat/add library={shapes}{pre 0.6}}}
 \tikzextset{
-  compat/shapes/warn/.append style=/tikz/ext/compat/shapes.heatmark/warn,
-  compat/shapes/pre 0.6/.append style=/tikz/ext/compat/shapes.heatmark/pre 0.6,
-  compat/shapes.heatmark/warn/.code={%
+  /tikz-ext/compat/add library*={shapes.heatmark}{shapes}{pre 0.6},
+  compat/shapes.heatmark/warn/.append code={%
     \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc width}{/pgf/ext/heatmark arc width}%
     \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc sep}{/pgf/ext/heatmark arc sep}%
     \tikzextutil@compatwarning@valuekey{shapes}{pre 0.6}{/pgf/heatmark arc rings}{/pgf/ext/heatmark arc rings}%
@@ -198,7 +196,7 @@
     \def\tikzext@temp{\tikzextutil@compatmaybewarning{shape 'heatmark'}{'ext_heatmark'}{shapes = pre 0.6}}%
     \tikzextutil@prefix@macrotomacro\pgf@sh@s@heatmark\tikzext@temp
   },
-  compat/shapes.heatmark/pre 0.6/.code={%
+  compat/shapes.heatmark/pre 0.6/.append code={%
     \pgfkeysdef{/pgf/heatmark arc width}{\pgfkeyssetvalue{/pgf/ext/heatmark arc width{##1}}}%
     \pgfkeysdef{/pgf/heatmark arc sep}{\pgfkeyssetvalue{/pgf/ext/heatmark arc sep{##1}}}%
     \pgfkeysdef{/pgf/heatmark arc rings}{\pgfkeyssetvalue{/pgf/ext/heatmark arc rings{##1}}}%
@@ -215,6 +213,6 @@
     \pgfkeyssetvalue{/pgf/heatmark outer opacity}{\pgfkeysvalueof{/pgf/ext/heatmark outer opacity}}%
     \tikzextutil@compat@cloneshape{heatmark}{text,north,north west,north east,center,west,east,mid,mid west,mid east,base,base west,base east,south,south west,south east,center}%
   },
-  compat/shapes.heatmark/\pgfkeysvalueof{/tikz/ext/compat/shapes}%
+  compat/shapes.heatmark/\pgfkeysvalueof{/tikz/ext/compat/shapes}/.try%
 }
 \endinput

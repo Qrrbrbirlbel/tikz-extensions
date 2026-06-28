@@ -1003,7 +1003,7 @@
           %
           \let\tikz@transform\relax
           \pgfkeysvalueof{/tikz/ext/node picture/at start}%
-          \scope[ext/every node picture scope=\the\tikzext@nodepicture]
+          \scope[ext/every node picture scope=\pgfinteval{\the\tikzext@nodepicture-1}]
             \bgroup
               \aftergroup\tikzext@nodepicture@done
 }

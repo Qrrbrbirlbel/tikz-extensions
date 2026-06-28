@@ -559,34 +559,42 @@
 }
 \makeatother
 \newcommand*\listcompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-6pt}\item{\color{gray}\small\sffamily#1\kern.5em{#2}}\vspace{-2pt}\par
 }
 \newcommand*\keylistcompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-6pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily/#2/\myname}}\vspace{-2pt}\par
   \pgfmanualpdflabel{/#2/\myname}{}%
 }
 \newcommand*\keycompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily/#2/\myname}}\vspace{-2pt}\par
   \pgfmanualpdflabel{/#2/\myname}{}%
 }
 \newcommand*\cmdcompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily\string#2}}\vspace{-2pt}\par
 %  \pgfmanualpdflabel{\string#2}{}%
 }
 \newcommand*\tipcompat[1][pre~0.6]{%
+  \nopagebreak
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily\expandafter\tipcompatstrip\currentarrowtype\tipstop}}\vspace{-2pt}\par
 %  \pgfmanualpdflabel{/#2/\myname}{}%
 }
-\newcommand*\tipCompat[2][pre~0.6]{
+\newcommand*\tipCompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-8pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{2pt}\par
 %  \pgfmanualpdflabel{/#2/\myname}{}%
 }
 \def\tipcompatstrip ext#1#2\tipstop{#2}%
 \newcommand*\handlercompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{-2pt}\par
   \pgfmanualpdflabel{#2}{}%
 }
 \newcommand*\mathcompat[2][pre~0.6]{%
+  \nopagebreak
   \vspace{-3pt}\item{\color{gray}\small\sffamily #1\kern.5em{\ttfamily#2}}\vspace{-2pt}\par
 %  \pgfmanualpdflabel{/#2/\myname}{}%
 }
@@ -595,6 +603,7 @@
 \newcommand*\pgfext{pgf/ext}
 \newcommand*\pgfforeachext{pgf/foreach/ext}
 \newcommand*\utilsext{utils/ext}
+\newcommand*\tikzextnp{tikz/ext/node picture}
 
 \def\decomposetoodeep#1/#2/\nil{%
   % avoid too-deep nesting in index
