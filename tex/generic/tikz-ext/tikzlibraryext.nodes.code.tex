@@ -154,7 +154,9 @@
   auto/false/.code=\let\tikz@do@auto@anchor\relax,
   /tikz/ext/nodes/install auto/.style 2 args={
     /tikz/swap/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
-    /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}%
+    /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi},
+    /tikz/swap/#1@precise/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
+    /tikz/auto/#1@precise/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi},
   },
   /tikz/ext/nodes/install auto={left}{right},
   /tikz/ext/nodes/install auto={right}{left},
