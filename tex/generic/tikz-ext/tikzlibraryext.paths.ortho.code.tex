@@ -573,10 +573,12 @@
     \endpgfextra
     \pgfkeys@expanded{%
       (perpendicular cs: horizontal line through={(\tikztostart)},
-                         vertical line through={(\tikztotarget)}) -- (\tikztotarget)}\tikztonodes
-      \pgfextra
-        \ifx\tikzext@origtotarget\pgfutil@empty\else
-          \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
+                         vertical line through={(\tikztotarget)}) -- (\tikztotarget)}
+    \tikztonodes
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }},
   only vertical second/.default=,
   only horizontal second/.style={/tikz/to path={
     \pgfextra
@@ -601,10 +603,12 @@
     \endpgfextra
     \pgfkeys@expanded{%
       (perpendicular cs: vertical line through={(\tikztostart)},
-                         horizontal line through={(\tikztotarget)}) -- (\tikztotarget)}\tikztonodes
-    \pgfextra
-      \ifx\tikzext@origtotarget\pgfutil@empty\else
-        \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
+                         horizontal line through={(\tikztotarget)}) -- (\tikztotarget)}
+    \tikztonodes
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }},
   only horizontal second/.default=,
   only vertical first/.style={/tikz/to path={
     \pgfextra
@@ -632,9 +636,10 @@
     -- (perpendicular cs: vertical line through/.expanded={(\tikztostart)},
                         horizontal line through={(\tikztotarget)})
     \tikztonodes
-    \pgfextra
-      \ifx\tikzext@origtotarget\pgfutil@empty\else
-        \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }},
   only vertical first/.default=,
   only horizontal first/.style={/tikz/to path={
     \pgfextra
@@ -661,9 +666,11 @@
     \expandafter(\tikztostart)
       -- (perpendicular cs: horizontal line through/.expanded={(\tikztostart)},
                               vertical line through={(\tikztotarget)})
-    \tikztonodes \pgfextra
-      \ifx\tikzext@origtotarget\pgfutil@empty\else
-        \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi\endpgfextra}},
+    \tikztonodes
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }},
   only horizontal first/.default=,
   only vertical first to center/.style={/tikz/to path={
     \pgfextra
@@ -671,14 +678,22 @@
     \endpgfextra
     (\tikztostart) -- (perpendicular cs: vertical line through={(\tikztostart)},
                                          horizontal line through={(\tikztotarget)})
-    \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}},
+    \tikztonodes
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }},
   only horizontal first to center/.style={/tikz/to path={
     \pgfextra
       \let\tikzext@origtotarget\tikztotarget
     \endpgfextra
     (\tikztostart) -- (perpendicular cs: horizontal line through={(\tikztostart)},
                                          vertical line through={(\tikztotarget)})
-    \tikztonodes \ifx\tikzext@origtotarget\pgfutil@empty\else\iftikzext@ortho@preflush(\tikzext@origtotarget)\fi\fi}}%
+    \tikztonodes
+    \ifx\tikzext@origtotarget\pgfutil@empty\else
+      \iftikzext@ortho@preflush(\tikzext@origtotarget)\fi
+    \fi
+  }}%
 }
 
 %%% Compatibility
