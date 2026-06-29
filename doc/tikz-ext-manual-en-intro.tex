@@ -1,6 +1,6 @@
 % !TeX spellcheck = en_US
 % !TeX root = tikz-ext-manual.tex
-% Copyright 2022 by Qrrbrbirlbel
+% Copyright 2026 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
 %
@@ -79,8 +79,7 @@ that do not appear in this manual are considered deprecated.
   The choice |warn| gives out warning for deprecated keys or commands
   but still executes them if they were not not in use when an extension was loaded.
   
-  For version 0.6 this is actually the default settings so that active documents
-  keep working -- for now.
+  Starting with version~0.6.3, the default compatibility setting is |newest|, i.e. |0.6|.
   
   The following table shows the compatibility settings for each extension.
   \newcommand*\X{$\checkmark$}%
@@ -110,8 +109,6 @@ that do not appear in this manual are considered deprecated.
     topaths.arcthrough                                   & \X   &   \X    & \Xdef/-- \\ \bottomrule
   \end{tabular}
   \end{center}
-  
-  For future version, it is planned that the default compatibility setting will not be |warn|.
 \end{key}
 
 \newcolumn\noindent

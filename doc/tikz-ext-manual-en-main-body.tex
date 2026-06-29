@@ -1,6 +1,6 @@
 % !TeX spellcheck = en_US
 % !TeX root = tikz-ext-manual.tex
-% Copyright 2022 by Qrrbrbirlbel
+% Copyright 2026 by Qrrbrbirlbel
 %
 % This file may be distributed and/or modified
 %
@@ -57,7 +57,7 @@
 
 These libraries only work with \tikzname.
 \vspace{1em}
-\begin{center}\tikzsetnextfilename{main-cover}
+\begin{center}
 \begin{tikzpicture}[
   very thick,
   scale=2.7,
@@ -92,31 +92,27 @@ These libraries only work with \tikzname.
 \end{tikzpicture}
 \end{center}
 
-\tikzsetfigurename{arrows-plus}     \include{tikz-ext-manual-en-library-arrows-plus}
-                                    \include{tikz-ext-manual-en-library-beamer}
-\tikzsetfigurename{calendar-plus}   \include{tikz-ext-manual-en-library-calendar-plus}
-\tikzsetfigurename{layers}          \include{tikz-ext-manual-en-library-layers}
-\tikzsetfigurename{node-families}   \include{tikz-ext-manual-en-library-node-families}
-\tikzsetfigurename{nodes}           \include{tikz-ext-manual-en-library-nodes}
-\tikzsetfigurename{paths.arcto}     \include{tikz-ext-manual-en-library-paths.arcto}
-\tikzsetfigurename{paths.ortho}     \include{tikz-ext-manual-en-library-paths.ortho}
-\tikzsetfigurename{paths.timer}     \include{tikz-ext-manual-en-library-paths.timer}
-\tikzsetfigurename{patterns.images} \include{tikz-ext-manual-en-library-patterns.images}
-\tikzsetfigurename{positioning-plus}
+\include{tikz-ext-manual-en-library-arrows-plus}
+\include{tikz-ext-manual-en-library-beamer}
+\include{tikz-ext-manual-en-library-calendar-plus}
+\include{tikz-ext-manual-en-library-layers}
+\include{tikz-ext-manual-en-library-node-families}
+\include{tikz-ext-manual-en-library-nodes}
+\include{tikz-ext-manual-en-library-paths.arcto}
+\include{tikz-ext-manual-en-library-paths.ortho}
+\include{tikz-ext-manual-en-library-paths.timer}
+\include{tikz-ext-manual-en-library-patterns.images}
 \include{tikz-ext-manual-en-library-positioning-plus}
-\tikzsetfigurename{scalepicture}
 \include{tikz-ext-manual-en-library-scalepicture}
-\tikzsetfigurename{topaths}
 \include{tikz-ext-manual-en-library-topaths.arcthrough}
 \include{tikz-ext-manual-en-library-topaths.autobend}
-\tikzsetfigurename{trans}
 \include{tikz-ext-manual-en-library-trans}
 %
 \part{\pgfname\space Libraries}
 \label{part:pgf}
 These libraries (should) work with both \pgfname\space and \tikzname.
 
-\begin{center}\tikzsetnextfilename{main-graph}
+\begin{center}
 \begin{codeexample}[width=10cm,preamble=%
   \usetikzlibrary{graphs,graphdrawing,ext.misc} \usegdlibrary{force}]
 \tikzset{
@@ -154,9 +150,8 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \end{codeexample}
 \end{center}
 
-\tikzsetfigurename{PGF.arrows}\include{tikz-ext-manual-en-pgf-arrows}
-\tikzsetfigurename{PGF.trans}\include{tikz-ext-manual-en-pgf-trans}
-\tikzsetfigurename{PGF.shapes}%
+\include{tikz-ext-manual-en-pgf-arrows}
+\include{tikz-ext-manual-en-pgf-trans}
 \include{tikz-ext-manual-en-pgf-shapes-circlearrow}
 \include{tikz-ext-manual-en-pgf-shapes-circlecrosssplit}
 \include{tikz-ext-manual-en-pgf-shapes-heatmark}
@@ -167,7 +162,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \part{Utilities}
 
 \label{part:misc}
-\vfill\tikzsetnextfilename{main-misc}
+\vfill
 \begin{codeexample}[width=6cm, preamble=\usetikzlibrary{ext.misc}]
 \begin{tikzpicture}[
   declare function={bigR(\n)=smallR+.05*\n;},
@@ -195,9 +190,9 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \end{codeexample}
 \vfill
 
-\tikzsetfigurename{misc.calendar}\include{tikz-ext-manual-en-calendar}
-\tikzsetfigurename{misc.pgffor}\include{tikz-ext-manual-en-library-pgffor}
-\tikzsetfigurename{misc.misc}\include{tikz-ext-manual-en-library-misc}
+\include{tikz-ext-manual-en-calendar}
+\include{tikz-ext-manual-en-library-pgffor}
+\include{tikz-ext-manual-en-library-misc}
 
 %% END
 \newcommand*{\addPackage}[1]{Added package \texttt{#1-ext}.}
@@ -211,11 +206,12 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \noindent
 Version \tikzextversion\ (\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day)
 \begin{itemize}
-\item Small bugfix to |ext.positioning-plus|. \cite{GH24}
-\item Small bugfix to |ext.beamer|.
-\item Small bufgix to |ext.paths.ortho|.
+\item Bugfix to |ext.positioning-plus|. \cite{GH24}
+\item Bugfix to |ext.beamer|.
+\item Bugfix to |ext.paths.ortho|.
 \item Added node pictures to |ext.nodes|.
 \item Added |auto| key to |ext.topaths.arcthrough|.
+\item |warn| is not the default compatibility setting anymore.
 \end{itemize}
 Version 0.6.2 (2025-04-24)
 \begin{itemize}
