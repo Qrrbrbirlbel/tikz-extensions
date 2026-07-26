@@ -2,7 +2,7 @@
 %
 % This file may be distributed and/or modified
 %
-% 1. under the LaTeX Project Public License and/or
+% 1. under the LaTeX Project Public License 1.3c and/or
 % 2. under the GNU Free Documentation License.
 %
 \unless\ifcsname tikzextset\endcsname
@@ -145,19 +145,19 @@
 \newif\iftikzext@auto@offset
 \newif\iftikzext@auto@precise
 \pgfkeysdef{/tikz/auto/}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on}
+\pgfkeysdef{/tikz/auto/false}{\let\tikz@do@auto@anchor\relax}
+\pgfkeysdefnargs{/tikz/ext/nodes/install auto}{2}{%
+  \pgfkeysdef{/tikz/swap/#1}{\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi}}%
+  \pgfkeysdef{/tikz/auto/#1}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}}%
+  \pgfkeysdef{/tikz/swap/#1@precise}{\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi}}%
+  \pgfkeysdef{/tikz/auto/#1@precise}{\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi}}%
+}
 \tikzset{
   swap/.style={% overwriting
     /tikz/swap/\tikz@auto@anchor@direction
   },
   auto/.is choice, % overwriting
   auto/.default=,
-  auto/false/.code=\let\tikz@do@auto@anchor\relax,
-  /tikz/ext/nodes/install auto/.style 2 args={
-    /tikz/swap/#1/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
-    /tikz/auto/#1/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi},
-    /tikz/swap/#1@precise/.code=\def\tikz@auto@anchor@direction{#2\iftikzext@auto@precise @precise\fi},
-    /tikz/auto/#1@precise/.code=\let\tikz@do@auto@anchor\tikz@auto@anchor@on\def\tikz@auto@anchor@direction{#1\iftikzext@auto@precise @precise\fi},
-  },
   /tikz/ext/nodes/install auto={left}{right},
   /tikz/ext/nodes/install auto={right}{left},
   /tikz/ext/nodes/install auto={ext/left}{ext/right},
@@ -189,7 +189,7 @@
       /tikz/ext/auto offset=\pgfdecorationsegmentamplitude+(\pgfkeysvalueof{/pgf/decoration/raise})%
     },
     /tikz/ext/every brace node/.style={
-      /tikz/auto=% Ugh?
+      /tikz/auto=ext/% Ugh?
         \ifx\tikz@dec@mirror\relax
           \ifpgf@decorate@inputsegmentobjects@reverse right\else left\fi
         \else
@@ -203,233 +203,243 @@
   },
 }
 \def\tikzext@auto@pre{%
+  \let\iftikzext@slopedattime\ifpgfslopedattime
+  \let\iftikzext@allowupsidedownattime\ifpgfallowupsidedownattime
   \begingroup
-    \let\iftikzext@slopedattime\ifpgfslopedattime
-    \let\iftikzext@allowupsidedownattime\ifpgfallowupsidedownattime
-    \begingroup
-      \pgfresetnontranslationattimefalse
-      \pgfslopedattimetrue
-      \pgfallowupsidedownattimetrue
-      \tikz@timer
-      \pgf@x=\pgf@pt@aa pt%
-      \pgf@y=\pgf@pt@ab pt%
-      \pgfpointnormalised{}%
-    \endgroup
-    \edef\tikzext@unslopedx{\the\pgf@x}%
-    \edef\tikzext@unslopedy{\the\pgf@y}%
     \pgfresetnontranslationattimefalse
-    \ifpgfslopedattime
-      \pgfslopedattimefalse%
-    \else
-      \pgfslopedattimetrue%
-    \fi
-    \pgfallowupsidedownattimetrue%
-    \tikz@timer%
+    \pgfslopedattimetrue
+    \pgfallowupsidedownattimetrue
+    \tikz@timer
     \pgf@x=\pgf@pt@aa pt%
     \pgf@y=\pgf@pt@ab pt%
     \pgfpointnormalised{}%
+  \endgroup
+  \edef\tikzext@unslopedx{\the\pgf@x}%
+  \edef\tikzext@unslopedy{\the\pgf@y}%
+  \tikz@auto@pre % includes \begingroup
+  \endgroup
 }
-\def\tikzext@auto@post{%
-    \edef\tikz@temp{%
-      \def\noexpand\tikz@anchor{\tikz@anchor}%
-      \def\noexpand\tikzext@autooffset@angle{\tikzext@autooffset@angle}}%
-  \expandafter\endgroup\tikz@temp
-}
-\def\tikzext@auto@offset@A#1{%
+\def\tikzext@auto@post#1{%
   \iftikzext@auto@offset
-    \xdef\tikz@marshal{%
-      \pgf@process{%
-        \noexpand\pgftransformreset
-        \noexpand\pgftransformrotate{#1}%
-        \noexpand\pgfpointtransformed{%
-          \noexpand\pgfpointscale{\noexpand\pgfkeysvalueof{/tikz/ext/auto offset}}
-                                 {\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}}%
-      \advance\pgf@pt@x\pgf@x
-      \advance\pgf@pt@y\pgf@y
-    }%
-  \fi
-}
-\def\tikzext@auto@offset@B#1{%
-  \iftikzext@auto@offset
+    \pgfmathsetmacro\tikzext@auto@offset@value{\pgfkeysvalueof{/tikz/ext/auto offset}}%
     \ifpgfslopedattime
-      \pgf@xb=\pgf@x
-      \pgf@yb=\pgf@y
-      \pgf@process{%
-        \pgftransformreset
-        \pgftransformrotate{#1}%
-        \pgfpointtransformed{%
-          \pgf@process{%
-            \tikz@timer%
-            \pgf@x=\pgf@pt@aa pt
-            \pgf@y=\pgf@pt@ab pt
-            \pgfpointnormalised{}%
-            \pgfpointscale{\pgfkeysvalueof{/tikz/ext/auto offset}}{}}}}%
-      \advance\pgf@pt@x\pgf@x
-      \advance\pgf@pt@y\pgf@y
-      \pgf@x=\pgf@xb
-      \pgf@y=\pgf@yb
+      \tikz@addtransform{\csname tikzext@auto@offset@\tikz@anchor\endcsname}%
     \else
-      \tikz@marshal
+      \tikz@addtransform{\csname tikzext@auto@offset@#1\endcsname}%
     \fi
   \fi
 }
-\def\tikzext@auto@offset@B@precise{%
-  \iftikzext@auto@offset
-    \ifpgfslopedattime
-    \else
-      \tikz@marshal
-    \fi
-  \fi
-}
-
-% direction: left
-\def\tikz@auto@anchor@left{% overwriting
-  \tikz@auto@pre
-  \tikz@auto@anchor
-  \tikzext@auto@offset@A{90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B{90}%
-}
-\def\tikz@auto@anchor@left@precise{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
-  \pgfmathadd@{\pgfmathresult}{-90}%
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% direction: right
-\def\tikz@auto@anchor@right{% overwriting
-  \tikz@auto@pre
-  \tikz@auto@anchor@prime
-  \tikzext@auto@offset@A{-90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B{-90}%
-}
-\def\tikz@auto@anchor@right@precise{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
-  \pgfmathadd@{\pgfmathresult}{90}%
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{-90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
+\pgfutil@namedef{tikzext@auto@offset@above}{\pgftransformshift{\pgfqpointscale{\tikzext@auto@offset@value}{\pgfqpoint{+\tikzext@unslopedx}{+\tikzext@unslopedy}}}}
+\pgfutil@namedef{tikzext@auto@offset@left}{\pgftransformshift{\pgfqpointscale{\tikzext@auto@offset@value}{\pgfqpoint{-\tikzext@unslopedy}{+\tikzext@unslopedx}}}}
+\pgfutil@namedef{tikzext@auto@offset@below}{\pgftransformshift{\pgfqpointscale{\tikzext@auto@offset@value}{\pgfqpoint{-\tikzext@unslopedx}{-\tikzext@unslopedy}}}}
+\pgfutil@namedef{tikzext@auto@offset@right}{\pgftransformshift{\pgfqpointscale{\tikzext@auto@offset@value}{\pgfqpoint{+\tikzext@unslopedy}{-\tikzext@unslopedx}}}}
+\pgfutil@namedef{tikzext@auto@offset@north}{\pgftransformyshift{+-\tikzext@auto@offset@value pt}}%
+\pgfutil@namedef{tikzext@auto@offset@south}{\pgftransformyshift{++\tikzext@auto@offset@value pt}}%
+\pgfutil@namedef{tikzext@auto@offset@east}{\pgftransformxshift{+-\tikzext@auto@offset@value pt}}%
+\pgfutil@namedef{tikzext@auto@offset@west}{\pgftransformxshift{++\tikzext@auto@offset@value pt}}%
 
 % direction: Left
-\pgfutil@namedef{tikz@auto@anchor@ext/left}{%
+\def\tikzext@auto@leftright#1#2#3#4{%
   \tikzext@auto@pre
-  \def\tikzext@autooffset@angle{90}%
-  \iftikzext@allowupsidedownattime
-    \tikz@auto@anchor
+  \iftikzext@slopedattime
+    \def\tikz@anchor{#2}%
+    \iftikzext@allowupsidedownattime
+    \else
+      \iftikzext@slopedattime
+        \ifdim\tikzext@unslopedx<0pt
+          \def\tikz@anchor{#3}%
+        \fi
+      \fi
+    \fi
   \else
-    \iftikzext@slopedattime
+    #4%
+  \fi
+  \tikzext@auto@post{#1}%
+}
+
+\pgfutil@namedef{tikz@auto@anchor@ext/left}{\tikzext@auto@leftright{left}{south}{north}{\tikz@auto@anchor}}
+\pgfutil@namedef{tikz@auto@anchor@ext/right}{\tikzext@auto@leftright{right}{north}{south}{\tikz@auto@anchor@prime}}
+
+\def\tikzext@auto@northsouth#1#2#3#4#5#6{%
+  \tikzext@auto@pre
+  \def\tikz@anchor{#3}%
+  \def\tikzext@autooffset@angle{#1}%
+  \iftikzext@slopedattime
+    \iftikzext@allowupsidedownattime
       \ifdim\tikzext@unslopedx<0pt
-        \def\tikz@anchor{north}%
-        \def\tikzext@autooffset@angle{-90}%
+        \def\tikz@anchor{#4}%
+      \fi
+      % we don't need an \else case here
+      % because the anchor will always be
+      % south for ext/north and north for ext/south
+    \fi
+  \else
+    \ifdim\pgf@x>0.05pt
+      \ifdim\pgf@y>0.05pt
+        \def\tikz@anchor{#3 #5}%
+      \else\ifdim\pgf@y<-0.05pt
+        \def\tikz@anchor{#3 #6}%
+      \fi\fi
+    \else\ifdim\pgf@x<-0.05pt
+      \def\tikzext@autooffset@angle{#2}%
+      \ifdim\pgf@y>0.05pt
+        \def\tikz@anchor{#3 #6}%
+      \else\ifdim\pgf@y<-0.05pt
+        \def\tikz@anchor{#3 #5}%
+      \fi\fi
+    \else
+      \ifdim\pgf@y>0pt
+        \def\tikz@anchor{#5}%
       \else
-        \def\tikz@anchor{south}%
+        \def\tikz@anchor{#6}%
+      \fi
+    \fi\fi
+  \fi
+  \tikzext@auto@post{\tikzext@autooffset@angle}%
+}
+\pgfutil@namedef{tikz@auto@anchor@ext/north}{\tikzext@auto@northsouth{left}{right}{south}{north}{east}{west}}
+\pgfutil@namedef{tikz@auto@anchor@ext/south}{\tikzext@auto@northsouth{right}{left}{north}{south}{west}{east}}
+
+\def\tikzext@auto@eastwest#1#2#3#4#5#6{%
+  \tikzext@auto@pre
+  \def\tikzext@autooffset@angle{#1}%
+  \iftikzext@slopedattime
+    \def\tikz@anchor{#5}%
+    \iftikzext@allowupsidedownattime
+      \ifdim\tikzext@unslopedy<-0.05pt
+        \def\tikz@anchor{#6}%
+        \def\tikzext@autooffset@angle{#2}%
       \fi
     \else
-      \tikz@auto@anchor
+      \ifdim\tikzext@unslopedy>0.05pt
+        \ifdim\tikzext@unslopedx<-0.05pt
+          \def\tikz@anchor{#6}%
+          \def\tikzext@autooffset@angle{#2}%
+        \fi
+      \else
+        \ifdim\tikzext@unslopedy<-0.05pt
+          \ifdim\tikzext@unslopedx<-0.05pt
+          \else
+            \def\tikz@anchor{#6}%
+            \def\tikzext@autooffset@angle{#2}%
+          \fi
+        \else
+          \ifdim\tikzext@unslopedx<0pt
+            \def\tikz@anchor{#6}%
+            \def\tikzext@autooffset@angle{#2}%
+          \fi
+        \fi
+      \fi
+    \fi
+  \else
+    \def\tikz@anchor{#3}%
+    \ifdim\pgf@y>0.05pt
+      \ifdim\pgf@x>0.05pt
+        \def\tikz@anchor{#5 #3}%
+      \else\ifdim\pgf@x<-0.05pt
+        \def\tikz@anchor{#6 #3}%
+      \fi\fi
+    \else
+      \ifdim\pgf@y<-0.05pt
+        \def\tikzext@autooffset@angle{#2}%
+        \ifdim\pgf@x>0.05pt
+          \def\tikz@anchor{#6 #3}%
+        \else\ifdim\pgf@x<-0.05pt
+          \def\tikz@anchor{#5 #3}%
+        \fi\fi
+      \else
+        \ifdim\pgf@x>0pt
+          \def\tikz@anchor{#5}%
+        \else
+          \def\tikz@anchor{#6}%
+        \fi
+      \fi
     \fi
   \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post{\tikzext@autooffset@angle}%
+}
+\pgfutil@namedef{tikz@auto@anchor@ext/east}{\tikzext@auto@eastwest{right}{left}{west}{east}{north}{south}}
+\pgfutil@namedef{tikz@auto@anchor@ext/west}{\tikzext@auto@eastwest{left}{right}{east}{west}{south}{north}}
+
+% auto: above/below (always towards end/start of line)
+\def\tikzext@auto@abovebelow#1#2#3#4#5{%
+  \tikzext@auto@pre
+  \iftikzext@slopedattime
+    \def\tikz@anchor{#4}%
+    \iftikzext@allowupsidedownattime
+    \else
+      \ifdim\tikzext@unslopedx<-0.05pt
+        \def\tikz@anchor{#5}%
+      \fi
+    \fi
+  \else
+    \ifdim\pgf@y>0.05pt
+      \def\tikz@anchor{#2}%
+      \ifdim\pgf@x>0.05pt
+        \def\tikz@anchor{#2 #4}%
+      \else\ifdim\pgf@x<-0.05pt
+        \def\tikz@anchor{#2 #5}%
+      \fi\fi
+    \else
+      \ifdim\pgf@y<-0.05pt
+        \def\tikz@anchor{#3}%
+        \ifdim\pgf@x>0.05pt
+          \def\tikz@anchor{#3 #4}%
+        \else\ifdim\pgf@x<-0.05pt
+          \def\tikz@anchor{#3 #5}%
+        \fi\fi
+      \else
+        \ifdim\pgf@x>0pt
+          \def\tikz@anchor{#4}%
+        \else
+          \def\tikz@anchor{#5}%
+        \fi
+      \fi
+    \fi
+  \fi
+  \tikzext@auto@post{#1}%
+}
+\pgfutil@namedef{tikz@auto@anchor@ext/below}{\tikzext@auto@abovebelow{below}{north}{south}{east}{west}}
+\pgfutil@namedef{tikz@auto@anchor@ext/above}{\tikzext@auto@abovebelow{above}{south}{north}{west}{east}}
+
+%%% auto: precise %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% no auto offset and no precise for original left and right options
+\let\tikz@auto@anchor@left@precise\tikz@auto@anchor@left
+\let\tikz@auto@anchor@right@precise\tikz@auto@anchor@right
+
+\def\tikzext@auto@pre@precise{%
+  \pgfmathsetmacro\tikzext@auto@offset@value{\pgfkeysvalueof{/tikz/ext/auto offset}}%
+  \tikz@auto@pre % includes a \begingroup
+  \endgroup
+  \edef\tikzext@unslopedx{\the\pgf@x}%
+  \edef\tikzext@unslopedy{\the\pgf@y}%
+  \pgfkeys@expanded{%
+    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}%
+  }%
+}
+
+\def\tikzext@auto@post@precise#1{%
+  \let\tikz@anchor\pgfmathresult
+  \iftikzext@auto@offset
+    \ifpgfslopedattime
+      % this should never happen, sloped disables precise
+    \else
+      \tikz@addtransform{\csname tikzext@auto@offset@#1\endcsname}%
+    \fi
+  \fi
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/left@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \pgfmathadd@{\pgfmathresult}{-90}%
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% direction: Right
-\pgfutil@namedef{tikz@auto@anchor@ext/right}{%
-  \tikzext@auto@pre
-  \def\tikzext@autooffset@angle{-90}%
-  \iftikzext@allowupsidedownattime
-    \tikz@auto@anchor@prime
-  \else
-    \iftikzext@slopedattime
-      \ifdim\tikzext@unslopedx<0pt
-        \def\tikz@anchor{south}%
-        \def\tikzext@autooffset@angle{90}%
-      \else
-        \def\tikz@anchor{north}%
-      \fi
-    \else
-      \tikz@auto@anchor@prime
-    \fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{90}
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/right@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \pgfmathadd@{\pgfmathresult}{90}%
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{-90}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-% direction: North (always above the line)
-\pgfutil@namedef{tikz@auto@anchor@ext/north}{%
-  \tikzext@auto@pre
-  \def\tikz@anchor{south}%
-  \def\tikzext@autooffset@angle{90}%
-  \iftikzext@allowupsidedownattime
-    \ifdim\tikzext@unslopedx<0pt
-      \def\tikzext@autooffset@angle{-90}%
-      \def\tikz@anchor{north}%
-    \fi
-  \else
-    \ifdim\pgf@x>0.05pt
-      \ifdim\pgf@y>0.05pt
-        \def\tikz@anchor{south east}%
-      \else\ifdim\pgf@y<-0.05pt
-        \def\tikz@anchor{south west}%
-      \fi\fi
-    \else\ifdim\pgf@x<-0.05pt
-      \def\tikzext@autooffset@angle{-90}%
-      \ifdim\pgf@y>0.05pt
-        \def\tikz@anchor{south west}%
-      \else\ifdim\pgf@y<-0.05pt
-        \def\tikz@anchor{south east}%
-      \fi\fi
-    \else
-      \ifdim\pgf@y>0pt
-        \def\tikz@anchor{east}%
-      \else
-        \def\tikz@anchor{west}%
-      \fi
-    \fi\fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{-90}
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/north@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \ifdim\pgf@x<0pt
     \pgfmathadd@{\pgfmathresult}{90}%
     \def\tikzext@autooffset@angle{-90}%
@@ -437,53 +447,10 @@
     \pgfmathadd@{\pgfmathresult}{-90}%
     \def\tikzext@autooffset@angle{90}%
   \fi
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% auto: South (always below the line)
-\pgfutil@namedef{tikz@auto@anchor@ext/south}{%
-  \tikzext@auto@pre
-  \def\tikz@anchor{north}%
-  \def\tikzext@autooffset@angle{-90}%
-  \iftikzext@allowupsidedownattime
-    \ifdim\tikzext@unslopedx<0pt
-      \def\tikzext@autooffset@angle{90}%
-      \def\tikz@anchor{south}%
-    \fi
-  \else
-    \ifdim\pgf@x>0.05pt
-      \ifdim\pgf@y>0.05pt
-        \def\tikz@anchor{north west}%
-      \else\ifdim\pgf@y<-0.05pt
-        \def\tikz@anchor{north east}%
-      \fi\fi
-    \else\ifdim\pgf@x<-0.05pt
-      \def\tikzext@autooffset@angle{90}%
-      \ifdim\pgf@y>0.05pt
-        \def\tikz@anchor{north east}%
-      \else\ifdim\pgf@y<-0.05pt
-        \def\tikz@anchor{north west}%
-      \fi\fi
-    \else
-      \ifdim\pgf@y>0pt
-        \def\tikz@anchor{west}%
-      \else
-        \def\tikz@anchor{east}%
-      \fi
-    \fi\fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{\tikzext@autooffset@angle}%
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/south@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \ifdim\pgf@x<0pt
     \pgfmathadd@{\pgfmathresult}{-90}%
     \def\tikzext@autooffset@angle{90}%
@@ -491,80 +458,10 @@
     \pgfmathadd@{\pgfmathresult}{90}%
     \def\tikzext@autooffset@angle{-90}%
   \fi
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
+  \tikzext@auto@post@precise{\tikzext@autooffset@angle}%
 }
-
-% auto: West (always to the left of the line)
-\pgfutil@namedef{tikz@auto@anchor@ext/west}{%
-  \tikzext@auto@pre
-  \def\tikz@anchor{east}%
-  \def\tikzext@autooffset@angle{90}%
-  \iftikzext@slopedattime
-    \def\tikz@anchor{south}%
-    \iftikzext@allowupsidedownattime
-      \ifdim\tikzext@unslopedy<-0.05pt
-        \def\tikz@anchor{north}%
-        \def\tikzext@autooffset@angle{-90}%
-      \fi
-    \else
-      \ifdim\tikzext@unslopedy>0.05pt
-        \ifdim\tikzext@unslopedx<-0.05pt
-          \def\tikz@anchor{north}%
-          \def\tikzext@autooffset@angle{-90}%
-        \fi
-      \else
-        \ifdim\tikzext@unslopedy<-0.05pt
-          \ifdim\tikzext@unslopedx<-0.05pt
-          \else
-            \def\tikz@anchor{north}%
-            \def\tikzext@autooffset@angle{-90}%
-          \fi
-        \else
-          \ifdim\tikzext@unslopedx>0pt
-          \else
-            \def\tikz@anchor{north}%
-            \def\tikzext@autooffset@angle{-90}%
-          \fi
-        \fi
-      \fi
-    \fi
-  \else
-    \ifdim\pgf@y>0.05pt
-      \ifdim\pgf@x>0.05pt
-        \def\tikz@anchor{south east}%
-      \else\ifdim\pgf@x<-0.05pt
-        \def\tikz@anchor{north east}%
-      \fi\fi
-    \else
-      \ifdim\pgf@y<-0.05pt
-        \def\tikzext@autooffset@angle{-90}%
-        \ifdim\pgf@x>0.05pt
-          \def\tikz@anchor{north east}%
-        \else\ifdim\pgf@x<-0.05pt
-          \def\tikz@anchor{south east}%
-        \fi\fi
-      \else
-        \ifdim\pgf@x>0pt
-          \def\tikz@anchor{south}%
-        \else
-          \def\tikz@anchor{north}%
-        \fi
-      \fi
-    \fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
-}
-
 \pgfutil@namedef{tikz@auto@anchor@ext/west@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \ifdim\pgf@y<0pt
     \pgfmathadd@{\pgfmathresult}{90}%
     \def\tikzext@autooffset@angle{-90}%
@@ -572,78 +469,10 @@
     \pgfmathadd@{\pgfmathresult}{-90}%
     \def\tikzext@autooffset@angle{90}%
   \fi
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% auto: East (always to the right of the line)
-\pgfutil@namedef{tikz@auto@anchor@ext/east}{%
-  \tikzext@auto@pre
-  \def\tikz@anchor{west}%
-  \def\tikzext@autooffset@angle{-90}%
-  \iftikzext@slopedattime
-    \def\tikz@anchor{north}%
-    \iftikzext@allowupsidedownattime
-      \ifdim\tikzext@unslopedy<-0.05pt
-        \def\tikz@anchor{south}%
-        \def\tikzext@autooffset@angle{90}%
-      \fi
-    \else
-      \ifdim\tikzext@unslopedy>0.05pt
-        \ifdim\tikzext@unslopedx<-0.05pt
-          \def\tikz@anchor{south}%
-          \def\tikzext@autooffset@angle{90}%
-        \fi
-      \else
-        \ifdim\tikzext@unslopedy<-0.05pt
-          \ifdim\tikzext@unslopedx<-0.05pt
-          \else
-            \def\tikz@anchor{south}%
-            \def\tikzext@autooffset@angle{90}%
-          \fi
-        \else
-          \ifdim\tikzext@unslopedx>0pt
-          \else
-            \def\tikz@anchor{south}%
-            \def\tikzext@autooffset@angle{90}%
-          \fi
-        \fi
-      \fi
-    \fi
-  \else
-    \ifdim\pgf@y>0.05pt
-      \ifdim\pgf@x>0.05pt
-        \def\tikz@anchor{north west}%
-      \else\ifdim\pgf@x<-0.05pt
-        \def\tikz@anchor{south west}%
-      \fi\fi
-    \else
-      \ifdim\pgf@y<-0.05pt
-        \ifdim\pgf@x>0.05pt
-          \def\tikz@anchor{south west}%
-        \else\ifdim\pgf@x<-0.05pt
-          \def\tikz@anchor{north west}%
-        \fi\fi
-      \else
-        \ifdim\pgf@x>0pt
-          \def\tikz@anchor{north}%
-        \else
-          \def\tikz@anchor{south}%
-        \fi
-      \fi
-    \fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{\tikzext@autooffset@angle}%
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/east@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \ifdim\pgf@y<0pt
     \pgfmathadd@{\pgfmathresult}{-90}%
     \def\tikzext@autooffset@angle{90}%
@@ -651,115 +480,18 @@
     \pgfmathadd@{\pgfmathresult}{90}%
     \def\tikzext@autooffset@angle{-90}%
   \fi
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% auto: above (always towards end of line)
-\pgfutil@namedef{tikz@auto@anchor@ext/above}{%
-  \tikzext@auto@pre
-  \def\tikzext@autooffset@angle{0}%
-  \ifdim\pgf@y>0.05pt
-    \def\tikz@anchor{south}%
-    \ifdim\pgf@x>0.05pt
-      \def\tikz@anchor{south west}%
-    \else\ifdim\pgf@x<-0.05pt
-      \def\tikz@anchor{south east}%
-    \fi\fi
-  \else
-    \ifdim\pgf@y<-0.05pt
-      \def\tikz@anchor{north}%
-      \ifdim\pgf@x>0.05pt
-        \def\tikz@anchor{north west}%
-      \else\ifdim\pgf@x<-0.05pt
-        \def\tikz@anchor{north east}%
-      \fi\fi
-    \else
-      \ifdim\pgf@x>0pt
-        \def\tikz@anchor{west}%
-      \else
-        \def\tikz@anchor{east}%
-      \fi
-    \fi
-  \fi
-  \iftikzext@allowupsidedownattime
-  \else
-    \iftikzext@slopedattime
-      \ifdim\tikzext@unslopedx<-0.05pt
-        \def\tikz@anchor{east}%
-        \def\tikzext@autooffset@angle{180}%
-      \fi
-    \fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{\tikzext@autooffset@angle}%
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/above@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \pgfmathadd@{\pgfmathresult}{180}%
-  \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{0}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
-}
-
-% auto: below (always towards the start of the line)
-\pgfutil@namedef{tikz@auto@anchor@ext/below}{%
-  \tikzext@auto@pre
-  \def\tikzext@autooffset@angle{180}%
-  \ifdim\pgf@y>0.05pt
-    \def\tikz@anchor{north}%
-    \ifdim\pgf@x>0.05pt
-      \def\tikz@anchor{north east}%
-    \else\ifdim\pgf@x<-0.05pt
-      \def\tikz@anchor{north west}%
-    \fi\fi
-  \else
-    \ifdim\pgf@y<-0.05pt
-      \def\tikz@anchor{south}%
-      \ifdim\pgf@x>0.05pt
-        \def\tikz@anchor{south east}%
-      \else\ifdim\pgf@x<-0.05pt
-        \def\tikz@anchor{south west}%
-      \fi\fi
-    \else
-      \ifdim\pgf@x>0pt
-        \def\tikz@anchor{east}%
-      \else
-        \def\tikz@anchor{west}%
-      \fi
-    \fi
-  \fi
-  \iftikzext@allowupsidedownattime
-  \else
-    \iftikzext@slopedattime
-      \ifdim\tikzext@unslopedx<-0.05pt
-        \def\tikz@anchor{west}%
-        \def\tikzext@autooffset@angle{0}%
-      \fi
-    \fi
-  \fi
-  \tikzext@auto@offset@A{\tikzext@autooffset@angle}%
-  \tikzext@auto@post
-  \tikzext@auto@offset@B{\tikzext@autooffset@angle}%
+  \tikzext@auto@post@precise{0}%
 }
 \pgfutil@namedef{tikz@auto@anchor@ext/below@precise}{%
-  \tikz@auto@pre
-  \edef\tikz@temp{%
-    \noexpand\pgfmathatantwo@{\pgf@sys@tonumber\pgf@y}{\pgf@sys@tonumber\pgf@x}}%
-  \tikz@temp
+  \tikzext@auto@pre@precise
   \let\tikz@anchor\pgfmathresult
-  \tikzext@auto@offset@A{180}%
-  \tikz@auto@post
-  \tikzext@auto@offset@B@precise
+  \tikzext@auto@post@precise{180}%
 }
-
 %%% node pic
 % named nodes need correction
 

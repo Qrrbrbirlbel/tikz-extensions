@@ -4,7 +4,7 @@
 %
 % This file may be distributed and/or modified
 %
-% 1. under the LaTeX Project Public License and/or
+% 1. under the LaTeX Project Public License 1.3c and/or
 % 2. under the GNU Free Documentation License.
 %
 
@@ -567,21 +567,20 @@ This sets \referenceKeyandIndex[/\tikzext/]{auto offset} to
 Using this key on a node along a path that's decorated by the |brace| decoration
 will offset the node so that it will be placed at the tip of the brace.
 \end{stylekey}
+\begin{codeexample}[preamble=\usetikzlibrary{decorations.pathreplacing, ext.nodes},width=3.75cm]
+\begin{tikzpicture}[
+  ext/nodes/install auto offset for brace decoration,
+  decoration={
+    name=brace, aspect=.3, raise=2mm, amplitude=4mm},
+]
+\draw[help lines] (0,0) -- (2,1)
+        (-.5,-.5) grid (2.5,1.5);
+\draw[decorate] (0,0) --
+  node[draw, ext/every brace node] {Foo} (2,1);
+\end{tikzpicture}
+\end{codeexample}
 \end{key}
 
-\paragraph{Implementation note:}
-This redefines the keys \referenceKeyandIndexO{auto},
-\referenceKeyandIndexO{swap} and \referenceKeyandIndexO{sloped}.
-One can install custom auto placement rules by using the following key.
-\begin{key}{/\tikzext/nodes/install auto=\marg{left}\marg{right}}
-  This key defines \texttt{/tikz/auto/\meta{left}} which activates the auto placement
-  and installs the appropriate placement function.
-  Further more, the key \texttt{/tikz/swap/\meta{left}} will be defined
-  to activate the \meta{right} placement function.
-  
-  The key |/tikz/swap| has been defined to apply \texttt{/tikz/swap/\meta{dir}}
-  where \meta{dir} is the current placement function.
-\end{key}
 \subsubsection{Precise placement}
 The default behavior of the |auto| placement mechanism is
 to snap to one of the eight compass directions.
@@ -591,5 +590,42 @@ to one of the eight compass directions.
 
 This key disables the \referenceKeyandIndexO{sloped} option
 which in turn will disable this option.
+
+As the following example shows, this might be most useful for circular nodes.
+\begin{codeexample}[preamble=\usetikzlibrary{ext.nodes}]
+\begin{tikzpicture}[
+  auto=ext/right, nodes={draw=blue, pos=\i/10}, outer sep=+0pt,
+  text depth=+0pt, out=-15, in=15, line width=1mm
+] \newcommand*\List{1, 3, 4, 5, 6, 7, 9}
+\draw (right:0) to node foreach \i in \List                         {\i} +(up:3);
+\draw (right:2) to node foreach \i in \List[ext/precise auto angle] {\i} +(up:3);
+\tikzset{shift=(right:4), shape=circle}
+\draw (right:0) to node foreach \i in \List                         {\i} +(up:3);
+\draw (right:2) to node foreach \i in \List[ext/precise auto angle] {\i} +(up:3);
+\end{tikzpicture}
+\end{codeexample}
+\end{key}
+
+\newcolumn
+\paragraph{Implementation note:}
+This library redefines the keys \referenceKeyandIndexO{auto},
+\referenceKeyandIndexO{swap} and \referenceKeyandIndexO{sloped}.
+One can install custom auto placement rules by using the following key.
+\begin{key}{/\tikzext/nodes/install auto=\marg{left}\marg{right}}
+  This key defines
+  \begin{itemize}
+  \item \texttt{/tikz/auto/\meta{left}} and
+  \item \texttt{/tikz/auto/\meta{left}@precise}
+        which both activate the auto placement for \meta{left}
+        as well as
+  \item \texttt{/tikz/swap/\meta{left}} and
+  \item \texttt{/tikz/swap/\meta{left}@precise}
+        which both swap to the \meta{right} placement function.
+  \end{itemize}
+  
+  This already shows that the precise versions are just separate placement functions.
+  
+  The key |/tikz/swap| has been defined to apply \texttt{/tikz/swap/\meta{dir}}
+  where \meta{dir} is the current placement function.
 \end{key}
 \end{multicols*}
