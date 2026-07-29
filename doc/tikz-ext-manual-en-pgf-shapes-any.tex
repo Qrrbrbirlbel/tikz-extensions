@@ -1,0 +1,182 @@
+% !TeX spellcheck = en_US
+% !TeX root = tikz-ext-manual.tex
+% Copyright 2026 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License 1.3c and/or
+% 2. under the GNU Free Documentation License.
+%
+\section{Shape: Any}
+\begin{purepgflibrary}{ext.shapes.any}
+  A shape that can have \emph{any} background path.
+\end{purepgflibrary}
+\begin{ext_shape}{any}
+  This shape is a shape that can have a custom background path and a custom border path.
+  For the border path, the \referenceLibraryandIndexO{intersections} library is needed and is loaded automatically.
+  If many points on the border are requested this might be quite the bottleneck for your diagrams.
+  
+  \begin{key}{/\pgfext/any path=\meta{background path} (initially \normalfont{empty})}
+    This sets the path for the background of the |any| shape.
+    
+    Remember that if this stays empty or is smaller than the text of the node,
+    the bounding box will not necessarily include the whole text of the node.
+    
+    The node's internal coordinate system is setup in such a way
+    that the origin is at the center of the node's text box.
+  \end{key}
+  \begin{key}{/\pgfext/any border=\meta{border path} (initially \normalfont{empty})}
+    This sets the path for the border of the |any| shape.
+
+    For example, the following example would replicate the background path of the |rectangle| shape.
+    
+    {\small
+      (We'll explicitly use the keys in the |/pgf/ext| namespace here
+      since the keys in the |/tikz/ext| namespace will wrap their arguments in \tikzname's path parser.)\par}
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.any}]
+\begin{tikzpicture}[ultra thick]
+\node[
+  shape=ext_any,
+  draw,
+  /pgf/ext/any path={
+    \pgfpathrectanglecorners
+      {\pgfqpoint{ \halftextwidthinner}{ \halftexttotalheightinner}}
+      {\pgfqpoint{-\halftextwidthinner}{-\halftexttotalheightinner}}
+  },
+  /pgf/ext/any border={
+    \pgfpathrectanglecorners
+      {\pgfpoint{ \halftextwidthinner+\outerxsep}{ \halftexttotalheightinner+\outerysep}}
+      {\pgfpoint{-\halftextwidthinner-\outerxsep}{-\halftexttotalheightinner-\outerysep}}
+  }
+] (fb) {Foo Bar};
+\node[draw] at (2, .5) {Foo Baz} edge[red] (fb);
+\end{tikzpicture}
+\end{codeexample}
+
+    Internally, the \referenceLibraryandIndexO{intersections} library will be used to
+    find a point where the border path will intersect with a straight ray coming from the center.
+    For efficiency reasons the following values should be set so that this ray will
+    be as short as possible.
+    \begin{key}{/\pgfext/any min ray radius=\meta{dimension} (initially 0pt)}
+      This value defines that the start point of that ray will be \meta{dimension} away from the |center| anchor.
+    \end{key}
+    \begin{key}{/\pgfext/any max ray radius=\meta{dimension} (initially 100pt)}
+      This value defines that the end point of that ray will be \meta{dimension} away from the |center| anchor.
+    \end{key}
+  \end{key}
+
+  If no |border path| is set and the \referenceLibraryandIndexExt{offsetpath} library \cite{nfold}
+  is loaded, it can be used to automatically offset the |any path| according to the following key to
+  find the border path.
+  \begin{key}{/\pgfext/any use offset=\mchoice{false, right, left, counter clockwise, clockwise, ccw, cw} (default false)}
+    This key disables (|false|) or enables (all other options) the use of the |offsetpath| library to
+    automatically offset the |any path|.
+    The choices |right|, |counter clockwise| and |ccw| are aliases of each other,
+    as are |left|, |clockwise| and |cw|.
+    
+    The distance for offset is the maximum of both |outer sep|s.
+    
+    This makes it very convenient to create a border for complex \enquote{shapes} but
+    remember that the use of |offsetpath| neither is efficient nor can it guarantee perfect results.
+\begin{codeexample}[preamble=\usepgflibrary{ext.shapes.any, offsetpath}]
+\begin{tikzpicture}[ultra thick]
+\node[
+  shape=ext_any,
+  draw,
+  /pgf/ext/any path={
+    \pgfpathrectanglecorners
+      {\pgfqpoint{ \halftextwidthinner}{ \halftexttotalheightinner}}
+      {\pgfqpoint{-\halftextwidthinner}{-\halftexttotalheightinner}}
+  },
+  ext/any use offset=left
+] (fb) {Foo Bar};
+\node[draw] at (2, .5) {Foo Baz} edge[red] (fb);
+\end{tikzpicture}
+\end{codeexample}
+  \end{key}
+
+Of course, no shape would be complete without named anchors,
+for this task, the following keys are provided.
+
+\begin{key}{/\pgfext/any add anchor=\marg{name}\marg{coordinate}}
+  This will add the anchor named \meta{name} at the \meta{coordinate} (remember, this is from the text's center).
+\end{key}
+\begin{key}{/\pgfext/any add direction anchor=\marg{name}\marg{direction}}
+  Similar to above, but it will use the shape's border to find the a point in the given \meta{direction} (a number in degree).
+\end{key}
+
+\clearpage
+
+As you've noticed, various macros can be used inside the setup of the node.
+Any of these may appear inside of |any min ray radius|, |any max ray radius|
+or an anchor specification.
+\begin{commandlist}{%
+  \minimumwidth, \minimumheight, \innerxsep, \innerysep, \outerxsep, \outerysep%
+}
+These commands return the evaluated values of the corresponding |/pgf| value-keys.
+\begin{commandlist}{%
+  \minimumsize, \innersep, \outersep
+}
+Some shapes only take the maximum of the previous values in consideration,
+these commands serve as a short-cut to these.
+\end{commandlist}
+\end{commandlist}
+
+\begin{commandlist}{%
+  \halftextwidth,
+  \halftexttotalheight,
+  \halftextwidthinner,
+  \halftexttotalheightinner
+}
+These commands return lengths corresponding to the text box. The ones with suffix |inner| include either |inner xsep| or |inner ysep|.
+
+As the previous example shows, the last two correspond to (half the) dimensions of a |rectangle| node.
+The first two are just neat wrappers for (half the) size of \referenceCommandandIndexO{\pgfnodeparttextbox}
+(which is also available, of course).
+\end{commandlist}
+
+%\clearpage
+
+\begin{tikzlibrary}{ext.shapes.any}
+  A shape that can have \emph{any} background path.
+\end{tikzlibrary}
+
+The \tikzname\ library offers a few wrappers for using the shape with \tikzname.
+\begin{key}{/\tikzext/any path=\meta{background path} (initially \normalfont{empty})}
+  As |/pgf/ext/any path| but \tikzname\ path specifications are supported.
+\end{key}
+\begin{key}{/\tikzext/any border=\meta{background path} (initially \normalfont{empty})}
+  As |/pgf/ext/any border| but \tikzname\ path specifications are supported.
+\end{key}
+\begin{key}{/\tikzext/any add anchor=\meta{name}\meta{coordinate}}
+  As |/pgf/ext/any add anchor| but \tikzname\ coordinate specifications (without |(| and |)|) are supported.
+\end{key}
+
+\clearpage
+\begin{codeexample}[preamble=\usetikzlibrary{ext.any, offset},width=16cm]
+\begin{tikzpicture}\Huge
+\node[name=s, shape=ext_any, shape example, line join=round,
+  ext/any path={
+       ( \halftextwidthinner,  \halftexttotalheightinner) -- ( 0pt                           ,  \halftexttotalheightinner+\innerysep)
+    -- (-\halftextwidthinner,  \halftexttotalheightinner) -- (-\halftextwidthinner-\innerxsep, 0pt                                  )
+    -- (-\halftextwidthinner, -\halftexttotalheightinner) -- ( 0pt                           , -\halftexttotalheightinner-\innerysep)
+    -- ( \halftextwidthinner, -\halftexttotalheightinner) -- ( \halftextwidthinner+\innerxsep, 0pt                                  )
+    -- cycle
+  },
+  ext/any use offset=right,
+  ext/any add directional anchor/.list={
+    {east}{0}, {north}{90}, {west}{180}, {south}{270}, {north east}{45}, {north west}{135}, {south west}{225}, {south east}{315}},
+  ext/any min ray radius={min(\halftextwidth,\halftexttotalheight)-1pt},
+  ext/any max ray radius={max(\halftextwidthinner,\halftexttotalheightinner)+\innersep+5*\outersep+1pt},
+]
+  {Any Shape\vrule width 1pt height 2cm};
+\foreach \anchor/\placement in {
+  north west/above left, north/above, north east/above right, west/left, center/above, east/right,
+  mid/above, base/below, % mid west/right, mid east/left, base west/left, base east/right,
+  south west/below left, south/below, south east/below right, text/left, 10/right, 130/above}
+  \draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)}
+    node[\placement] {\scriptsize\texttt{(s.\anchor)}};
+\end{tikzpicture}
+\end{codeexample}
+\end{ext_shape}
+\endinput

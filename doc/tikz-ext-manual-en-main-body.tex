@@ -8,7 +8,7 @@
 % 2. under the GNU Free Documentation License.
 %
 \newcommand*\tikzextname{Ti\textit kZ-Extensions}
-%\includeonly{
+\includeonly{
 %  tikz-ext-manual-en-intro,
 %  tikz-ext-manual-en-library-arrows-plus,
 %  tikz-ext-manual-en-library-beamer,
@@ -27,6 +27,7 @@
 %  tikz-ext-manual-en-library-trans,
 %  tikz-ext-manual-en-pgf-arrows,
 %  tikz-ext-manual-en-pgf-trans,
+  tikz-ext-manual-en-pgf-shapes-any,
 %  tikz-ext-manual-en-pgf-shapes-circlearrow,
 %  tikz-ext-manual-en-pgf-shapes-circlecrosssplit,
 %  tikz-ext-manual-en-pgf-shapes-heatmark,
@@ -36,7 +37,7 @@
 %  tikz-ext-manual-en-calendar,
 %  tikz-ext-manual-en-library-pgffor,
 %  tikz-ext-manual-en-library-misc,
-%}
+}
 \begin{document}
 {\colorlet{blue}{black}% links shall be black
 \title{\bfseries The \tikzextname\space Package\\
@@ -152,6 +153,7 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 
 \include{tikz-ext-manual-en-pgf-arrows}
 \include{tikz-ext-manual-en-pgf-trans}
+\include{tikz-ext-manual-en-pgf-shapes-any}
 \include{tikz-ext-manual-en-pgf-shapes-circlearrow}
 \include{tikz-ext-manual-en-pgf-shapes-circlecrosssplit}
 \include{tikz-ext-manual-en-pgf-shapes-heatmark}
@@ -199,12 +201,17 @@ These libraries (should) work with both \pgfname\space and \tikzname.
 \newcommand*{\addTikz}[1]{Added \tikzname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGF}[1]{Added \pgfname\space library \texttt{ext.#1}.}
 \newcommand*{\addPGFkeys}[1]{Added \pgfname keys library \texttt{ext.#1}.}
-\newcommand*{\addShape}[2][]{Added shape \texttt{\ifx\\#1\\#2\else#1\fi}\\(\pgfname\space library \texttt{ext.shapes.#2}).}
+\newcommand*{\addShape}[2][]{Added shape \texttt{ext\textunderscore\ifx\\#1\\#2\else#1\fi}\\(\pgfname\space library \texttt{ext.shapes.#2}).}
 \part{Changelog, Index \& References}
 \section*{Changelog}\addcontentsline{toc}{section}{Changelog}
 \begin{multicols}{2}\raggedright
 \noindent
 Version \tikzextversion\ (\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day)
+\begin{itemize}
+\item \addShape{any}
+\end{itemize}
+
+Version 0.6.3 (2026-06-29)
 \begin{itemize}
 \item Bugfix to |ext.positioning-plus|. \cite{GH24}
 \item Bugfix to |ext.beamer|.

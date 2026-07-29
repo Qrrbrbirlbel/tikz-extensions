@@ -1,0 +1,225 @@
+% Copyright 2026 by Qrrbrbirlbel
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License 1.3c and/or
+% 2. under the GNU Free Documentation License.
+%
+
+\usepgflibrary{intersections}
+\unless\ifcsname pgfextset\endcsname
+  \input tikzext-util.tex
+\fi
+\newif\ifpgfext@shapes@any@useoffset
+\newif\ifpgfext@shapes@any@debug
+\def\pgfext@shapes@any@useoffset@mode{0}%
+\pgfextset{
+  any use offset/.is choice,
+  any use offset/false/.code=\def\pgfext@shapes@any@useoffset@mode{0},
+  any use offset/right/.code=\def\pgfext@shapes@any@useoffset@mode{1},
+  any use offset/left/.code=\def\pgfext@shapes@any@useoffset@mode{2},
+  any use offset/counter clockwise/.code=\def\pgfext@shapes@any@useoffset@mode{1},
+  any use offset/ccw/.code=\def\pgfext@shapes@any@useoffset@mode{1},
+  any use offset/clockwise/.code=\def\pgfext@shapes@any@useoffset@mode{2},
+  any use offset/cw/.code=\def\pgfext@shapes@any@useoffset@mode{2},
+  any min ray radius/.initial=0pt,
+  any max ray radius/.initial=100pt,
+  any border/.initial=,
+  any path/.initial=,
+  any add anchor/.code 2 args=\pgfextutil@addto@macro\pgfext@shapes@any@anchors{{#1}{#2}},
+  any add directional anchor/.code 2 args=\pgfextutil@addto@macro\pgfext@shapes@any@anchors{{#1}{\pgfext@shapes@any@diranchor{#2}}},
+  any debug/.is if=pgfext@shapes@any@debug,
+  any debug settings/.initial={%
+    \pgfsetlinewidth{.2pt}%
+    \pgfsetstrokecolor{red}%
+  }
+}
+\let\pgfext@shapes@any@anchors\pgfutil@empty
+\def\pgfext@shapes@any@diranchor#1{%
+  \begingroup
+    \pgfmathsetcounter{pgf@counta}{#1}%
+    \pgftransformreset
+    \csname pgf@anchor@ext_any@border\endcsname{\pgfqpointpolar{\the\c@pgf@counta}{1pt}}%
+  \endgroup
+}
+% Ugh, need to access node name before \pgf@node@name has been defined
+% Patching \pgfmultipartnode
+\let\pgfext@pgfmultipartnode\pgfmultipartnode
+\def\pgfmultipartnode#1#2#3{%
+  \edef\pgfext@shapes@any@nodename{#3}%
+  \pgfext@pgfmultipartnode{#1}{#2}{#3}%
+}
+\def\pgfext@shapes@any@addanchor#1#2{%
+  \expandafter\pgfext@shapes@any@@addanchor\csname pgf@anchor@ext_any@#1\endcsname{#2}%
+  \expandafter\gdef\csname pgf@anchor@ext_any@#1\endcsname{#2}%
+}
+\def\pgfext@shapes@any@@addanchor#1#2{%
+  \expandafter\pgfutil@g@addto@macro\csname pgf@sh@ma@\pgfext@shapes@any@nodename\endcsname{%
+    \def#1{#2}%
+  }%
+}
+\def\pgfext@shapes@any@extractanchor#1#2#3{%
+  \pgf@process{#2}%
+  \pgfutil@expanded{%
+    \noexpand\pgfext@shapes@any@addanchor{#1}{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  }%
+  \def\pgfext@temp{#3}%
+  \ifx\pgfext@temp\pgfext@stop
+    \let\pgfext@temp\pgfutil@empty
+  \else
+    \def\pgfext@temp{\pgfext@shapes@any@extractanchor{#3}}%
+  \fi
+  \pgfext@temp
+}
+\pgfdeclareshape{ext_any}{
+  \savedanchor{\textanchor}{%
+    \pgf@x=-.5\wd\pgfnodeparttextbox
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \advance\pgf@y by .5\dp\pgfnodeparttextbox
+  }
+  \savedmacro\anyradii{%
+    \pgfmathsetlengthmacro\minimumwidth{\pgfkeysvalueof{/pgf/minimum width}}%
+    \pgfmathsetlengthmacro\minimumheight{\pgfkeysvalueof{/pgf/minimum height}}%
+    \pgfmathsetlengthmacro\innerxsep{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \pgfmathsetlengthmacro\innerysep{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \pgfmathsetlengthmacro\outerxsep{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \pgfmathsetlengthmacro\outerysep{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \edef\halftextwidth{\the\dimexpr.5\wd\pgfnodeparttextbox\relax}%
+    \edef\halftexttotalheight{\the\dimexpr.5\ht\pgfnodeparttextbox+.5\dp\pgfnodeparttextbox\relax}%
+    \edef\halftextwidthinner{\the\dimexpr.5\wd\pgfnodeparttextbox+\innerxsep\relax}%
+    \edef\halftexttotalheightinner{\the\dimexpr.5\ht\pgfnodeparttextbox+.5\dp\pgfnodeparttextbox+\innerysep\relax}%
+    \pgfext@shapes@any@commoncalculations@max\minimumwidth\minimumheight\minimumsize
+    \pgfext@shapes@any@commoncalculations@max\innerxsep\innerysep\innersep
+    \pgfext@shapes@any@commoncalculations@max\outerxsep\outerysep\outersep
+    \pgfmathsetmacro\minradius{\pgfkeysvalueof{/pgf/ext/any min ray radius}}%
+    \pgfmathsetmacro\maxradius{\pgfkeysvalueof{/pgf/ext/any max ray radius}}%
+    \addtosavedmacro\minradius
+    \addtosavedmacro\maxradius
+    \ifpgfext@shapes@any@debug
+      \typeout{%
+        The any node "\pgfext@shapes@any@nodename"'s values on line \the\inputlineno\space are:^^J
+        \space\space Minimum Width: \minimumwidth^^J
+        \space\space Minimum Height: \minimumheight^^J
+        \space\space Minimum Size: \minimumsize^^J
+        \space\space Inner Xsep: \innerxsep^^J
+        \space\space Inner Ysep: \innerysep^^J
+        \space\space Inner Sep: \innersep^^J
+        \space\space Outer Xsep: \outerxsep^^J
+        \space\space Outer Ysep: \outerysep^^J
+        \space\space Outer Sep: \outersep^^J
+        \space\space Half Text Width: \halftextwidth^^J
+        \space\space Half Text Total Height: \halftexttotalheight^^J
+        \space\space Min Radius: \minradius^^J
+        \space\space Max Radius: \maxradius
+      }%
+    \fi
+  }
+  \savedmacro\anyborderpath{%
+    \let\realanyborderpath\pgfutil@empty
+    \pgfkeysgetvalue{/pgf/ext/any border}\anyborderpath
+    \ifx\anyborderpath\pgfutil@empty
+      \pgfkeysgetvalue{/pgf/ext/any path}\anyborderpath
+    \else
+      \def\pgfext@shapes@any@useoffset@mode{0}%
+    \fi
+    \unless\ifx\anyborderpath\pgfutil@empty
+      \pgfinterruptpath
+        \pgfscope
+          \pgfinterruptboundingbox
+            \pgftransformreset
+            \anyborderpath
+            \pgfsyssoftpath@getcurrentpath\pgfext@temp
+            \ifnum\pgfext@shapes@any@useoffset@mode>0
+              \ifcsname pgf@library@offsetpath@loaded\endcsname
+                \pgfsyssoftpath@setcurrentpath\pgfutil@empty
+                \pgfoffsetpath{\pgfext@temp}{+\ifnum\pgfext@shapes@any@useoffset@mode=1 -\fi\outersep}%
+                \pgfsyssoftpath@getcurrentpath\pgfext@temp
+              \else
+                \pgfutil@packagewarning{tikz-ext}{%
+                  You need to load the "offsetpath" library to use the "any use offset" option.
+                }%
+              \fi
+            \fi
+            \ifpgfext@shapes@any@debug
+              \pgfinterruptpath
+                \pgfscope
+                  \pgf@relevantforpicturesizefalse
+                  \pgfsyssoftpath@setcurrentpath\pgfext@temp
+                  \pgfkeysvalueof{/pgf/ext/any debug settings}%
+                  \pgfusepathqstroke
+                \endpgfscope
+              \endpgfinterruptpath
+            \fi
+            \global\let\pgfext@gtemp\pgfext@temp
+          \endpgfinterruptboundingbox
+        \endpgfscope
+      \endpgfinterruptpath
+      \let\realanyborderpath\pgfext@gtemp
+      % we need to sneak in a \unexpanded because a saved macro will be expanded once more before it is properly saved with a node
+      \edef\anyborderpath{\noexpand\pgfutil@unexpanded{\pgfutil@unexpanded\expandafter{\pgfext@gtemp}}}%
+    \fi
+    % TODO: directional anchors may be better if they're all on one path
+    \unless\ifx\pgfext@shapes@any@anchors\pgfutil@empty
+      \begingroup
+        \let\anyradii\pgfutil@empty % \anyradii is not yet properly set up but \minradius and \maxradius are
+        \let\anyborderpath\realanyborderpath % \anyborderpath includes an \unexpanded, let's use \realanyborderpath
+        \expandafter\pgfext@shapes@any@extractanchor\pgfext@shapes@any@anchors\pgfext@stop
+      \endgroup
+    \fi
+  }
+  \anchor{center}{\pgfpointorigin}%
+  \anchor{text}{\textanchor}%
+  \anchor{base}{\textanchor \pgf@x=0pt }
+  \anchor{mid}{\textanchor \pgf@x=0pt \pgfmathaddtolength\pgf@y{.5ex}}
+  \backgroundpath{%
+    \pgfkeysvalueof{/pgf/ext/any path}%
+  }
+  \anchorborder{%
+    \ifx\anyborderpath\pgfutil@empty
+      % I guess, we just have no border, return origin/center
+      \pgfpointorigin
+    \else
+      \pgfextract@process\direction{\pgfpointnormalised{}}%
+      \anyradii
+      \ifpgfext@shapes@any@debug
+        \pgfinterruptpath
+          \pgfscope
+            \pgfkeysvalueof{/pgf/ext/any debug settings}%
+            \pgfpathmoveto{\pgfqpointscale{\minradius}{\direction}}%
+            \pgfpathlineto{\pgfqpointscale{\maxradius}{\direction}}%
+            \pgfusepathqstroke
+          \endpgfscope
+        \endpgfinterruptpath
+      \fi
+      \pgfintersectionofpaths{%
+        \pgfsyssoftpath@setcurrentpath\anyborderpath
+      }{%
+        \direction
+        \edef\pgfext@temp{%
+          \noexpand\pgfsyssoftpath@movetotoken{\the\dimexpr\minradius\pgf@x}{\the\dimexpr\minradius\pgf@y}%
+          \noexpand\pgfsyssoftpath@linetotoken{\the\dimexpr\maxradius\pgf@x}{\the\dimexpr\maxradius\pgf@y}%
+        }%
+        \pgfsyssoftpath@setcurrentpath\pgfext@temp
+      }%
+      \ifnum\pgfintersectionsolutions=0 % oh no
+        \pgfutil@packagewarning{tikz-ext}{%
+          Couldn't find a border on the any shape border.
+          Are "any min ray radius" and "any max ray radius" set properly?
+          Returning the center.
+        }%
+        \pgfpointorigin
+      \else
+        \pgfpointtransformed{\pgfpointintersectionsolution{1}}%
+      \fi
+    \fi
+  }
+}
+% \expandafter\show\csname pgf@sh@s@ext_any\endcsname
+\def\pgfext@shapes@any@commoncalculations@max#1#2#3{%
+  \ifdim#1<#2\relax
+    \let#3#2%
+  \else
+    \let#3#1%
+  \fi
+}
+\endinput

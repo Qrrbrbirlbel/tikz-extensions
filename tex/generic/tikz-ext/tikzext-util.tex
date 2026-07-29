@@ -234,6 +234,7 @@
 
 \long\def\tikzextutil@gobblethree#1#2#3{}
 \def\tikzextutil@addto@macro#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}} % calendar: if
+\let\pgfextutil@addto@macro\tikzextutil@addto@macro
 \def\tikzextutil@prefixtomacro#1#2{%
   \def\tikzext@temp{#2}%
   \tikzextutil@prefix@macrotomacro#1\tikzext@temp
@@ -245,4 +246,5 @@
 
 \def\tikzextutil@firstofmany#1#2\pgf@stop{#1}
 \def\tikzextutil@secondofmany#1#2\pgf@stop{#2}
+\def\pgfext@stop{\pgfext@stop}
 \endinput

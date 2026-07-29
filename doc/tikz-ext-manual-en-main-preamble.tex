@@ -109,6 +109,7 @@
   ext.patterns.images,
   ext.positioning-plus,
   ext.scalepicture,
+  ext.shapes.any,
   ext.shapes.heatmark,
   ext.shapes.circlearrow,
   ext.shapes.circlecrosssplit,
@@ -126,6 +127,7 @@
   intersections,
   graphs,
   matrix,
+  offsetpath, % (part of nfold) for ext_any
   shapes.geometric,
   spath3,
   through,
@@ -697,6 +699,21 @@
 %  \end{pgfmanualentry}
 %}
 
+% from: https://github.com/pgf-tikz/pgfplots/blob/3eb58fcae2d14d8fde63e6bab25adaedb0039a1f/doc/latex/pgfplots/pgfplots-macros.tex#L699-L711
+\makeatother % FIXME this is almost surely a bug in pgfmanual-en-macros
+             % Qrrbrbirlbel: Yes it is. \extractcommand is defined with @ being other
+% \begin{commandlist}
+%     {\command1{arg1},\command2{\arg2}}
+% \end{commandlist}
+\renewenvironment{commandlist}[1]{%
+    \begin{pgfmanualentry}
+    \foreach \xx in {#1} {%
+        \expandafter\extractcommand\xx\@@%
+    }%
+    \pgfmanualbody
+}{%
+  \end{pgfmanualentry}
+}%
 \makeatletter
 \newenvironment{ext_handler}[1]{
   \begin{pgfmanualentry}
