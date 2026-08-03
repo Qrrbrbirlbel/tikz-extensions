@@ -598,7 +598,7 @@
     % Usually that's at the text anchor but just in case:
     \pgftransformshift{\pgf@sh@reanchor{\csname pgf@sh@ns@#1\endcsname}{text}}%
     % Correction: Baseline and left side of node picture.
-    \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx@g}{-\tikzext@nodepicture@baseline@}}%
+    \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx}{-\tikzext@nodepicture@baseline}}%
     \let\tikzext@temp\tikzext@nodepicture@list
     % Empty list and loop over entries:
     \global\let\tikzext@nodepicture@list\pgfutil@gobble
@@ -643,7 +643,7 @@
       % Usually that's at the text anchor but just in case:
       \pgftransformshift{\pgf@sh@reanchor{\csname pgf@sh@ns@#1\endcsname}{text}}%
       % Correction: Baseline and left side of node picture.
-      \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx@g}{-\tikzext@nodepicture@baseline@}}%
+      \pgftransformshift{\pgfqpoint{-\tikzext@nodepicture@minx}{-\tikzext@nodepicture@baseline}}%
       \pgfutil@for\tikzext@temp:=\tikzext@nodepicture@hooklist@this\do{%
         \expandafter\tikzext@nodepicture@callback@hook@special\tikzext@temp
       }%
@@ -657,15 +657,15 @@
 % node picture: baseline
 \def\tikzext@nodepicture@baseline@coord#1{%
   \pgf@process{\pgfpointtransformed{#1}}%
-  \xdef\tikzext@nodepicture@baseline@{\the\pgf@y}%
+  \edef\tikzext@nodepicture@baseline{\the\pgf@y}%
 }
 \def\tikzext@nodepicture@baseline@value#1{%
   \pgfmathsetlength\pgf@ya{#1}%
-  \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
+  \edef\tikzext@nodepicture@baseline{\the\pgf@ya}%
 }
 \def\tikzext@nodepicture@shift#1{%
   \pgf@process{\pgfpointtransformed{#1}}%
-  \xdef\tikzext@nodepicture@shift@{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \edef\tikzext@nodepicture@shiftvalue{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
 }
 
 % node picture: anchors
@@ -682,7 +682,7 @@
 }
 \def\tikzext@nodepicture@doanchors#1#2#3#4{%
   \tikz@scan@one@point\pgfpointtransformed(#2)\relax
-  \global\advance\pgf@y by -\tikzext@nodepicture@baseline@\relax
+  \global\advance\pgf@y by -\tikzext@nodepicture@baseline\relax
   \global\advance\pgf@x by -\pgf@picminx\relax
   \tikzext@nodepicture@doanchors@xy\tikzext@nodepicture@innerxsep\tikzext@nodepicture@innerysep#3%
   \tikzext@nodepicture@doanchors@xy\tikzext@nodepicture@outerxsep\tikzext@nodepicture@outerysep#4%
@@ -698,20 +698,17 @@
   \expandafter\pgfutil@g@addto@macro\expandafter\tikzext@nodepicture@anchorslist\expandafter{\tikzext@temp}%
 }
 
+%%% Now the real Node Picture stuff
 \let\tikzextorig@tikz@do@fig\tikz@do@fig
 \def\tikzext@nodepicture@do{%
   \tikzset{ext/every node picture=\the\tikzext@nodepicture}%
   \tikzextutil@prefixtomacro\tikz@alias{%
+    \tikzext@nodepicture@callback@{\tikz@fig@name}%
     \tikzext@nodepicture@callback@anchors{\tikz@fig@name}%
     \iftikzext@nodepicture@nonode
       \tikzext@nodepicture@callback@size{\tikz@fig@name}%
     \fi
   }%
-  \pgfkeysvalueof{/tikz/prefix after command/.@cmd}%
-    \pgfextra{%
-      \tikzext@nodepicture@callback@{\tikzlastnode}%
-    }%
-  \pgfeov
   % If no name is given or name prefixes are disabled
   % don't set a name prefix.
   \ifx\tikz@fig@name\pgfutil@empty % yes, this test happens twice if it's true
@@ -782,14 +779,14 @@
             \ifx\tikzext@nodepicture@baseline@save\pgfutil@empty
               \pgf@ya=.5\pgf@picminy
               \advance\pgf@ya by .5\pgf@picmaxy
-              \xdef\tikzext@nodepicture@baseline@{\the\pgf@ya}%
+              \edef\tikzext@nodepicture@baseline{\the\pgf@ya}%
             \else
               \def\tikzext@temp{\tikz@handle@vec{\tikzext@nodepicture@baseline@coord}{\tikzext@nodepicture@baseline@value}}%
               \expandafter\tikzext@temp\tikzext@nodepicture@baseline@save\relax
             \fi
             % The anchor to place the node picture.
             \ifx\tikzext@nodepicture@anchor@save\pgfutil@empty
-              \global\let\tikzext@nodepicture@shift@\pgfutil@empty
+              \let\tikzext@nodepicture@shiftvalue\pgfutil@empty
             \else
               \def\tikz@anchor{text}%
               \tikz@scan@one@point\tikzext@nodepicture@shift(\tikzext@nodepicture@anchor@save)\relax
@@ -800,6 +797,10 @@
                 \expandafter\tikzext@nodepicture@doanchors\tikzext@temp
               }%
             \fi
+            \xdef\tikzext@gtemp{%
+              \pgfutil@unexpanded{\def\noexpand\tikzext@nodepicture@baseline}{\tikzext@nodepicture@baseline}%
+              \pgfutil@unexpanded{\def\noexpand\tikzext@nodepicture@shiftvalue}{\tikzext@nodepicture@shiftvalue}%
+            }%
           \endscope
           \pgfkeysvalueof{/tikz/ext/node picture/at end}%
           \iftikzext@nodepicture@ilw
@@ -811,6 +812,7 @@
           % The \pgf@picminx etc. are reset by \endpgfinterruptboundingbox,
           % we need to save them and smuggle them out.
           \xdef\tikzext@gtemp{%
+            \tikzext@gtemp
             \def\noexpand\tikzext@nodepicture@minx{\the\pgf@picminx}%
             \def\noexpand\tikzext@nodepicture@miny{\the\pgf@picminy}%
             \def\noexpand\tikzext@nodepicture@maxx{\the\pgf@picmaxx}%
@@ -829,30 +831,29 @@
     \def\tikzext@nodepicture@miny{0pt}%
     \def\tikzext@nodepicture@maxy{0pt}%
   \fi
-  \global\let\tikzext@nodepicture@minx@g\tikzext@nodepicture@minx
   \setbox\pgfnodeparttextbox=\hbox{%
     \kern-\tikzext@nodepicture@minx\relax
-    \lower\tikzext@nodepicture@baseline@\relax
+    \lower\tikzext@nodepicture@baseline\relax
     \box\pgfnodeparttextbox
     \kern\tikzext@nodepicture@maxx\relax
   }%
   \pgf@ya=\tikzext@nodepicture@maxy\relax
-  \advance\pgf@ya by -\tikzext@nodepicture@baseline@
+  \advance\pgf@ya by -\tikzext@nodepicture@baseline
   \ht\pgfnodeparttextbox=\pgf@ya
   \pgf@ya=-\tikzext@nodepicture@miny\relax
-  \advance\pgf@ya by \tikzext@nodepicture@baseline@
+  \advance\pgf@ya by \tikzext@nodepicture@baseline
   \dp\pgfnodeparttextbox=\pgf@ya
   %
-  \ifx\tikzext@nodepicture@shift@\pgfutil@empty
+  \ifx\tikzext@nodepicture@shiftvalue\pgfutil@empty
   \else
     \def\tikz@anchor{text}%
     \tikz@addtransform{%
       \pgftransformshift{%
-        \tikzext@nodepicture@shift@
+        \tikzext@nodepicture@shiftvalue
         \pgf@x=-\pgf@x
         \advance\pgf@x by\tikzext@nodepicture@minx
         \pgf@y=-\pgf@y
-        \advance\pgf@y by\tikzext@nodepicture@baseline@
+        \advance\pgf@y by\tikzext@nodepicture@baseline
       }}%
   \fi
   \let\tikzext@nodepicture@hooklist@this\tikzext@nodepicture@hooklist
